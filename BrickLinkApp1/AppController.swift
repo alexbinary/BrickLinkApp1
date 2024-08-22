@@ -46,7 +46,7 @@ class AppController: ObservableObject {
                         buyer: blOrder.buyerName,
                         items: blOrder.totalCount,
                         lots: blOrder.uniqueCount,
-                        grandTotal: -1,
+                        grandTotal: blOrder.cost.grandTotal.floatValue,
                         status: blOrder.status
                     )
                 }.sorted {

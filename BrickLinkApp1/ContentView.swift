@@ -9,7 +9,7 @@ struct Order: Identifiable {
     let buyer: String
     let items: Int
     let lots: Int
-    let grandTotal: Int
+    let grandTotal: Float
     let status: String
 }
 
@@ -39,7 +39,7 @@ struct ContentView: View {
                     Text(verbatim: "\(order.items) (\(order.lots))")
                 }
                 TableColumn("Grand total") { order in
-                    Text(verbatim: "\(Double(order.grandTotal)/100) €")
+                    Text(verbatim: "\(order.grandTotal) €")
                 }
                 TableColumn("Shipping cost") { order in
                     
