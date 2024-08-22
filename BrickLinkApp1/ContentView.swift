@@ -59,7 +59,7 @@ struct ContentView: View {
                     
                     TextField("Shipping cost", value: shippingCostBinding, format: .number)
                         .onSubmit {
-                            print("Updating shipping cost for order \(order.id) : \(value)")
+                            appController.updateShippingCost(forOrderWithId: order.id, cost: value)
                         }
                 }
                 TableColumn("Status", value: \.status)

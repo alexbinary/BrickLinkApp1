@@ -16,4 +16,10 @@ class AppController: ObservableObject {
             return 0
         }
     }
+    
+    
+    func updateShippingCost(forOrderWithId id: String, cost: Int) {
+        
+        print("Updating shipping cost for order \(id) : \(cost)")
+    }
 }
