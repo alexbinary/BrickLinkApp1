@@ -42,6 +42,21 @@ struct ContentView: View {
                 TableColumn("Grand total") { order in
                     Text(verbatim: "\(Double(order.grandTotal)/100) €")
                 }
+                TableColumn("Shipping cost") { order in
+                    
+                    var value: Int = 0
+                    
+                    let shippingCostBinding = Binding<Int> {
+                        return value
+                    } set: { newValue in
+                        value = newValue
+                    }
+                    
+                    TextField("Shipping cost", value: shippingCostBinding, format: .number)
+                        .onSubmit {
+                            print("Updating shipping cost for order \(order.id) : \(value)")
+                        }
+                }
                 TableColumn("Status", value: \.status)
                 
             }
