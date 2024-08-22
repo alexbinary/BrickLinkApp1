@@ -19,4 +19,5 @@ struct BrickLinkOrder: Decodable {
     let buyerName: String
     let totalCount: Int
     let uniqueCount: Int
+    let status: String
 }

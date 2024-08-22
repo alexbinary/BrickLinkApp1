@@ -47,7 +47,7 @@ class AppController: ObservableObject {
                         items: blOrder.totalCount,
                         lots: blOrder.uniqueCount,
                         grandTotal: -1,
-                        status: "--"
+                        status: blOrder.status
                     )
                 }.sorted {
                     $0.date > $1.date
