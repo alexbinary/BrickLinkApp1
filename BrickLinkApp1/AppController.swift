@@ -49,6 +49,8 @@ class AppController: ObservableObject {
                         grandTotal: -1,
                         status: "--"
                     )
+                }.sorted {
+                    $0.date > $1.date
                 }
             }
         }
