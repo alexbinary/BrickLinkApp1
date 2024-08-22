@@ -20,12 +20,6 @@ struct ContentView: View {
     @EnvironmentObject var appController: AppController
     
     
-    let orders: [Order] = [
-        Order(id: "#1", date: "Aug 14, 2024", buyer: "legofan_fr", items: 248, lots: 71, grandTotal: 1681, status: "COMPLETED"),
-        Order(id: "#2", date: "Aug 14, 2024", buyer: "legofan_fr", items: 248, lots: 71, grandTotal: 1681, status: "COMPLETED"),
-    ]
-    
-    
     var body: some View {
         
         NavigationSplitView {
@@ -36,7 +30,7 @@ struct ContentView: View {
             
         } detail: {
             
-            Table(orders) {
+            Table(appController.orders) {
                 
                 TableColumn("ID", value: \.id)
                 TableColumn("Date", value: \.date)
@@ -66,6 +60,9 @@ struct ContentView: View {
                 
             }
                 .navigationTitle("Orders")
+                .onAppear {
+                    appController.reloadOrders()
+                }
         }
     }
 }

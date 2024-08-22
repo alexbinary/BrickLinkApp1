@@ -14,6 +14,19 @@ class AppController: ObservableObject {
     }
     
     
+    @Published var orders: [Order] = []
+    
+    
+    func reloadOrders() {
+        
+        orders = [
+        
+            Order(id: "#1", date: "Aug 14, 2024", buyer: "legofan_fr", items: 248, lots: 71, grandTotal: 1681, status: "COMPLETED"),
+            Order(id: "#2", date: "Aug 14, 2024", buyer: "legofan_fr", items: 248, lots: 71, grandTotal: 1681, status: "COMPLETED"),
+        ]
+    }
+    
+    
     func shippingCost(forOrderWithId id: String) -> Int {
         
         return dataStore.shippingCostsByOrderId[id] ?? 0
