@@ -5,21 +5,28 @@ import SwiftUI
 class AppController: ObservableObject {
     
     
+    private let dataStore: DataStore
+    
+
+    init(dataStore: DataStore) {
+        
+        self.dataStore = dataStore
+    }
+    
+    
     func shippingCost(forOrderWithId id: String) -> Int {
         
-        switch id {
-        case "#1":
-            return 12
-        case "#2":
-            return 56
-        default:
-            return 0
-        }
+        return dataStore.shippingCostsByOrderId[id] ?? 0
     }
     
     
     func updateShippingCost(forOrderWithId id: String, cost: Int) {
         
-        print("Updating shipping cost for order \(id) : \(cost)")
+        var shippingCostsByOrderId = dataStore.shippingCostsByOrderId
+        
+        shippingCostsByOrderId[id] = cost
+        
+        try! dataStore.setShippingCostsByOrderId(shippingCostsByOrderId)
+        try! dataStore.save()
     }
 }
