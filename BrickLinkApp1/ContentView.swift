@@ -16,10 +16,15 @@ struct Order: Identifiable {
 
 struct ContentView: View {
     
+    
+    @EnvironmentObject var appController: AppController
+    
+    
     let orders: [Order] = [
         Order(id: "#1", date: "Aug 14, 2024", buyer: "legofan_fr", items: 248, lots: 71, grandTotal: 1681, status: "COMPLETED"),
         Order(id: "#2", date: "Aug 14, 2024", buyer: "legofan_fr", items: 248, lots: 71, grandTotal: 1681, status: "COMPLETED"),
     ]
+    
     
     var body: some View {
         
@@ -44,7 +49,7 @@ struct ContentView: View {
                 }
                 TableColumn("Shipping cost") { order in
                     
-                    var value: Int = 0
+                    var value: Int = appController.shippingCost(forOrderWithId: order.id)
                     
                     let shippingCostBinding = Binding<Int> {
                         return value
