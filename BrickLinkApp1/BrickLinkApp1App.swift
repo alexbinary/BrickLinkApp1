@@ -14,8 +14,11 @@ struct BrickLinkApp1App: App {
         let dataFileUrl = URL(fileURLWithPath: FileManager.default.currentDirectoryPath.appending("/data/data.json5"))
         let dataStore = DataStore(dataFileUrl: dataFileUrl)
         
-        let appController = AppController(dataStore: dataStore)
+        let blCredentials = BrickLinkAPICredentials()
         
+        let appController = AppController(
+            dataStore: dataStore, blCredentials: blCredentials
+        )
         _appController = StateObject(wrappedValue: appController)
     }
     

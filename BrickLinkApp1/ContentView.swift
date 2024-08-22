@@ -59,10 +59,10 @@ struct ContentView: View {
                 TableColumn("Status", value: \.status)
                 
             }
-                .navigationTitle("Orders")
-                .onAppear {
-                    appController.reloadOrders()
-                }
+            .task {
+                await appController.reloadOrders()
+            }
+            .navigationTitle("Orders")
         }
     }
 }

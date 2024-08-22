@@ -13,6 +13,10 @@
 		29BB30972C77B0CB000525CB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30962C77B0CB000525CB /* Preview Assets.xcassets */; };
 		29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6744C2C77BE8100BAA00A /* AppController.swift */; };
 		29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6744E2C77C14F00BAA00A /* DataStore.swift */; };
+		29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */; };
+		29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */; };
+		29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 29D674572C77C7E300BAA00A /* CryptoSwift */; };
+		29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,9 @@
 		29BB30982C77B0CB000525CB /* BrickLinkApp1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BrickLinkApp1.entitlements; sourceTree = "<group>"; };
 		29D6744C2C77BE8100BAA00A /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		29D6744E2C77C14F00BAA00A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPICredentials.swift; sourceTree = "<group>"; };
+		29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIAuth.swift; sourceTree = "<group>"; };
+		29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +67,9 @@
 				29BB308F2C77B0CA000525CB /* BrickLinkApp1App.swift */,
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
+				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
+				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
+				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
 				29BB30912C77B0CA000525CB /* ContentView.swift */,
 				29BB30932C77B0CB000525CB /* Assets.xcassets */,
 				29BB30982C77B0CB000525CB /* BrickLinkApp1.entitlements */,
@@ -91,6 +102,9 @@
 			dependencies = (
 			);
 			name = App1;
+			packageProductDependencies = (
+				29D674572C77C7E300BAA00A /* CryptoSwift */,
+			);
 			productName = BrickLinkApp1;
 			productReference = 29BB308C2C77B0CA000525CB /* App1.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +133,9 @@
 				Base,
 			);
 			mainGroup = 29BB30832C77B0CA000525CB;
+			packageReferences = (
+				29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+			);
 			productRefGroup = 29BB308D2C77B0CA000525CB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -145,9 +162,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */,
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
+				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29BB30902C77B0CA000525CB /* BrickLinkApp1App.swift in Sources */,
+				29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */,
 				29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +369,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.8.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		29D674572C77C7E300BAA00A /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 29BB30842C77B0CA000525CB /* Project object */;
 }
