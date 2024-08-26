@@ -57,13 +57,13 @@ class AppController: ObservableObject {
     }
     
     
-    func shippingCost(forOrderWithId id: String) -> Int {
+    func shippingCost(forOrderWithId id: String) -> Float {
         
         return dataStore.shippingCostsByOrderId[id] ?? 0
     }
     
     
-    func updateShippingCost(forOrderWithId id: String, cost: Int) {
+    func updateShippingCost(forOrderWithId id: String, cost: Float) {
         
         var shippingCostsByOrderId = dataStore.shippingCostsByOrderId
         

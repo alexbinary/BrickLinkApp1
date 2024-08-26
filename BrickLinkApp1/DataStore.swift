@@ -42,13 +42,13 @@ class DataStore {
     }
     
     
-    public var shippingCostsByOrderId: [String: Int] {
+    public var shippingCostsByOrderId: [String: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
     }
     
     
-    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [String: Int]) throws {
+    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [String: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -65,7 +65,7 @@ class DataStore {
 
 struct DataRoot: Codable {
     
-    var shippingCostsByOrderId: [String: Int]
+    var shippingCostsByOrderId: [String: Float]
 }
 
 

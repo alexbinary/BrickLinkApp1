@@ -41,19 +41,21 @@ struct ContentView: View {
                     Text(verbatim: "\(order.items) (\(order.lots))")
                 }
                 TableColumn("Grand total") { order in
-                    Text(verbatim: "\(order.grandTotal) €")
+                    Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
                 }
                 TableColumn("Shipping cost") { order in
                     
-                    var value: Int = appController.shippingCost(forOrderWithId: order.id)
+                    var value = appController.shippingCost(forOrderWithId: order.id)
                     
-                    let shippingCostBinding = Binding<Int> {
+                    let shippingCostBinding = Binding<Float> {
                         return value
                     } set: { newValue in
                         value = newValue
                     }
                     
-                    TextField("Shipping cost", value: shippingCostBinding, format: .number)
+                    TextField("Shipping cost", value: shippingCostBinding,
+                              format: .currency(code: "EUR").presentation(.isoCode)
+                    )
                         .onSubmit {
                             appController.updateShippingCost(forOrderWithId: order.id, cost: value)
                         }
