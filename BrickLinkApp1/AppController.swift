@@ -8,7 +8,7 @@ class AppController: ObservableObject {
     private let dataStore: DataStore
     private let blCredentials: BrickLinkAPICredentials
     
-
+    
     init(
         dataStore: DataStore,
         blCredentials: BrickLinkAPICredentials
@@ -54,6 +54,26 @@ class AppController: ObservableObject {
                 }
             }
         }
+    }
+    
+    
+    func updateOrderStatus(orderId: String, status: String) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!)
+        request.httpMethod = "PUT"
+        request.httpBody = """
+            {
+                "field" : "status",
+                "value" : "\(status)"
+            }
+            """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8))
+        
+        await reloadOrders()
     }
     
     

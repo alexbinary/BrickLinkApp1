@@ -19,6 +19,8 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
+    @State var selectedOrderID: Order.ID? = nil
+    
     
     var body: some View {
         
@@ -28,9 +30,9 @@ struct ContentView: View {
                 Label("Orders", systemImage: "list.bullet")
             }
             
-        } detail: {
+        } content : {
             
-            Table(appController.orders) {
+            Table(appController.orders, selection: $selectedOrderID) {
                 
                 TableColumn("ID", value: \.id)
                 TableColumn("Date") { order in
@@ -67,6 +69,31 @@ struct ContentView: View {
                 await appController.reloadOrders()
             }
             .navigationTitle("Orders")
+            
+        } detail: {
+            
+            if let orderID = selectedOrderID {
+                
+                Text("\(orderID)")
+                
+                let statuses = ["PAID", "PACKED", "SHIPPED", "COMPLETED"]
+                
+                ForEach(statuses, id: \.self) { status in
+                
+                    Button {
+                        Task {
+                            await appController.updateOrderStatus(orderId: orderID, status: status)
+                        }
+                    } label: {
+                        Text(status)
+                    }
+
+                }
+                
+            } else {
+                
+                Text("select an order")
+            }
         }
     }
 }
