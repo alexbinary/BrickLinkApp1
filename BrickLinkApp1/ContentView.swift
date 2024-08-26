@@ -5,7 +5,7 @@ import SwiftUI
 struct Order: Identifiable {
     
     let id: String
-    let date: String
+    let date: Date
     let buyer: String
     let items: Int
     let lots: Int
@@ -33,7 +33,9 @@ struct ContentView: View {
             Table(appController.orders) {
                 
                 TableColumn("ID", value: \.id)
-                TableColumn("Date", value: \.date)
+                TableColumn("Date") { order in
+                    Text(order.date, format: .dateTime)
+                }
                 TableColumn("Buyer", value: \.buyer)
                 TableColumn("Items (lots)") { order in
                     Text(verbatim: "\(order.items) (\(order.lots))")
