@@ -2,24 +2,14 @@
 import SwiftUI
 
 
-struct Order: Identifiable {
-    
-    let id: String
-    let date: Date
-    let buyer: String
-    let items: Int
-    let lots: Int
-    let grandTotal: Float
-    let status: String
-}
-
-
 struct ContentView: View {
     
     
     @EnvironmentObject var appController: AppController
     
     @State var selectedOrderId: Order.ID? = nil
+    
+    
     
     
     var body: some View {
@@ -105,6 +95,12 @@ struct ContentView: View {
                         } label: {
                             Text("Send drive thru")
                         }
+                        
+                        Divider()
+                        
+                        HeaderTitleView(label: "􁊇 Items")
+                        
+                        
                         
                         Divider()
                         

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */; };
+		29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9491B2C7DB3A000CC7F26 /* Order.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
+		29B9491B2C7DB3A000CC7F26 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,14 @@
 				29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		29B9491D2C7DB3AC00CC7F26 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				29B9491B2C7DB3A000CC7F26 /* Order.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		29BB30832C77B0CA000525CB = {
@@ -100,6 +110,7 @@
 				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
 				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
 				29BB30912C77B0CA000525CB /* ContentView.swift */,
+				29B9491D2C7DB3AC00CC7F26 /* Models */,
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 			);
 			path = Src;
@@ -184,6 +195,7 @@
 				29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */,
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
 				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
+				29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
 				29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */,
