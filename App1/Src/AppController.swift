@@ -71,9 +71,20 @@ class AppController: ObservableObject {
         request.addAuthentication(using: blCredentials)
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8))
+        print(String(data: data, encoding: .utf8)!)
         
         await reloadOrders()
+    }
+    
+    
+    func sendDriveThru(orderId: String) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru")!)
+        request.httpMethod = "POST"
+        request.addAuthentication(using: blCredentials)
+        
+//        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+//        print(String(data: data, encoding: .utf8)!)
     }
     
     

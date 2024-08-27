@@ -19,7 +19,7 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedOrderID: Order.ID? = nil
+    @State var selectedOrderId: Order.ID? = nil
     
     
     var body: some View {
@@ -32,7 +32,7 @@ struct ContentView: View {
             
         } content : {
             
-            Table(appController.orders, selection: $selectedOrderID) {
+            Table(appController.orders, selection: $selectedOrderId) {
                 
                 TableColumn("ID", value: \.id)
                 TableColumn("Date") { order in
@@ -74,7 +74,7 @@ struct ContentView: View {
             
             VStack {
                 
-                if let orderID = selectedOrderID {
+                if let orderId = selectedOrderId {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
@@ -86,12 +86,24 @@ struct ContentView: View {
                             ForEach(statuses, id: \.self) { status in
                                 Button {
                                     Task {
-                                        await appController.updateOrderStatus(orderId: orderID, status: status)
+                                        await appController.updateOrderStatus(orderId: orderId, status: status)
                                     }
                                 } label: {
                                     Text(status)
                                 }
                             }
+                        }
+                        
+                        Divider()
+                        
+                        HeaderTitleView(label: "􁊇 Drive thru")
+                        
+                        Button {
+                            Task {
+                                await appController.sendDriveThru(orderId: orderId)
+                            }
+                        } label: {
+                            Text("Send drive thru")
                         }
                         
                         Divider()
