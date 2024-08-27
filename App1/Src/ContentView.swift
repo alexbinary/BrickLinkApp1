@@ -8,8 +8,7 @@ struct ContentView: View {
     @EnvironmentObject var appController: AppController
     
     @State var selectedOrderId: Order.ID? = nil
-    
-    
+    @State var orderItems: [OrderItem] = []
     
     
     var body: some View {
@@ -100,7 +99,25 @@ struct ContentView: View {
                         
                         HeaderTitleView(label: "􁊇 Items")
                         
-                        
+                        Table(orderItems) {
+                            
+                            TableColumn("Condition", value: \.condition)
+                            TableColumn("Color", value: \.color)
+                            TableColumn("Ref", value: \.ref)
+                            TableColumn("Name", value: \.name)
+                            TableColumn("Comment", value: \.comment)
+                            TableColumn("Location", value: \.location)
+                            TableColumn("Quantity", value: \.quantity)
+                            TableColumn("Left", value: \.quantityLeft)
+                        }
+                        .task {
+                            await loadOrderItems()
+                        }
+                        .onChange(of: selectedOrderId) { oldValue, newValue in
+                            Task {
+                                await loadOrderItems()
+                            }
+                        }
                         
                         Divider()
                         
@@ -114,5 +131,14 @@ struct ContentView: View {
             }
             .padding()
         }
+    }
+    
+    
+    func loadOrderItems() async {
+        
+        guard let orderId = selectedOrderId else { return }
+        
+        self.orderItems.removeAll()
+        self.orderItems = await appController.loadOrderItems(orderId: orderId)
     }
 }

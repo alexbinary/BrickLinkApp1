@@ -5,14 +5,12 @@ import Foundation
 
 struct BrickLinkAPIResponse<T>: Decodable where T: Decodable {
     
-    
     let data: T?
 }
 
 
 
 struct BrickLinkOrder: Decodable {
-    
     
     let orderId: Int
     let dateOrdered: Date
@@ -24,11 +22,33 @@ struct BrickLinkOrder: Decodable {
 }
 
 
-struct BrickLinkOrderCost: Decodable {
+
+struct BrickLinkOrderItem: Decodable {
     
+    let inventoryId: Int
+    let item: BrickLinkInventoryItem
+    let quantity: Int
+    let colorId: Int
+    let newOrUsed: String
+    let remarks: String
+    let description: String
+}
+
+
+
+struct BrickLinkInventoryItem: Decodable {
+
+    let no: String
+    let name: String
+}
+
+
+
+struct BrickLinkOrderCost: Decodable {
     
     let grandTotal: FixedPointNumber
 }
+
 
 
 struct FixedPointNumber: Codable, ExpressibleByFloatLiteral, CustomStringConvertible {

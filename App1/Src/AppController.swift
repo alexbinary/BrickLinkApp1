@@ -57,6 +57,36 @@ class AppController: ObservableObject {
     }
     
     
+    func loadOrderItems(orderId: String) async -> [OrderItem] {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        
+        let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
+        if let batches = decoded.data, let items = batches.first {
+            
+            return items.map { item in
+                
+                OrderItem(
+                    id: "\(item.inventoryId)",
+                    condition: item.newOrUsed,
+                    color: "\(item.colorId)",
+                    ref: item.item.no,
+                    name: item.item.name,
+                    location: item.remarks,
+                    comment: item.description,
+                    quantity: "\(item.quantity)",
+                    quantityLeft: ""
+                )
+            }
+        }
+        
+        return []
+    }
+    
+    
     func updateOrderStatus(orderId: String, status: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!)
