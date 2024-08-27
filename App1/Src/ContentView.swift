@@ -72,28 +72,39 @@ struct ContentView: View {
             
         } detail: {
             
-            if let orderID = selectedOrderID {
+            VStack {
                 
-                Text("\(orderID)")
-                
-                let statuses = ["PAID", "PACKED", "SHIPPED", "COMPLETED"]
-                
-                ForEach(statuses, id: \.self) { status in
-                
-                    Button {
-                        Task {
-                            await appController.updateOrderStatus(orderId: orderID, status: status)
+                if let orderID = selectedOrderID {
+                    
+                    VStack(alignment: .leading, spacing: 12) {
+                        
+                        HeaderTitleView(label: "􁊇 Update status")
+                        
+                        let statuses = ["PAID", "PACKED", "SHIPPED", "COMPLETED"]
+                        
+                        HStack {
+                            ForEach(statuses, id: \.self) { status in
+                                Button {
+                                    Task {
+                                        await appController.updateOrderStatus(orderId: orderID, status: status)
+                                    }
+                                } label: {
+                                    Text(status)
+                                }
+                            }
                         }
-                    } label: {
-                        Text(status)
+                        
+                        Divider()
+                        
+                        Spacer()
                     }
-
+                    
+                } else {
+                    
+                    Text("select an order")
                 }
-                
-            } else {
-                
-                Text("select an order")
             }
+            .padding()
         }
     }
 }
