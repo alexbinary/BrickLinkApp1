@@ -64,15 +64,9 @@
 		29BB308E2C77B0CA000525CB /* BrickLinkApp1 */ = {
 			isa = PBXGroup;
 			children = (
-				29BB308F2C77B0CA000525CB /* BrickLinkApp1App.swift */,
-				29D6744C2C77BE8100BAA00A /* AppController.swift */,
-				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
-				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
-				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
-				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
-				29BB30912C77B0CA000525CB /* ContentView.swift */,
-				29BB30932C77B0CB000525CB /* Assets.xcassets */,
 				29BB30982C77B0CB000525CB /* BrickLinkApp1.entitlements */,
+				29BB30932C77B0CB000525CB /* Assets.xcassets */,
+				29D6745B2C7DAD9F00BAA00A /* Src */,
 				29BB30952C77B0CB000525CB /* Preview Content */,
 			);
 			path = BrickLinkApp1;
@@ -84,6 +78,20 @@
 				29BB30962C77B0CB000525CB /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		29D6745B2C7DAD9F00BAA00A /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				29BB308F2C77B0CA000525CB /* BrickLinkApp1App.swift */,
+				29D6744C2C77BE8100BAA00A /* AppController.swift */,
+				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
+				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
+				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
+				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
+				29BB30912C77B0CA000525CB /* ContentView.swift */,
+			);
+			path = Src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
