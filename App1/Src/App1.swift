@@ -3,7 +3,7 @@ import SwiftUI
 
 
 @main
-struct BrickLinkApp1App: App {
+struct App1: App {
     
     
     @StateObject private var appController: AppController

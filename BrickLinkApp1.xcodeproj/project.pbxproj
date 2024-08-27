@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		29BB30902C77B0CA000525CB /* BrickLinkApp1App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* BrickLinkApp1App.swift */; };
+		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
 		29BB30972C77B0CB000525CB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30962C77B0CB000525CB /* Preview Assets.xcassets */; };
@@ -21,11 +21,11 @@
 
 /* Begin PBXFileReference section */
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		29BB308F2C77B0CA000525CB /* BrickLinkApp1App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickLinkApp1App.swift; sourceTree = "<group>"; };
+		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		29BB30932C77B0CB000525CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		29BB30962C77B0CB000525CB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		29BB30982C77B0CB000525CB /* BrickLinkApp1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BrickLinkApp1.entitlements; sourceTree = "<group>"; };
+		29BB30982C77B0CB000525CB /* App1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App1.entitlements; sourceTree = "<group>"; };
 		29D6744C2C77BE8100BAA00A /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		29D6744E2C77C14F00BAA00A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPICredentials.swift; sourceTree = "<group>"; };
@@ -48,7 +48,7 @@
 		29BB30832C77B0CA000525CB = {
 			isa = PBXGroup;
 			children = (
-				29BB308E2C77B0CA000525CB /* BrickLinkApp1 */,
+				29BB308E2C77B0CA000525CB /* App1 */,
 				29BB308D2C77B0CA000525CB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,15 +61,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		29BB308E2C77B0CA000525CB /* BrickLinkApp1 */ = {
+		29BB308E2C77B0CA000525CB /* App1 */ = {
 			isa = PBXGroup;
 			children = (
-				29BB30982C77B0CB000525CB /* BrickLinkApp1.entitlements */,
+				29BB30982C77B0CB000525CB /* App1.entitlements */,
 				29BB30932C77B0CB000525CB /* Assets.xcassets */,
 				29D6745B2C7DAD9F00BAA00A /* Src */,
 				29BB30952C77B0CB000525CB /* Preview Content */,
 			);
-			path = BrickLinkApp1;
+			path = App1;
 			sourceTree = "<group>";
 		};
 		29BB30952C77B0CB000525CB /* Preview Content */ = {
@@ -83,7 +83,7 @@
 		29D6745B2C7DAD9F00BAA00A /* Src */ = {
 			isa = PBXGroup;
 			children = (
-				29BB308F2C77B0CA000525CB /* BrickLinkApp1App.swift */,
+				29BB308F2C77B0CA000525CB /* App1.swift */,
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
 				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
@@ -174,7 +174,7 @@
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
 				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
-				29BB30902C77B0CA000525CB /* BrickLinkApp1App.swift in Sources */,
+				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
 				29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */,
 				29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */,
 			);
@@ -306,11 +306,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = BrickLinkApp1/BrickLinkApp1.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App1/App1.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BrickLinkApp1/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"App1/Preview Content\"";
 				DEVELOPMENT_TEAM = E2Z62523JJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -333,11 +333,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = BrickLinkApp1/BrickLinkApp1.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App1/App1.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BrickLinkApp1/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"App1/Preview Content\"";
 				DEVELOPMENT_TEAM = E2Z62523JJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
