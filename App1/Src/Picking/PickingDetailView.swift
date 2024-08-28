@@ -25,7 +25,7 @@ struct PickingDetailView: View {
                 
                 Text("loading order...")
                 
-            } else {
+            } else if let order = order {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     
@@ -33,6 +33,25 @@ struct PickingDetailView: View {
                     
                     Table(orderItems) {
                         
+                        TableColumn("Picked") { item in
+                            let picked = appController.pickedItems(forOrderWithId: order.id).contains(item.id)
+                            if picked {
+                                Text("Picked")
+                            } else {
+                                Text("Not picked")
+                            }
+                            
+                            Button {
+                                if picked {
+                                    appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                } else {
+                                    appController.pickItem(forOrderWithId: order.id, item: item.id)
+                                }
+                            } label: {
+                                Text(picked ? "Unpick" : "Pick")
+                            }
+
+                        }
                         TableColumn("Condition", value: \.condition)
                         TableColumn("Color", value: \.color)
                         TableColumn("Ref", value: \.ref)

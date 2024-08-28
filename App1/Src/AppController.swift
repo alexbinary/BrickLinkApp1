@@ -65,7 +65,7 @@ class AppController: ObservableObject {
     }
     
     
-    func getOrderItems(orderId: String) async -> [OrderItem] {
+    func getOrderItems(orderId: OrderId) async -> [OrderItem] {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
         request.addAuthentication(using: blCredentials)
@@ -95,7 +95,7 @@ class AppController: ObservableObject {
     }
     
     
-    func updateOrderStatus(orderId: String, status: String) async {
+    func updateOrderStatus(orderId: OrderId, status: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!)
         request.httpMethod = "PUT"
@@ -115,7 +115,7 @@ class AppController: ObservableObject {
     }
     
     
-    func updateTrackingNo(forOrderWithId orderId: String, trackingNo: String) async {
+    func updateTrackingNo(forOrderWithId orderId: OrderId, trackingNo: String) async {
         
         print("update tracking no \(trackingNo) for order \(orderId)")
         
@@ -136,7 +136,7 @@ class AppController: ObservableObject {
     }
 
 
-    func sendDriveThru(orderId: String) async {
+    func sendDriveThru(orderId: OrderId) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru?mail_me=true")!)
         request.httpMethod = "POST"
@@ -147,20 +147,62 @@ class AppController: ObservableObject {
     }
     
     
-    func shippingCost(forOrderWithId id: String) -> Float {
+    func shippingCost(forOrderWithId orderId: OrderId) -> Float {
         
-        return dataStore.shippingCostsByOrderId[id] ?? 0
+        return dataStore.shippingCostsByOrderId[orderId] ?? 0
     }
     
     
-    func updateShippingCost(forOrderWithId id: String, cost: Float) {
+    func pickedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
+        
+        return dataStore.pickedItemsByOrderId[orderId] ?? []
+    }
+    
+    
+    func updateShippingCost(forOrderWithId orderId: OrderId, cost: Float) {
         
         var shippingCostsByOrderId = dataStore.shippingCostsByOrderId
         
-        shippingCostsByOrderId[id] = cost
+        shippingCostsByOrderId[orderId] = cost
         
         try! dataStore.setShippingCostsByOrderId(shippingCostsByOrderId)
         try! dataStore.save()
+    }
+    
+    
+    func pickItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+        
+        var pickedItemsByOrderId = dataStore.pickedItemsByOrderId
+        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [InventoryId]()
+        
+        guard !pickedItemsForOrder.contains(itemId) else { return }
+            
+        pickedItemsForOrder.append(itemId)
+        pickedItemsByOrderId[orderId] = pickedItemsForOrder
+        
+        try! dataStore.setPickedItemsByOrderId(pickedItemsByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    func unpickItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+        
+        var pickedItemsByOrderId = dataStore.pickedItemsByOrderId
+        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [InventoryId]()
+        
+        pickedItemsForOrder.removeAll { $0 == itemId }
+        pickedItemsByOrderId[orderId] = pickedItemsForOrder
+        
+        if pickedItemsByOrderId[orderId]!.isEmpty {
+            pickedItemsByOrderId.removeValue(forKey: orderId)
+        }
+        
+        try! dataStore.setPickedItemsByOrderId(pickedItemsByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
     }
 }
 

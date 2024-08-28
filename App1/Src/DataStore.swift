@@ -42,17 +42,31 @@ class DataStore {
     }
     
     
-    public var shippingCostsByOrderId: [String: Float] {
+    public var shippingCostsByOrderId: [OrderId: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
     }
     
     
-    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [String: Float]) throws {
+    public var pickedItemsByOrderId: [OrderId: [InventoryId]] {
+        
+        data?.pickedItemsByOrderId ?? [:]
+    }
+    
+    
+    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderId: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
         data!.shippingCostsByOrderId = shippingCostsByOrderId
+    }
+    
+    
+    public func setPickedItemsByOrderId(_ pickedItemsByOrderId: [OrderId: [InventoryId]]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.pickedItemsByOrderId = pickedItemsByOrderId
     }
     
     
@@ -63,9 +77,14 @@ class DataStore {
 }
 
 
+typealias OrderId = String
+typealias InventoryId = String
+
+
 struct DataRoot: Codable {
     
-    var shippingCostsByOrderId: [String: Float]
+    var shippingCostsByOrderId: [OrderId: Float]
+    var pickedItemsByOrderId: [OrderId: [InventoryId]]
 }
 
 
