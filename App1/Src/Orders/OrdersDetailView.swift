@@ -112,6 +112,10 @@ struct OrdersDetailView: View {
             }
         }
         .padding()
+        .task {
+            await loadOrder()
+            await loadOrderItems()
+        }
         .onChange(of: selectedOrderId) { oldValue, newValue in
             Task {
                 await loadOrder()
