@@ -31,7 +31,16 @@ struct PickingDetailView: View {
                     
                     HeaderTitleView(label: "􁊇 Items")
                     
-                    Table(orderItems) {
+                    let pickedItems = appController.pickedItems(forOrderWithId: order.id)
+                    
+                    let pickedOrderItems = orderItems.filter {
+                        pickedItems.contains($0.id)
+                    }
+                    let unpickedOrderItems = orderItems.filter {
+                        !pickedItems.contains($0.id)
+                    }
+                    
+                    Table(of: OrderItem.self) {
                         
                         TableColumn("Picked") { item in
                             let picked = appController.pickedItems(forOrderWithId: order.id).contains(item.id)
@@ -60,6 +69,19 @@ struct PickingDetailView: View {
                         TableColumn("Location", value: \.location)
                         TableColumn("Quantity", value: \.quantity)
                         TableColumn("Left", value: \.quantityLeft)
+                        
+                    } rows : {
+                        
+                        Section("Unpicked") {
+                            ForEach(unpickedOrderItems) { item in
+                                TableRow(item)
+                            }
+                        }
+                        Section("Picked") {
+                            ForEach(pickedOrderItems) { item in
+                                TableRow(item)
+                            }
+                        }
                     }
                     
                     Divider()
