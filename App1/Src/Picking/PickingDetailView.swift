@@ -40,6 +40,25 @@ struct PickingDetailView: View {
                         !pickedItems.contains($0.id)
                     }
                     
+                    HStack {
+                        
+                        Button {
+                            for item in orderItems {
+                                appController.pickItem(forOrderWithId: order.id, item: item.id)
+                            }
+                        } label: {
+                            Text("Pick all")
+                        }
+                        
+                        Button {
+                            for item in orderItems {
+                                appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                            }
+                        } label: {
+                            Text("Unpick all")
+                        }
+                    }
+                    
                     Table(of: OrderItem.self) {
                         
                         TableColumn("Picked") { item in
