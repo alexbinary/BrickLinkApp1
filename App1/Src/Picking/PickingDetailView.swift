@@ -33,12 +33,12 @@ struct PickingDetailView: View {
                     
                     let pickedItems = appController.pickedItems(forOrderWithId: order.id)
                     
-                    let pickedOrderItems = orderItems.filter {
-                        pickedItems.contains($0.id)
-                    }
-                    let unpickedOrderItems = orderItems.filter {
-                        !pickedItems.contains($0.id)
-                    }
+                    let pickedOrderItems = orderItems
+                        .filter { pickedItems.contains($0.id) }
+                        .sorted { $0.location < $1.location }
+                    let unpickedOrderItems = orderItems
+                        .filter { !pickedItems.contains($0.id) }
+                        .sorted { $0.location < $1.location }
                     
                     HStack {
                         
