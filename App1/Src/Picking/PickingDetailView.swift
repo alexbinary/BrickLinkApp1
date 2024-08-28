@@ -32,12 +32,16 @@ struct PickingDetailView: View {
                     HeaderTitleView(label: "􁊇 Items")
                     
                     let pickedItems = appController.pickedItems(forOrderWithId: order.id)
+                    let verifiedItems = appController.verifiedItems(forOrderWithId: order.id)
                     
-                    let pickedOrderItems = orderItems
-                        .filter { pickedItems.contains($0.id) }
-                        .sorted { $0.location < $1.location }
-                    let unpickedOrderItems = orderItems
+                    let orderItemsToPick = orderItems
                         .filter { !pickedItems.contains($0.id) }
+                        .sorted { $0.location < $1.location }
+                    let orderItemsToVerify = orderItems
+                        .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
+                        .sorted { $0.location < $1.location }
+                    let orderItemsPickedAndVerified = orderItems
+                        .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
                         .sorted { $0.location < $1.location }
                     
                     HStack {
@@ -56,6 +60,22 @@ struct PickingDetailView: View {
                             }
                         } label: {
                             Text("Unpick all")
+                        }
+                        
+                        Button {
+                            for item in orderItems {
+                                appController.verifyItem(forOrderWithId: order.id, item: item.id)
+                            }
+                        } label: {
+                            Text("Verify all")
+                        }
+                        
+                        Button {
+                            for item in orderItems {
+                                appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                            }
+                        } label: {
+                            Text("Unverify all")
                         }
                     }
                     
@@ -78,7 +98,24 @@ struct PickingDetailView: View {
                             } label: {
                                 Text(picked ? "Unpick" : "Pick")
                             }
-
+                        }
+                        TableColumn("Verified") { item in
+                            let verified = appController.verifiedItems(forOrderWithId: order.id).contains(item.id)
+                            if verified {
+                                Text("Verified")
+                            } else {
+                                Text("Not verified")
+                            }
+                            
+                            Button {
+                                if verified {
+                                    appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                } else {
+                                    appController.verifyItem(forOrderWithId: order.id, item: item.id)
+                                }
+                            } label: {
+                                Text(verified ? "Unverify" : "Verify")
+                            }
                         }
                         TableColumn("Condition", value: \.condition)
                         TableColumn("Color", value: \.color)
@@ -91,13 +128,18 @@ struct PickingDetailView: View {
                         
                     } rows : {
                         
-                        Section("Unpicked") {
-                            ForEach(unpickedOrderItems) { item in
+                        Section("To pick") {
+                            ForEach(orderItemsToPick) { item in
                                 TableRow(item)
                             }
                         }
-                        Section("Picked") {
-                            ForEach(pickedOrderItems) { item in
+                        Section("To verify") {
+                            ForEach(orderItemsToVerify) { item in
+                                TableRow(item)
+                            }
+                        }
+                        Section("Verified") {
+                            ForEach(orderItemsPickedAndVerified) { item in
                                 TableRow(item)
                             }
                         }

@@ -54,6 +54,12 @@ class DataStore {
     }
     
     
+    public var verifiedItemsByOrderId: [OrderId: [InventoryId]] {
+        
+        data?.verifiedItemsByOrderId ?? [:]
+    }
+    
+    
     public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderId: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
@@ -67,6 +73,14 @@ class DataStore {
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
         data!.pickedItemsByOrderId = pickedItemsByOrderId
+    }
+    
+    
+    public func setVerifiedItemsByOrderId(_ verifiedItemsByOrderId: [OrderId: [InventoryId]]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.verifiedItemsByOrderId = verifiedItemsByOrderId
     }
     
     
@@ -85,6 +99,7 @@ struct DataRoot: Codable {
     
     var shippingCostsByOrderId: [OrderId: Float]
     var pickedItemsByOrderId: [OrderId: [InventoryId]]
+    var verifiedItemsByOrderId: [OrderId: [InventoryId]]
 }
 
 

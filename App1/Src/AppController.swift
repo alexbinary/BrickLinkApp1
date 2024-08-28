@@ -159,6 +159,12 @@ class AppController: ObservableObject {
     }
     
     
+    func verifiedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
+        
+        return dataStore.verifiedItemsByOrderId[orderId] ?? []
+    }
+    
+    
     func updateShippingCost(forOrderWithId orderId: OrderId, cost: Float) {
         
         var shippingCostsByOrderId = dataStore.shippingCostsByOrderId
@@ -200,6 +206,42 @@ class AppController: ObservableObject {
         }
         
         try! dataStore.setPickedItemsByOrderId(pickedItemsByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    func verifyItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+        
+        var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
+        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [InventoryId]()
+        
+        guard !verifiedItemsForOrder.contains(itemId) else { return }
+            
+        verifiedItemsForOrder.append(itemId)
+        verifiedItemsByOrderId[orderId] = verifiedItemsForOrder
+        
+        try! dataStore.setVerifiedItemsByOrderId(verifiedItemsByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    func unverifyItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+        
+        var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
+        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [InventoryId]()
+        
+        verifiedItemsForOrder.removeAll { $0 == itemId }
+        verifiedItemsByOrderId[orderId] = verifiedItemsForOrder
+        
+        if verifiedItemsByOrderId[orderId]!.isEmpty {
+            verifiedItemsByOrderId.removeValue(forKey: orderId)
+        }
+        
+        try! dataStore.setVerifiedItemsByOrderId(verifiedItemsByOrderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
