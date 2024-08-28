@@ -84,7 +84,7 @@ class AppController: ObservableObject {
                     ref: item.item.no,
                     name: item.item.name,
                     location: item.remarks,
-                    comment: item.description,
+                    comment: item.description ?? "",
                     quantity: "\(item.quantity)",
                     quantityLeft: ""
                 )
