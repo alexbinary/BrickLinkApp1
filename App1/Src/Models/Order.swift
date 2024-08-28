@@ -13,4 +13,5 @@ struct Order: Identifiable {
     let grandTotal: Float
     let status: String
     let driveThruSent: Bool
+    let trackingNo: String?
 }

@@ -20,6 +20,14 @@ struct BrickLinkOrder: Decodable {
     let cost: BrickLinkOrderCost
     let status: String
     let driveThruSent: Bool?
+    let shipping: BrickLinkOrderShipping?
+}
+
+
+
+struct BrickLinkOrderShipping: Decodable {
+    
+    let trackingNo: String?
 }
 
 

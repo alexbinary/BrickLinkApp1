@@ -94,6 +94,32 @@ struct ContentView: View {
                         
                         Divider()
                         
+                        HeaderTitleView(label: "􁊇 Tracking")
+                        
+                        if order.trackingNo?.isEmpty ?? true {
+                            Text("Tracking no not set")
+                        } else {
+                            Text("Tracking no set")
+                        }
+                        
+                        var trackingNoEditValue = order.trackingNo
+                        
+                        let trackingNoBinding = Binding<String> {
+                            return trackingNoEditValue ?? ""
+                        } set: { newValue in
+                            trackingNoEditValue = newValue
+                        }
+                        
+                        TextField("Tracking No", text: trackingNoBinding)
+                            .onSubmit {
+                                Task {
+                                    await appController.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
+                                    await loadOrder()
+                                }
+                            }
+                        
+                        Divider()
+                        
                         HeaderTitleView(label: "􁊇 Drive thru")
                         
                         if order.driveThruSent {

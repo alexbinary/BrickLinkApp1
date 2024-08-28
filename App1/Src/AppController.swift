@@ -115,6 +115,27 @@ class AppController: ObservableObject {
     }
     
     
+    func updateTrackingNo(forOrderWithId orderId: String, trackingNo: String) async {
+        
+        print("update tracking no \(trackingNo) for order \(orderId)")
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
+        request.httpMethod = "PUT"
+        request.httpBody = """
+            {
+                "shipping": {
+                    "tracking_no": "\(trackingNo)"
+                }
+            }
+            """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+    }
+
+
     func sendDriveThru(orderId: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru?mail_me=true")!)
@@ -157,6 +178,7 @@ extension Order {
         self.grandTotal = blOrder.cost.grandTotal.floatValue
         self.status = blOrder.status
         self.driveThruSent = blOrder.driveThruSent ?? false
+        self.trackingNo = blOrder.shipping?.trackingNo
     }
 }
 
