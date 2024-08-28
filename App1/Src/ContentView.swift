@@ -8,6 +8,7 @@ struct ContentView: View {
     @EnvironmentObject var appController: AppController
     
     @State var selectedOrderId: Order.ID? = nil
+    @State var selectedOrder: Order? = nil
     @State var orderItems: [OrderItem] = []
     
     
@@ -63,7 +64,15 @@ struct ContentView: View {
             
             VStack {
                 
-                if let orderId = selectedOrderId {
+                if selectedOrderId == nil {
+                    
+                    Text("select an order")
+                    
+                } else if selectedOrder == nil {
+                    
+                    Text("loading order...")
+                    
+                } else if let order = selectedOrder {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
@@ -75,7 +84,7 @@ struct ContentView: View {
                             ForEach(statuses, id: \.self) { status in
                                 Button {
                                     Task {
-                                        await appController.updateOrderStatus(orderId: orderId, status: status)
+                                        await appController.updateOrderStatus(orderId: order.id, status: status)
                                     }
                                 } label: {
                                     Text(status)
@@ -87,9 +96,15 @@ struct ContentView: View {
                         
                         HeaderTitleView(label: "􁊇 Drive thru")
                         
+                        if order.driveThruSent {
+                            Text("Drive through sent")
+                        } else {
+                            Text("Drive through not sent")
+                        }
+                        
                         Button {
                             Task {
-                                await appController.sendDriveThru(orderId: orderId)
+                                await appController.sendDriveThru(orderId: order.id)
                             }
                         } label: {
                             Text("Send drive thru")
@@ -110,27 +125,30 @@ struct ContentView: View {
                             TableColumn("Quantity", value: \.quantity)
                             TableColumn("Left", value: \.quantityLeft)
                         }
-                        .task {
-                            await loadOrderItems()
-                        }
-                        .onChange(of: selectedOrderId) { oldValue, newValue in
-                            Task {
-                                await loadOrderItems()
-                            }
-                        }
                         
                         Divider()
                         
                         Spacer()
                     }
-                    
-                } else {
-                    
-                    Text("select an order")
                 }
             }
             .padding()
+            .onChange(of: selectedOrderId) { oldValue, newValue in
+                Task {
+                    await loadOrder()
+                    await loadOrderItems()
+                }
+            }
         }
+    }
+    
+    
+    func loadOrder() async {
+        
+        guard let orderId = selectedOrderId else { return }
+        
+        self.selectedOrder = nil
+        self.selectedOrder = await appController.getOrder(orderId: orderId)
     }
     
     

@@ -19,6 +19,7 @@ struct BrickLinkOrder: Decodable {
     let uniqueCount: Int
     let cost: BrickLinkOrderCost
     let status: String
+    let driveThruSent: Bool?
 }
 
 

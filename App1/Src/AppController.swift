@@ -32,28 +32,36 @@ class AppController: ObservableObject {
         request.addAuthentication(using: blCredentials)
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
         
         let decoded: BrickLinkAPIResponse<[BrickLinkOrder]> = data.decode()
         if let blOrders = decoded.data {
             
             DispatchQueue.main.sync {
                 
-                self.orders = blOrders.map { blOrder in
-                    
-                    Order(
-                        id: "\(blOrder.orderId)",
-                        date: blOrder.dateOrdered,
-                        buyer: blOrder.buyerName,
-                        items: blOrder.totalCount,
-                        lots: blOrder.uniqueCount,
-                        grandTotal: blOrder.cost.grandTotal.floatValue,
-                        status: blOrder.status
-                    )
-                }.sorted {
-                    $0.date > $1.date
-                }
+                self.orders = blOrders
+                    .map { Order(fromBlOrder: $0) }
+                    .sorted { $0.date > $1.date }
             }
         }
+    }
+    
+    
+    func getOrder(orderId: String) async -> Order? {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<BrickLinkOrder> = data.decode()
+        if let blOrder = decoded.data {
+            
+            return Order(fromBlOrder: blOrder)
+        }
+        
+        return nil
     }
     
     
@@ -132,6 +140,23 @@ class AppController: ObservableObject {
         
         try! dataStore.setShippingCostsByOrderId(shippingCostsByOrderId)
         try! dataStore.save()
+    }
+}
+
+
+extension Order {
+    
+    
+    init(fromBlOrder blOrder: BrickLinkOrder) {
+        
+        self.id = "\(blOrder.orderId)"
+        self.date = blOrder.dateOrdered
+        self.buyer = blOrder.buyerName
+        self.items = blOrder.totalCount
+        self.lots = blOrder.uniqueCount
+        self.grandTotal = blOrder.cost.grandTotal.floatValue
+        self.status = blOrder.status
+        self.driveThruSent = blOrder.driveThruSent ?? false
     }
 }
 
