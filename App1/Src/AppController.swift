@@ -57,7 +57,7 @@ class AppController: ObservableObject {
     }
     
     
-    func loadOrderItems(orderId: String) async -> [OrderItem] {
+    func getOrderItems(orderId: String) async -> [OrderItem] {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
         request.addAuthentication(using: blCredentials)

@@ -139,6 +139,6 @@ struct ContentView: View {
         guard let orderId = selectedOrderId else { return }
         
         self.orderItems.removeAll()
-        self.orderItems = await appController.loadOrderItems(orderId: orderId)
+        self.orderItems = await appController.getOrderItems(orderId: orderId)
     }
 }
