@@ -81,7 +81,9 @@ struct PickingDetailView: View {
                             }
                         }
                         
-                        Table(of: OrderItem.self) {
+                        Text("To pick").font(.title2)
+                        
+                        Table(orderItemsToPick) {
                             
                             TableColumn("Status") { item in
                                 
@@ -133,24 +135,116 @@ struct PickingDetailView: View {
                             TableColumn("Location", value: \.location)
                             TableColumn("Quantity", value: \.quantity)
                             TableColumn("Left", value: \.quantityLeft)
+                        }
+                        .frame(minHeight: 400)
+                        
+                        Text("To verify").font(.title2)
+                        
+                        Table(orderItemsToVerify) {
                             
-                        } rows : {
+                            TableColumn("Status") { item in
+                                
+                                let picked = appController.pickedItems(forOrderWithId: order.id).contains(item.id)
+                                let verified = appController.verifiedItems(forOrderWithId: order.id).contains(item.id)
+                                
+                                if !picked {
+                                    Button {
+                                        appController.pickItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Pick")
+                                    }
+                                }
+                                
+                                if picked && !verified {
+                                    
+                                    Button {
+                                        appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unpick")
+                                    }
+                                    Button {
+                                        appController.verifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Verify")
+                                    }
+                                }
+                                
+                                if picked && verified {
+                                    
+                                    Button {
+                                        appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                        appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unpick")
+                                    }
+                                    Button {
+                                        appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unverify")
+                                    }
+                                }
+                            }
+                            TableColumn("Condition", value: \.condition)
+                            TableColumn("Color", value: \.color)
+                            TableColumn("Ref", value: \.ref)
+                            TableColumn("Name", value: \.name)
+                            TableColumn("Comment", value: \.comment)
+                            TableColumn("Quantity", value: \.quantity)
+                        }
+                        .frame(minHeight: 400)
+                        
+                        Text("Picked and verified").font(.title2)
+                        
+                        Table(orderItemsPickedAndVerified) {
                             
-                            Section("To pick") {
-                                ForEach(orderItemsToPick) { item in
-                                    TableRow(item)
+                            TableColumn("Status") { item in
+                                
+                                let picked = appController.pickedItems(forOrderWithId: order.id).contains(item.id)
+                                let verified = appController.verifiedItems(forOrderWithId: order.id).contains(item.id)
+                                
+                                if !picked {
+                                    Button {
+                                        appController.pickItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Pick")
+                                    }
+                                }
+                                
+                                if picked && !verified {
+                                    
+                                    Button {
+                                        appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unpick")
+                                    }
+                                    Button {
+                                        appController.verifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Verify")
+                                    }
+                                }
+                                
+                                if picked && verified {
+                                    
+                                    Button {
+                                        appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                        appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unpick")
+                                    }
+                                    Button {
+                                        appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unverify")
+                                    }
                                 }
                             }
-                            Section("To verify") {
-                                ForEach(orderItemsToVerify) { item in
-                                    TableRow(item)
-                                }
-                            }
-                            Section("Verified") {
-                                ForEach(orderItemsPickedAndVerified) { item in
-                                    TableRow(item)
-                                }
-                            }
+                            TableColumn("Condition", value: \.condition)
+                            TableColumn("Color", value: \.color)
+                            TableColumn("Ref", value: \.ref)
+                            TableColumn("Name", value: \.name)
+                            TableColumn("Comment", value: \.comment)
+                            TableColumn("Quantity", value: \.quantity)
                         }
                         .frame(minHeight: 400)
                         
