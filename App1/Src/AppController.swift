@@ -264,6 +264,9 @@ extension Order {
         self.driveThruSent = blOrder.driveThruSent ?? false
         self.trackingNo = blOrder.shipping?.trackingNo
         self.totalWeight = blOrder.totalWeight?.floatValue
+        self.shippingAddress = blOrder.shipping?.address.full
+        self.shippingAddressCountryCode = blOrder.shipping?.address.countryCode
+        self.shippingAddressName = blOrder.shipping?.address.name.full
     }
 }
 

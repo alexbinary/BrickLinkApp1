@@ -29,6 +29,14 @@ struct OrdersDetailView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     
+                    HeaderTitleView(label: "􁊇 Address")
+                    
+                    Text(order.shippingAddressName ?? "")
+                    Text(order.shippingAddress ?? "").fixedSize(horizontal: false, vertical: true) 
+                    Text(order.shippingAddressCountryCode ?? "")
+                    
+                    Divider()
+                    
                     HeaderTitleView(label: "􁊇 Update status")
                     
                     let statuses = ["PAID", "PACKED", "SHIPPED", "COMPLETED"]

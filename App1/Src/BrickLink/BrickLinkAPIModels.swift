@@ -29,6 +29,23 @@ struct BrickLinkOrder: Decodable {
 struct BrickLinkOrderShipping: Decodable {
     
     let trackingNo: String?
+    let address: BrickLinkOrderShippingAddress
+}
+
+
+
+struct BrickLinkOrderShippingAddress: Decodable {
+    
+    let countryCode: String
+    let full: String
+    let name: BrickLinkOrderShippingAddressName
+}
+
+
+
+struct BrickLinkOrderShippingAddressName: Decodable {
+    
+    let full: String
 }
 
 

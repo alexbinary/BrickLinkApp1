@@ -15,4 +15,7 @@ struct Order: Identifiable {
     let driveThruSent: Bool
     let trackingNo: String?
     let totalWeight: Float?
+    let shippingAddress: String?
+    let shippingAddressCountryCode: String?
+    let shippingAddressName: String?
 }
