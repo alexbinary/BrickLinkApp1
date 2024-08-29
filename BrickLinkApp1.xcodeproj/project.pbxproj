@@ -94,6 +94,16 @@
 			path = Picking;
 			sourceTree = "<group>";
 		};
+		29B9492A2C80532F00CC7F26 /* BrickLink */ = {
+			isa = PBXGroup;
+			children = (
+				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
+				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
+				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
+			);
+			path = BrickLink;
+			sourceTree = "<group>";
+		};
 		29BB30832C77B0CA000525CB = {
 			isa = PBXGroup;
 			children = (
@@ -135,10 +145,8 @@
 				29BB308F2C77B0CA000525CB /* App1.swift */,
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
-				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
-				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
-				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
 				29BB30912C77B0CA000525CB /* ContentView.swift */,
+				29B9492A2C80532F00CC7F26 /* BrickLink */,
 				29B9491D2C7DB3AC00CC7F26 /* Models */,
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 				29B949202C7F0A3D00CC7F26 /* Orders */,
