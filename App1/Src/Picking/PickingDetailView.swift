@@ -142,7 +142,7 @@ struct PickingDetailView: View {
                             } rows: {
                                 
                                 Section("Next") {
-                                    ForEach(orderItemsToPick.filter { pick in nextItemsToPick.contains { next in next.id == pick.id } }) { item in
+                                    ForEach(nextItemsToPick) { item in
                                         TableRow(item)
                                     }
                                 }
@@ -219,7 +219,7 @@ struct PickingDetailView: View {
                             } rows: {
                                 
                                 Section("Next") {
-                                    ForEach(orderItemsToVerify.filter { pick in nextItemsToVerify.contains { next in next.id == pick.id } }) { item in
+                                    ForEach(nextItemsToVerify) { item in
                                         TableRow(item)
                                     }
                                 }
