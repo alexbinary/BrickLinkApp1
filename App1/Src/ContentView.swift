@@ -17,7 +17,7 @@ struct ContentView: View {
     @State var selectedSidebarItem: SidebarItem = .picking
     
     @State var ordersSelectedOrderId: Order.ID? = nil
-    @State var pickingSelectedOrderId: Order.ID? = nil
+    @State var pickingSelectedOrderIds: Set<Order.ID> = []
     
     var body: some View {
         
@@ -36,7 +36,7 @@ struct ContentView: View {
             case .orders:
                 OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
             case .picking:
-                PickingContentView(selectedOrderId: $pickingSelectedOrderId)
+                PickingContentView(selectedOrderIds: $pickingSelectedOrderIds)
             }
             
         } detail: {
@@ -45,7 +45,7 @@ struct ContentView: View {
             case .orders:
                 OrdersDetailView(selectedOrderId: ordersSelectedOrderId)
             case .picking:
-                PickingDetailView(selectedOrderId: pickingSelectedOrderId)
+                PickingDetailView(selectedOrderIds: pickingSelectedOrderIds)
             }
         }
     }

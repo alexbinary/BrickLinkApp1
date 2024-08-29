@@ -7,7 +7,7 @@ struct PickingDetailView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedOrderId: Order.ID?
+    let selectedOrderIds: Set<Order.ID>
     
     @State var orderItems: [OrderItem] = []
     
@@ -18,7 +18,7 @@ struct PickingDetailView: View {
             
             VStack {
                 
-                if selectedOrderId == nil {
+                if selectedOrderIds.isEmpty {
                     
                     Text("select an order")
                     
@@ -300,7 +300,7 @@ struct PickingDetailView: View {
             .task {
                 await loadOrderItems()
             }
-            .onChange(of: selectedOrderId) { oldValue, newValue in
+            .onChange(of: selectedOrderIds) { oldValue, newValue in
                 Task {
                     await loadOrderItems()
                 }
@@ -311,20 +311,32 @@ struct PickingDetailView: View {
     
     func loadOrderItems() async {
         
-        guard let orderId = selectedOrderId else { return }
-        
         self.orderItems.removeAll()
-        self.orderItems = await appController.getOrderItems(orderId: orderId)
+        
+        for orderId in selectedOrderIds {
+            self.orderItems.append(contentsOf: await appController.getOrderItems(orderId: orderId))
+        }
     }
     
     
     var pickedItems: [InventoryId] {
-        guard let orderId = selectedOrderId else { return [] }
-        return appController.pickedItems(forOrderWithId: orderId)
+        
+        var items: [InventoryId] = []
+        
+        for orderId in selectedOrderIds {
+            items.append(contentsOf: appController.pickedItems(forOrderWithId: orderId))
+        }
+        return items
     }
+    
     var verifiedItems: [InventoryId] {
-        guard let orderId = selectedOrderId else { return [] }
-        return appController.verifiedItems(forOrderWithId: orderId)
+        
+        var items: [InventoryId] = []
+        
+        for orderId in selectedOrderIds {
+            items.append(contentsOf: appController.verifiedItems(forOrderWithId: orderId))
+        }
+        return items
     }
     
     
@@ -393,12 +405,10 @@ struct PickingDetailView: View {
     
     func nextPick() {
         
-        guard let orderId = selectedOrderId else { return }
-        
         if !nextItemsToPick.isEmpty {
         
             for item in nextItemsToPick {
-                appController.pickItem(forOrderWithId: orderId, item: item.id)
+                appController.pickItem(forOrderWithId: item.orderId, item: item.id)
             }
         }
     }
@@ -406,12 +416,10 @@ struct PickingDetailView: View {
     
     func nextVerify() {
         
-        guard let orderId = selectedOrderId else { return }
-        
         if !nextItemsToVerify.isEmpty {
             
             for item in nextItemsToVerify {
-                appController.verifyItem(forOrderWithId: orderId, item: item.id)
+                appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
             }
         }
     }
