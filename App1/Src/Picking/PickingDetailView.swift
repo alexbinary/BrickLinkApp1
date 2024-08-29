@@ -32,16 +32,6 @@ struct PickingDetailView: View {
                         
                         HeaderTitleView(label: "􁊇 Items")
                         
-                        let orderItemsToPick = orderItems
-                            .filter { !pickedItems.contains($0.id) }
-                            .sorted { $0.location < $1.location }
-                        let orderItemsToVerify = orderItems
-                            .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
-                            .sorted { $0.location < $1.location }
-                        let orderItemsPickedAndVerified = orderItems
-                            .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
-                            .sorted { $0.location < $1.location }
-                        
                         HStack {
                             
                             Button {
@@ -338,15 +328,25 @@ struct PickingDetailView: View {
     }
     
     
+    var orderItemsToPick: [OrderItem] { orderItems
+        .filter { !pickedItems.contains($0.id) }
+        .sorted { $0.location < $1.location }
+    }
+    var orderItemsToVerify: [OrderItem] { orderItems
+        .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
+        .sorted { $0.location < $1.location }
+    }
+    var orderItemsPickedAndVerified: [OrderItem] { orderItems
+        .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
+        .sorted { $0.location < $1.location }
+    }
+    
+    
     var nextItemsToPick: [OrderItem] {
         
-        guard let orderId = selectedOrderId else { return [] }
-     
-        var orderItemsToPick = orderItems
-            .filter { !pickedItems.contains($0.id) }
-            .sorted { $0.location < $1.location }
-        
         var nextItems: [OrderItem] = []
+        
+        var orderItemsToPick = orderItemsToPick
         
         if !orderItemsToPick.isEmpty {
             nextItems.append(orderItemsToPick.removeFirst())
@@ -361,11 +361,7 @@ struct PickingDetailView: View {
     
     var nextItemsToVerify: [OrderItem] {
         
-        guard let orderId = selectedOrderId else { return [] }
-        
-        var orderItemsToVerify = orderItems
-            .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
-            .sorted { $0.location < $1.location }
+        var orderItemsToVerify = orderItemsToVerify
         
         var nextItems: [OrderItem] = []
         
