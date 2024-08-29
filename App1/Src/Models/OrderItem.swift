@@ -6,6 +6,7 @@ import Foundation
 struct OrderItem: Identifiable {
     
     let id: String
+    let orderId: String
     let condition: String
     let color: String
     let ref: String

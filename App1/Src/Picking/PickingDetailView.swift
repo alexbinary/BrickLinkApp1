@@ -26,7 +26,7 @@ struct PickingDetailView: View {
                     
                     Text("loading order...")
                     
-                } else if let orderId = selectedOrderId {
+                } else {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
@@ -36,7 +36,7 @@ struct PickingDetailView: View {
                             
                             Button {
                                 for item in orderItems {
-                                    appController.pickItem(forOrderWithId: orderId, item: item.id)
+                                    appController.pickItem(forOrderWithId: item.orderId, item: item.id)
                                 }
                             } label: {
                                 Text("Pick all")
@@ -44,7 +44,7 @@ struct PickingDetailView: View {
                             
                             Button {
                                 for item in orderItems {
-                                    appController.unpickItem(forOrderWithId: orderId, item: item.id)
+                                    appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
                                 }
                             } label: {
                                 Text("Unpick all")
@@ -52,7 +52,7 @@ struct PickingDetailView: View {
                             
                             Button {
                                 for item in orderItems {
-                                    appController.verifyItem(forOrderWithId: orderId, item: item.id)
+                                    appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
                                 }
                             } label: {
                                 Text("Verify all")
@@ -60,7 +60,7 @@ struct PickingDetailView: View {
                             
                             Button {
                                 for item in orderItems {
-                                    appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                    appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                 }
                             } label: {
                                 Text("Unverify all")
@@ -90,12 +90,12 @@ struct PickingDetailView: View {
                                 
                                 TableColumn("Status") { item in
                                     
-                                    let picked = appController.pickedItems(forOrderWithId: orderId).contains(item.id)
-                                    let verified = appController.verifiedItems(forOrderWithId: orderId).contains(item.id)
+                                    let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+                                    let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
                                     
                                     if !picked {
                                         Button {
-                                            appController.pickItem(forOrderWithId: orderId, item: item.id)
+                                            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Pick")
                                         }
@@ -104,12 +104,12 @@ struct PickingDetailView: View {
                                     if picked && !verified {
                                         
                                         Button {
-                                            appController.unpickItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unpick")
                                         }
                                         Button {
-                                            appController.verifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Verify")
                                         }
@@ -118,13 +118,13 @@ struct PickingDetailView: View {
                                     if picked && verified {
                                         
                                         Button {
-                                            appController.unpickItem(forOrderWithId: orderId, item: item.id)
-                                            appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unpick")
                                         }
                                         Button {
-                                            appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unverify")
                                         }
@@ -169,12 +169,12 @@ struct PickingDetailView: View {
                                 
                                 TableColumn("Status") { item in
                                     
-                                    let picked = appController.pickedItems(forOrderWithId: orderId).contains(item.id)
-                                    let verified = appController.verifiedItems(forOrderWithId: orderId).contains(item.id)
+                                    let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+                                    let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
                                     
                                     if !picked {
                                         Button {
-                                            appController.pickItem(forOrderWithId: orderId, item: item.id)
+                                            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Pick")
                                         }
@@ -183,12 +183,12 @@ struct PickingDetailView: View {
                                     if picked && !verified {
                                         
                                         Button {
-                                            appController.unpickItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unpick")
                                         }
                                         Button {
-                                            appController.verifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Verify")
                                         }
@@ -197,13 +197,13 @@ struct PickingDetailView: View {
                                     if picked && verified {
                                         
                                         Button {
-                                            appController.unpickItem(forOrderWithId: orderId, item: item.id)
-                                            appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unpick")
                                         }
                                         Button {
-                                            appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unverify")
                                         }
@@ -240,12 +240,12 @@ struct PickingDetailView: View {
                                 
                                 TableColumn("Status") { item in
                                     
-                                    let picked = appController.pickedItems(forOrderWithId: orderId).contains(item.id)
-                                    let verified = appController.verifiedItems(forOrderWithId: orderId).contains(item.id)
+                                    let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+                                    let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
                                     
                                     if !picked {
                                         Button {
-                                            appController.pickItem(forOrderWithId: orderId, item: item.id)
+                                            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Pick")
                                         }
@@ -254,12 +254,12 @@ struct PickingDetailView: View {
                                     if picked && !verified {
                                         
                                         Button {
-                                            appController.unpickItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unpick")
                                         }
                                         Button {
-                                            appController.verifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Verify")
                                         }
@@ -268,13 +268,13 @@ struct PickingDetailView: View {
                                     if picked && verified {
                                         
                                         Button {
-                                            appController.unpickItem(forOrderWithId: orderId, item: item.id)
-                                            appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unpick")
                                         }
                                         Button {
-                                            appController.unverifyItem(forOrderWithId: orderId, item: item.id)
+                                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                                         } label: {
                                             Text("Unverify")
                                         }

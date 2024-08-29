@@ -79,6 +79,7 @@ class AppController: ObservableObject {
                 
                 OrderItem(
                     id: "\(item.inventoryId)",
+                    orderId: orderId,
                     condition: item.newOrUsed,
                     color: "\(item.colorId)",
                     ref: item.item.no,
