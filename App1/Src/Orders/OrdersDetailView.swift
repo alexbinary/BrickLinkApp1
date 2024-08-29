@@ -96,7 +96,7 @@ struct OrdersDetailView: View {
                     
                     HeaderTitleView(label: "􁊇 Items")
                     
-                    Text("\(order.items) items in \(order.lots) lots")
+                    Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight!))g")
                     
                     Table(orderItems) {
                         

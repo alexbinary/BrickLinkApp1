@@ -263,6 +263,7 @@ extension Order {
         self.status = blOrder.status
         self.driveThruSent = blOrder.driveThruSent ?? false
         self.trackingNo = blOrder.shipping?.trackingNo
+        self.totalWeight = blOrder.totalWeight?.floatValue
     }
 }
 

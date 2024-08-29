@@ -21,6 +21,7 @@ struct BrickLinkOrder: Decodable {
     let status: String
     let driveThruSent: Bool?
     let shipping: BrickLinkOrderShipping?
+    let totalWeight: FixedPointNumber?
 }
 
 
