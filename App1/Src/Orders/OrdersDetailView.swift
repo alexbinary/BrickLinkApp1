@@ -38,6 +38,7 @@ struct OrdersDetailView: View {
                             Button {
                                 Task {
                                     await appController.updateOrderStatus(orderId: order.id, status: status)
+                                    await loadOrder()
                                 }
                             } label: {
                                 Text(status)
@@ -84,6 +85,7 @@ struct OrdersDetailView: View {
                     Button {
                         Task {
                             await appController.sendDriveThru(orderId: order.id)
+                            await loadOrder()
                         }
                     } label: {
                         Text("Send drive thru")
