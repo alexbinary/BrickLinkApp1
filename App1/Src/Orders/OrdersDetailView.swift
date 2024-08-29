@@ -21,6 +21,7 @@ struct OrdersDetailView: View {
     
     @State var order: Order? = nil
     @State var orderItems: [OrderItem] = []
+    @State var orderFeedbacks: [Feedback] = []
     
     
     var body: some View {
@@ -154,6 +155,22 @@ struct OrdersDetailView: View {
                         
                         Divider()
                         
+                        HeaderTitleView(label: "􁊇 Feedback")
+                        
+                        Table(orderFeedbacks.sorted { $0.dateRated < $1.dateRated }) {
+                            TableColumn("From", value: \.from)
+                            TableColumn("Rating") { feedback in
+                                Text("\(feedback.rating)")
+                            }
+                            TableColumn("Comment", value: \.comment)
+                            TableColumn("Date") { feedback in
+                                Text(feedback.dateRated, format: .dateTime)
+                            }
+                        }
+                        .frame(minHeight: 100)
+                        
+                        Divider()
+                        
                         HeaderTitleView(label: "􁊇 Items")
                         
                         Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight!))g")
@@ -181,11 +198,13 @@ struct OrdersDetailView: View {
             .task {
                 await loadOrder()
                 await loadOrderItems()
+                await loadOrderFeedbacks()
             }
             .onChange(of: selectedOrderId) { oldValue, newValue in
                 Task {
                     await loadOrder()
                     await loadOrderItems()
+                    await loadOrderFeedbacks()
                 }
             }
         }
@@ -207,5 +226,14 @@ struct OrdersDetailView: View {
         
         self.orderItems.removeAll()
         self.orderItems = await appController.getOrderItems(orderId: orderId)
+    }
+    
+    
+    func loadOrderFeedbacks() async {
+        
+        guard let orderId = selectedOrderId else { return }
+        
+        self.orderFeedbacks.removeAll()
+        self.orderFeedbacks = await appController.getOrderFeedbacks(orderId: orderId)
     }
 }

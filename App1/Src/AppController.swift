@@ -147,6 +147,24 @@ class AppController: ObservableObject {
     }
     
     
+    func getOrderFeedbacks(orderId: String) async -> [Feedback] {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
+        if let feedbacks = decoded.data {
+            
+            return feedbacks.map { Feedback(fromBlFeedback: $0) }
+        }
+        
+        return []
+    }
+    
+    
     func shippingCost(forOrderWithId orderId: OrderId) -> Float {
         
         return dataStore.shippingCostsByOrderId[orderId] ?? 0
@@ -278,6 +296,22 @@ extension Order {
         self.shippingAddress = blOrder.shipping?.address.full
         self.shippingAddressCountryCode = blOrder.shipping?.address.countryCode
         self.shippingAddressName = blOrder.shipping?.address.name.full
+    }
+}
+
+
+extension Feedback {
+    
+    
+    init(fromBlFeedback blFeedback: BrickLinkOrderFeedback) {
+        
+        self.id = blFeedback.feedbackId
+        self.from = blFeedback.from
+        self.to = blFeedback.to
+        self.dateRated = blFeedback.dateRated
+        self.rating = blFeedback.rating
+        self.ratingOfBs = blFeedback.ratingOfBs
+        self.comment = blFeedback.comment
     }
 }
 

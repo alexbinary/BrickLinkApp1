@@ -14,6 +14,7 @@
 		29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */; };
 		29B949272C7F0C1500CC7F26 /* PickingContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949262C7F0C1500CC7F26 /* PickingContentView.swift */; };
 		29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */; };
+		29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492B2C80603900CC7F26 /* Feedback.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailView.swift; sourceTree = "<group>"; };
 		29B949262C7F0C1500CC7F26 /* PickingContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickingContentView.swift; sourceTree = "<group>"; };
 		29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickingDetailView.swift; sourceTree = "<group>"; };
+		29B9492B2C80603900CC7F26 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 			children = (
 				29B9491B2C7DB3A000CC7F26 /* Order.swift */,
 				29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */,
+				29B9492B2C80603900CC7F26 /* Feedback.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 			files = (
 				29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */,
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
+				29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */,
 				29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */,
 				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
 				29B949272C7F0C1500CC7F26 /* PickingContentView.swift in Sources */,

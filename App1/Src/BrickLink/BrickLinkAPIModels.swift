@@ -10,6 +10,19 @@ struct BrickLinkAPIResponse<T>: Decodable where T: Decodable {
 
 
 
+struct BrickLinkOrderFeedback: Decodable {
+    
+    let feedbackId: Int
+    let from: String
+    let to: String
+    let dateRated: Date
+    let rating: Int
+    let ratingOfBs: String
+    let comment: String
+}
+
+
+
 struct BrickLinkOrder: Decodable {
     
     let orderId: Int
