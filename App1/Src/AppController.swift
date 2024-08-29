@@ -83,7 +83,7 @@ class AppController: ObservableObject {
                     color: "\(item.colorId)",
                     ref: item.item.no,
                     name: item.item.name,
-                    location: item.remarks,
+                    location: item.remarks ?? "",
                     comment: item.description ?? "",
                     quantity: "\(item.quantity)",
                     quantityLeft: ""

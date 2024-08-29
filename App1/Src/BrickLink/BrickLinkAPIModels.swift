@@ -71,7 +71,7 @@ struct BrickLinkOrderItem: Decodable {
     let quantity: Int
     let colorId: Int
     let newOrUsed: String
-    let remarks: String
+    let remarks: String?
     let description: String?
 }
 
