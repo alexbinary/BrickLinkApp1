@@ -15,157 +15,161 @@ struct PickingDetailView: View {
     
     var body: some View {
         
-        VStack {
+        ScrollView {
             
-            if selectedOrderId == nil {
+            VStack {
                 
-                Text("select an order")
-                
-            } else if order == nil {
-                
-                Text("loading order...")
-                
-            } else if let order = order {
-                
-                VStack(alignment: .leading, spacing: 12) {
+                if selectedOrderId == nil {
                     
-                    HeaderTitleView(label: "􁊇 Items")
+                    Text("select an order")
                     
-                    let pickedItems = appController.pickedItems(forOrderWithId: order.id)
-                    let verifiedItems = appController.verifiedItems(forOrderWithId: order.id)
+                } else if order == nil {
                     
-                    let orderItemsToPick = orderItems
-                        .filter { !pickedItems.contains($0.id) }
-                        .sorted { $0.location < $1.location }
-                    let orderItemsToVerify = orderItems
-                        .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
-                        .sorted { $0.location < $1.location }
-                    let orderItemsPickedAndVerified = orderItems
-                        .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
-                        .sorted { $0.location < $1.location }
+                    Text("loading order...")
                     
-                    HStack {
-                        
-                        Button {
-                            for item in orderItems {
-                                appController.pickItem(forOrderWithId: order.id, item: item.id)
-                            }
-                        } label: {
-                            Text("Pick all")
-                        }
-                        
-                        Button {
-                            for item in orderItems {
-                                appController.unpickItem(forOrderWithId: order.id, item: item.id)
-                            }
-                        } label: {
-                            Text("Unpick all")
-                        }
-                        
-                        Button {
-                            for item in orderItems {
-                                appController.verifyItem(forOrderWithId: order.id, item: item.id)
-                            }
-                        } label: {
-                            Text("Verify all")
-                        }
-                        
-                        Button {
-                            for item in orderItems {
-                                appController.unverifyItem(forOrderWithId: order.id, item: item.id)
-                            }
-                        } label: {
-                            Text("Unverify all")
-                        }
-                    }
+                } else if let order = order {
                     
-                    Table(of: OrderItem.self) {
+                    VStack(alignment: .leading, spacing: 12) {
                         
-                        TableColumn("Status") { item in
+                        HeaderTitleView(label: "􁊇 Items")
+                        
+                        let pickedItems = appController.pickedItems(forOrderWithId: order.id)
+                        let verifiedItems = appController.verifiedItems(forOrderWithId: order.id)
+                        
+                        let orderItemsToPick = orderItems
+                            .filter { !pickedItems.contains($0.id) }
+                            .sorted { $0.location < $1.location }
+                        let orderItemsToVerify = orderItems
+                            .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
+                            .sorted { $0.location < $1.location }
+                        let orderItemsPickedAndVerified = orderItems
+                            .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
+                            .sorted { $0.location < $1.location }
+                        
+                        HStack {
                             
-                            let picked = appController.pickedItems(forOrderWithId: order.id).contains(item.id)
-                            let verified = appController.verifiedItems(forOrderWithId: order.id).contains(item.id)
-                            
-                            if !picked {
-                                Button {
+                            Button {
+                                for item in orderItems {
                                     appController.pickItem(forOrderWithId: order.id, item: item.id)
-                                } label: {
-                                    Text("Pick")
                                 }
+                            } label: {
+                                Text("Pick all")
                             }
                             
-                            if picked && !verified {
-                                
-                                Button {
+                            Button {
+                                for item in orderItems {
                                     appController.unpickItem(forOrderWithId: order.id, item: item.id)
-                                } label: {
-                                    Text("Unpick")
                                 }
-                                Button {
+                            } label: {
+                                Text("Unpick all")
+                            }
+                            
+                            Button {
+                                for item in orderItems {
                                     appController.verifyItem(forOrderWithId: order.id, item: item.id)
-                                } label: {
-                                    Text("Verify")
                                 }
+                            } label: {
+                                Text("Verify all")
                             }
                             
-                            if picked && verified {
+                            Button {
+                                for item in orderItems {
+                                    appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                }
+                            } label: {
+                                Text("Unverify all")
+                            }
+                        }
+                        
+                        Table(of: OrderItem.self) {
+                            
+                            TableColumn("Status") { item in
                                 
-                                Button {
-                                    appController.unpickItem(forOrderWithId: order.id, item: item.id)
-                                    appController.unverifyItem(forOrderWithId: order.id, item: item.id)
-                                } label: {
-                                    Text("Unpick")
+                                let picked = appController.pickedItems(forOrderWithId: order.id).contains(item.id)
+                                let verified = appController.verifiedItems(forOrderWithId: order.id).contains(item.id)
+                                
+                                if !picked {
+                                    Button {
+                                        appController.pickItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Pick")
+                                    }
                                 }
-                                Button {
-                                    appController.unverifyItem(forOrderWithId: order.id, item: item.id)
-                                } label: {
-                                    Text("Unverify")
+                                
+                                if picked && !verified {
+                                    
+                                    Button {
+                                        appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unpick")
+                                    }
+                                    Button {
+                                        appController.verifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Verify")
+                                    }
+                                }
+                                
+                                if picked && verified {
+                                    
+                                    Button {
+                                        appController.unpickItem(forOrderWithId: order.id, item: item.id)
+                                        appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unpick")
+                                    }
+                                    Button {
+                                        appController.unverifyItem(forOrderWithId: order.id, item: item.id)
+                                    } label: {
+                                        Text("Unverify")
+                                    }
+                                }
+                            }
+                            TableColumn("Condition", value: \.condition)
+                            TableColumn("Color", value: \.color)
+                            TableColumn("Ref", value: \.ref)
+                            TableColumn("Name", value: \.name)
+                            TableColumn("Comment", value: \.comment)
+                            TableColumn("Location", value: \.location)
+                            TableColumn("Quantity", value: \.quantity)
+                            TableColumn("Left", value: \.quantityLeft)
+                            
+                        } rows : {
+                            
+                            Section("To pick") {
+                                ForEach(orderItemsToPick) { item in
+                                    TableRow(item)
+                                }
+                            }
+                            Section("To verify") {
+                                ForEach(orderItemsToVerify) { item in
+                                    TableRow(item)
+                                }
+                            }
+                            Section("Verified") {
+                                ForEach(orderItemsPickedAndVerified) { item in
+                                    TableRow(item)
                                 }
                             }
                         }
-                        TableColumn("Condition", value: \.condition)
-                        TableColumn("Color", value: \.color)
-                        TableColumn("Ref", value: \.ref)
-                        TableColumn("Name", value: \.name)
-                        TableColumn("Comment", value: \.comment)
-                        TableColumn("Location", value: \.location)
-                        TableColumn("Quantity", value: \.quantity)
-                        TableColumn("Left", value: \.quantityLeft)
+                        .frame(minHeight: 400)
                         
-                    } rows : {
+                        Divider()
                         
-                        Section("To pick") {
-                            ForEach(orderItemsToPick) { item in
-                                TableRow(item)
-                            }
-                        }
-                        Section("To verify") {
-                            ForEach(orderItemsToVerify) { item in
-                                TableRow(item)
-                            }
-                        }
-                        Section("Verified") {
-                            ForEach(orderItemsPickedAndVerified) { item in
-                                TableRow(item)
-                            }
-                        }
+                        Spacer()
                     }
-                    
-                    Divider()
-                    
-                    Spacer()
                 }
             }
-        }
-        .padding()
-        .task {
-            await loadOrder()
-            await loadOrderItems()
-        }
-        .onChange(of: selectedOrderId) { oldValue, newValue in
-            Task {
+            .padding()
+            .task {
                 await loadOrder()
                 await loadOrderItems()
+            }
+            .onChange(of: selectedOrderId) { oldValue, newValue in
+                Task {
+                    await loadOrder()
+                    await loadOrderItems()
+                }
             }
         }
     }
