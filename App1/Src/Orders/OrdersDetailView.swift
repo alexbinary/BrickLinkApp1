@@ -96,6 +96,8 @@ struct OrdersDetailView: View {
                     
                     HeaderTitleView(label: "􁊇 Items")
                     
+                    Text("\(order.items) items in \(order.lots) lots")
+                    
                     Table(orderItems) {
                         
                         TableColumn("Condition", value: \.condition)
