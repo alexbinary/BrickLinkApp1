@@ -42,6 +42,7 @@ struct OrdersDetailView: View {
                                 }
                             } label: {
                                 Text(status)
+                                    .fontWeight(order.status == status ? .bold : .regular)
                             }
                         }
                     }
