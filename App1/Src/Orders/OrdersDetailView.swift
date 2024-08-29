@@ -2,6 +2,16 @@
 import SwiftUI
 
 
+
+struct PriceTableRow: Identifiable {
+    
+    var id: String { label }
+    let label: String
+    let cost: Float?
+    let displayCost: Float?
+}
+
+
 struct OrdersDetailView: View {
     
     
@@ -34,6 +44,45 @@ struct OrdersDetailView: View {
                     Text(order.shippingAddressName ?? "")
                     Text(order.shippingAddress ?? "").fixedSize(horizontal: false, vertical: true) 
                     Text(order.shippingAddressCountryCode ?? "")
+                    
+                    Divider()
+                    
+                    HeaderTitleView(label: "􁊇 Cost")
+                    
+                    Table(of: PriceTableRow.self) {
+                        TableColumn("") { row in
+                            Text(row.label).fontWeight(.bold)
+                        }
+                        TableColumn("Cost") { row in
+                            if let cost = row.cost {
+                                Text(cost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                            }
+                        }
+                        if order.dispCostCurrencyCode != order.costCurrencyCode {
+                            TableColumn("Display") { row in
+                                if let cost = row.displayCost {
+                                    Text(cost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                                }
+                            }
+                        }
+                    } rows: {
+                        TableRow(PriceTableRow(
+                            label: "Subtotal",
+                            cost: order.subTotal,
+                            displayCost: order.dispSubTotal
+                        ))
+                        TableRow(PriceTableRow(
+                            label: "Shipping",
+                            cost: order.shippingCost,
+                            displayCost: order.dispShippingCost
+                        ))
+                        TableRow(PriceTableRow(
+                            label: "Grand total",
+                            cost: order.grandTotal,
+                            displayCost: order.dispGrandTotal
+                        ))
+                    }
+                    .tableColumnHeaders(.hidden)
                     
                     Divider()
                     

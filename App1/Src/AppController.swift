@@ -259,11 +259,22 @@ extension Order {
         self.buyer = blOrder.buyerName
         self.items = blOrder.totalCount
         self.lots = blOrder.uniqueCount
+        
+        self.subTotal = blOrder.cost.subtotal.floatValue
         self.grandTotal = blOrder.cost.grandTotal.floatValue
+        self.shippingCost = blOrder.cost.shipping?.floatValue
+        self.costCurrencyCode = blOrder.cost.currencyCode
+        
+        self.dispSubTotal = blOrder.dispCost.subtotal.floatValue
+        self.dispGrandTotal = blOrder.dispCost.grandTotal.floatValue
+        self.dispShippingCost = blOrder.dispCost.shipping?.floatValue
+        self.dispCostCurrencyCode = blOrder.dispCost.currencyCode
+        
         self.status = blOrder.status
         self.driveThruSent = blOrder.driveThruSent ?? false
         self.trackingNo = blOrder.shipping?.trackingNo
         self.totalWeight = blOrder.totalWeight?.floatValue
+        
         self.shippingAddress = blOrder.shipping?.address.full
         self.shippingAddressCountryCode = blOrder.shipping?.address.countryCode
         self.shippingAddressName = blOrder.shipping?.address.name.full

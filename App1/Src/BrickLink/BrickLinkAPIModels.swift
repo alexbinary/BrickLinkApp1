@@ -18,6 +18,7 @@ struct BrickLinkOrder: Decodable {
     let totalCount: Int
     let uniqueCount: Int
     let cost: BrickLinkOrderCost
+    let dispCost: BrickLinkOrderCost
     let status: String
     let driveThruSent: Bool?
     let shipping: BrickLinkOrderShipping?
@@ -73,7 +74,10 @@ struct BrickLinkInventoryItem: Decodable {
 
 struct BrickLinkOrderCost: Decodable {
     
+    let currencyCode: String
+    let subtotal: FixedPointNumber
     let grandTotal: FixedPointNumber
+    let shipping: FixedPointNumber?
 }
 
 
