@@ -165,6 +165,27 @@ class AppController: ObservableObject {
     }
     
     
+    func postOrderFeedback(orderId: String, rating: Int, comment: String) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!)
+        request.httpMethod = "POST"
+        request.httpBody = """
+            {
+                "order_id": \(orderId),
+                "rating": \(rating),
+                "comment": "\(comment)",
+            }
+            """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.addAuthentication(using: blCredentials)
+        
+        print(String(data: request.httpBody!, encoding: .utf8)!)
+        
+//        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+//        print(String(data: data, encoding: .utf8)!)
+    }
+    
+    
     func shippingCost(forOrderWithId orderId: OrderId) -> Float {
         
         return dataStore.shippingCostsByOrderId[orderId] ?? 0

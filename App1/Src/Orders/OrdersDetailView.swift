@@ -169,6 +169,18 @@ struct OrdersDetailView: View {
                         }
                         .frame(minHeight: 100)
                         
+                        Button {
+                            Task {
+                                await appController.postOrderFeedback(
+                                    orderId: order.id, rating: 0,
+                                    comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
+                                )
+                                await loadOrderFeedbacks()
+                            }
+                        } label: {
+                            Text("Post Praise feedback")
+                        }
+
                         Divider()
                         
                         HeaderTitleView(label: "􁊇 Items")
