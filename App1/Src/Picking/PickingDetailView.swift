@@ -32,9 +32,6 @@ struct PickingDetailView: View {
                         
                         HeaderTitleView(label: "􁊇 Items")
                         
-                        let pickedItems = appController.pickedItems(forOrderWithId: orderId)
-                        let verifiedItems = appController.verifiedItems(forOrderWithId: orderId)
-                        
                         let orderItemsToPick = orderItems
                             .filter { !pickedItems.contains($0.id) }
                             .sorted { $0.location < $1.location }
@@ -331,12 +328,20 @@ struct PickingDetailView: View {
     }
     
     
+    var pickedItems: [InventoryId] {
+        guard let orderId = selectedOrderId else { return [] }
+        return appController.pickedItems(forOrderWithId: orderId)
+    }
+    var verifiedItems: [InventoryId] {
+        guard let orderId = selectedOrderId else { return [] }
+        return appController.verifiedItems(forOrderWithId: orderId)
+    }
+    
+    
     var nextItemsToPick: [OrderItem] {
         
         guard let orderId = selectedOrderId else { return [] }
      
-        let pickedItems = appController.pickedItems(forOrderWithId: orderId)
-        
         var orderItemsToPick = orderItems
             .filter { !pickedItems.contains($0.id) }
             .sorted { $0.location < $1.location }
@@ -357,9 +362,6 @@ struct PickingDetailView: View {
     var nextItemsToVerify: [OrderItem] {
         
         guard let orderId = selectedOrderId else { return [] }
-     
-        let pickedItems = appController.pickedItems(forOrderWithId: orderId)
-        let verifiedItems = appController.verifiedItems(forOrderWithId: orderId)
         
         var orderItemsToVerify = orderItems
             .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
