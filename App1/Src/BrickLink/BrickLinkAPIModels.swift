@@ -42,6 +42,8 @@ struct BrickLinkOrder: Decodable {
 
 struct BrickLinkOrderShipping: Decodable {
     
+    let methodId: Int
+    let method: String
     let trackingNo: String?
     let address: BrickLinkOrderShippingAddress
 }

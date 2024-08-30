@@ -26,6 +26,8 @@ struct Order: Identifiable {
     let trackingNo: String?
     let totalWeight: Float?
     
+    let shippingMethodId: Int?
+    let shippingMethodName: String?
     let shippingAddress: String?
     let shippingAddressCountryCode: String?
     let shippingAddressName: String?

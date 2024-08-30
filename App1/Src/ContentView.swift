@@ -17,7 +17,7 @@ struct ContentView: View {
     @State var selectedSidebarItem: SidebarItem = .picking
     
     @State var ordersSelectedOrderId: Order.ID? = nil
-    @State var pickingSelectedOrderIds: Set<Order.ID> = []
+    @State var pickingSelectedOrderIds: Set<Order.ID> = ["26050777"]
     
     var body: some View {
         

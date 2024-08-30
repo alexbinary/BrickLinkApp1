@@ -315,6 +315,8 @@ extension Order {
         self.trackingNo = blOrder.shipping?.trackingNo
         self.totalWeight = blOrder.totalWeight?.floatValue
         
+        self.shippingMethodId = blOrder.shipping?.methodId
+        self.shippingMethodName = blOrder.shipping?.method
         self.shippingAddress = blOrder.shipping?.address.full
         self.shippingAddressCountryCode = blOrder.shipping?.address.countryCode
         self.shippingAddressName = blOrder.shipping?.address.name.full
