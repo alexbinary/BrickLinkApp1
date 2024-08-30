@@ -182,7 +182,7 @@ struct ShippingCostView: View {
             }
         }
         
-        Table(of: ShippingCostTableRow.self) {
+        Table(of: ShippingCostTableRow.self, selection: .constant(selectedShippingCost?.maxWeight)) {
             
             TableColumn("Weight band") { item in
                 Text("\(item.minWeight)-\(item.maxWeight)g")
