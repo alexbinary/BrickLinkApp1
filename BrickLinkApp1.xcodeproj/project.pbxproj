@@ -16,6 +16,7 @@
 		29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */; };
 		29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492B2C80603900CC7F26 /* Feedback.swift */; };
 		29B9492E2C81A5B400CC7F26 /* PickingItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */; };
+		29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 		29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickingDetailView.swift; sourceTree = "<group>"; };
 		29B9492B2C80603900CC7F26 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickingItemsView.swift; sourceTree = "<group>"; };
+		29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingCostView.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				29B949262C7F0C1500CC7F26 /* PickingContentView.swift */,
 				29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */,
 				29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */,
+				29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */,
 			);
 			path = Picking;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 				29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */,
 				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
 				29B949272C7F0C1500CC7F26 /* PickingContentView.swift in Sources */,
+				29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */,
 				29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */,
 				29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
