@@ -217,6 +217,12 @@ struct PickingDetailView: View {
                                    let value = selectedShippingCost.value {
                                     
                                     Text(value, format: .currency(code: "EUR").presentation(.isoCode))
+                                    
+                                    Button {
+                                        appController.updateShippingCost(forOrderWithId: order.id, cost: value)
+                                    } label: {
+                                        Text("Confirm shipping cost")
+                                    }
                                 }
                             }
                             
