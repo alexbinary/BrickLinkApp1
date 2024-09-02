@@ -174,7 +174,7 @@ class AppController: ObservableObject {
             {
                 "order_id": \(orderId),
                 "rating": \(rating),
-                "comment": "\(comment)",
+                "comment": "\(comment)"
             }
             """.data(using: .utf8)
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -182,8 +182,8 @@ class AppController: ObservableObject {
         
         print(String(data: request.httpBody!, encoding: .utf8)!)
         
-//        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-//        print(String(data: data, encoding: .utf8)!)
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
     }
     
     
