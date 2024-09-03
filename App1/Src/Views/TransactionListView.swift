@@ -9,9 +9,12 @@ struct TransactionListView: View {
     var grouppedByMonth = true
     
     
+    @Binding var selectedTransactions: Set<Transaction.ID>
+    
+    
     var body: some View {
         
-        Table(of: Transaction.self) {
+        Table(of: Transaction.self, selection: $selectedTransactions) {
             
             TableColumn("Date") { transaction in
                 Text(transaction.date, format: .dateTime)

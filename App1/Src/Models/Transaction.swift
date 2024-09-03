@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct Transaction: Identifiable, Codable {
+struct Transaction: Identifiable, Codable, Hashable {
     
     var id: UUID = UUID()
     var date: Date

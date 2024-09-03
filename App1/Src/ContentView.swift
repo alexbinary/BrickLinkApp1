@@ -19,6 +19,7 @@ struct ContentView: View {
     
     @State var ordersSelectedOrderId: Order.ID? = "26050777"
     @State var pickingSelectedOrderIds: Set<Order.ID> = ["26050777"]
+    @State var selectedTransactions: Set<Transaction.ID> = []
     
     var body: some View {
         
@@ -41,7 +42,7 @@ struct ContentView: View {
             case .picking:
                 PickingContentView(selectedOrderIds: $pickingSelectedOrderIds)
             case .compta:
-                ComptaContentView()
+                ComptaContentView(selectedTransactions: $selectedTransactions)
             }
             
         } detail: {
@@ -52,7 +53,7 @@ struct ContentView: View {
             case .picking:
                 PickingDetailView(selectedOrderIds: pickingSelectedOrderIds)
             case .compta:
-                ComptaDetailView()
+                ComptaDetailView(selectedTransactions: selectedTransactions)
             }
         }
     }

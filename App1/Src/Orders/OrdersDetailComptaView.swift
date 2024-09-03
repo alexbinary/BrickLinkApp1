@@ -58,7 +58,8 @@ struct OrdersDetailComptaView: View {
             TransactionListView(
                 transactions: appController.transactions
                     .filter { $0.type == .orderIncome && $0.orderRefIn == order.id },
-                grouppedByMonth: false
+                grouppedByMonth: false,
+                selectedTransactions: .constant([])
             )
             .frame(minHeight: 100)
             
@@ -97,7 +98,8 @@ struct OrdersDetailComptaView: View {
             TransactionListView(
                 transactions: appController.transactions
                     .filter { $0.type == .orderShipping && $0.orderRefIn == order.id },
-                grouppedByMonth: false
+                grouppedByMonth: false,
+                selectedTransactions: .constant([])
             )
             .frame(minHeight: 100)
             

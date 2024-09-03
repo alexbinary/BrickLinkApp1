@@ -10,6 +10,9 @@ struct ComptaDetailView: View {
     @EnvironmentObject var appController: AppController
     
     
+    let selectedTransactions: Set<Transaction.ID>
+    
+    
     var body: some View {
         
         let allTransactions = appController.transactions.sorted { $0.date > $1.date }
@@ -25,6 +28,16 @@ struct ComptaDetailView: View {
                 )
                 
                 Divider()
+                
+                if !selectedTransactions.isEmpty {
+                    
+                    ComptaDetailDashboardItemView(
+                        transactions: allTransactions.filter { selectedTransactions.contains($0.id) },
+                        title: "Selection"
+                    )
+                    
+                    Divider()
+                }
                 
                 ForEach(allTransactionsGrouppedByMonth, id: \.month) {
                     
