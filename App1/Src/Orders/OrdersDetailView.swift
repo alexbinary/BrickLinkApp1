@@ -33,11 +33,26 @@ struct OrdersDetailView: View {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
-                        OrdersDetailDetailView(order: order, reloadOrder: {
-                            Task {
-                                await loadOrder()
+                        TabView(selection: .constant(1)) {
+                            
+                            OrdersDetailDetailView(order: order, reloadOrder: {
+                                Task {
+                                    await loadOrder()
+                                }
+                            })
+                            .padding()
+                            .tabItem {
+                                Text("Details & Actions")
                             }
-                        })
+                            .tag(0)
+                            
+                            OrdersDetailComptaView(order: order)
+                                .padding()
+                                .tabItem {
+                                    Text("Compta")
+                                }
+                                .tag(1)
+                        }
                         
                         Spacer()
                     }

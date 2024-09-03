@@ -2,21 +2,21 @@
 import SwiftUI
 
 
-struct ComptaContentView: View {
+struct TransactionListView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    let transactions: [Transaction]
     
     
     var body: some View {
         
-        Table(appController.transactions) {
+        Table(transactions) {
             
             TableColumn("Date") { transaction in
                 Text(transaction.date, format: .dateTime)
             }
             TableColumn("Type") { transaction in
-                Text(transaction.type)
+                Text(transaction.type.rawValue)
             }
             TableColumn("Amount") { transaction in
                 Text(transaction.amount, format: .currency(code: "EUR").presentation(.isoCode))
@@ -33,8 +33,6 @@ struct ComptaContentView: View {
             TableColumn("Comment") { transaction in
                 Text(transaction.comment ?? "")
             }
-            
         }
-        .navigationTitle("Compta")
     }
 }

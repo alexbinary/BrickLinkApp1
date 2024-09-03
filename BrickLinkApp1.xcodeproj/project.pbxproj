@@ -20,6 +20,8 @@
 		29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949312C86EA8E00CC7F26 /* Transaction.swift */; };
 		29B949342C86EEDF00CC7F26 /* ComptaContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949332C86EEDF00CC7F26 /* ComptaContentView.swift */; };
 		29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */; };
+		29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */; };
+		29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493A2C86F45800CC7F26 /* TransactionListView.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -46,6 +48,8 @@
 		29B949312C86EA8E00CC7F26 /* Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		29B949332C86EEDF00CC7F26 /* ComptaContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComptaContentView.swift; sourceTree = "<group>"; };
 		29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailDetailView.swift; sourceTree = "<group>"; };
+		29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailComptaView.swift; sourceTree = "<group>"; };
+		29B9493A2C86F45800CC7F26 /* TransactionListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionListView.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -75,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */,
+				29B9493A2C86F45800CC7F26 /* TransactionListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -96,6 +101,7 @@
 				29B949212C7F0A5E00CC7F26 /* OrdersContentView.swift */,
 				29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */,
 				29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */,
+				29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -104,7 +110,6 @@
 			isa = PBXGroup;
 			children = (
 				29B949262C7F0C1500CC7F26 /* PickingContentView.swift */,
-				29B949332C86EEDF00CC7F26 /* ComptaContentView.swift */,
 				29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */,
 				29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */,
 				29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */,
@@ -120,6 +125,14 @@
 				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
 			);
 			path = BrickLink;
+			sourceTree = "<group>";
+		};
+		29B949392C86F34C00CC7F26 /* Compta */ = {
+			isa = PBXGroup;
+			children = (
+				29B949332C86EEDF00CC7F26 /* ComptaContentView.swift */,
+			);
+			path = Compta;
 			sourceTree = "<group>";
 		};
 		29BB30832C77B0CA000525CB = {
@@ -169,6 +182,7 @@
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 				29B949202C7F0A3D00CC7F26 /* Orders */,
 				29B949252C7F0C0500CC7F26 /* Picking */,
+				29B949392C86F34C00CC7F26 /* Compta */,
 			);
 			path = Src;
 			sourceTree = "<group>";
@@ -263,10 +277,12 @@
 				29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
+				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
 				29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */,
 				29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */,
 				29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */,
+				29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */,
 				29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */,
 				29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */,
 			);
