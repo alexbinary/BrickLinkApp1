@@ -289,6 +289,18 @@ class AppController: ObservableObject {
         
         self.objectWillChange.send()
     }
+    
+    
+    func registerTransaction(_ transaction: Transaction) {
+        
+        var transactions = dataStore.transactions
+        transactions.append(transaction)
+        
+        try! dataStore.setTransactions(transactions)
+        try! dataStore.save()
+        
+        self.transactions = transactions
+    }
 }
 
 

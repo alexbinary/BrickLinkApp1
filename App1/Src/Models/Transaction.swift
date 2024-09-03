@@ -6,12 +6,12 @@ import Foundation
 struct Transaction: Identifiable, Codable {
     
     var id: UUID = UUID()
-    let date: Date
+    var date: Date
     let createdAt: Date
     let type: TransactionType
-    let amount: Float
-    let paymentMethod: String
-    let comment: String?
+    var amount: Float
+    var paymentMethod: PaymentMethod
+    var comment: String
     let orderRefIn: OrderId
 }
 
@@ -23,7 +23,8 @@ enum TransactionType: String, Codable {
 }
 
 
-enum PaymentMethod: String, Codable {
+enum PaymentMethod: String, Codable, CaseIterable {
     
     case paypal
+    case cb_iban
 }

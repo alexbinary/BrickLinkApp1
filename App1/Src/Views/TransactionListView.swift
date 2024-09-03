@@ -22,7 +22,7 @@ struct TransactionListView: View {
                 Text(transaction.amount, format: .currency(code: "EUR").presentation(.isoCode))
             }
             TableColumn("Payment") { transaction in
-                Text(transaction.paymentMethod)
+                Text(transaction.paymentMethod.rawValue)
             }
             TableColumn("Order (in)") { transaction in
                 Text(transaction.orderRefIn)
@@ -31,7 +31,7 @@ struct TransactionListView: View {
                 Text(transaction.createdAt, format: .dateTime)
             }
             TableColumn("Comment") { transaction in
-                Text(transaction.comment ?? "")
+                Text(transaction.comment)
             }
         }
     }
