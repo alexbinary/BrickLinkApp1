@@ -27,6 +27,7 @@
 		29B949432C87039300CC7F26 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949422C87039300CC7F26 /* constants.swift */; };
 		29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949442C870C0900CC7F26 /* ProgressView.swift */; };
 		29B949472C87317300CC7F26 /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949462C87317300CC7F26 /* extensions.swift */; };
+		29B949492C87336300CC7F26 /* ComptaDetailDashboardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949482C87336300CC7F26 /* ComptaDetailDashboardItemView.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -60,6 +61,7 @@
 		29B949422C87039300CC7F26 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
 		29B949442C870C0900CC7F26 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		29B949462C87317300CC7F26 /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
+		29B949482C87336300CC7F26 /* ComptaDetailDashboardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComptaDetailDashboardItemView.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			children = (
 				29B949332C86EEDF00CC7F26 /* ComptaContentView.swift */,
 				29B9493C2C87011F00CC7F26 /* ComptaDetailView.swift */,
+				29B949482C87336300CC7F26 /* ComptaDetailDashboardItemView.swift */,
 			);
 			path = Compta;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */,
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
 				29B9493D2C87011F00CC7F26 /* ComptaDetailView.swift in Sources */,
+				29B949492C87336300CC7F26 /* ComptaDetailDashboardItemView.swift in Sources */,
 				29B949342C86EEDF00CC7F26 /* ComptaContentView.swift in Sources */,
 				29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */,
 				29B9492E2C81A5B400CC7F26 /* PickingItemsView.swift in Sources */,
