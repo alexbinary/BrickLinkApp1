@@ -18,6 +18,7 @@ class DataStore {
         self.dataFileUrl = dataFileUrl
         
         try! loadDataFromFile()
+        try! save()
     }
     
     
@@ -27,6 +28,7 @@ class DataStore {
         
         let decoder = JSONDecoder()
         decoder.allowsJSON5 = true
+        decoder.dateDecodingStrategy = .iso8601
         
         self.data = try decoder.decode(DataRoot.self, from: rawData)
     }
@@ -36,6 +38,7 @@ class DataStore {
         
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.dateEncodingStrategy = .iso8601
         
         let rawData = try encoder.encode(data)
         try rawData.write(to: self.dataFileUrl)
@@ -57,6 +60,12 @@ class DataStore {
     public var verifiedItemsByOrderId: [OrderId: [InventoryId]] {
         
         data?.verifiedItemsByOrderId ?? [:]
+    }
+    
+    
+    public var transactions: [Transaction] {
+        
+        data?.transactions ?? []
     }
     
     
@@ -84,6 +93,14 @@ class DataStore {
     }
     
     
+    public func setTransactions(_ transactions: [Transaction]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.transactions = transactions
+    }
+    
+    
     public func save() throws {
         
         try write()
@@ -100,6 +117,7 @@ struct DataRoot: Codable {
     var shippingCostsByOrderId: [OrderId: Float]
     var pickedItemsByOrderId: [OrderId: [InventoryId]]
     var verifiedItemsByOrderId: [OrderId: [InventoryId]]
+    var transactions: [Transaction]
 }
 
 

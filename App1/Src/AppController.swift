@@ -16,10 +16,13 @@ class AppController: ObservableObject {
         
         self.dataStore = dataStore
         self.blCredentials = blCredentials
+        
+        self.transactions = dataStore.transactions
     }
     
     
     @Published var orders: [Order] = []
+    @Published var transactions: [Transaction] = []
     
     
     func reloadOrders() async {

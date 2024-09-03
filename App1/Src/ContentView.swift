@@ -6,6 +6,7 @@ enum SidebarItem {
     
     case orders
     case picking
+    case compta
 }
 
 
@@ -14,9 +15,9 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .picking
+    @State var selectedSidebarItem: SidebarItem = .compta
     
-    @State var ordersSelectedOrderId: Order.ID? = nil
+    @State var ordersSelectedOrderId: Order.ID? = "26050777"
     @State var pickingSelectedOrderIds: Set<Order.ID> = ["26050777"]
     
     var body: some View {
@@ -28,6 +29,8 @@ struct ContentView: View {
                     .tag(SidebarItem.orders)
                 Label("Picking", systemImage: "tray.and.arrow.up")
                     .tag(SidebarItem.picking)
+                Label("Compta", systemImage: "eurosign.circle")
+                    .tag(SidebarItem.compta)
             }
             
         } content : {
@@ -37,6 +40,8 @@ struct ContentView: View {
                 OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
             case .picking:
                 PickingContentView(selectedOrderIds: $pickingSelectedOrderIds)
+            case .compta:
+                ComptaContentView()
             }
             
         } detail: {
@@ -46,6 +51,8 @@ struct ContentView: View {
                 OrdersDetailView(selectedOrderId: ordersSelectedOrderId)
             case .picking:
                 PickingDetailView(selectedOrderIds: pickingSelectedOrderIds)
+            case .compta:
+                Text("Compta")
             }
         }
     }
