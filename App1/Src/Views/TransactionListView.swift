@@ -19,7 +19,8 @@ struct TransactionListView: View {
                 Text(transaction.type.rawValue)
             }
             TableColumn("Amount") { transaction in
-                Text(transaction.amount, format: .currency(code: "EUR").presentation(.isoCode))
+                Text(abs(transaction.amount), format: .currency(code: "EUR").presentation(.isoCode))
+                    .signedAmountColor(transaction.amount)
             }
             TableColumn("Payment") { transaction in
                 Text(transaction.paymentMethod.rawValue)

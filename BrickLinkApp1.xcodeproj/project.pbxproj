@@ -22,6 +22,10 @@
 		29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */; };
 		29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */; };
 		29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493A2C86F45800CC7F26 /* TransactionListView.swift */; };
+		29B9493D2C87011F00CC7F26 /* ComptaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493C2C87011F00CC7F26 /* ComptaDetailView.swift */; };
+		29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */; };
+		29B949432C87039300CC7F26 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949422C87039300CC7F26 /* constants.swift */; };
+		29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949442C870C0900CC7F26 /* ProgressView.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -50,6 +54,10 @@
 		29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailDetailView.swift; sourceTree = "<group>"; };
 		29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailComptaView.swift; sourceTree = "<group>"; };
 		29B9493A2C86F45800CC7F26 /* TransactionListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionListView.swift; sourceTree = "<group>"; };
+		29B9493C2C87011F00CC7F26 /* ComptaDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComptaDetailView.swift; sourceTree = "<group>"; };
+		29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signedAmountColor.swift; sourceTree = "<group>"; };
+		29B949422C87039300CC7F26 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
+		29B949442C870C0900CC7F26 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -80,6 +88,7 @@
 			children = (
 				29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */,
 				29B9493A2C86F45800CC7F26 /* TransactionListView.swift */,
+				29B949442C870C0900CC7F26 /* ProgressView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -131,8 +140,17 @@
 			isa = PBXGroup;
 			children = (
 				29B949332C86EEDF00CC7F26 /* ComptaContentView.swift */,
+				29B9493C2C87011F00CC7F26 /* ComptaDetailView.swift */,
 			);
 			path = Compta;
+			sourceTree = "<group>";
+		};
+		29B9493E2C87028300CC7F26 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		29BB30832C77B0CA000525CB = {
@@ -173,6 +191,7 @@
 		29D6745B2C7DAD9F00BAA00A /* Src */ = {
 			isa = PBXGroup;
 			children = (
+				29B949422C87039300CC7F26 /* constants.swift */,
 				29BB308F2C77B0CA000525CB /* App1.swift */,
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
@@ -180,6 +199,7 @@
 				29B9492A2C80532F00CC7F26 /* BrickLink */,
 				29B9491D2C7DB3AC00CC7F26 /* Models */,
 				29B9491A2C7DB14D00CC7F26 /* Views */,
+				29B9493E2C87028300CC7F26 /* Modifiers */,
 				29B949202C7F0A3D00CC7F26 /* Orders */,
 				29B949252C7F0C0500CC7F26 /* Picking */,
 				29B949392C86F34C00CC7F26 /* Compta */,
@@ -265,6 +285,7 @@
 			files = (
 				29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */,
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
+				29B9493D2C87011F00CC7F26 /* ComptaDetailView.swift in Sources */,
 				29B949342C86EEDF00CC7F26 /* ComptaContentView.swift in Sources */,
 				29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */,
 				29B9492E2C81A5B400CC7F26 /* PickingItemsView.swift in Sources */,
@@ -277,6 +298,7 @@
 				29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
+				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
 				29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */,
@@ -284,7 +306,9 @@
 				29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */,
 				29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */,
 				29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */,
+				29B949432C87039300CC7F26 /* constants.swift in Sources */,
 				29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */,
+				29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,10 +16,16 @@ struct Transaction: Identifiable, Codable {
 }
 
 
-enum TransactionType: String, Codable {
+enum TransactionType: String, Codable, CaseIterable {
     
     case orderIncome
     case orderShipping
+    
+    static var incomeTypes: [TransactionType] { [.orderIncome] }
+    static var expenseTypes: [TransactionType] { [.orderShipping] }
+    
+    var isIncome: Bool { Self.incomeTypes.contains(self) }
+    var isExpense: Bool { Self.expenseTypes.contains(self) }
 }
 
 

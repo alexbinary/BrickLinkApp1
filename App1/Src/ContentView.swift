@@ -15,7 +15,7 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .orders
+    @State var selectedSidebarItem: SidebarItem = .compta
     
     @State var ordersSelectedOrderId: Order.ID? = "26050777"
     @State var pickingSelectedOrderIds: Set<Order.ID> = ["26050777"]
@@ -52,7 +52,7 @@ struct ContentView: View {
             case .picking:
                 PickingDetailView(selectedOrderIds: pickingSelectedOrderIds)
             case .compta:
-                Text("Compta")
+                ComptaDetailView()
             }
         }
     }

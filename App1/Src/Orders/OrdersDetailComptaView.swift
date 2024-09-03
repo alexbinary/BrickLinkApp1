@@ -81,7 +81,7 @@ struct OrdersDetailComptaView: View {
                         date: shippingDate,
                         createdAt: Date(),
                         type: .orderShipping,
-                        amount: shippingAmount,
+                        amount: -shippingAmount,
                         paymentMethod: shippingPaymentMethod,
                         comment: shippingComment,
                         orderRefIn: order.id
