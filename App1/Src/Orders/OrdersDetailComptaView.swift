@@ -55,8 +55,11 @@ struct OrdersDetailComptaView: View {
                 }
             }
 
-            TransactionListView(transactions: appController.transactions
-                .filter { $0.type == .orderIncome && $0.orderRefIn == order.id })
+            TransactionListView(
+                transactions: appController.transactions
+                    .filter { $0.type == .orderIncome && $0.orderRefIn == order.id },
+                grouppedByMonth: false
+            )
             .frame(minHeight: 100)
             
             Divider()
@@ -91,8 +94,11 @@ struct OrdersDetailComptaView: View {
                 }
             }
             
-            TransactionListView(transactions: appController.transactions
-                .filter { $0.type == .orderShipping && $0.orderRefIn == order.id })
+            TransactionListView(
+                transactions: appController.transactions
+                    .filter { $0.type == .orderShipping && $0.orderRefIn == order.id },
+                grouppedByMonth: false
+            )
             .frame(minHeight: 100)
             
             Divider()

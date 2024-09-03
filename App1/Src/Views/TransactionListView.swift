@@ -6,11 +6,12 @@ struct TransactionListView: View {
     
     
     let transactions: [Transaction]
+    var grouppedByMonth = true
     
     
     var body: some View {
         
-        Table(transactions) {
+        Table(of: Transaction.self) {
             
             TableColumn("Date") { transaction in
                 Text(transaction.date, format: .dateTime)
@@ -33,6 +34,25 @@ struct TransactionListView: View {
             }
             TableColumn("Comment") { transaction in
                 Text(transaction.comment)
+            }
+            
+        } rows : {
+            
+            let transactions = transactions.sorted { $0.date > $1.date }
+            
+            if grouppedByMonth {
+                
+                ForEach(transactions.grouppedByMonth, id: \.month) { item in
+                    
+                    Section(item.month) {
+                        
+                        ForEach(item.transactions) { TableRow($0) }
+                    }
+                }
+                
+            } else {
+                
+                ForEach(transactions) { TableRow($0) }
             }
         }
     }

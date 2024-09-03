@@ -26,6 +26,7 @@
 		29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */; };
 		29B949432C87039300CC7F26 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949422C87039300CC7F26 /* constants.swift */; };
 		29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949442C870C0900CC7F26 /* ProgressView.swift */; };
+		29B949472C87317300CC7F26 /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949462C87317300CC7F26 /* extensions.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -58,6 +59,7 @@
 		29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signedAmountColor.swift; sourceTree = "<group>"; };
 		29B949422C87039300CC7F26 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
 		29B949442C870C0900CC7F26 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		29B949462C87317300CC7F26 /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				29B949422C87039300CC7F26 /* constants.swift */,
+				29B949462C87317300CC7F26 /* extensions.swift */,
 				29BB308F2C77B0CA000525CB /* App1.swift */,
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
@@ -297,6 +300,7 @@
 				29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */,
 				29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
+				29B949472C87317300CC7F26 /* extensions.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
