@@ -22,13 +22,6 @@ struct ComptaDetailView: View {
             
             VStack(spacing: 36) {
                 
-                ComptaDetailDashboardItemView(
-                    transactions: allTransactions,
-                    title: "All time"
-                )
-                
-                Divider()
-                
                 if !selectedTransactions.isEmpty {
                     
                     ComptaDetailDashboardItemView(
@@ -36,18 +29,19 @@ struct ComptaDetailView: View {
                         title: "Selection"
                     )
                     
-                    Divider()
-                }
-                
-                ForEach(allTransactionsGrouppedByMonth, id: \.month) {
+                } else {
+                    
+                    let month = Date.currentMonth
+                    let transactions = allTransactionsGrouppedByMonth
+                        .first(where: { $0.month == month })?.transactions ?? []
                     
                     ComptaDetailDashboardItemView(
-                        transactions: $0.transactions,
-                        title: $0.month
+                        transactions: transactions,
+                        title: month
                     )
-                    
-                    Divider()
                 }
+                
+                Divider()
             }
             .padding(24)
         }
