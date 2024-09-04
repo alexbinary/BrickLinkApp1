@@ -1,5 +1,6 @@
 
 import Foundation
+import SwiftUI
 
 
 
@@ -26,6 +27,13 @@ enum TransactionType: String, Codable, CaseIterable {
     
     var isIncome: Bool { Self.incomeTypes.contains(self) }
     var isExpense: Bool { Self.expenseTypes.contains(self) }
+    
+    static func colorFor(_ type: Self) -> Color {
+        switch type {
+            case .orderIncome: .green
+            case .orderShipping: .red
+        }
+    }
 }
 
 
@@ -33,6 +41,13 @@ enum PaymentMethod: String, Codable, CaseIterable {
     
     case paypal
     case cb_iban
+    
+    static func colorFor(_ method: Self) -> Color {
+        switch method {
+            case .paypal: .blue
+            case .cb_iban: .gray
+        }
+    }
 }
 
 

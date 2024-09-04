@@ -79,14 +79,20 @@ struct ComptaDetailDashboardItemView: View {
                                 SectorMark(
                                     angle: .value(item.type.rawValue, abs(item.totalAmount))
                                 )
+                                .foregroundStyle(by: .value("", item.type.rawValue))
                             }
                         }
+                        .chartForegroundStyleScale { rawValue in
+                            
+                            TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
+                        }
+                        .chartLegend(.hidden)
                         .frame(minHeight: 75)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalIncomeByType, id: \.type) { item in
                                 GridRow {
-                                    Color.primary
+                                    TransactionType.colorFor(item.type)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
@@ -104,14 +110,20 @@ struct ComptaDetailDashboardItemView: View {
                                 SectorMark(
                                     angle: .value(item.method.rawValue, abs(item.totalAmount))
                                 )
+                                .foregroundStyle(by: .value("", item.method.rawValue))
                             }
                         }
+                        .chartForegroundStyleScale { rawValue in
+                            
+                            PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
+                        }
+                        .chartLegend(.hidden)
                         .frame(minHeight: 75)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
                                 GridRow {
-                                    Color.primary
+                                    PaymentMethod.colorFor(item.method)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
@@ -143,14 +155,20 @@ struct ComptaDetailDashboardItemView: View {
                                 SectorMark(
                                     angle: .value(item.type.rawValue, abs(item.totalAmount))
                                 )
+                                .foregroundStyle(by: .value("", item.type.rawValue))
                             }
                         }
+                        .chartForegroundStyleScale { rawValue in
+                            
+                            TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
+                        }
+                        .chartLegend(.hidden)
                         .frame(minHeight: 75)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalExpenseByType, id: \.type) { item in
                                 GridRow {
-                                    Color.primary
+                                    TransactionType.colorFor(item.type)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
@@ -168,14 +186,20 @@ struct ComptaDetailDashboardItemView: View {
                                 SectorMark(
                                     angle: .value(item.method.rawValue, abs(item.totalAmount))
                                 )
+                                .foregroundStyle(by: .value("", item.method.rawValue))
                             }
                         }
+                        .chartForegroundStyleScale { rawValue in
+                            
+                            PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
+                        }
+                        .chartLegend(.hidden)
                         .frame(minHeight: 75)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
                                 GridRow {
-                                    Color.primary
+                                    PaymentMethod.colorFor(item.method)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
