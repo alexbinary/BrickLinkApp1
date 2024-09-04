@@ -12,8 +12,8 @@ struct ComptaDetailDashboardItemView: View {
     
     
     var body: some View {
-            
-        VStack {
+        
+        VStack(spacing: 48) {
             
             Text(title).font(.title)
             
@@ -25,6 +25,14 @@ struct ComptaDetailDashboardItemView: View {
                     type: type,
                     totalAmount: incomeTransactions
                         .filter { $0.type == type }
+                        .reduce(0, { $0 + $1.amount })
+                )
+            }
+            let totalIncomeByPaymentMethod: [(method: PaymentMethod, totalAmount: Float)] = PaymentMethod.allCases.map { method in
+                (
+                    method: method,
+                    totalAmount: incomeTransactions
+                        .filter { $0.paymentMethod == method }
                         .reduce(0, { $0 + $1.amount })
                 )
             }
@@ -40,111 +48,154 @@ struct ComptaDetailDashboardItemView: View {
                         .reduce(0, { $0 + $1.amount })
                 )
             }
+            let totalExpenseByPaymentMethod: [(method: PaymentMethod, totalAmount: Float)] = PaymentMethod.allCases.map { method in
+                (
+                    method: method,
+                    totalAmount: expenseTransactions
+                        .filter { $0.paymentMethod == method }
+                        .reduce(0, { $0 + $1.amount })
+                )
+            }
             
             let totalResult = totalIncome + totalExpense
             
-            Grid(verticalSpacing: 36) {
+            Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 24) {
                 
                 GridRow {
+                    Text("Total income")
+                    Text(totalIncome, format: .currency(code: "EUR").presentation(.isoCode))
+                        .signedAmountColor(totalIncome)
                     
-                    VStack {
-                        
-                        Text("Total income").font(.title2)
-                        
-                        ZStack {
-                            
-                            Chart {
-                                ForEach(totalIncomeByType, id: \.type) { item in
-                                    SectorMark(
-                                        angle: .value(item.type.rawValue, abs(item.totalAmount)),
-                                        innerRadius: .ratio(0.9)
-                                    )
-                                }
-                            }
-                            .frame(minHeight: 150)
-                            
-                            Text(totalIncome, format: .currency(code: "EUR").presentation(.isoCode))
-                                .font(.title)
-                                .signedAmountColor(totalIncome)
-                        }
-                    }
-                    
-                    VStack {
-                        ForEach(totalIncomeByType, id: \.type) { item in
-                            HStack {
-                                Color.primary
-                                    .frame(width: 8, height: 8)
-                                    .clipShape(.circle)
-                                Text(item.type.rawValue)
-                                Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .signedAmountColor(item.totalAmount)
-                            }
-                        }
-                    }
-                    
-                    VStack {
-                        
-                        Text("Total expense").font(.title2)
-                        
-                        ZStack {
-                            
-                            Chart {
-                                ForEach(totalExpenseByType, id: \.type) { item in
-                                    SectorMark(
-                                        angle: .value(item.type.rawValue, abs(item.totalAmount)),
-                                        innerRadius: .ratio(0.9)
-                                    )
-                                }
-                            }
-                            .frame(minHeight: 150)
-                            
-                            Text(abs(totalExpense), format: .currency(code: "EUR").presentation(.isoCode))
-                                .font(.title)
-                                .signedAmountColor(totalExpense)
-                        }
-                    }
-                    
-                    VStack {
-                        ForEach(totalExpenseByType, id: \.type) { item in
-                            HStack {
-                                Color.primary
-                                    .frame(width: 8, height: 8)
-                                    .clipShape(.circle)
-                                Text(item.type.rawValue)
-                                Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
-                                    .signedAmountColor(item.totalAmount)
-                            }
-                        }
-                    }
+                    Text("")
                 }
+                .font(.title2)
                 
-                GridRow {
+                HStack {
                     
-                    VStack(alignment: .center) {
+                    HStack {
                         
-                        Text("Total result").font(.title2)
+                        Chart {
+                            ForEach(totalIncomeByType, id: \.type) { item in
+                                SectorMark(
+                                    angle: .value(item.type.rawValue, abs(item.totalAmount))
+                                )
+                            }
+                        }
+                        .frame(minHeight: 75)
                         
-                        ZStack(alignment: .center) {
-                            
-                            let targetResult: Float = 360
-                            
-                            ProgressView(targetValue: targetResult, value: totalResult)
-                                .frame(minHeight: 150, maxHeight: 150)
-                            
-                            VStack {
-                                Text(totalResult, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .font(.title)
-                                    .signedAmountColor(totalResult)
-                                HStack(spacing: 0) {
-                                    Text("Target: ")
-                                        .font(.caption)
-                                    Text(targetResult, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .font(.caption)
+                        Grid(alignment: .leading) {
+                            ForEach(totalIncomeByType, id: \.type) { item in
+                                GridRow {
+                                    Color.primary
+                                        .frame(width: 8, height: 8)
+                                        .clipShape(.circle)
+                                    Text(item.type.rawValue)
+                                    Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
+                                        .signedAmountColor(.income)
+                                }
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        
+                        Chart {
+                            ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
+                                SectorMark(
+                                    angle: .value(item.method.rawValue, abs(item.totalAmount))
+                                )
+                            }
+                        }
+                        .frame(minHeight: 75)
+                        
+                        Grid(alignment: .leading) {
+                            ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
+                                GridRow {
+                                    Color.primary
+                                        .frame(width: 8, height: 8)
+                                        .clipShape(.circle)
+                                    Text(item.method.rawValue)
+                                    Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
+                                        .signedAmountColor(.income)
                                 }
                             }
                         }
                     }
                 }
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(.black.opacity(0.2)))
+                .padding(.bottom, 24)
+                
+                
+                GridRow {
+                    Text("Total expense")
+                    Text(abs(totalExpense), format: .currency(code: "EUR").presentation(.isoCode))
+                        .signedAmountColor(.expense)
+                }
+                .font(.title2)
+                
+                HStack {
+                    
+                    HStack {
+                        
+                        Chart {
+                            ForEach(totalExpenseByType, id: \.type) { item in
+                                SectorMark(
+                                    angle: .value(item.type.rawValue, abs(item.totalAmount))
+                                )
+                            }
+                        }
+                        .frame(minHeight: 75)
+                        
+                        Grid(alignment: .leading) {
+                            ForEach(totalExpenseByType, id: \.type) { item in
+                                GridRow {
+                                    Color.primary
+                                        .frame(width: 8, height: 8)
+                                        .clipShape(.circle)
+                                    Text(item.type.rawValue)
+                                    Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
+                                        .signedAmountColor(.expense)
+                                }
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        
+                        Chart {
+                            ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
+                                SectorMark(
+                                    angle: .value(item.method.rawValue, abs(item.totalAmount))
+                                )
+                            }
+                        }
+                        .frame(minHeight: 75)
+                        
+                        Grid(alignment: .leading) {
+                            ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
+                                GridRow {
+                                    Color.primary
+                                        .frame(width: 8, height: 8)
+                                        .clipShape(.circle)
+                                    Text(item.method.rawValue)
+                                    Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
+                                        .signedAmountColor(.expense)
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(.black.opacity(0.2)))
+                .padding(.bottom, 24)
+                
+                GridRow {
+                    Text("Total result")
+                    Text(abs(totalResult), format: .currency(code: "EUR").presentation(.isoCode))
+                        .signedAmountColor(totalResult)
+                }
+                .font(.title)
             }
         }
     }
