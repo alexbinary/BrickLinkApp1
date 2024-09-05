@@ -113,7 +113,7 @@ struct OrdersDetailComptaView: View {
             self.incomeComment = ""
 
             self.shippingDate = Date()
-            self.shippingAmount = appController.shippingCost(forOrderWithId: order.id)
+            self.shippingAmount = appController.shippingCost(forOrderWithId: order.id) ?? 0
             self.shippingPaymentMethod = .cb_iban
             self.shippingComment = ""
         }

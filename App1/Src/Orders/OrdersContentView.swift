@@ -27,7 +27,7 @@ struct OrdersContentView: View {
             }
             TableColumn("Shipping cost") { order in
                 
-                var value = appController.shippingCost(forOrderWithId: order.id)
+                var value = appController.shippingCost(forOrderWithId: order.id) ?? 0
                 
                 let shippingCostBinding = Binding<Float> {
                     return value

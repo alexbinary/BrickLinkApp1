@@ -179,6 +179,14 @@ struct ShippingCostView: View {
                 } label: {
                     Text("Confirm shipping cost")
                 }
+                
+                if let cost = appController.shippingCost(forOrderWithId: order.id) {
+                    
+                    HStack {
+                        Text("Confirmed")
+                        Text(cost, format: .currency(code: "EUR").presentation(.isoCode))
+                    }
+                }
             }
         }
         

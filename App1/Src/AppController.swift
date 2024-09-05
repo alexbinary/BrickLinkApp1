@@ -243,9 +243,9 @@ class AppController: ObservableObject {
     }
     
     
-    func shippingCost(forOrderWithId orderId: OrderId) -> Float {
+    func shippingCost(forOrderWithId orderId: OrderId) -> Float? {
         
-        return dataStore.shippingCostsByOrderId[orderId] ?? 0
+        return dataStore.shippingCostsByOrderId[orderId]
     }
     
     
