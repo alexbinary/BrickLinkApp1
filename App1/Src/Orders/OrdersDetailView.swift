@@ -33,7 +33,7 @@ struct OrdersDetailView: View {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
-                        TabView(selection: .constant(1)) {
+                        TabView(selection: .constant(0)) {
                             
                             OrdersDetailDetailView(order: order, reloadOrder: {
                                 Task {
