@@ -189,7 +189,7 @@ struct PickingDetailView: View {
                             
                             Text("select only one order")
                             
-                        } else if let order = order {
+                        } else if let order = appController.orderDetails(orderId: selectedOrderIds.first!) {
                             
                             Text("Address").font(.title2)
                             
@@ -333,10 +333,8 @@ struct PickingDetailView: View {
     
     func loadOrder() async {
         
-        self.order = nil
-        
         if selectedOrderIds.count == 1 {
-            self.order = await appController.getOrder(orderId: selectedOrderIds.first!)
+            await appController.loadOrderDetailsIfNeeded(orderId: selectedOrderIds.first!)
         }
     }
     

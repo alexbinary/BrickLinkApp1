@@ -23,9 +23,6 @@ struct PickingContentView: View {
                 Text(verbatim: "\(order.items) (\(order.lots))")
             }
         }
-        .task {
-            await appController.reloadOrders()
-        }
         .navigationTitle("Picking")
     }
 }

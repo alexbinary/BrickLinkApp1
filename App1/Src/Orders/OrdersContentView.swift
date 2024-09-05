@@ -43,10 +43,6 @@ struct OrdersContentView: View {
                     }
             }
             TableColumn("Status", value: \.status)
-            
-        }
-        .task {
-            await appController.reloadOrders()
         }
         .navigationTitle("Orders")
     }

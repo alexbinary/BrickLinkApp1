@@ -20,7 +20,8 @@ class AppController: ObservableObject {
         self.transactions = dataStore.transactions
         
         Task {
-            await self.reloadColors()
+            await self.loadColors()
+            await self.loadOrders()
         }
     }
     
@@ -31,7 +32,7 @@ class AppController: ObservableObject {
     @Published var legoColors: [LegoColor] = []
     
     
-    func reloadColors() async {
+    func loadColors() async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
         request.addAuthentication(using: blCredentials)
@@ -75,11 +76,7 @@ class AppController: ObservableObject {
     @Published var orders: [Order] = []
     
     
-    func reloadOrders() async {
-        
-        DispatchQueue.main.sync {
-            orders = []
-        }
+    private func loadOrders() async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
         request.addAuthentication(using: blCredentials)
@@ -100,7 +97,25 @@ class AppController: ObservableObject {
     }
     
     
-    func getOrder(orderId: String) async -> Order? {
+    func reloadOrders() async {
+        
+        if !orders.isEmpty {
+        
+            await loadOrders()
+        }
+    }
+    
+    
+    @Published var orderDetails: [Order] = []
+    
+    
+    func orderDetails(orderId: String) -> Order? {
+        
+        orderDetails.first { $0.id == orderId }
+    }
+    
+    
+    private func loadOrderDetails(orderId: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
         request.addAuthentication(using: blCredentials)
@@ -111,10 +126,34 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<BrickLinkOrder> = data.decode()
         if let blOrder = decoded.data {
             
-            return Order(fromBlOrder: blOrder)
+            let order = Order(fromBlOrder: blOrder)
+            
+            DispatchQueue.main.sync {
+                if let index = self.orderDetails.firstIndex(where: { $0.id == order.id }) {
+                    self.orderDetails[index] = order
+                } else {
+                    self.orderDetails.append(order)
+                }
+            }
         }
+    }
+    
+    
+    func loadOrderDetailsIfNeeded(orderId: String) async {
         
-        return nil
+        if !self.orderDetails.contains(where: { $0.id == orderId }) {
+            
+            await loadOrderDetails(orderId: orderId)
+        }
+    }
+    
+    
+    func reloadOrderDetails(orderId: String) async {
+        
+        if self.orderDetails.contains(where: { $0.id == orderId }) {
+            
+            await loadOrderDetails(orderId: orderId)
+        }
     }
     
     
@@ -139,6 +178,7 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         await reloadOrders()
+        await reloadOrderDetails(orderId: orderId)
     }
     
     
@@ -160,6 +200,9 @@ class AppController: ObservableObject {
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
+        
+        await reloadOrders()
+        await reloadOrderDetails(orderId: orderId)
     }
 
 
@@ -171,6 +214,9 @@ class AppController: ObservableObject {
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
+        
+        await reloadOrders()
+        await reloadOrderDetails(orderId: orderId)
     }
     
     

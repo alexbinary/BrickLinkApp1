@@ -11,8 +11,6 @@ struct OrdersDetailView: View {
     let selectedOrderId: Order.ID?
     
     @State var order: Order? = nil
-    @State var orderItems: [OrderItem] = []
-    @State var orderFeedbacks: [Feedback] = []
     
     
     var body: some View {
@@ -21,41 +19,40 @@ struct OrdersDetailView: View {
             
             VStack {
                 
-                if selectedOrderId == nil {
+                if let orderId = selectedOrderId {
                     
-                    Text("select an order")
-                    
-                } else if order == nil {
-                    
-                    Text("loading order...")
-                    
-                } else if let order = order {
-                    
-                    VStack(alignment: .leading, spacing: 12) {
+                    if let order = appController.orderDetails(orderId: orderId) {
                         
-                        TabView(selection: .constant(0)) {
+                        VStack(alignment: .leading, spacing: 12) {
                             
-                            OrdersDetailDetailView(order: order, reloadOrder: {
-                                Task {
-                                    await loadOrder()
-                                }
-                            })
-                            .padding()
-                            .tabItem {
-                                Text("Details & Actions")
+                            TabView(selection: .constant(0)) {
+                                
+                                OrdersDetailDetailView(order: order)
+                                    .padding()
+                                    .tabItem {
+                                        Text("Details & Actions")
+                                    }
+                                    .tag(0)
+                                
+                                OrdersDetailComptaView(order: order)
+                                    .padding()
+                                    .tabItem {
+                                        Text("Compta")
+                                    }
+                                    .tag(1)
                             }
-                            .tag(0)
                             
-                            OrdersDetailComptaView(order: order)
-                                .padding()
-                                .tabItem {
-                                    Text("Compta")
-                                }
-                                .tag(1)
+                            Spacer()
                         }
                         
-                        Spacer()
+                    } else {
+                        
+                        Text("loading order...")
                     }
+                    
+                } else {
+                    
+                    Text("select an order")
                 }
             }
             .padding()
@@ -75,7 +72,6 @@ struct OrdersDetailView: View {
         
         guard let orderId = selectedOrderId else { return }
         
-        self.order = nil
-        self.order = await appController.getOrder(orderId: orderId)
+        await appController.loadOrderDetailsIfNeeded(orderId: orderId)
     }
 }

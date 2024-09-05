@@ -18,7 +18,6 @@ struct OrdersDetailDetailView: View {
     @EnvironmentObject var appController: AppController
     
     let order: Order
-    let reloadOrder: ()->()
     
     @State var orderItems: [OrderItem] = []
     @State var orderFeedbacks: [Feedback] = []
@@ -85,7 +84,6 @@ struct OrdersDetailDetailView: View {
                     Button {
                         Task {
                             await appController.updateOrderStatus(orderId: order.id, status: status)
-                            reloadOrder()
                         }
                     } label: {
                         Text(status)
@@ -116,7 +114,6 @@ struct OrdersDetailDetailView: View {
                 .onSubmit {
                     Task {
                         await appController.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
-                        reloadOrder()
                     }
                 }
             
@@ -133,7 +130,6 @@ struct OrdersDetailDetailView: View {
             Button {
                 Task {
                     await appController.sendDriveThru(orderId: order.id)
-                    reloadOrder()
                 }
             } label: {
                 Text("Send drive thru")
@@ -194,6 +190,12 @@ struct OrdersDetailDetailView: View {
             .frame(minHeight: 400)
             
             Divider()
+        }
+        .onChange(of: order) {
+            Task {
+                await loadOrderItems()
+                await loadOrderFeedbacks()
+            }
         }
         .task {
             await loadOrderItems()
