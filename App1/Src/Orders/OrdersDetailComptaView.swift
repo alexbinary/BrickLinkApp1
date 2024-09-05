@@ -66,6 +66,13 @@ struct OrdersDetailComptaView: View {
             Divider()
             
             HeaderTitleView(label: "􀐚 Shipping")
+               
+            HStack {
+                Text("Confirmed affranchissment:")
+                if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                    Text(confirmedMethod)
+                }
+            }
             
             Form {
                 TextField("Amount", value: $shippingAmount,

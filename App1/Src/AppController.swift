@@ -249,6 +249,12 @@ class AppController: ObservableObject {
     }
     
     
+    func affranchissement(forOrderWithId orderId: OrderId) -> String? {
+        
+        return dataStore.affranchissementMethodByOrderId[orderId]
+    }
+    
+    
     func pickedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
         
         return dataStore.pickedItemsByOrderId[orderId] ?? []
@@ -269,6 +275,19 @@ class AppController: ObservableObject {
         
         try! dataStore.setShippingCostsByOrderId(shippingCostsByOrderId)
         try! dataStore.save()
+    }
+    
+    
+    func updateAffranchissement(forOrderWithId orderId: OrderId, method: String) {
+        
+        var affranchissementMethodByOrderId = dataStore.affranchissementMethodByOrderId
+        
+        affranchissementMethodByOrderId[orderId] = method
+        
+        try! dataStore.setAffranchissementMethodByOrderId(affranchissementMethodByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
     }
     
     

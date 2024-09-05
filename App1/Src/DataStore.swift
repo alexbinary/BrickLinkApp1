@@ -51,6 +51,12 @@ class DataStore {
     }
     
     
+    public var affranchissementMethodByOrderId: [OrderId: String] {
+        
+        data?.affranchissementMethodByOrderId ?? [:]
+    }
+    
+    
     public var pickedItemsByOrderId: [OrderId: [InventoryId]] {
         
         data?.pickedItemsByOrderId ?? [:]
@@ -74,6 +80,14 @@ class DataStore {
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
         data!.shippingCostsByOrderId = shippingCostsByOrderId
+    }
+    
+    
+    public func setAffranchissementMethodByOrderId(_ affranchissementMethodByOrderId: [OrderId: String]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.affranchissementMethodByOrderId = affranchissementMethodByOrderId
     }
     
     
@@ -115,6 +129,7 @@ typealias InventoryId = String
 struct DataRoot: Codable {
     
     var shippingCostsByOrderId: [OrderId: Float]
+    var affranchissementMethodByOrderId: [OrderId: String]
     var pickedItemsByOrderId: [OrderId: [InventoryId]]
     var verifiedItemsByOrderId: [OrderId: [InventoryId]]
     var transactions: [Transaction]

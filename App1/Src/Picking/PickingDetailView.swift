@@ -211,16 +211,41 @@ struct PickingDetailView: View {
                             HStack {
                                 Text("Recommended method : ")
                                 
-                                if let selectedAffranchissement = selectedAffranchissement {
+                                let method = {
                                     
-                                    if selectedAffranchissement.usePostOffice {
-                                        Text("Bureau de poste")
-                                    } else {
-                                        Text("\(selectedAffranchissement.nbTimbres) timbres")
+                                    var s = ""
+                                    
+                                    if let selectedAffranchissement = selectedAffranchissement {
                                         
-                                        if order.shippingMethodId != shippingMethodId_France {
-                                            Text("international")
+                                        if selectedAffranchissement.usePostOffice {
+                                            return "Bureau de poste"
+                                        } else {
+                                            s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                            
+                                            if order.shippingMethodId != shippingMethodId_France {
+                                                s += "international"
+                                            }
+                                            
+                                            return s
                                         }
+                                    }
+                                    
+                                    return s
+                                }()
+                                
+                                Text(method)
+                                
+                                Button {
+                                    appController.updateAffranchissement(forOrderWithId: order.id, method: method)
+                                } label: {
+                                    Text("Confirm affranchissement")
+                                }
+                                
+                                if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                                    
+                                    HStack {
+                                        Text("Confirmed")
+                                        Text(confirmedMethod)
                                     }
                                 }
                             }
