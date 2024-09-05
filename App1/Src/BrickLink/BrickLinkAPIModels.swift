@@ -97,6 +97,14 @@ struct BrickLinkOrderCost: Decodable {
 
 
 
+struct BrickLinkColor: Decodable {
+    
+    let colorId: Int
+    let colorName: String
+}
+
+
+
 struct FixedPointNumber: Codable, ExpressibleByFloatLiteral, CustomStringConvertible {
     
     

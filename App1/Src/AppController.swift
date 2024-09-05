@@ -18,11 +18,51 @@ class AppController: ObservableObject {
         self.blCredentials = blCredentials
         
         self.transactions = dataStore.transactions
+        
+        Task {
+            await self.reloadColors()
+        }
     }
     
     
+    @Published var legoColors: [LegoColor] = []
+    
     @Published var orders: [Order] = []
     @Published var transactions: [Transaction] = []
+    
+    
+    func reloadColors() async {
+        
+        DispatchQueue.main.sync {
+            legoColors = []
+        }
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<[BrickLinkColor]> = data.decode()
+        if let blColors = decoded.data {
+            
+            DispatchQueue.main.sync {
+                
+                self.legoColors = blColors.map {
+                    LegoColor(
+                        id: "\($0.colorId)",
+                        name: $0.colorName
+                    )
+                }
+            }
+        }
+    }
+    
+    
+    func colorName(id: LegoColor.ID) -> String {
+        
+        legoColors.first(where: { $0.id == id })?.name ?? id
+    }
     
     
     func reloadOrders() async {
@@ -84,7 +124,7 @@ class AppController: ObservableObject {
                     id: "\(item.inventoryId)",
                     orderId: orderId,
                     condition: item.newOrUsed,
-                    color: "\(item.colorId)",
+                    colorId: "\(item.colorId)",
                     ref: item.item.no,
                     name: item.item.name,
                     location: item.remarks ?? "",

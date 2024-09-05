@@ -121,7 +121,9 @@ struct PickingItemsView: View {
                     TableColumn("Left", value: \.quantityLeft)
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Name", value: \.name)
-                    TableColumn("Color", value: \.color)
+                    TableColumn("Color") { value in
+                        Text(appController.colorName(id: value.colorId))
+                    }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     
@@ -196,7 +198,9 @@ struct PickingItemsView: View {
                         }
                     }
                     TableColumn("Condition", value: \.condition)
-                    TableColumn("Color", value: \.color)
+                    TableColumn("Color") { value in
+                        Text(appController.colorName(id: value.colorId))
+                    }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Name", value: \.name)
                     TableColumn("Comment", value: \.comment)
@@ -267,7 +271,9 @@ struct PickingItemsView: View {
                         }
                     }
                     TableColumn("Condition", value: \.condition)
-                    TableColumn("Color", value: \.color)
+                    TableColumn("Color") { value in
+                        Text(appController.colorName(id: value.colorId))
+                    }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Name", value: \.name)
                     TableColumn("Comment", value: \.comment)

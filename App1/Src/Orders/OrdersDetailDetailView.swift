@@ -176,7 +176,9 @@ struct OrdersDetailDetailView: View {
             Table(orderItems) {
                 
                 TableColumn("Condition", value: \.condition)
-                TableColumn("Color", value: \.color)
+                TableColumn("Color") { value in
+                    Text(appController.colorName(id: value.colorId))
+                }
                 TableColumn("Ref", value: \.ref)
                 TableColumn("Name", value: \.name)
                 TableColumn("Comment", value: \.comment)
