@@ -44,9 +44,9 @@ struct ComptaDetailView: View {
                 
                 Text("All time").font(.title)
                 
-                let transactionsByMonth = allTransactions.sorted { $0.date < $1.date } .grouppedByMonth
-                
                 Chart {
+                    
+                    let transactionsByMonth = allTransactions.sorted { $0.date < $1.date } .grouppedByMonth
                     
                     ForEach(transactionsByMonth, id: \.month) { transactionsForMonth in
                         
@@ -157,6 +157,32 @@ struct ComptaDetailView: View {
                     
                 }
                 .frame(minHeight: 200)
+                
+                Chart {
+                    
+                    let transactions = allTransactions.sorted { $0.date < $1.date }
+                    
+                    let accumulatedTotal: [(transaction: Transaction, accumlatedTotal: Float)] = {
+                       
+                        var values: [(transaction: Transaction, accumlatedTotal: Float)] = []
+                        
+                        var total: Float = 0
+                        
+                        for transaction in transactions {
+                            
+                            total += transaction.amount
+                            
+                            values.append((transaction: transaction, accumlatedTotal: total))
+                        }
+                        
+                        return values
+                    }()
+                    
+                    ForEach(accumulatedTotal, id: \.transaction.id) { item in
+
+                        LineMark(x: .value("Date", item.transaction.date), y: .value("Total", item.accumlatedTotal))
+                    }
+                }
             }
             .padding(24)
         }
