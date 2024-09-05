@@ -182,10 +182,9 @@ struct OrdersDetailDetailView: View {
                         Text(appController.colorName(id: value.colorId))
                     }
                 }
-                TableColumn("Ref", value: \.ref)
                 TableColumn("Name", value: \.name)
+                TableColumn("Ref", value: \.ref)
                 TableColumn("Comment", value: \.comment)
-                TableColumn("Location", value: \.location)
                 TableColumn("Quantity", value: \.quantity)
                 TableColumn("Left", value: \.quantityLeft)
             }

@@ -116,17 +116,17 @@ struct PickingItemsView: View {
                             }
                         }
                     }
+                    TableColumn("Condition", value: \.condition)
                     TableColumn("Location", value: \.location)
                     TableColumn("Quantity", value: \.quantity)
                     TableColumn("Left", value: \.quantityLeft)
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Name", value: \.name)
                     TableColumn("Color") { value in
                         HStack {
                             appController.color(id: value.colorId).frame(width: 18, height: 18)
                             Text(appController.colorName(id: value.colorId))
                         }
                     }
+                    TableColumn("Name", value: \.name)
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     
@@ -207,8 +207,8 @@ struct PickingItemsView: View {
                             Text(appController.colorName(id: value.colorId))
                         }
                     }
-                    TableColumn("Ref", value: \.ref)
                     TableColumn("Name", value: \.name)
+                    TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     TableColumn("Quantity", value: \.quantity)
                     
@@ -283,8 +283,8 @@ struct PickingItemsView: View {
                             Text(appController.colorName(id: value.colorId))
                         }
                     }
-                    TableColumn("Ref", value: \.ref)
                     TableColumn("Name", value: \.name)
+                    TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     TableColumn("Quantity", value: \.quantity)
                 }
