@@ -233,7 +233,7 @@ struct ComptaDetailView: View {
                             let comps = cal.dateComponents([.month, .year], from: transaction.date)
                             let month = "\(cal.monthSymbols[comps.month!-1]) \(comps.year!)"
                             
-                            if month != previousMonth {
+                            if month != previousMonth && previousMonth != "" {
                                 values.append((
                                     transaction: nil,
                                     date: transaction.date.firstDayOfMonth.previousDay.endOfDay,
