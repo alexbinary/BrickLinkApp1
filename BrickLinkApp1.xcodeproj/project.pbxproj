@@ -28,13 +28,13 @@
 		29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949442C870C0900CC7F26 /* ProgressView.swift */; };
 		29B949472C87317300CC7F26 /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949462C87317300CC7F26 /* extensions.swift */; };
 		29B949492C87336300CC7F26 /* ComptaDetailDashboardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949482C87336300CC7F26 /* ComptaDetailDashboardItemView.swift */; };
+		29B9494B2C898FEE00CC7F26 /* secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9494A2C898FEE00CC7F26 /* secrets.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
 		29BB30972C77B0CB000525CB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30962C77B0CB000525CB /* Preview Assets.xcassets */; };
 		29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6744C2C77BE8100BAA00A /* AppController.swift */; };
 		29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6744E2C77C14F00BAA00A /* DataStore.swift */; };
-		29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */; };
 		29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */; };
 		29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 29D674572C77C7E300BAA00A /* CryptoSwift */; };
 		29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */; };
@@ -62,6 +62,7 @@
 		29B949442C870C0900CC7F26 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		29B949462C87317300CC7F26 /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		29B949482C87336300CC7F26 /* ComptaDetailDashboardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComptaDetailDashboardItemView.swift; sourceTree = "<group>"; };
+		29B9494A2C898FEE00CC7F26 /* secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secrets.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -70,7 +71,6 @@
 		29BB30982C77B0CB000525CB /* App1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App1.entitlements; sourceTree = "<group>"; };
 		29D6744C2C77BE8100BAA00A /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		29D6744E2C77C14F00BAA00A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
-		29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPICredentials.swift; sourceTree = "<group>"; };
 		29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIAuth.swift; sourceTree = "<group>"; };
 		29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,7 +133,6 @@
 		29B9492A2C80532F00CC7F26 /* BrickLink */ = {
 			isa = PBXGroup;
 			children = (
-				29D674502C77C67B00BAA00A /* BrickLinkAPICredentials.swift */,
 				29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */,
 				29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */,
 			);
@@ -196,6 +195,7 @@
 		29D6745B2C7DAD9F00BAA00A /* Src */ = {
 			isa = PBXGroup;
 			children = (
+				29B9494A2C898FEE00CC7F26 /* secrets.swift */,
 				29B949422C87039300CC7F26 /* constants.swift */,
 				29B949462C87317300CC7F26 /* extensions.swift */,
 				29BB308F2C77B0CA000525CB /* App1.swift */,
@@ -305,11 +305,11 @@
 				29B9491C2C7DB3A000CC7F26 /* Order.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
 				29B949472C87317300CC7F26 /* extensions.swift in Sources */,
+				29B9494B2C898FEE00CC7F26 /* secrets.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
-				29D674522C77C67B00BAA00A /* BrickLinkAPICredentials.swift in Sources */,
 				29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */,
 				29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */,
 				29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */,

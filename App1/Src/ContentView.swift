@@ -15,10 +15,10 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .compta
+    @State var selectedSidebarItem: SidebarItem = .picking
     
-    @State var ordersSelectedOrderId: Order.ID? = "26050777"
-    @State var pickingSelectedOrderIds: Set<Order.ID> = ["26050777"]
+    @State var ordersSelectedOrderId: Order.ID? = Secrets.Default.ordersSelectedOrderId
+    @State var pickingSelectedOrderIds: Set<Order.ID> = Secrets.Default.pickingSelectedOrderIds
     @State var selectedTransactions: Set<Transaction.ID> = []
     
     var body: some View {

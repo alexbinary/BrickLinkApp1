@@ -9,6 +9,18 @@ import CryptoSwift
 
 
 
+struct BrickLinkAPICredentials {
+
+    
+    let consumerKey: String
+    let consumerSecret: String
+    
+    let tokenValue: String
+    let tokenSecret: String
+}
+
+
+
 extension URLRequest {
     
     
