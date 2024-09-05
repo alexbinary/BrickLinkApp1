@@ -42,8 +42,6 @@ struct ComptaDetailView: View {
                 
                 Divider()
                 
-                Text("All time").font(.title)
-                
                 Chart {
                     
                     let transactionsByMonth = allTransactions.sorted { $0.date < $1.date } .grouppedByMonth
@@ -154,7 +152,6 @@ struct ComptaDetailView: View {
                         return PaymentMethod.colorFor(method)
                     }
                     return Color.primary
-                    
                 }
                 .frame(minHeight: 200)
                 
@@ -162,27 +159,93 @@ struct ComptaDetailView: View {
                     
                     let transactions = allTransactions.sorted { $0.date < $1.date }
                     
-                    let accumulatedTotal: [(transaction: Transaction, accumlatedTotal: Float)] = {
-                       
-                        var values: [(transaction: Transaction, accumlatedTotal: Float)] = []
+                    let accumulatedTotals: [(
+                        transaction: Transaction?,
+                        date: Date,
+                        totalIncome: Float,
+                        totalExpense: Float,
+                        totalResult: Float
+                    )] = {
                         
-                        var total: Float = 0
+                        var values: [(
+                            transaction: Transaction?,
+                            date: Date,
+                            totalIncome: Float,
+                            totalExpense: Float,
+                            totalResult: Float
+                        )] = []
+                        
+                        var previousMonth: String = ""
+                        
+                        var totalIncome: Float = 0
+                        var totalExpense: Float = 0
+                        var totalResult: Float = 0
                         
                         for transaction in transactions {
                             
-                            total += transaction.amount
+                            let cal = Calendar.current
                             
-                            values.append((transaction: transaction, accumlatedTotal: total))
+                            let comps = cal.dateComponents([.month, .year], from: transaction.date)
+                            let month = "\(cal.monthSymbols[comps.month!-1]) \(comps.year!)"
+                            
+                            if month != previousMonth {
+                                values.append((
+                                    transaction: nil,
+                                    date: transaction.date.firstDayOfMonth.previousDay.endOfDay,
+                                    totalIncome: totalIncome,
+                                    totalExpense: totalExpense,
+                                    totalResult: totalResult
+                                ))
+                                values.append((
+                                    transaction: nil,
+                                    date: transaction.date.firstDayOfMonth.startOfDay,
+                                    totalIncome: 0,
+                                    totalExpense: 0,
+                                    totalResult: totalResult
+                                ))
+                                totalIncome = 0
+                                totalExpense = 0
+                            }
+                            
+                            totalIncome += max(transaction.amount, 0)
+                            totalExpense += min(transaction.amount, 0)
+                            totalResult += transaction.amount
+                            
+                            values.append((
+                                transaction: transaction,
+                                date: transaction.date,
+                                totalIncome: totalIncome,
+                                totalExpense: totalExpense,
+                                totalResult: totalResult
+                            ))
+                            
+                            previousMonth = month
                         }
                         
                         return values
                     }()
                     
-                    ForEach(accumulatedTotal, id: \.transaction.id) { item in
-
-                        LineMark(x: .value("Date", item.transaction.date), y: .value("Total", item.accumlatedTotal))
+                    ForEach(accumulatedTotals, id: \.date) { item in
+                        
+                        AreaMark(x: .value("Date", item.date), y: .value("Income", item.totalIncome))
+                            .foregroundStyle(by: .value("Type", "Income"))
+                        
+                        AreaMark(x: .value("Date", item.date), y: .value("Expense", item.totalExpense))
+                            .foregroundStyle(by: .value("Type", "Expense"))
+                        
+                        LineMark(x: .value("Date", item.date), y: .value("Result", item.totalResult))
+                            .foregroundStyle(by: .value("Type", "Result"))
                     }
                 }
+                .chartForegroundStyleScale { (value: String) in
+                    
+                    switch value {
+                    case "Income": return Color.green
+                    case "Expense": return Color.red
+                    default: return Color.accentColor
+                    }
+                }
+                .frame(minHeight: 200)
             }
             .padding(24)
         }

@@ -34,4 +34,42 @@ extension Date {
         
         return month
     }
+    
+    
+    var firstDayOfMonth: Date {
+        
+        let calendar = Calendar.current
+        
+        guard calendar.component(.day, from: self) != 1 else { return self }
+        
+        var date = self
+        date = calendar.date(bySetting: .day, value: 1, of: date)!
+        date = calendar.date(byAdding: .month, value: -1, to: date)!
+        
+        return date
+    }
+    
+    
+    var previousDay: Date {
+        
+        let calendar = Calendar.current
+        
+        return calendar.date(byAdding: .day, value: -1, to: self)!
+    }
+    
+    
+    var endOfDay: Date {
+        
+        let calendar = Calendar.current
+        
+        return calendar.date(bySettingHour: 23, minute: 59, second: 59, of: self)!
+    }
+    
+    
+    var startOfDay: Date {
+        
+        let calendar = Calendar.current
+        
+        return calendar.date(bySettingHour: 0, minute: 0, second: 0, of: self)!
+    }
 }
