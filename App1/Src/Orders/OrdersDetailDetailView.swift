@@ -188,6 +188,10 @@ struct OrdersDetailDetailView: View {
             
             Divider()
         }
+        .task {
+            await loadOrderItems()
+            await loadOrderFeedbacks()
+        }
     }
     
     
