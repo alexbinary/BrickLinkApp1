@@ -116,14 +116,14 @@ struct PickingItemsView: View {
                             }
                         }
                     }
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Color", value: \.color)
-                    TableColumn("Ref", value: \.ref)
-                    TableColumn("Name", value: \.name)
-                    TableColumn("Comment", value: \.comment)
                     TableColumn("Location", value: \.location)
                     TableColumn("Quantity", value: \.quantity)
                     TableColumn("Left", value: \.quantityLeft)
+                    TableColumn("Condition", value: \.condition)
+                    TableColumn("Name", value: \.name)
+                    TableColumn("Color", value: \.color)
+                    TableColumn("Ref", value: \.ref)
+                    TableColumn("Comment", value: \.comment)
                     
                 } rows: {
                     
