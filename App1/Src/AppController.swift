@@ -72,6 +72,12 @@ class AppController: ObservableObject {
     }
     
     
+    func imageUrl(item: OrderItem) -> URL? {
+        
+        URL(string: "https://img.bricklink.com/P/\(item.colorId)/\(item.ref).jpg")
+    }
+    
+    
     func reloadOrders() async {
         
         DispatchQueue.main.sync {

@@ -175,6 +175,9 @@ struct OrdersDetailDetailView: View {
             
             Table(orderItems) {
                 
+                TableColumn("Image") { value in
+                    AsyncImage(url: appController.imageUrl(item: value))
+                }
                 TableColumn("Condition", value: \.condition)
                 TableColumn("Color") { value in
                     HStack {

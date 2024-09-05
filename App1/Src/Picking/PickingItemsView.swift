@@ -116,6 +116,9 @@ struct PickingItemsView: View {
                             }
                         }
                     }
+                    TableColumn("Image") { value in
+                        AsyncImage(url: appController.imageUrl(item: value))
+                    }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Location", value: \.location)
                     TableColumn("Quantity", value: \.quantity)
@@ -200,6 +203,9 @@ struct PickingItemsView: View {
                             }
                         }
                     }
+                    TableColumn("Image") { value in
+                        AsyncImage(url: appController.imageUrl(item: value))
+                    }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Color") { value in
                         HStack {
@@ -275,6 +281,9 @@ struct PickingItemsView: View {
                                 Text("Unverify")
                             }
                         }
+                    }
+                    TableColumn("Image") { value in
+                        AsyncImage(url: appController.imageUrl(item: value))
                     }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Color") { value in

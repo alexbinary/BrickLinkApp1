@@ -15,7 +15,7 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .picking
+    @State var selectedSidebarItem: SidebarItem = .orders
     
     @State var ordersSelectedOrderId: Order.ID? = Secrets.Default.ordersSelectedOrderId
     @State var pickingSelectedOrderIds: Set<Order.ID> = Secrets.Default.pickingSelectedOrderIds
