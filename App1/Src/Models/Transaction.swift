@@ -76,3 +76,30 @@ extension Array where Element == Transaction {
         }
     }
 }
+
+
+
+extension Array where Element == Transaction {
+    
+    
+    func closest(for date: Date) -> Transaction? {
+        
+        let all = self.sorted { $0.date < $1.date }
+        
+        let lastBefore = all.last(where: { $0.date < date })
+        let firstAfter = all.first(where: { $0.date > date })
+        
+        if lastBefore == nil || firstAfter == nil {
+            return lastBefore ?? firstAfter
+        }
+        
+        let distanceBefore = lastBefore!.date.distance(to: date)
+        let distanceAfter = date.distance(to: firstAfter!.date)
+        
+        if distanceBefore < distanceAfter {
+            return lastBefore
+        } else {
+            return firstAfter
+        }
+    }
+}

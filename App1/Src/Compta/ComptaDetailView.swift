@@ -12,6 +12,11 @@ struct ComptaDetailView: View {
     
     let selectedTransactions: Set<Transaction.ID>
     
+    @State private var selectedMonth: String? = nil
+    @State private var monthPositionRangesByMonth: [String: ClosedRange<CGFloat>] = [:]
+    
+    @State private var selectedTransaction: Transaction? = nil
+    
     
     var body: some View {
         
@@ -42,9 +47,10 @@ struct ComptaDetailView: View {
                 
                 Divider()
                 
+                let transactionsByMonth = allTransactions.sorted { $0.date < $1.date } .grouppedByMonth
+                let months = transactionsByMonth.map { $0.month }
+                
                 Chart {
-                    
-                    let transactionsByMonth = allTransactions.sorted { $0.date < $1.date } .grouppedByMonth
                     
                     ForEach(transactionsByMonth, id: \.month) { transactionsForMonth in
                         
@@ -142,6 +148,8 @@ struct ComptaDetailView: View {
                             .position(by: .value("Split", "Method"))
                         }
                     }
+                    
+                    
                 }
                 .chartForegroundStyleScale { rawValue in
                     
@@ -152,6 +160,43 @@ struct ComptaDetailView: View {
                         return PaymentMethod.colorFor(method)
                     }
                     return Color.primary
+                }
+                .chartOverlay { chart in
+                    
+                    Color.clear
+                        .onContinuousHover { phase in
+                            
+                            switch phase {
+                            case .active(let mouse):
+                                
+                                selectedMonth = chart.value(atX: mouse.x)
+                                
+                                for month in months {
+                                    monthPositionRangesByMonth[month] = chart.positionRange(forX: month)!
+                                }
+                                
+                                selectedTransaction = nil
+                                
+                            case .ended:
+                                break
+                            }
+                        }
+                }
+                .chartBackground { chart in
+                    
+                    GeometryReader { geometry in
+                        
+                        let plotFrame = geometry[chart.plotFrame!]
+
+                        if let month = selectedMonth,
+                           let range = monthPositionRangesByMonth[month] {
+                            Rectangle()
+                                .size(width: range.upperBound - range.lowerBound, height: plotFrame.maxY - plotFrame.minY)
+                                .fill(Color.accentColor)
+                                .offset(x: range.lowerBound, y: 0)
+                                .opacity(0.1)
+                        }
+                    }
                 }
                 .frame(minHeight: 200)
                 
@@ -236,6 +281,23 @@ struct ComptaDetailView: View {
                         LineMark(x: .value("Date", item.date), y: .value("Result", item.totalResult))
                             .foregroundStyle(by: .value("Type", "Result"))
                     }
+                    
+                    if let transaction = selectedTransaction {
+                        
+                        RuleMark(
+                            x: .value("Date", transaction.date)
+                        )
+                        .foregroundStyle(Color.accentColor.opacity(0.4))
+                        
+                        if let totals = accumulatedTotals.first(where: { $0.transaction != nil && $0.date == transaction.date }) {
+                            
+                            PointMark(
+                                x: .value("Date", transaction.date),
+                                y: .value("Result", totals.totalResult)
+                            )
+                            .foregroundStyle(Color.accentColor.opacity(0.4))
+                        }
+                    }
                 }
                 .chartForegroundStyleScale { (value: String) in
                     
@@ -245,7 +307,109 @@ struct ComptaDetailView: View {
                     default: return Color.accentColor
                     }
                 }
+                .chartOverlay { chart in
+                    
+                    Color.clear
+                        .onContinuousHover { phase in
+                            
+                            switch phase {
+                            case .active(let mouse):
+                                
+                                if let date: Date = chart.value(atX: mouse.x),
+                                   let transaction = allTransactions.closest(for: date) {
+                                    selectedTransaction = transaction
+                                }
+                                
+                                selectedMonth = nil
+                                
+                            case .ended:
+                                break
+                            }
+                        }
+                }
                 .frame(minHeight: 200)
+                
+                if let month = selectedMonth {
+                    
+                    HStack {
+                        
+                        let activeIndex = months.firstIndex(where: { $0 == month })!
+                        
+                        let previousIndex = months.index(before: activeIndex)
+                        
+                        Button {
+                            guard previousIndex >= months.startIndex else { return }
+                            selectedMonth = months[previousIndex]
+                        } label: {
+                            Text("Previous")
+                        }
+                        .disabled(previousIndex < months.startIndex)
+                        
+                        Text(month)
+                        
+                        let nextIndex = months.index(after: activeIndex)
+                        
+                        Button {
+                            guard nextIndex < months.endIndex else { return }
+                            selectedMonth = months[nextIndex]
+                        } label: {
+                            Text("Next")
+                        }
+                        .disabled(nextIndex >= months.endIndex)
+                    }
+                    
+                } else if let transaction = selectedTransaction {
+                    
+                    HStack {
+                        
+                        let transactions = allTransactions.sorted { $0.date < $1.date }
+                        
+                        let activeIndex = transactions.firstIndex(where: { $0.id == transaction.id })!
+                        
+                        let previousIndex = transactions.index(before: activeIndex)
+                        
+                        Button {
+                            guard previousIndex >= transactions.startIndex else { return }
+                            selectedTransaction = transactions[previousIndex]
+                        } label: {
+                            Text("Previous")
+                        }
+                        .disabled(previousIndex < transactions.startIndex)
+                        
+                        Text(transaction.date, format: .dateTime)
+                        
+                        let nextIndex = transactions.index(after: activeIndex)
+                        
+                        Button {
+                            guard nextIndex < transactions.endIndex else { return }
+                            selectedTransaction = transactions[nextIndex]
+                        } label: {
+                            Text("Next")
+                        }
+                        .disabled(nextIndex >= transactions.endIndex)
+                    }
+                }
+                
+                let transactions = allTransactions.filter { transaction in
+                    
+                    if let selectedTransaction = selectedTransaction {
+                        return transaction.id == selectedTransaction.id
+                    }
+                    
+                    let cal = Calendar.current
+                    
+                    let comps = cal.dateComponents([.month, .year], from: transaction.date)
+                    let month = "\(cal.monthSymbols[comps.month!-1]) \(comps.year!)"
+                    
+                    return month == selectedMonth
+                }
+                
+                TransactionListView(
+                    transactions: transactions,
+                    grouppedByMonth: false,
+                    selectedTransactions: .constant([])
+                )
+                    .frame(minHeight: 200)
             }
             .padding(24)
         }
