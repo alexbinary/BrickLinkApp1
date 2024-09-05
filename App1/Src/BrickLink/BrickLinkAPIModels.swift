@@ -101,6 +101,7 @@ struct BrickLinkColor: Decodable {
     
     let colorId: Int
     let colorName: String
+    let colorCode: String
 }
 
 

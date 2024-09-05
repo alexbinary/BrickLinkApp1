@@ -51,11 +51,18 @@ class AppController: ObservableObject {
                 self.legoColors = blColors.map {
                     LegoColor(
                         id: "\($0.colorId)",
-                        name: $0.colorName
+                        name: $0.colorName,
+                        colorCode: $0.colorCode
                     )
                 }
             }
         }
+    }
+    
+    
+    func color(id: LegoColor.ID) -> Color {
+        
+        Color(fromBLCode: legoColors.first(where: { $0.id == id })!.colorCode)
     }
     
     

@@ -177,7 +177,10 @@ struct OrdersDetailDetailView: View {
                 
                 TableColumn("Condition", value: \.condition)
                 TableColumn("Color") { value in
-                    Text(appController.colorName(id: value.colorId))
+                    HStack {
+                        appController.color(id: value.colorId).frame(width: 18, height: 18)
+                        Text(appController.colorName(id: value.colorId))
+                    }
                 }
                 TableColumn("Ref", value: \.ref)
                 TableColumn("Name", value: \.name)
