@@ -25,17 +25,13 @@ class AppController: ObservableObject {
     }
     
     
-    @Published var legoColors: [LegoColor] = []
+    // MARK: - Colors
     
-    @Published var orders: [Order] = []
-    @Published var transactions: [Transaction] = []
+    
+    @Published var legoColors: [LegoColor] = []
     
     
     func reloadColors() async {
-        
-        DispatchQueue.main.sync {
-            legoColors = []
-        }
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
         request.addAuthentication(using: blCredentials)
@@ -72,10 +68,11 @@ class AppController: ObservableObject {
     }
     
     
-    func imageUrl(item: OrderItem) -> URL? {
-        
-        URL(string: "https://img.bricklink.com/P/\(item.colorId)/\(item.ref).jpg")
-    }
+    
+    // MARK: - Orders
+    
+    
+    @Published var orders: [Order] = []
     
     
     func reloadOrders() async {
@@ -121,35 +118,8 @@ class AppController: ObservableObject {
     }
     
     
-    func getOrderItems(orderId: OrderId) async -> [OrderItem] {
-        
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
-        request.addAuthentication(using: blCredentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        
-        let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
-        if let batches = decoded.data, let items = batches.first {
-            
-            return items.map { item in
-                
-                OrderItem(
-                    id: "\(item.inventoryId)",
-                    orderId: orderId,
-                    condition: item.newOrUsed,
-                    colorId: "\(item.colorId)",
-                    ref: item.item.no,
-                    name: item.item.name,
-                    location: item.remarks ?? "",
-                    comment: item.description ?? "",
-                    quantity: "\(item.quantity)",
-                    quantityLeft: ""
-                )
-            }
-        }
-        
-        return []
-    }
+    
+    // MARK: - Order status, Tracking no, Drive thru
     
     
     func updateOrderStatus(orderId: OrderId, status: String) async {
@@ -204,66 +174,13 @@ class AppController: ObservableObject {
     }
     
     
-    func getOrderFeedbacks(orderId: String) async -> [Feedback] {
-        
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
-        request.addAuthentication(using: blCredentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
-        if let feedbacks = decoded.data {
-            
-            return feedbacks.map { Feedback(fromBlFeedback: $0) }
-        }
-        
-        return []
-    }
     
-    
-    func postOrderFeedback(orderId: String, rating: Int, comment: String) async {
-        
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!)
-        request.httpMethod = "POST"
-        request.httpBody = """
-            {
-                "order_id": \(orderId),
-                "rating": \(rating),
-                "comment": "\(comment)"
-            }
-            """.data(using: .utf8)
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        request.addAuthentication(using: blCredentials)
-        
-        print(String(data: request.httpBody!, encoding: .utf8)!)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-    }
+    // MARK: - Shipping cost
     
     
     func shippingCost(forOrderWithId orderId: OrderId) -> Float? {
         
         return dataStore.shippingCostsByOrderId[orderId]
-    }
-    
-    
-    func affranchissement(forOrderWithId orderId: OrderId) -> String? {
-        
-        return dataStore.affranchissementMethodByOrderId[orderId]
-    }
-    
-    
-    func pickedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
-        
-        return dataStore.pickedItemsByOrderId[orderId] ?? []
-    }
-    
-    
-    func verifiedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
-        
-        return dataStore.verifiedItemsByOrderId[orderId] ?? []
     }
     
     
@@ -278,6 +195,16 @@ class AppController: ObservableObject {
     }
     
     
+    
+    // MARK: - Affranchissement
+    
+    
+    func affranchissement(forOrderWithId orderId: OrderId) -> String? {
+        
+        return dataStore.affranchissementMethodByOrderId[orderId]
+    }
+    
+    
     func updateAffranchissement(forOrderWithId orderId: OrderId, method: String) {
         
         var affranchissementMethodByOrderId = dataStore.affranchissementMethodByOrderId
@@ -288,6 +215,53 @@ class AppController: ObservableObject {
         try! dataStore.save()
         
         self.objectWillChange.send()
+    }
+    
+    
+    
+    // MARK: - Order items
+    
+    
+    func getOrderItems(orderId: OrderId) async -> [OrderItem] {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        
+        let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
+        if let batches = decoded.data, let items = batches.first {
+            
+            return items.map { item in
+                
+                OrderItem(
+                    id: "\(item.inventoryId)",
+                    orderId: orderId,
+                    condition: item.newOrUsed,
+                    colorId: "\(item.colorId)",
+                    ref: item.item.no,
+                    name: item.item.name,
+                    location: item.remarks ?? "",
+                    comment: item.description ?? "",
+                    quantity: "\(item.quantity)",
+                    quantityLeft: ""
+                )
+            }
+        }
+        
+        return []
+    }
+    
+    
+    func imageUrl(item: OrderItem) -> URL? {
+        
+        URL(string: "https://img.bricklink.com/P/\(item.colorId)/\(item.ref).jpg")
+    }
+    
+    
+    func pickedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
+        
+        return dataStore.pickedItemsByOrderId[orderId] ?? []
     }
     
     
@@ -327,6 +301,12 @@ class AppController: ObservableObject {
     }
     
     
+    func verifiedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
+        
+        return dataStore.verifiedItemsByOrderId[orderId] ?? []
+    }
+    
+    
     func verifyItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
         
         var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
@@ -363,6 +343,56 @@ class AppController: ObservableObject {
     }
     
     
+    
+    // MARK: - Order feedback
+    
+    
+    func getOrderFeedbacks(orderId: String) async -> [Feedback] {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
+        if let feedbacks = decoded.data {
+            
+            return feedbacks.map { Feedback(fromBlFeedback: $0) }
+        }
+        
+        return []
+    }
+    
+    
+    func postOrderFeedback(orderId: String, rating: Int, comment: String) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!)
+        request.httpMethod = "POST"
+        request.httpBody = """
+            {
+                "order_id": \(orderId),
+                "rating": \(rating),
+                "comment": "\(comment)"
+            }
+            """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.addAuthentication(using: blCredentials)
+        
+        print(String(data: request.httpBody!, encoding: .utf8)!)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+    }
+    
+    
+    
+    // MARK: - Transactions
+    
+    
+    @Published var transactions: [Transaction] = []
+    
+    
     func registerTransaction(_ transaction: Transaction) {
         
         var transactions = dataStore.transactions
@@ -374,6 +404,7 @@ class AppController: ObservableObject {
         self.transactions = transactions
     }
 }
+
 
 
 extension Order {
