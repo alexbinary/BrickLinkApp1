@@ -57,15 +57,19 @@ class AppController: ObservableObject {
     }
     
     
-    func color(id: LegoColor.ID) -> Color {
+    func color(for item: OrderItem) -> Color? {
         
-        Color(fromBLCode: legoColors.first(where: { $0.id == id })!.colorCode)
+        if let c = legoColors.first(where: { $0.id == item.colorId }) {
+            return Color(fromBLCode: c.colorCode)
+        } else {
+            return nil
+        }
     }
     
     
-    func colorName(id: LegoColor.ID) -> String {
+    func colorName(for item: OrderItem) -> String {
         
-        legoColors.first(where: { $0.id == id })?.name ?? id
+        item.colorName
     }
     
     
@@ -285,6 +289,7 @@ class AppController: ObservableObject {
                     orderId: orderId,
                     condition: item.newOrUsed,
                     colorId: "\(item.colorId)",
+                    colorName: item.colorName,
                     ref: item.item.no,
                     name: item.item.name,
                     location: item.remarks ?? "",

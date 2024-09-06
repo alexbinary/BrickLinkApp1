@@ -123,10 +123,10 @@ struct PickingItemsView: View {
                     TableColumn("Location", value: \.location)
                     TableColumn("Quantity", value: \.quantity)
                     TableColumn("Left", value: \.quantityLeft)
-                    TableColumn("Color") { value in
+                    TableColumn("Color") { item in
                         HStack {
-                            appController.color(id: value.colorId).frame(width: 18, height: 18)
-                            Text(appController.colorName(id: value.colorId))
+                            appController.color(for: item).frame(width: 18, height: 18)
+                            Text(appController.colorName(for: item))
                         }
                     }
                     TableColumn("Name", value: \.name)
@@ -207,10 +207,10 @@ struct PickingItemsView: View {
                         AsyncImage(url: appController.imageUrl(item: value))
                     }
                     TableColumn("Condition", value: \.condition)
-                    TableColumn("Color") { value in
+                    TableColumn("Color") { item in
                         HStack {
-                            appController.color(id: value.colorId).frame(width: 18, height: 18)
-                            Text(appController.colorName(id: value.colorId))
+                            appController.color(for: item).frame(width: 18, height: 18)
+                            Text(appController.colorName(for: item))
                         }
                     }
                     TableColumn("Name", value: \.name)
@@ -286,10 +286,10 @@ struct PickingItemsView: View {
                         AsyncImage(url: appController.imageUrl(item: value))
                     }
                     TableColumn("Condition", value: \.condition)
-                    TableColumn("Color") { value in
+                    TableColumn("Color") { item in
                         HStack {
-                            appController.color(id: value.colorId).frame(width: 18, height: 18)
-                            Text(appController.colorName(id: value.colorId))
+                            appController.color(for: item).frame(width: 18, height: 18)
+                            Text(appController.colorName(for: item))
                         }
                     }
                     TableColumn("Name", value: \.name)

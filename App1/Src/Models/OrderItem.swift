@@ -9,6 +9,7 @@ struct OrderItem: Identifiable {
     let orderId: String
     let condition: String
     let colorId: String
+    let colorName: String
     let ref: String
     let name: String
     let location: String
