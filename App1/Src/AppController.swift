@@ -18,7 +18,7 @@ class AppController: ObservableObject {
         self.blCredentials = blCredentials
         
         Task {
-            await self.loadColors()
+            await self.reloadColors()
             await self.loadOrderSummaries()
         }
     }
@@ -27,12 +27,9 @@ class AppController: ObservableObject {
     // MARK: - Colors
     
     
-    private var legoColors: [LegoColor] = []
-    
-    
     public func color(for item: OrderItem) -> Color? {
         
-        if let c = legoColors.first(where: { $0.id == item.colorId }) {
+        if let c = dataStore.colors.first(where: { $0.id == item.colorId }) {
             return Color(fromBLCode: c.colorCode)
         } else {
             return nil
@@ -57,16 +54,38 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<[BrickLinkColor]> = data.decode()
         if let blColors = decoded.data {
             
-            self.legoColors = blColors.map {
+            let colors = blColors.map {
                 LegoColor(
                     id: "\($0.colorId)",
                     name: $0.colorName,
                     colorCode: $0.colorCode
                 )
             }
+            
+            try! dataStore.setColors(colors)
+            try! dataStore.save()
+            
             DispatchQueue.main.sync {
                 self.objectWillChange.send()
             }
+        }
+    }
+    
+    
+    func loadColorsIfMissing() async {
+        
+        if dataStore.colors.isEmpty {
+            
+            await loadColors()
+        }
+    }
+    
+    
+    func reloadColors() async {
+        
+        if !dataStore.colors.isEmpty {
+            
+            await loadColors()
         }
     }
     

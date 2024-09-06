@@ -1,5 +1,6 @@
 
-struct LegoColor: Identifiable {
+
+struct LegoColor: Identifiable, Codable {
     
     let id: String
     let name: String

@@ -45,6 +45,20 @@ class DataStore {
     }
     
     
+    public var colors: [LegoColor] {
+        
+        data?.colors ?? []
+    }
+    
+    
+    public func setColors(_ colors: [LegoColor]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.colors = colors
+    }
+    
+    
     public var shippingCostsByOrderId: [OrderId: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
@@ -127,6 +141,12 @@ typealias InventoryId = String
 
 
 struct DataRoot: Codable {
+    
+    // MARK: - External data
+    
+    var colors: [LegoColor]
+    
+    // MARK: - Local data
     
     var shippingCostsByOrderId: [OrderId: Float]
     var affranchissementMethodByOrderId: [OrderId: String]
