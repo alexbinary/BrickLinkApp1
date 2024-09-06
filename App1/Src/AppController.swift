@@ -17,8 +17,6 @@ class AppController: ObservableObject {
         self.dataStore = dataStore
         self.blCredentials = blCredentials
         
-        self.transactions = dataStore.transactions
-        
         Task {
             await self.loadColors()
             await self.loadOrderSummaries()
@@ -495,7 +493,10 @@ class AppController: ObservableObject {
     // MARK: - Transactions
     
     
-    @Published var transactions: [Transaction] = []
+    var transactions: [Transaction] {
+        
+        dataStore.transactions
+    }
     
     
     func registerTransaction(_ transaction: Transaction) {
@@ -506,7 +507,7 @@ class AppController: ObservableObject {
         try! dataStore.setTransactions(transactions)
         try! dataStore.save()
         
-        self.transactions = transactions
+        self.objectWillChange.send()
     }
 }
 
