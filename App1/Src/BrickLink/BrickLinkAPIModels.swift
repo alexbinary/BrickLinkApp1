@@ -84,6 +84,15 @@ struct BrickLinkInventoryItem: Decodable {
 
     let no: String
     let name: String
+    let type: BrickLinkItemType
+}
+
+
+
+enum BrickLinkItemType: String, Decodable {
+    
+    case part = "PART"
+    case minifig = "MINIFIG"
 }
 
 

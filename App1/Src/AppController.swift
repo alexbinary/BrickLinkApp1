@@ -295,6 +295,7 @@ class AppController: ObservableObject {
                     colorName: item.colorName,
                     ref: item.item.no,
                     name: item.item.name,
+                    type: item.item.type,
                     location: item.remarks ?? "",
                     comment: item.description ?? "",
                     quantity: "\(item.quantity)",
@@ -309,7 +310,12 @@ class AppController: ObservableObject {
     
     func imageUrl(item: OrderItem) -> URL? {
         
-        URL(string: "https://img.bricklink.com/P/\(item.colorId)/\(item.ref).jpg")
+        switch item.type {
+        case .part:
+            return URL(string: "https://img.bricklink.com/P/\(item.colorId)/\(item.ref).jpg")
+        case .minifig:
+            return URL(string: "https://img.bricklink.com/M/\(item.ref).jpg")
+        }
     }
     
     

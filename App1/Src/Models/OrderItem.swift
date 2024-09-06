@@ -12,6 +12,7 @@ struct OrderItem: Identifiable {
     let colorName: String
     let ref: String
     let name: String
+    let type: BrickLinkItemType
     let location: String
     let comment: String
     let quantity: String
