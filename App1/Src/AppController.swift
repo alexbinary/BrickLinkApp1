@@ -280,6 +280,7 @@ class AppController: ObservableObject {
         request.addAuthentication(using: blCredentials)
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
         
         let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
         if let batches = decoded.data, let items = batches.first {
