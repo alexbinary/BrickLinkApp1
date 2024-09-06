@@ -8,7 +8,7 @@ struct OrdersDetailComptaView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let order: Order
+    let order: OrderDetails
     
     @State var incomeDate: Date = Date()
     @State var incomeAmount: Float = 0

@@ -7,12 +7,12 @@ struct PickingContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @Binding var selectedOrderIds: Set<Order.ID>
+    @Binding var selectedOrderIds: Set<OrderSummary.ID>
     
     
     var body: some View {
         
-        Table(appController.orders, selection: $selectedOrderIds) {
+        Table(appController.orderSummaries, selection: $selectedOrderIds) {
             
             TableColumn("ID", value: \.id)
             TableColumn("Date") { order in

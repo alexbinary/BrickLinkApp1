@@ -17,8 +17,8 @@ struct ContentView: View {
     
     @State var selectedSidebarItem: SidebarItem = .orders
     
-    @State var ordersSelectedOrderId: Order.ID? = Secrets.Default.ordersSelectedOrderId
-    @State var pickingSelectedOrderIds: Set<Order.ID> = Secrets.Default.pickingSelectedOrderIds
+    @State var ordersSelectedOrderId: OrderSummary.ID? = Secrets.Default.ordersSelectedOrderId
+    @State var pickingSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.pickingSelectedOrderIds
     @State var selectedTransactions: Set<Transaction.ID> = []
     
     var body: some View {

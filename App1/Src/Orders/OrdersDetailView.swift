@@ -8,9 +8,9 @@ struct OrdersDetailView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedOrderId: Order.ID?
+    let selectedOrderId: OrderDetails.ID?
     
-    @State var order: Order? = nil
+    @State var order: OrderDetails? = nil
     
     
     var body: some View {

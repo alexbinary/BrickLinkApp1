@@ -155,7 +155,7 @@ struct PickingDetailView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedOrderIds: Set<Order.ID>
+    let selectedOrderIds: Set<OrderDetails.ID>
     
     @State var orderItems: [OrderItem] = []
     
@@ -192,15 +192,15 @@ struct PickingDetailView: View {
                             
                             Text("Address").font(.title2)
                             
-                            Text(order.shippingAddressName ?? "")
-                            Text(order.shippingAddress ?? "").fixedSize(horizontal: false, vertical: true)
-                            Text(order.shippingAddressCountryCode ?? "")
+                            Text(order.shippingAddressName)
+                            Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
+                            Text(order.shippingAddressCountryCode)
                             
                             Text("Shipping price").font(.title2)
                             
                             HStack {
-                                Text(order.shippingCost!, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                Text(" - \(order.shippingMethodName!) \(String(format: "%.0f", order.totalWeight!))g")
+                                Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                Text(" - \(order.shippingMethodName) \(String(format: "%.0f", order.totalWeight))g")
                             }
                             
                             ShippingCostView(order: order)
@@ -357,10 +357,12 @@ struct PickingDetailView: View {
     var selectedAffranchissement: SelectedAffranchissement? {
         
         guard !selectedOrderIds.isEmpty,
-              let order = appController.orderDetails(orderId: selectedOrderIds.first!),
-              let weight = order.totalWeight else {
+              let order = appController.orderDetails(orderId: selectedOrderIds.first!)
+        else {
             return nil
         }
+        
+        let weight = order.totalWeight
         
         if order.shippingMethodId == shippingMethodId_France {
             

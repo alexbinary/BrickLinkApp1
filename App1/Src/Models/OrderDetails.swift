@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct Order: Identifiable, Equatable {
+struct OrderDetails: Identifiable, Equatable {
     
     let id: String
     let date: Date
@@ -13,22 +13,22 @@ struct Order: Identifiable, Equatable {
     
     let subTotal: Float
     let grandTotal: Float
-    let shippingCost: Float?
+    let shippingCost: Float
     let costCurrencyCode: String
     
     let dispSubTotal: Float
     let dispGrandTotal: Float
-    let dispShippingCost: Float?
+    let dispShippingCost: Float
     let dispCostCurrencyCode: String
     
     let status: String
     let driveThruSent: Bool
     let trackingNo: String?
-    let totalWeight: Float?
+    let totalWeight: Float
     
-    let shippingMethodId: Int?
-    let shippingMethodName: String?
-    let shippingAddress: String?
-    let shippingAddressCountryCode: String?
-    let shippingAddressName: String?
+    let shippingMethodId: Int
+    let shippingMethodName: String
+    let shippingAddress: String
+    let shippingAddressCountryCode: String
+    let shippingAddressName: String
 }

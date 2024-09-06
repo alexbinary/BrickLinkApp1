@@ -25,6 +25,8 @@ struct BrickLinkOrderFeedback: Decodable {
 
 struct BrickLinkOrder: Decodable {
     
+    // MARK: Summary
+    
     let orderId: Int
     let dateOrdered: Date
     let buyerName: String
@@ -33,6 +35,9 @@ struct BrickLinkOrder: Decodable {
     let cost: BrickLinkOrderCost
     let dispCost: BrickLinkOrderCost
     let status: String
+    
+    // MARK: Details
+    
     let driveThruSent: Bool?
     let shipping: BrickLinkOrderShipping?
     let totalWeight: FixedPointNumber?

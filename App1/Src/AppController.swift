@@ -21,7 +21,7 @@ class AppController: ObservableObject {
         
         Task {
             await self.loadColors()
-            await self.loadOrders()
+            await self.loadOrderSummaries()
         }
     }
     
@@ -74,13 +74,13 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Orders
+    // MARK: - Order summaries
     
     
-    @Published var orders: [Order] = []
+    @Published var orderSummaries: [OrderSummary] = []
     
     
-    private func loadOrders() async {
+    private func loadOrderSummaries() async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
         request.addAuthentication(using: blCredentials)
@@ -93,27 +93,31 @@ class AppController: ObservableObject {
             
             DispatchQueue.main.sync {
                 
-                self.orders = blOrders
-                    .map { Order(fromBlOrder: $0) }
+                self.orderSummaries = blOrders
+                    .map { OrderSummary(fromBlOrder: $0) }
                     .sorted { $0.date > $1.date }
             }
         }
     }
     
     
-    func reloadOrders() async {
+    func reloadOrderSummaries() async {
         
-        if !orders.isEmpty {
+        if !orderSummaries.isEmpty {
         
-            await loadOrders()
+            await loadOrderSummaries()
         }
     }
     
     
-    @Published var orderDetails: [Order] = []
+    
+    // MARK: - Orders details
     
     
-    func orderDetails(orderId: String) -> Order? {
+    @Published var orderDetails: [OrderDetails] = []
+    
+    
+    func orderDetails(orderId: String) -> OrderDetails? {
         
         orderDetails.first { $0.id == orderId }
     }
@@ -130,7 +134,7 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<BrickLinkOrder> = data.decode()
         if let blOrder = decoded.data {
             
-            let order = Order(fromBlOrder: blOrder)
+            let order = OrderDetails(fromBlOrder: blOrder)
             
             DispatchQueue.main.sync {
                 if let index = self.orderDetails.firstIndex(where: { $0.id == order.id }) {
@@ -181,7 +185,7 @@ class AppController: ObservableObject {
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
         
-        await reloadOrders()
+        await reloadOrderSummaries()
         await reloadOrderDetails(orderId: orderId)
     }
     
@@ -205,7 +209,7 @@ class AppController: ObservableObject {
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
         
-        await reloadOrders()
+        await reloadOrderSummaries()
         await reloadOrderDetails(orderId: orderId)
     }
 
@@ -219,7 +223,7 @@ class AppController: ObservableObject {
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
         
-        await reloadOrders()
+        await reloadOrderSummaries()
         await reloadOrderDetails(orderId: orderId)
     }
     
@@ -469,7 +473,7 @@ class AppController: ObservableObject {
 
 
 
-extension Order {
+extension OrderSummary {
     
     
     init(fromBlOrder blOrder: BrickLinkOrder) {
@@ -482,24 +486,48 @@ extension Order {
         
         self.subTotal = blOrder.cost.subtotal.floatValue
         self.grandTotal = blOrder.cost.grandTotal.floatValue
-        self.shippingCost = blOrder.cost.shipping?.floatValue
         self.costCurrencyCode = blOrder.cost.currencyCode
         
         self.dispSubTotal = blOrder.dispCost.subtotal.floatValue
         self.dispGrandTotal = blOrder.dispCost.grandTotal.floatValue
-        self.dispShippingCost = blOrder.dispCost.shipping?.floatValue
         self.dispCostCurrencyCode = blOrder.dispCost.currencyCode
         
         self.status = blOrder.status
-        self.driveThruSent = blOrder.driveThruSent ?? false
-        self.trackingNo = blOrder.shipping?.trackingNo
-        self.totalWeight = blOrder.totalWeight?.floatValue
+    }
+}
+
+
+extension OrderDetails {
+    
+    
+    init(fromBlOrder blOrder: BrickLinkOrder) {
         
-        self.shippingMethodId = blOrder.shipping?.methodId
-        self.shippingMethodName = blOrder.shipping?.method
-        self.shippingAddress = blOrder.shipping?.address.full
-        self.shippingAddressCountryCode = blOrder.shipping?.address.countryCode
-        self.shippingAddressName = blOrder.shipping?.address.name.full
+        self.id = "\(blOrder.orderId)"
+        self.date = blOrder.dateOrdered
+        self.buyer = blOrder.buyerName
+        self.items = blOrder.totalCount
+        self.lots = blOrder.uniqueCount
+        
+        self.subTotal = blOrder.cost.subtotal.floatValue
+        self.grandTotal = blOrder.cost.grandTotal.floatValue
+        self.shippingCost = blOrder.cost.shipping!.floatValue
+        self.costCurrencyCode = blOrder.cost.currencyCode
+        
+        self.dispSubTotal = blOrder.dispCost.subtotal.floatValue
+        self.dispGrandTotal = blOrder.dispCost.grandTotal.floatValue
+        self.dispShippingCost = blOrder.dispCost.shipping!.floatValue
+        self.dispCostCurrencyCode = blOrder.dispCost.currencyCode
+        
+        self.status = blOrder.status
+        self.driveThruSent = blOrder.driveThruSent!
+        self.trackingNo = blOrder.shipping!.trackingNo
+        self.totalWeight = blOrder.totalWeight!.floatValue
+        
+        self.shippingMethodId = blOrder.shipping!.methodId
+        self.shippingMethodName = blOrder.shipping!.method
+        self.shippingAddress = blOrder.shipping!.address.full
+        self.shippingAddressCountryCode = blOrder.shipping!.address.countryCode
+        self.shippingAddressName = blOrder.shipping!.address.name.full
     }
 }
 

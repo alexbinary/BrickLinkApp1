@@ -147,7 +147,7 @@ struct ShippingCostView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let order: Order
+    let order: OrderDetails
     
     
     var body: some View {
@@ -263,7 +263,7 @@ struct ShippingCostView: View {
     
     var selectedShippingCost: SelectedShippingCost? {
         
-        guard let weight = order.totalWeight else { return nil }
+        let weight = order.totalWeight
         
         if order.shippingMethodId == shippingMethodId_France {
             

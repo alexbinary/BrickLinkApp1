@@ -17,7 +17,7 @@ struct OrdersDetailDetailView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let order: Order
+    let order: OrderDetails
     
     @State var orderItems: [OrderItem] = []
     @State var orderFeedbacks: [Feedback] = []
@@ -29,9 +29,9 @@ struct OrdersDetailDetailView: View {
             
             HeaderTitleView(label: "􁊇 Address")
             
-            Text(order.shippingAddressName ?? "")
-            Text(order.shippingAddress ?? "").fixedSize(horizontal: false, vertical: true)
-            Text(order.shippingAddressCountryCode ?? "")
+            Text(order.shippingAddressName)
+            Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
+            Text(order.shippingAddressCountryCode)
             
             Divider()
             
@@ -96,7 +96,7 @@ struct OrdersDetailDetailView: View {
             
             HeaderTitleView(label: "􁊇 Tracking")
             
-            if order.trackingNo?.isEmpty ?? true {
+            if (order.trackingNo ?? "").isEmpty {
                 Text("Tracking no not set")
             } else {
                 Text("Tracking no set")
@@ -167,7 +167,7 @@ struct OrdersDetailDetailView: View {
             
             HeaderTitleView(label: "􁊇 Items")
             
-            Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight!))g")
+            Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")
             
             Table(orderItems) {
                 
