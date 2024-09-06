@@ -240,6 +240,12 @@ struct PickingDetailView: View {
                                     Text("Confirm affranchissement")
                                 }
                                 
+                                Button {
+                                    appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
+                                } label: {
+                                    Text("Affranchissement Bureau de poste")
+                                }
+                                
                                 if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
                                     
                                     HStack {
