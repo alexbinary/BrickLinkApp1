@@ -51,35 +51,17 @@ class DataStore {
     }
     
     
-    public var affranchissementMethodByOrderId: [OrderId: String] {
-        
-        data?.affranchissementMethodByOrderId ?? [:]
-    }
-    
-    
-    public var pickedItemsByOrderId: [OrderId: [InventoryId]] {
-        
-        data?.pickedItemsByOrderId ?? [:]
-    }
-    
-    
-    public var verifiedItemsByOrderId: [OrderId: [InventoryId]] {
-        
-        data?.verifiedItemsByOrderId ?? [:]
-    }
-    
-    
-    public var transactions: [Transaction] {
-        
-        data?.transactions ?? []
-    }
-    
-    
     public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderId: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
         data!.shippingCostsByOrderId = shippingCostsByOrderId
+    }
+    
+    
+    public var affranchissementMethodByOrderId: [OrderId: String] {
+        
+        data?.affranchissementMethodByOrderId ?? [:]
     }
     
     
@@ -91,6 +73,12 @@ class DataStore {
     }
     
     
+    public var pickedItemsByOrderId: [OrderId: [InventoryId]] {
+        
+        data?.pickedItemsByOrderId ?? [:]
+    }
+    
+    
     public func setPickedItemsByOrderId(_ pickedItemsByOrderId: [OrderId: [InventoryId]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
@@ -99,11 +87,23 @@ class DataStore {
     }
     
     
+    public var verifiedItemsByOrderId: [OrderId: [InventoryId]] {
+        
+        data?.verifiedItemsByOrderId ?? [:]
+    }
+    
+    
     public func setVerifiedItemsByOrderId(_ verifiedItemsByOrderId: [OrderId: [InventoryId]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
         data!.verifiedItemsByOrderId = verifiedItemsByOrderId
+    }
+    
+    
+    public var transactions: [Transaction] {
+        
+        data?.transactions ?? []
     }
     
     
