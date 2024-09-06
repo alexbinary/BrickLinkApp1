@@ -20,7 +20,6 @@ struct OrdersDetailDetailView: View {
     let order: OrderDetails
     
     @State var orderItems: [OrderItem] = []
-    @State var orderFeedbacks: [Feedback] = []
     
     
     var body: some View {
@@ -139,6 +138,8 @@ struct OrdersDetailDetailView: View {
             
             HeaderTitleView(label: "􁊇 Feedback")
             
+            let orderFeedbacks = appController.orderFeedbacks(forOrderWithId: order.id)
+            
             Table(orderFeedbacks.sorted { $0.dateRated < $1.dateRated }) {
                 TableColumn("From", value: \.from)
                 TableColumn("Rating") { feedback in
@@ -157,7 +158,6 @@ struct OrdersDetailDetailView: View {
                         orderId: order.id, rating: 0,
                         comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
                     )
-                    await loadOrderFeedbacks()
                 }
             } label: {
                 Text("Post Praise feedback")
@@ -222,7 +222,6 @@ struct OrdersDetailDetailView: View {
     
     func loadOrderFeedbacks() async {
         
-        self.orderFeedbacks.removeAll()
-        self.orderFeedbacks = await appController.getOrderFeedbacks(orderId: order.id)
+        await appController.loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
     }
 }

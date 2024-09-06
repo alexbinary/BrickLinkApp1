@@ -146,6 +146,7 @@ class AppController: ObservableObject {
             let order = OrderDetails(fromBlOrder: blOrder)
             
             DispatchQueue.main.sync {
+                
                 if let index = self.orderDetails.firstIndex(where: { $0.id == order.id }) {
                     self.orderDetails[index] = order
                 } else {
@@ -422,7 +423,16 @@ class AppController: ObservableObject {
     // MARK: - Order feedback
     
     
-    func getOrderFeedbacks(orderId: String) async -> [Feedback] {
+    @Published var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]] = [:]
+    
+    
+    func orderFeedbacks(forOrderWithId orderId: String) -> [Feedback] {
+        
+        orderFeedbacksByOrderId[orderId] ?? []
+    }
+    
+    
+    func loadOrderFeedbacks(forOrderWithId orderId: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
         request.addAuthentication(using: blCredentials)
@@ -431,12 +441,30 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
-        if let feedbacks = decoded.data {
+        if let blFeedbacks = decoded.data {
             
-            return feedbacks.map { Feedback(fromBlFeedback: $0) }
+            DispatchQueue.main.sync {
+                orderFeedbacksByOrderId[orderId] = blFeedbacks.map { Feedback(fromBlFeedback: $0) }
+            }
         }
+    }
+    
+    
+    func loadOrderFeedbacksIfMissing(forOrderWithId orderId: String) async {
         
-        return []
+        if !orderFeedbacksByOrderId.keys.contains(orderId) {
+            
+            await loadOrderFeedbacks(forOrderWithId: orderId)
+        }
+    }
+    
+    
+    func reloadOrderFeedbacks(forOrderWithId orderId: String) async {
+        
+        if orderFeedbacksByOrderId.keys.contains(orderId) {
+            
+            await loadOrderFeedbacks(forOrderWithId: orderId)
+        }
     }
     
     
@@ -458,6 +486,8 @@ class AppController: ObservableObject {
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
+        
+        await reloadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
