@@ -17,4 +17,6 @@ struct OrderItem: Identifiable {
     let comment: String
     let quantity: String
     let quantityLeft: String
+    let unitPrice: Float
+    let unitPriceFinal: Float
 }

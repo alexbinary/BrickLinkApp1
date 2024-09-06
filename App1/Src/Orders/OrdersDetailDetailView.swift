@@ -186,6 +186,15 @@ struct OrdersDetailDetailView: View {
                 TableColumn("Comment", value: \.comment)
                 TableColumn("Quantity", value: \.quantity)
                 TableColumn("Left", value: \.quantityLeft)
+                TableColumn("PU") { item in
+                    
+                    if item.unitPriceFinal != item.unitPrice {
+                        
+                        Text(item.unitPrice, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                            .strikethrough()
+                    }
+                    Text(item.unitPriceFinal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                }
             }
             .frame(minHeight: 400)
             

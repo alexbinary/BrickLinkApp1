@@ -299,7 +299,9 @@ class AppController: ObservableObject {
                     location: item.remarks ?? "",
                     comment: item.description ?? "",
                     quantity: "\(item.quantity)",
-                    quantityLeft: ""
+                    quantityLeft: "",
+                    unitPrice: item.unitPrice.floatValue,
+                    unitPriceFinal: item.unitPriceFinal.floatValue
                 )
             }
         }

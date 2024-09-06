@@ -76,6 +76,8 @@ struct BrickLinkOrderItem: Decodable {
     let newOrUsed: String
     let remarks: String?
     let description: String?
+    let unitPrice: FixedPointNumber
+    let unitPriceFinal: FixedPointNumber
 }
 
 
