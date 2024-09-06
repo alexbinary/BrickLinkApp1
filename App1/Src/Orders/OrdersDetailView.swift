@@ -21,7 +21,7 @@ struct OrdersDetailView: View {
                 
                 if let orderId = selectedOrderId {
                     
-                    if let order = appController.orderDetails(orderId: orderId) {
+                    if let order = appController.orderDetails(forOrderWithId: orderId) {
                         
                         VStack(alignment: .leading, spacing: 12) {
                             

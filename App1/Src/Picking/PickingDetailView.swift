@@ -188,7 +188,7 @@ struct PickingDetailView: View {
                             
                             Text("select only one order")
                             
-                        } else if let order = appController.orderDetails(orderId: selectedOrderIds.first!) {
+                        } else if let order = appController.orderDetails(forOrderWithId: selectedOrderIds.first!) {
                             
                             Text("Address").font(.title2)
                             
@@ -357,7 +357,7 @@ struct PickingDetailView: View {
     var selectedAffranchissement: SelectedAffranchissement? {
         
         guard !selectedOrderIds.isEmpty,
-              let order = appController.orderDetails(orderId: selectedOrderIds.first!)
+              let order = appController.orderDetails(forOrderWithId: selectedOrderIds.first!)
         else {
             return nil
         }
