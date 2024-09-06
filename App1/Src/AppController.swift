@@ -242,6 +242,8 @@ class AppController: ObservableObject {
         
         try! dataStore.setShippingCostsByOrderId(shippingCostsByOrderId)
         try! dataStore.save()
+        
+        self.objectWillChange.send()
     }
     
     
