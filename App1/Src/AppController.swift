@@ -18,7 +18,7 @@ class AppController: ObservableObject {
         self.blCredentials = blCredentials
         
         Task {
-            await self.reloadColors()
+            await self.loadColors()
             await self.loadOrderSummaries()
         }
     }
@@ -94,12 +94,9 @@ class AppController: ObservableObject {
     // MARK: - Order summaries
     
     
-    private var orderSummaries: [OrderSummary] = []
-    
-    
-    public var allOrderSummaries: [OrderSummary] {
+    public var orderSummaries: [OrderSummary] {
         
-        orderSummaries
+        dataStore.orderSummaries
     }
     
     
@@ -114,9 +111,12 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<[BrickLinkOrder]> = data.decode()
         if let blOrders = decoded.data {
             
-            self.orderSummaries = blOrders
+            let orderSummaries = blOrders
                 .map { OrderSummary(fromBlOrder: $0) }
                 .sorted { $0.date > $1.date }
+            
+            try! dataStore.setOrderSummaries(orderSummaries)
+            try! dataStore.save()
             
             DispatchQueue.main.sync {
                 self.objectWillChange.send()
@@ -127,7 +127,7 @@ class AppController: ObservableObject {
     
     public func loadOrderSummariesIfMissing() async {
         
-        if orderSummaries.isEmpty {
+        if dataStore.orderSummaries.isEmpty {
         
             await loadOrderSummaries()
         }
@@ -136,7 +136,7 @@ class AppController: ObservableObject {
     
     public func reloadOrderSummaries() async {
         
-        if !orderSummaries.isEmpty {
+        if !dataStore.orderSummaries.isEmpty {
         
             await loadOrderSummaries()
         }

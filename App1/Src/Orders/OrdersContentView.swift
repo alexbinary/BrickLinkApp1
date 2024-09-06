@@ -12,7 +12,7 @@ struct OrdersContentView: View {
     
     var body: some View {
         
-        Table(appController.allOrderSummaries, selection: $selectedOrderId) {
+        Table(appController.orderSummaries, selection: $selectedOrderId) {
             
             TableColumn("ID", value: \.id)
             TableColumn("Date") { order in

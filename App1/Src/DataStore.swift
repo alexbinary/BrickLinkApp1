@@ -59,6 +59,20 @@ class DataStore {
     }
     
     
+    public var orderSummaries: [OrderSummary] {
+        
+        data?.orderSummaries ?? []
+    }
+    
+    
+    public func setOrderSummaries(_ orderSummaries: [OrderSummary]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.orderSummaries = orderSummaries
+    }
+
+    
     public var shippingCostsByOrderId: [OrderId: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
@@ -145,6 +159,7 @@ struct DataRoot: Codable {
     // MARK: - External data
     
     var colors: [LegoColor]
+    var orderSummaries: [OrderSummary]
     
     // MARK: - Local data
     
