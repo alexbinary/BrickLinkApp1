@@ -101,6 +101,15 @@ class AppController: ObservableObject {
     }
     
     
+    func loadOrderSummariesIfMissing() async {
+        
+        if orderSummaries.isEmpty {
+        
+            await loadOrderSummaries()
+        }
+    }
+    
+    
     func reloadOrderSummaries() async {
         
         if !orderSummaries.isEmpty {
@@ -147,7 +156,7 @@ class AppController: ObservableObject {
     }
     
     
-    func loadOrderDetailsIfNeeded(orderId: String) async {
+    func loadOrderDetailsIfMissing(orderId: String) async {
         
         if !self.orderDetails.contains(where: { $0.id == orderId }) {
             

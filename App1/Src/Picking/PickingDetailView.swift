@@ -339,7 +339,7 @@ struct PickingDetailView: View {
     func loadOrder() async {
         
         if selectedOrderIds.count == 1 {
-            await appController.loadOrderDetailsIfNeeded(orderId: selectedOrderIds.first!)
+            await appController.loadOrderDetailsIfMissing(orderId: selectedOrderIds.first!)
         }
     }
     

@@ -72,6 +72,6 @@ struct OrdersDetailView: View {
         
         guard let orderId = selectedOrderId else { return }
         
-        await appController.loadOrderDetailsIfNeeded(orderId: orderId)
+        await appController.loadOrderDetailsIfMissing(orderId: orderId)
     }
 }
