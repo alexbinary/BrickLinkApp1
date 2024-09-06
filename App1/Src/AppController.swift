@@ -147,12 +147,9 @@ class AppController: ObservableObject {
     // MARK: - Orders details
     
     
-    private var orderDetails: [OrderDetails] = []
-    
-    
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderDetails.first { $0.id == orderId }
+        dataStore.orderDetails.first { $0.id == orderId }
     }
     
     
@@ -169,11 +166,16 @@ class AppController: ObservableObject {
             
             let order = OrderDetails(fromBlOrder: blOrder)
             
-            if let index = self.orderDetails.firstIndex(where: { $0.id == order.id }) {
-                self.orderDetails[index] = order
+            var orderDetails = dataStore.orderDetails
+            
+            if let index = orderDetails.firstIndex(where: { $0.id == order.id }) {
+                orderDetails[index] = order
             } else {
-                self.orderDetails.append(order)
+                orderDetails.append(order)
             }
+            
+            try! dataStore.setOrderDetails(orderDetails)
+            try! dataStore.save()
             
             DispatchQueue.main.sync {
                 self.objectWillChange.send()
@@ -184,7 +186,7 @@ class AppController: ObservableObject {
     
     public func loadOrderDetailsIfMissing(orderId: String) async {
         
-        if !self.orderDetails.contains(where: { $0.id == orderId }) {
+        if !dataStore.orderDetails.contains(where: { $0.id == orderId }) {
             
             await loadOrderDetails(orderId: orderId)
         }
@@ -193,7 +195,7 @@ class AppController: ObservableObject {
     
     public func reloadOrderDetails(orderId: String) async {
         
-        if self.orderDetails.contains(where: { $0.id == orderId }) {
+        if dataStore.orderDetails.contains(where: { $0.id == orderId }) {
             
             await loadOrderDetails(orderId: orderId)
         }
