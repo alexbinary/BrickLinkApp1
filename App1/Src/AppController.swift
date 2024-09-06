@@ -450,12 +450,9 @@ class AppController: ObservableObject {
     // MARK: - Order feedback
     
     
-    private var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]] = [:]
-    
-    
     public func orderFeedbacks(forOrderWithId orderId: String) -> [Feedback] {
         
-        orderFeedbacksByOrderId[orderId] ?? []
+        dataStore.orderFeedbacks.filter { $0.orderId == orderId }
     }
     
     
@@ -470,7 +467,14 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
         if let blFeedbacks = decoded.data {
             
-            orderFeedbacksByOrderId[orderId] = blFeedbacks.map { Feedback(fromBlFeedback: $0) }
+            let newFeedbacks = blFeedbacks.map { Feedback(fromBlFeedback: $0) }
+            
+            var feedbacks = dataStore.orderFeedbacks
+            feedbacks.removeAll(where: { $0.orderId == newFeedbacks.first?.orderId })
+            feedbacks.append(contentsOf: newFeedbacks)
+            
+            try! dataStore.setOrderFeedbacks(feedbacks)
+            try! dataStore.save()
             
             DispatchQueue.main.sync {
                 self.objectWillChange.send()
@@ -481,7 +485,7 @@ class AppController: ObservableObject {
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: String) async {
         
-        if !orderFeedbacksByOrderId.keys.contains(orderId) {
+        if !dataStore.orderFeedbacks.contains(where: { $0.orderId == orderId }) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -490,7 +494,7 @@ class AppController: ObservableObject {
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: String) async {
         
-        if orderFeedbacksByOrderId.keys.contains(orderId) {
+        if dataStore.orderFeedbacks.contains(where: { $0.orderId == orderId }) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -609,6 +613,7 @@ extension Feedback {
     init(fromBlFeedback blFeedback: BrickLinkOrderFeedback) {
         
         self.id = blFeedback.feedbackId
+        self.orderId = "\(blFeedback.orderId)"
         self.from = blFeedback.from
         self.to = blFeedback.to
         self.dateRated = blFeedback.dateRated

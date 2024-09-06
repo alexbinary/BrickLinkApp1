@@ -3,9 +3,10 @@ import Foundation
 
 
 
-struct Feedback: Identifiable {
+struct Feedback: Identifiable, Codable {
     
     let id: Int
+    let orderId: String
     let from: String
     let to: String
     let dateRated: Date

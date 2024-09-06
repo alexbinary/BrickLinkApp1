@@ -85,6 +85,20 @@ class DataStore {
         
         data!.orderDetails = orderDetails
     }
+    
+    
+    public var orderFeedbacks: [Feedback] {
+        
+        data?.orderFeedbacks ?? []
+    }
+    
+    
+    public func setOrderFeedbacks(_ orderFeedbacks: [Feedback]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.orderFeedbacks = orderFeedbacks
+    }
 
     
     public var shippingCostsByOrderId: [OrderId: Float] {
@@ -175,6 +189,7 @@ struct DataRoot: Codable {
     var colors: [LegoColor]
     var orderSummaries: [OrderSummary]
     var orderDetails: [OrderDetails]
+    var orderFeedbacks: [Feedback]
     
     // MARK: - Local data
     

@@ -13,6 +13,7 @@ struct BrickLinkAPIResponse<T>: Decodable where T: Decodable {
 struct BrickLinkOrderFeedback: Decodable {
     
     let feedbackId: Int
+    let orderId: Int
     let from: String
     let to: String
     let dateRated: Date
