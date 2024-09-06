@@ -157,7 +157,6 @@ struct PickingDetailView: View {
     
     let selectedOrderIds: Set<Order.ID>
     
-    @State var order: Order? = nil
     @State var orderItems: [OrderItem] = []
     
     
@@ -351,8 +350,11 @@ struct PickingDetailView: View {
     
     var selectedAffranchissement: SelectedAffranchissement? {
         
-        guard let order = order,
-              let weight = order.totalWeight else { return nil }
+        guard !selectedOrderIds.isEmpty,
+              let order = appController.orderDetails(orderId: selectedOrderIds.first!),
+              let weight = order.totalWeight else {
+            return nil
+        }
         
         if order.shippingMethodId == shippingMethodId_France {
             
