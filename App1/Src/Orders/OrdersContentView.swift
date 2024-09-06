@@ -43,6 +43,20 @@ struct OrdersContentView: View {
                     }
             }
             TableColumn("Status", value: \.status)
+            TableColumn("Feedback") { order in
+                HStack {
+                    Text("Buyer:")
+                    if let ratingFromBuyer = appController.orderFeedbacks(forOrderWithId: order.id).first(where: { $0.ratingOfBs == "S" })?.rating {
+                        Text(ratingFromBuyer, format: .number)
+                    }
+                }
+                HStack {
+                    Text("Me:")
+                    if let ratingFromSeller = appController.orderFeedbacks(forOrderWithId: order.id).first(where: { $0.ratingOfBs == "B" })?.rating {
+                        Text(ratingFromSeller, format: .number)
+                    }
+                }
+            }
         }
         .navigationTitle("Orders")
     }
