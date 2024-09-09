@@ -59,5 +59,15 @@ struct OrdersContentView: View {
             }
         }
         .navigationTitle("Orders")
+        .toolbar {
+            
+            Button {
+                Task {
+                    await appController.reloadOrderSummaries()
+                }
+            } label: {
+                Text("Reload orders")
+            }
+        }
     }
 }
