@@ -116,13 +116,13 @@ class DataStore {
     }
 
     
-    public var shippingCostsByOrderId: [OrderId: Float] {
+    public var shippingCostsByOrderId: [OrderSummary.ID: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
     }
     
     
-    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderId: Float]) throws {
+    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderSummary.ID: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -130,13 +130,13 @@ class DataStore {
     }
     
     
-    public var affranchissementMethodByOrderId: [OrderId: String] {
+    public var affranchissementMethodByOrderId: [OrderSummary.ID: String] {
         
         data?.affranchissementMethodByOrderId ?? [:]
     }
     
     
-    public func setAffranchissementMethodByOrderId(_ affranchissementMethodByOrderId: [OrderId: String]) throws {
+    public func setAffranchissementMethodByOrderId(_ affranchissementMethodByOrderId: [OrderSummary.ID: String]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -144,13 +144,13 @@ class DataStore {
     }
     
     
-    public var pickedItemsByOrderId: [OrderId: [InventoryId]] {
+    public var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
         
         data?.pickedItemsByOrderId ?? [:]
     }
     
     
-    public func setPickedItemsByOrderId(_ pickedItemsByOrderId: [OrderId: [InventoryId]]) throws {
+    public func setPickedItemsByOrderId(_ pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -158,13 +158,13 @@ class DataStore {
     }
     
     
-    public var verifiedItemsByOrderId: [OrderId: [InventoryId]] {
+    public var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
         
         data?.verifiedItemsByOrderId ?? [:]
     }
     
     
-    public func setVerifiedItemsByOrderId(_ verifiedItemsByOrderId: [OrderId: [InventoryId]]) throws {
+    public func setVerifiedItemsByOrderId(_ verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -187,9 +187,6 @@ class DataStore {
 }
 
 
-typealias OrderId = String
-typealias InventoryId = String
-
 
 struct DataRoot: Codable {
     
@@ -202,9 +199,9 @@ struct DataRoot: Codable {
     
     // MARK: - Local data
     
-    var shippingCostsByOrderId: [OrderId: Float]?
-    var affranchissementMethodByOrderId: [OrderId: String]?
-    var pickedItemsByOrderId: [OrderId: [InventoryId]]?
-    var verifiedItemsByOrderId: [OrderId: [InventoryId]]?
+    var shippingCostsByOrderId: [OrderSummary.ID: Float]?
+    var affranchissementMethodByOrderId: [OrderSummary.ID: String]?
+    var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
+    var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
     var transactions: [Transaction]?
 }

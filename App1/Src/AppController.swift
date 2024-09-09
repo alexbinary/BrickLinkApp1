@@ -206,7 +206,7 @@ class AppController: ObservableObject {
     // MARK: - Order status, Tracking no, Drive thru
     
     
-    public func updateOrderStatus(orderId: OrderId, status: String) async {
+    public func updateOrderStatus(orderId: OrderSummary.ID, status: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!)
         request.httpMethod = "PUT"
@@ -227,7 +227,7 @@ class AppController: ObservableObject {
     }
     
     
-    public func updateTrackingNo(forOrderWithId orderId: OrderId, trackingNo: String) async {
+    public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
         
         print("update tracking no \(trackingNo) for order \(orderId)")
         
@@ -251,7 +251,7 @@ class AppController: ObservableObject {
     }
 
 
-    public func sendDriveThru(orderId: OrderId) async {
+    public func sendDriveThru(orderId: OrderSummary.ID) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru?mail_me=true")!)
         request.httpMethod = "POST"
@@ -269,13 +269,13 @@ class AppController: ObservableObject {
     // MARK: - Shipping cost
     
     
-    public func shippingCost(forOrderWithId orderId: OrderId) -> Float? {
+    public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
         return dataStore.shippingCostsByOrderId[orderId]
     }
     
     
-    public func updateShippingCost(forOrderWithId orderId: OrderId, cost: Float) {
+    public func updateShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
         
         var shippingCostsByOrderId = dataStore.shippingCostsByOrderId
         
@@ -292,13 +292,13 @@ class AppController: ObservableObject {
     // MARK: - Affranchissement
     
     
-    public func affranchissement(forOrderWithId orderId: OrderId) -> String? {
+    public func affranchissement(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
         return dataStore.affranchissementMethodByOrderId[orderId]
     }
     
     
-    public func updateAffranchissement(forOrderWithId orderId: OrderId, method: String) {
+    public func updateAffranchissement(forOrderWithId orderId: OrderSummary.ID, method: String) {
         
         var affranchissementMethodByOrderId = dataStore.affranchissementMethodByOrderId
         
@@ -315,7 +315,7 @@ class AppController: ObservableObject {
     // MARK: - Order items
     
     
-    public func getOrderItems(orderId: OrderId) async -> [OrderItem] {
+    public func getOrderItems(orderId: OrderSummary.ID) async -> [OrderItem] {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
         request.addAuthentication(using: blCredentials)
@@ -362,16 +362,16 @@ class AppController: ObservableObject {
     }
     
     
-    public func pickedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
+    public func pickedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         return dataStore.pickedItemsByOrderId[orderId] ?? []
     }
     
     
-    public func pickItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+    public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
         var pickedItemsByOrderId = dataStore.pickedItemsByOrderId
-        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [InventoryId]()
+        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         guard !pickedItemsForOrder.contains(itemId) else { return }
             
@@ -385,10 +385,10 @@ class AppController: ObservableObject {
     }
     
     
-    public func unpickItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
         var pickedItemsByOrderId = dataStore.pickedItemsByOrderId
-        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [InventoryId]()
+        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         pickedItemsForOrder.removeAll { $0 == itemId }
         pickedItemsByOrderId[orderId] = pickedItemsForOrder
@@ -404,16 +404,16 @@ class AppController: ObservableObject {
     }
     
     
-    public func verifiedItems(forOrderWithId orderId: OrderId) -> [InventoryId] {
+    public func verifiedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         return dataStore.verifiedItemsByOrderId[orderId] ?? []
     }
     
     
-    public func verifyItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
         var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
-        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [InventoryId]()
+        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         guard !verifiedItemsForOrder.contains(itemId) else { return }
             
@@ -427,10 +427,10 @@ class AppController: ObservableObject {
     }
     
     
-    public func unverifyItem(forOrderWithId orderId: OrderId, item itemId: InventoryId) {
+    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
         var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
-        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [InventoryId]()
+        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         verifiedItemsForOrder.removeAll { $0 == itemId }
         verifiedItemsByOrderId[orderId] = verifiedItemsForOrder
@@ -450,13 +450,13 @@ class AppController: ObservableObject {
     // MARK: - Order feedback
     
     
-    public func orderFeedbacks(forOrderWithId orderId: String) -> [Feedback] {
+    public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
         dataStore.orderFeedbacks.filter { $0.orderId == orderId }
     }
     
     
-    private func loadOrderFeedbacks(forOrderWithId orderId: String) async {
+    private func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
         request.addAuthentication(using: blCredentials)
@@ -483,7 +483,7 @@ class AppController: ObservableObject {
     }
     
     
-    public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: String) async {
+    public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
         if !dataStore.orderFeedbacks.contains(where: { $0.orderId == orderId }) {
             
@@ -492,7 +492,7 @@ class AppController: ObservableObject {
     }
     
     
-    public func reloadOrderFeedbacks(forOrderWithId orderId: String) async {
+    public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
         if dataStore.orderFeedbacks.contains(where: { $0.orderId == orderId }) {
             
@@ -501,7 +501,7 @@ class AppController: ObservableObject {
     }
     
     
-    public func postOrderFeedback(orderId: String, rating: Int, comment: String) async {
+    public func postOrderFeedback(orderId: OrderSummary.ID, rating: Int, comment: String) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!)
         request.httpMethod = "POST"

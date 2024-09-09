@@ -13,7 +13,7 @@ struct Transaction: Identifiable, Codable, Hashable {
     var amount: Float
     var paymentMethod: PaymentMethod
     var comment: String
-    let orderRefIn: OrderId
+    let orderRefIn: OrderSummary.ID
 }
 
 
