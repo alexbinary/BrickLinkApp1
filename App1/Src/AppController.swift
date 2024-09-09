@@ -332,7 +332,7 @@ class AppController: ObservableObject {
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        (dataStore.orderItemsByOrderId[orderId] ?? []).first ?? []
+        (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
     }
     
     
@@ -347,31 +347,34 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
-        if let batches = decoded.data, let blItems = batches.first {
+        if let blBatches = decoded.data {
             
-            let items = blItems.map { item in
+            let batches = blBatches.map { blItems in
                 
-                OrderItem(
-                    inventoryId: "\(item.inventoryId)",
-                    orderId: orderId,
-                    condition: item.newOrUsed,
-                    colorId: "\(item.colorId)",
-                    colorName: item.colorName,
-                    ref: item.item.no,
-                    name: item.item.name,
-                    type: item.item.type,
-                    location: item.remarks ?? "",
-                    comment: item.description ?? "",
-                    quantity: "\(item.quantity)",
-                    quantityLeft: "",
-                    unitPrice: item.unitPrice.floatValue,
-                    unitPriceFinal: item.unitPriceFinal.floatValue
-                )
+                blItems.map { item in
+                    
+                    OrderItem(
+                        inventoryId: "\(item.inventoryId)",
+                        orderId: orderId,
+                        condition: item.newOrUsed,
+                        colorId: "\(item.colorId)",
+                        colorName: item.colorName,
+                        ref: item.item.no,
+                        name: item.item.name,
+                        type: item.item.type,
+                        location: item.remarks ?? "",
+                        comment: item.description ?? "",
+                        quantity: "\(item.quantity)",
+                        quantityLeft: "",
+                        unitPrice: item.unitPrice.floatValue,
+                        unitPriceFinal: item.unitPriceFinal.floatValue
+                    )
+                }
             }
             
             var orderItemsByOrderId = dataStore.orderItemsByOrderId
             
-            orderItemsByOrderId[orderId] = [items]
+            orderItemsByOrderId[orderId] = batches
             
             try! dataStore.setOrderItemsByOrderId(orderItemsByOrderId)
             try! dataStore.save()
