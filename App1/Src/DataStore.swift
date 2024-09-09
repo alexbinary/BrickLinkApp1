@@ -24,13 +24,19 @@ class DataStore {
     
     private func loadDataFromFile() throws {
             
-        let rawData = try Data(contentsOf: dataFileUrl)
-        
         let decoder = JSONDecoder()
         decoder.allowsJSON5 = true
         decoder.dateDecodingStrategy = .iso8601
         
-        self.data = try decoder.decode(DataRoot.self, from: rawData)
+        if let rawData = try? Data(contentsOf: dataFileUrl), 
+        let decodedData = try? decoder.decode(DataRoot.self, from: rawData) {
+            
+            self.data = decodedData
+            
+        } else {
+            
+            self.data = DataRoot()
+        }
     }
     
     
@@ -186,18 +192,18 @@ struct DataRoot: Codable {
     
     // MARK: - External data
     
-    var colors: [LegoColor]
-    var orderSummaries: [OrderSummary]
-    var orderDetails: [OrderDetails]
-    var orderFeedbacks: [Feedback]
+    var colors: [LegoColor]?
+    var orderSummaries: [OrderSummary]?
+    var orderDetails: [OrderDetails]?
+    var orderFeedbacks: [Feedback]?
     
     // MARK: - Local data
     
-    var shippingCostsByOrderId: [OrderId: Float]
-    var affranchissementMethodByOrderId: [OrderId: String]
-    var pickedItemsByOrderId: [OrderId: [InventoryId]]
-    var verifiedItemsByOrderId: [OrderId: [InventoryId]]
-    var transactions: [Transaction]
+    var shippingCostsByOrderId: [OrderId: Float]?
+    var affranchissementMethodByOrderId: [OrderId: String]?
+    var pickedItemsByOrderId: [OrderId: [InventoryId]]?
+    var verifiedItemsByOrderId: [OrderId: [InventoryId]]?
+    var transactions: [Transaction]?
 }
 
 
