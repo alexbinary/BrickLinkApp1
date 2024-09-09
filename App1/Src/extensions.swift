@@ -4,6 +4,10 @@ import SwiftUI
 
 
 
+extension String: Error { }
+
+
+
 extension Array where Element: Equatable {
 
 

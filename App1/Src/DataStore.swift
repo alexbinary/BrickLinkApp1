@@ -208,6 +208,3 @@ struct DataRoot: Codable {
     var verifiedItemsByOrderId: [OrderId: [InventoryId]]?
     var transactions: [Transaction]?
 }
-
-
-extension String: Error { }
