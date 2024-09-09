@@ -18,10 +18,13 @@ class AppController: ObservableObject {
         self.blCredentials = blCredentials
         
         Task {
-            await self.loadColors()
-            await self.loadOrderSummaries()
+            await parallel([
+                { await self.loadColors() },
+                { await self.loadOrderSummaries() },
+            ])
         }
     }
+    
     
     
     // MARK: - Colors
@@ -44,6 +47,8 @@ class AppController: ObservableObject {
     
     
     private func loadColors() async {
+        
+        print("Loading colors")
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
         request.addAuthentication(using: blCredentials)
@@ -102,6 +107,8 @@ class AppController: ObservableObject {
     
     private func loadOrderSummaries() async {
         
+        print("Loading orders")
+        
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
         request.addAuthentication(using: blCredentials)
         
@@ -153,7 +160,9 @@ class AppController: ObservableObject {
     }
     
     
-    private func loadOrderDetails(orderId: String) async {
+    private func loadOrderDetails(orderId: OrderSummary.ID) async {
+        
+        print("Loading order details \(orderId)")
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
         request.addAuthentication(using: blCredentials)
@@ -222,8 +231,10 @@ class AppController: ObservableObject {
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
         
-        await reloadOrderSummaries()
-        await reloadOrderDetails(orderId: orderId)
+        await parallel([
+            { await self.reloadOrderSummaries() },
+            { await self.reloadOrderDetails(orderId: orderId) },
+        ])
     }
     
     
@@ -246,8 +257,10 @@ class AppController: ObservableObject {
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
         
-        await reloadOrderSummaries()
-        await reloadOrderDetails(orderId: orderId)
+        await parallel([
+            { await self.reloadOrderSummaries() },
+            { await self.reloadOrderDetails(orderId: orderId) },
+        ])
     }
 
 
@@ -260,8 +273,10 @@ class AppController: ObservableObject {
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
         
-        await reloadOrderSummaries()
-        await reloadOrderDetails(orderId: orderId)
+        await parallel([
+            { await self.reloadOrderSummaries() },
+            { await self.reloadOrderDetails(orderId: orderId) },
+        ])
     }
     
     
@@ -316,6 +331,8 @@ class AppController: ObservableObject {
     
     
     public func getOrderItems(orderId: OrderSummary.ID) async -> [OrderItem] {
+        
+        print("Loading order items \(orderId)")
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
         request.addAuthentication(using: blCredentials)
@@ -457,6 +474,8 @@ class AppController: ObservableObject {
     
     
     private func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
+        
+        print("Loading order feedbacks \(orderId)")
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
         request.addAuthentication(using: blCredentials)

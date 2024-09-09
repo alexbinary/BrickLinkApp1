@@ -323,13 +323,17 @@ struct PickingDetailView: View {
             }
             .padding()
             .task {
-                await loadOrder()
-                await loadOrderItems()
+                await parallel([
+                    { await loadOrder() },
+                    { await loadOrderItems() },
+                ])
             }
             .onChange(of: selectedOrderIds) { oldValue, newValue in
                 Task {
-                    await loadOrder()
-                    await loadOrderItems()
+                    await parallel([
+                        { await loadOrder() },
+                        { await loadOrderItems() },
+                    ])
                 }
             }
         }

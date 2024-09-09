@@ -202,13 +202,17 @@ struct OrdersDetailDetailView: View {
         }
         .onChange(of: order) {
             Task {
-                await loadOrderItems()
-                await loadOrderFeedbacks()
+                await parallel([
+                    { await loadOrderItems() },
+                    { await loadOrderFeedbacks() },
+                ])
             }
         }
         .task {
-            await loadOrderItems()
-            await loadOrderFeedbacks()
+            await parallel([
+                { await loadOrderItems() },
+                { await loadOrderFeedbacks() },
+            ])
         }
     }
     
