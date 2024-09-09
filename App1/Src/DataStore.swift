@@ -190,6 +190,8 @@ class DataStore {
 
 struct DataRoot: Codable {
     
+    var _meta: String?
+    
     // MARK: - External data
     
     var colors: [LegoColor]?
