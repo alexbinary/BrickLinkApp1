@@ -157,8 +157,6 @@ struct PickingDetailView: View {
     
     let selectedOrderIds: Set<OrderDetails.ID>
     
-    @State var orderItems: [OrderItem] = []
-    
     
     var body: some View {
         
@@ -170,11 +168,11 @@ struct PickingDetailView: View {
                     
                     Text("select an order")
                     
-                } else if orderItems.isEmpty {
-                    
-                    Text("loading order...")
-                    
                 } else {
+                    
+                    let orderItems = selectedOrderIds.reduce([]) { items, orderId in
+                        items + appController.orderItems(forOrderWithId: orderId)
+                    }
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
@@ -350,10 +348,12 @@ struct PickingDetailView: View {
     
     func loadOrderItems() async {
         
-        self.orderItems.removeAll()
-        
-        for orderId in selectedOrderIds {
-            self.orderItems.append(contentsOf: await appController.getOrderItems(orderId: orderId))
+        await withTaskGroup(of: Void.self) { group in
+            for orderId in selectedOrderIds {
+                group.addTask {
+                    await appController.loadOrderItemsIfMissing(forOrderWithId: orderId)
+                }
+            }
         }
     }
     

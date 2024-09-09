@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct OrderItem: Identifiable {
+struct OrderItem: Identifiable, Codable {
     
     var id: InventoryItem.ID { inventoryId }
     

@@ -19,8 +19,6 @@ struct OrdersDetailDetailView: View {
     
     let order: OrderDetails
     
-    @State var orderItems: [OrderItem] = []
-    
     
     var body: some View {
         
@@ -169,7 +167,7 @@ struct OrdersDetailDetailView: View {
             
             Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")
             
-            Table(orderItems) {
+            Table(appController.orderItems(forOrderWithId: order.id)) {
                 
                 TableColumn("Image") { value in
                     AsyncImage(url: appController.imageUrl(item: value))
@@ -219,8 +217,7 @@ struct OrdersDetailDetailView: View {
     
     func loadOrderItems() async {
         
-        self.orderItems.removeAll()
-        self.orderItems = await appController.getOrderItems(orderId: order.id)
+        await appController.loadOrderItemsIfMissing(forOrderWithId: order.id)
     }
     
     

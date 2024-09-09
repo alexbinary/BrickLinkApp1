@@ -330,7 +330,13 @@ class AppController: ObservableObject {
     // MARK: - Order items
     
     
-    public func getOrderItems(orderId: OrderSummary.ID) async -> [OrderItem] {
+    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        (dataStore.orderItemsByOrderId[orderId] ?? []).first ?? []
+    }
+    
+    
+    private func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
         
         print("Loading order items \(orderId)")
         
@@ -341,9 +347,9 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
-        if let batches = decoded.data, let items = batches.first {
+        if let batches = decoded.data, let blItems = batches.first {
             
-            return items.map { item in
+            let items = blItems.map { item in
                 
                 OrderItem(
                     inventoryId: "\(item.inventoryId)",
@@ -362,9 +368,36 @@ class AppController: ObservableObject {
                     unitPriceFinal: item.unitPriceFinal.floatValue
                 )
             }
+            
+            var orderItemsByOrderId = dataStore.orderItemsByOrderId
+            
+            orderItemsByOrderId[orderId] = [items]
+            
+            try! dataStore.setOrderItemsByOrderId(orderItemsByOrderId)
+            try! dataStore.save()
+            
+            DispatchQueue.main.sync {
+                self.objectWillChange.send()
+            }
         }
+    }
+    
+    
+    public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
         
-        return []
+        if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
+            
+            await loadOrderItems(forOrderWithId: orderId)
+        }
+    }
+    
+    
+    public func reloadOrderItems(forOrderWithId orderId: String) async {
+        
+        if dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
+            
+            await loadOrderItems(forOrderWithId: orderId)
+        }
     }
     
     

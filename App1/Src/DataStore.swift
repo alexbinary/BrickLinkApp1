@@ -102,6 +102,20 @@ class DataStore {
     }
     
     
+    public var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]] {
+        
+        data?.orderItemsByOrderId ?? [:]
+    }
+    
+    
+    public func setOrderItemsByOrderId(_ orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.orderItemsByOrderId = orderItemsByOrderId
+    }
+    
+    
     public var orderFeedbacks: [Feedback] {
         
         data?.orderFeedbacks ?? []
@@ -197,6 +211,7 @@ struct DataRoot: Codable {
     var colors: [LegoColor]?
     var orderSummaries: [OrderSummary]?
     var orderDetails: [OrderDetails]?
+    var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]?
     var orderFeedbacks: [Feedback]?
     
     // MARK: - Local data
