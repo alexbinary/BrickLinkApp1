@@ -263,7 +263,7 @@ struct ShippingCostView: View {
     
     var selectedShippingCost: SelectedShippingCost? {
         
-        let weight = order.totalWeight
+        let weight = order.totalWeight * orderWeightMarginRatio
         
         if order.shippingMethodId == shippingMethodId_France {
             

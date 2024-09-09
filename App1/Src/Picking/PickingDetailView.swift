@@ -200,7 +200,7 @@ struct PickingDetailView: View {
                             
                             HStack {
                                 Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                Text(" - \(order.shippingMethodName) \(String(format: "%.0f", order.totalWeight))g")
+                                Text(" - \(order.shippingMethodName) \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
                             }
                             
                             ShippingCostView(order: order)
@@ -362,7 +362,7 @@ struct PickingDetailView: View {
             return nil
         }
         
-        let weight = order.totalWeight
+        let weight = order.totalWeight * orderWeightMarginRatio
         
         if order.shippingMethodId == shippingMethodId_France {
             
