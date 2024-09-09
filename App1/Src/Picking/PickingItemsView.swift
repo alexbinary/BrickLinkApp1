@@ -207,6 +207,7 @@ struct PickingItemsView: View {
                         AsyncImage(url: appController.imageUrl(item: value))
                     }
                     TableColumn("Condition", value: \.condition)
+                    TableColumn("Quantity", value: \.quantity)
                     TableColumn("Color") { item in
                         HStack {
                             appController.color(for: item).frame(width: 18, height: 18)
@@ -216,7 +217,6 @@ struct PickingItemsView: View {
                     TableColumn("Name", value: \.name)
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
-                    TableColumn("Quantity", value: \.quantity)
                     
                 } rows: {
                     
@@ -330,7 +330,7 @@ struct PickingItemsView: View {
     }
     var orderItemsToVerify: [OrderItem] { orderItems
         .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
-        .sorted { $0.location < $1.location }
+        .sorted { a, b in a.condition == "N" }
     }
     var orderItemsPickedAndVerified: [OrderItem] { orderItems
         .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
@@ -363,10 +363,6 @@ struct PickingItemsView: View {
         
         if !orderItemsToVerify.isEmpty {
             nextItems.append(orderItemsToVerify.removeFirst())
-            while !orderItemsToVerify.isEmpty && orderItemsToVerify.first!.location == nextItems.last!.location {
-                nextItems.append(orderItemsToVerify.removeFirst())
-            }
-            
         }
         
         return nextItems
