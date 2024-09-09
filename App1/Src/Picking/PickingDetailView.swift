@@ -222,7 +222,7 @@ struct PickingDetailView: View {
                                             s = "\(selectedAffranchissement.nbTimbres) timbres"
                                             
                                             if order.shippingMethodId != shippingMethodId_France {
-                                                s += "international"
+                                                s += " international"
                                             }
                                             
                                             return s
