@@ -51,6 +51,15 @@ class DataStore {
     }
     
     
+    public func save() throws {
+        
+        try write()
+    }
+    
+    
+    // MARK: - Public setters & getters
+    
+    
     public var colors: [LegoColor] {
         
         data?.colors ?? []
@@ -174,12 +183,6 @@ class DataStore {
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
         data!.transactions = transactions
-    }
-    
-    
-    public func save() throws {
-        
-        try write()
     }
 }
 
