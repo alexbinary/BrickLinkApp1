@@ -75,7 +75,7 @@ struct BrickLinkOrderShippingAddressName: Decodable {
 struct BrickLinkOrderItem: Decodable {
     
     let inventoryId: Int
-    let item: BrickLinkInventoryItem
+    let item: BrickLinkCatalogItem
     let quantity: Int
     let colorId: Int
     let colorName: String
@@ -88,7 +88,7 @@ struct BrickLinkOrderItem: Decodable {
 
 
 
-struct BrickLinkInventoryItem: Decodable {
+struct BrickLinkCatalogItem: Decodable {
 
     let no: String
     let name: String
