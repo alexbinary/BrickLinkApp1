@@ -31,6 +31,7 @@
 		29B9494D2C89CED200CC7F26 /* LegoColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9494C2C89CED200CC7F26 /* LegoColor.swift */; };
 		29B9494F2C8B25DA00CC7F26 /* OrderSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9494E2C8B25DA00CC7F26 /* OrderSummary.swift */; };
 		29B949512C8B25E400CC7F26 /* OrderDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949502C8B25E400CC7F26 /* OrderDetails.swift */; };
+		29B949532C8F2AC400CC7F26 /* InventoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949522C8F2AC400CC7F26 /* InventoryItem.swift */; };
 		29BB30902C77B0CA000525CB /* App1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB308F2C77B0CA000525CB /* App1.swift */; };
 		29BB30922C77B0CA000525CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BB30912C77B0CA000525CB /* ContentView.swift */; };
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 		29B9494C2C89CED200CC7F26 /* LegoColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegoColor.swift; sourceTree = "<group>"; };
 		29B9494E2C8B25DA00CC7F26 /* OrderSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderSummary.swift; sourceTree = "<group>"; };
 		29B949502C8B25E400CC7F26 /* OrderDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderDetails.swift; sourceTree = "<group>"; };
+		29B949522C8F2AC400CC7F26 /* InventoryItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InventoryItem.swift; sourceTree = "<group>"; };
 		29BB308C2C77B0CA000525CB /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BB308F2C77B0CA000525CB /* App1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App1.swift; sourceTree = "<group>"; };
 		29BB30912C77B0CA000525CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				29B9492B2C80603900CC7F26 /* Feedback.swift */,
 				29B949312C86EA8E00CC7F26 /* Transaction.swift */,
 				29B9494C2C89CED200CC7F26 /* LegoColor.swift */,
+				29B949522C8F2AC400CC7F26 /* InventoryItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */,
 				29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */,
 				29B949512C8B25E400CC7F26 /* OrderDetails.swift in Sources */,
+				29B949532C8F2AC400CC7F26 /* InventoryItem.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
 				29B949472C87317300CC7F26 /* extensions.swift in Sources */,
 				29B9494B2C898FEE00CC7F26 /* secrets.swift in Sources */,

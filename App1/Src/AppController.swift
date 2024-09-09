@@ -329,7 +329,7 @@ class AppController: ObservableObject {
             return items.map { item in
                 
                 OrderItem(
-                    id: "\(item.inventoryId)",
+                    inventoryId: "\(item.inventoryId)",
                     orderId: orderId,
                     condition: item.newOrUsed,
                     colorId: "\(item.colorId)",

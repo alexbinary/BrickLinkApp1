@@ -5,7 +5,9 @@ import Foundation
 
 struct OrderItem: Identifiable {
     
-    let id: String
+    var id: InventoryItem.ID { inventoryId }
+    
+    let inventoryId: InventoryItem.ID
     let orderId: String
     let condition: String
     let colorId: String
