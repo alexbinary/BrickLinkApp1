@@ -43,6 +43,11 @@ struct OrdersContentView: View {
                     }
             }
             TableColumn("Status", value: \.status)
+            TableColumn("Drive thru") { order in
+                if let driveThruSent = appController.orderDetails(forOrderWithId: order.id)?.driveThruSent {
+                    Text("\(driveThruSent)")
+                }
+            }
             TableColumn("Feedback") { order in
                 HStack {
                     Text("Buyer:")
@@ -54,6 +59,23 @@ struct OrdersContentView: View {
                     Text("Me:")
                     if let ratingFromSeller = appController.orderFeedbacks(forOrderWithId: order.id).first(where: { $0.ratingOfBs == "B" })?.rating {
                         Text(ratingFromSeller, format: .number)
+                    }
+                }
+            }
+            Group {
+                TableColumn("Affranchissement") { (order: OrderSummary) in
+                    if let aff = appController.affranchissement(forOrderWithId: order.id) {
+                        Text(aff)
+                    }
+                }
+                TableColumn("Transaction in") { order in
+                    if let t = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id }) {
+                        Text(t.createdAt, format: .dateTime)
+                    }
+                }
+                TableColumn("Transaction out") { order in
+                    if let t = appController.transactions.first(where: { $0.type == .orderShipping && $0.orderRefIn == order.id }) {
+                        Text(t.createdAt, format: .dateTime)
                     }
                 }
             }
