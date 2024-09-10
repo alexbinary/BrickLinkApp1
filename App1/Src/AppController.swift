@@ -20,7 +20,7 @@ class AppController: ObservableObject {
         Task {
             await parallel([
                 { await self.loadColors() },
-                { await self.loadOrderSummaries() },
+                { await self.refresh() },
             ])
         }
     }
@@ -597,6 +597,28 @@ class AppController: ObservableObject {
         try! dataStore.save()
         
         self.objectWillChange.send()
+    }
+    
+    
+    
+    // MARK: - Load all orders data
+    
+    
+    public func refresh() async {
+        
+        await self.loadOrderSummaries()
+        await self.loadAllOrdersDataIfMissing()
+    }
+    
+    
+    private func loadAllOrdersDataIfMissing() async {
+        
+        for order in orderSummaries {
+            
+            await loadOrderDetailsIfMissing(forOrderWithId: order.id)
+            await loadOrderItemsIfMissing(forOrderWithId: order.id)
+            await loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
+        }
     }
 }
 

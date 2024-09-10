@@ -63,10 +63,10 @@ struct OrdersContentView: View {
             
             Button {
                 Task {
-                    await appController.reloadOrderSummaries()
+                    await appController.refresh()
                 }
             } label: {
-                Text("Reload orders")
+                Text("Refresh everything")
             }
         }
     }
