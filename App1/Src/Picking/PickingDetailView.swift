@@ -341,7 +341,7 @@ struct PickingDetailView: View {
     func loadOrder() async {
         
         if selectedOrderIds.count == 1 {
-            await appController.loadOrderDetailsIfMissing(orderId: selectedOrderIds.first!)
+            await appController.loadOrderDetailsIfMissing(forOrderWithId: selectedOrderIds.first!)
         }
     }
     

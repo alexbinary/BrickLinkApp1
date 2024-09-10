@@ -160,7 +160,7 @@ class AppController: ObservableObject {
     }
     
     
-    private func loadOrderDetails(orderId: OrderSummary.ID) async {
+    private func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
         
         print("Loading order details \(orderId)")
         
@@ -193,20 +193,20 @@ class AppController: ObservableObject {
     }
     
     
-    public func loadOrderDetailsIfMissing(orderId: String) async {
+    public func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
         
         if !dataStore.orderDetails.contains(where: { $0.id == orderId }) {
             
-            await loadOrderDetails(orderId: orderId)
+            await loadOrderDetails(forOrderWithId: orderId)
         }
     }
     
     
-    public func reloadOrderDetails(orderId: String) async {
+    public func reloadOrderDetails(forOrderWithId orderId: String) async {
         
         if dataStore.orderDetails.contains(where: { $0.id == orderId }) {
             
-            await loadOrderDetails(orderId: orderId)
+            await loadOrderDetails(forOrderWithId: orderId)
         }
     }
     
@@ -233,7 +233,7 @@ class AppController: ObservableObject {
         
         await parallel([
             { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(orderId: orderId) },
+            { await self.reloadOrderDetails(forOrderWithId: orderId) },
         ])
     }
     
@@ -259,7 +259,7 @@ class AppController: ObservableObject {
         
         await parallel([
             { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(orderId: orderId) },
+            { await self.reloadOrderDetails(forOrderWithId: orderId) },
         ])
     }
 
@@ -275,7 +275,7 @@ class AppController: ObservableObject {
         
         await parallel([
             { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(orderId: orderId) },
+            { await self.reloadOrderDetails(forOrderWithId: orderId) },
         ])
     }
     
