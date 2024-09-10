@@ -217,6 +217,7 @@ struct PickingItemsView: View {
                     TableColumn("Name", value: \.name)
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
+                    TableColumn("Location", value: \.location)
                     
                 } rows: {
                     
