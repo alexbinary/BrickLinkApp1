@@ -505,7 +505,7 @@ class AppController: ObservableObject {
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        dataStore.orderFeedbacks.filter { $0.orderId == orderId }
+        dataStore.orderFeedbacksByOrderId[orderId] ?? []
     }
     
     
@@ -522,13 +522,12 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
         if let blFeedbacks = decoded.data {
             
-            let newFeedbacks = blFeedbacks.map { Feedback(fromBlFeedback: $0) }
+            let feedbacks = blFeedbacks.map { Feedback(fromBlFeedback: $0) }
             
-            var feedbacks = dataStore.orderFeedbacks
-            feedbacks.removeAll(where: { $0.orderId == newFeedbacks.first?.orderId })
-            feedbacks.append(contentsOf: newFeedbacks)
+            var orderFeedbacksByOrderId = dataStore.orderFeedbacksByOrderId
+            orderFeedbacksByOrderId[orderId] = feedbacks
             
-            try! dataStore.setOrderFeedbacks(feedbacks)
+            try! dataStore.setOrderFeedbacksByOrderId(orderFeedbacksByOrderId)
             try! dataStore.save()
             
             DispatchQueue.main.sync {
@@ -540,7 +539,7 @@ class AppController: ObservableObject {
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if !dataStore.orderFeedbacks.contains(where: { $0.orderId == orderId }) {
+        if !dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -549,7 +548,7 @@ class AppController: ObservableObject {
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if dataStore.orderFeedbacks.contains(where: { $0.orderId == orderId }) {
+        if dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }

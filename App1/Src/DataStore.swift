@@ -116,17 +116,17 @@ class DataStore {
     }
     
     
-    public var orderFeedbacks: [Feedback] {
+    public var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]] {
         
-        data?.orderFeedbacks ?? []
+        data?.orderFeedbacksByOrderId ?? [:]
     }
     
     
-    public func setOrderFeedbacks(_ orderFeedbacks: [Feedback]) throws {
+    public func setOrderFeedbacksByOrderId(_ orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
-        data!.orderFeedbacks = orderFeedbacks
+        data!.orderFeedbacksByOrderId = orderFeedbacksByOrderId
     }
 
     
@@ -212,7 +212,7 @@ struct DataRoot: Codable {
     var orderSummaries: [OrderSummary]?
     var orderDetails: [OrderDetails]?
     var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]?
-    var orderFeedbacks: [Feedback]?
+    var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]]?
     
     // MARK: - Local data
     
