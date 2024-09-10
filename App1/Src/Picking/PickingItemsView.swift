@@ -386,22 +386,18 @@ struct PickingItemsView: View {
     
     func nextPick() {
         
-        if !nextItemsToPick.isEmpty {
-        
-            for item in nextItemsToPick {
-                appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-            }
+        if let item = nextItemsToPick.first {
+            
+            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
         }
     }
     
     
     func nextVerify() {
         
-        if !nextItemsToVerify.isEmpty {
+        if let item = nextItemsToVerify.first {
             
-            for item in nextItemsToVerify {
-                appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-            }
+            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
         }
     }
     
