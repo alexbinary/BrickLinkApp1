@@ -28,9 +28,9 @@ class DataStore {
         decoder.allowsJSON5 = true
         decoder.dateDecodingStrategy = .iso8601
         
-        if let rawData = try? Data(contentsOf: dataFileUrl), 
-        let decodedData = try? decoder.decode(DataRoot.self, from: rawData) {
-            
+        if let rawData = try? Data(contentsOf: dataFileUrl) {
+        
+            let decodedData = try! decoder.decode(DataRoot.self, from: rawData)
             self.data = decodedData
             
         } else {
