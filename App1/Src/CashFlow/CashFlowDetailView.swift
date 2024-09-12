@@ -4,7 +4,7 @@ import Charts
 
 
 
-struct ComptaDetailView: View {
+struct CashFlowDetailView: View {
     
     
     @EnvironmentObject var appController: AppController
@@ -28,7 +28,7 @@ struct ComptaDetailView: View {
                 
                 if !selectedTransactions.isEmpty {
                     
-                    ComptaDetailDashboardItemView(
+                    CashFlowDetailDashboardItemView(
                         transactions: allTransactions.filter { selectedTransactions.contains($0.id) },
                         title: "Selection"
                     )
@@ -39,7 +39,7 @@ struct ComptaDetailView: View {
                     let transactions = allTransactions.sorted { $0.date > $1.date } .grouppedByMonth
                         .first(where: { $0.month == month })?.transactions ?? []
                     
-                    ComptaDetailDashboardItemView(
+                    CashFlowDetailDashboardItemView(
                         transactions: transactions,
                         title: month
                     )

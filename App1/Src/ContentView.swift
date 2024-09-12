@@ -6,7 +6,7 @@ enum SidebarItem {
     
     case orders
     case picking
-    case compta
+    case cashFlow
 }
 
 
@@ -26,12 +26,20 @@ struct ContentView: View {
         NavigationSplitView {
             
             List(selection: $selectedSidebarItem) {
-                Label("Orders", systemImage: "list.bullet")
-                    .tag(SidebarItem.orders)
-                Label("Picking", systemImage: "tray.and.arrow.up")
-                    .tag(SidebarItem.picking)
-                Label("Compta", systemImage: "eurosign.circle")
-                    .tag(SidebarItem.compta)
+                
+                Section("Operations") {
+                    
+                    Label("Orders", systemImage: "list.bullet")
+                        .tag(SidebarItem.orders)
+                    Label("Picking", systemImage: "tray.and.arrow.up")
+                        .tag(SidebarItem.picking)
+                }
+                
+                Section("Accounting") {
+                    
+                    Label("Cash flow", systemImage: "eurosign.circle")
+                        .tag(SidebarItem.cashFlow)
+                }
             }
             
         } content : {
@@ -41,8 +49,8 @@ struct ContentView: View {
                 OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
             case .picking:
                 PickingContentView(selectedOrderIds: $pickingSelectedOrderIds)
-            case .compta:
-                ComptaContentView(selectedTransactions: $selectedTransactions)
+            case .cashFlow:
+                CashFlowContentView(selectedTransactions: $selectedTransactions)
             }
             
         } detail: {
@@ -52,8 +60,8 @@ struct ContentView: View {
                 OrdersDetailView(selectedOrderId: ordersSelectedOrderId)
             case .picking:
                 PickingDetailView(selectedOrderIds: pickingSelectedOrderIds)
-            case .compta:
-                ComptaDetailView(selectedTransactions: selectedTransactions)
+            case .cashFlow:
+                CashFlowDetailView(selectedTransactions: selectedTransactions)
             }
         }
     }

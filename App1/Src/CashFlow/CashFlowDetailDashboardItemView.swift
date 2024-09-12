@@ -4,7 +4,7 @@ import Charts
 
 
 
-struct ComptaDetailDashboardItemView: View {
+struct CashFlowDetailDashboardItemView: View {
     
     
     let transactions: [Transaction]

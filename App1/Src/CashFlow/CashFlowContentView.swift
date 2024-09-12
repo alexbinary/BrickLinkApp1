@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct ComptaContentView: View {
+struct CashFlowContentView: View {
     
     
     @EnvironmentObject var appController: AppController
@@ -14,6 +14,6 @@ struct ComptaContentView: View {
     var body: some View {
         
         TransactionListView(transactions: appController.transactions, selectedTransactions: $selectedTransactions)
-            .navigationTitle("Compta")
+            .navigationTitle("Cash Flow")
     }
 }
