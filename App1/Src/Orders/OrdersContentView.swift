@@ -51,6 +51,12 @@ struct OrdersContentView: View {
                 }
                 TableColumn("Status", value: \OrderSummary.status)
                 
+                TableColumn("Tracking no") { (order: OrderSummary) in
+                    if let no = appController.orderDetails(forOrderWithId: order.id)?.trackingNo {
+                        Text(no)
+                    }
+                }
+                
                 TableColumn("Drive thru") { (order: OrderSummary) in
                     if let driveThruSent = appController.orderDetails(forOrderWithId: order.id)?.driveThruSent {
                         Text("\(driveThruSent)")
@@ -71,14 +77,14 @@ struct OrdersContentView: View {
                         }
                     }
                 }
-                
+            }
+            Group {
+
                 TableColumn("Affranchissement") { (order: OrderSummary) in
                     if let aff = appController.affranchissement(forOrderWithId: order.id) {
                         Text(aff)
                     }
                 }
-            }
-            Group {
                 
                 TableColumn("Transaction in") { (order: OrderSummary) in
                     if let t = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id }) {
