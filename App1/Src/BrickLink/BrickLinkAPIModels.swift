@@ -36,6 +36,7 @@ struct BrickLinkOrder: Decodable {
     let cost: BrickLinkOrderCost
     let dispCost: BrickLinkOrderCost
     let status: String
+    let dateStatusChanged: Date
     
     // MARK: Details
     

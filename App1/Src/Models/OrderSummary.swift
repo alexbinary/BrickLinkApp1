@@ -20,4 +20,5 @@ struct OrderSummary: Identifiable, Equatable, Codable {
     let dispCostCurrencyCode: String
     
     let status: String
+    let dateStatusChanged: Date
 }

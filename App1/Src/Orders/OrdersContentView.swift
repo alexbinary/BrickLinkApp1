@@ -49,7 +49,12 @@ struct OrdersContentView: View {
                         appController.updateShippingCost(forOrderWithId: order.id, cost: value)
                     }
                 }
+                
                 TableColumn("Status", value: \OrderSummary.status)
+                
+                TableColumn("Changed") { (order: OrderSummary) in
+                    Text(order.dateStatusChanged, format: .dateTime)
+                }
                 
                 TableColumn("Tracking no") { (order: OrderSummary) in
                     if let no = appController.orderDetails(forOrderWithId: order.id)?.trackingNo {
@@ -62,6 +67,8 @@ struct OrdersContentView: View {
                         Text("\(driveThruSent)")
                     }
                 }
+            }
+            Group {
                 
                 TableColumn("Feedback") { (order: OrderSummary) in
                     HStack {
@@ -77,8 +84,6 @@ struct OrdersContentView: View {
                         }
                     }
                 }
-            }
-            Group {
 
                 TableColumn("Affranchissement") { (order: OrderSummary) in
                     if let aff = appController.affranchissement(forOrderWithId: order.id) {

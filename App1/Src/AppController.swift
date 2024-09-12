@@ -644,6 +644,7 @@ extension OrderSummary {
         self.dispCostCurrencyCode = blOrder.dispCost.currencyCode
         
         self.status = blOrder.status
+        self.dateStatusChanged = blOrder.dateStatusChanged
     }
 }
 
