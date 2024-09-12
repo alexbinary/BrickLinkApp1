@@ -114,15 +114,25 @@ struct OrdersDetailComptaView: View {
         }
         .onAppear {
             
-            self.incomeDate = order.date
-            self.incomeAmount = order.grandTotal
-            self.incomePaymentMethod = .paypal
-            self.incomeComment = ""
-
-            self.shippingDate = Date()
-            self.shippingAmount = appController.shippingCost(forOrderWithId: order.id) ?? 0
-            self.shippingPaymentMethod = .cb_iban
-            self.shippingComment = ""
+            self.setupFormStateFromOrder()
         }
+        .onChange(of: order) {
+            
+            self.setupFormStateFromOrder()
+        }
+    }
+    
+    
+    func setupFormStateFromOrder() {
+        
+        self.incomeDate = order.date
+        self.incomeAmount = order.grandTotal
+        self.incomePaymentMethod = .paypal
+        self.incomeComment = ""
+
+        self.shippingDate = Date()
+        self.shippingAmount = appController.shippingCost(forOrderWithId: order.id) ?? 0
+        self.shippingPaymentMethod = .cb_iban
+        self.shippingComment = ""
     }
 }
