@@ -27,7 +27,7 @@ struct OrderDetails: Identifiable, Equatable, Codable {
     let totalWeight: Float
     
     let shippingMethodId: Int
-    let shippingMethodName: String
+    let shippingMethodName: String?
     let shippingAddress: String
     let shippingAddressCountryCode: String
     let shippingAddressName: String

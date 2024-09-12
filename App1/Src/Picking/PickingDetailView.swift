@@ -198,7 +198,7 @@ struct PickingDetailView: View {
                             
                             HStack {
                                 Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                Text(" - \(order.shippingMethodName) \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
+                                Text(" - \(order.shippingMethodName ?? "") \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
                             }
                             
                             ShippingCostView(order: order)
