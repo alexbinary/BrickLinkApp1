@@ -31,6 +31,9 @@ struct OrdersDetailComptaView: View {
                 TextField("Amount", value: $incomeAmount,
                           format: .currency(code: "EUR").presentation(.isoCode)
                 )
+                .onSubmit {
+                    self.submitIncomeTransaction()
+                }
                 Picker("Payment method", selection: $incomePaymentMethod) {
                     ForEach(PaymentMethod.allCases, id: \.self) { method in
                         Text(method.rawValue).tag(method)
@@ -41,15 +44,7 @@ struct OrdersDetailComptaView: View {
                     .lineLimit(3...5)
                 
                 Button {
-                    appController.registerTransaction(Transaction(
-                        date: incomeDate,
-                        createdAt: Date(),
-                        type: .orderIncome,
-                        amount: incomeAmount,
-                        paymentMethod: incomePaymentMethod,
-                        comment: incomeComment,
-                        orderRefIn: order.id
-                    ))
+                    self.submitIncomeTransaction()
                 } label: {
                     Text("Register transaction")
                 }
@@ -78,6 +73,9 @@ struct OrdersDetailComptaView: View {
                 TextField("Amount", value: $shippingAmount,
                           format: .currency(code: "EUR").presentation(.isoCode)
                 )
+                .onSubmit {
+                    self.submitShippingTransaction()
+                }
                 Picker("Payment method", selection: $shippingPaymentMethod) {
                     ForEach(PaymentMethod.allCases, id: \.self) { method in
                         Text(method.rawValue).tag(method)
@@ -88,15 +86,7 @@ struct OrdersDetailComptaView: View {
                     .lineLimit(3...5)
                 
                 Button {
-                    appController.registerTransaction(Transaction(
-                        date: shippingDate,
-                        createdAt: Date(),
-                        type: .orderShipping,
-                        amount: -shippingAmount,
-                        paymentMethod: shippingPaymentMethod,
-                        comment: shippingComment,
-                        orderRefIn: order.id
-                    ))
+                    self.submitShippingTransaction()
                 } label: {
                     Text("Register transaction")
                 }
@@ -134,5 +124,33 @@ struct OrdersDetailComptaView: View {
         self.shippingAmount = appController.shippingCost(forOrderWithId: order.id) ?? 0
         self.shippingPaymentMethod = .cb_iban
         self.shippingComment = ""
+    }
+    
+    
+    func submitIncomeTransaction() {
+        
+        appController.registerTransaction(Transaction(
+            date: incomeDate,
+            createdAt: Date(),
+            type: .orderIncome,
+            amount: incomeAmount,
+            paymentMethod: incomePaymentMethod,
+            comment: incomeComment,
+            orderRefIn: order.id
+        ))
+    }
+    
+    
+    func submitShippingTransaction() {
+     
+        appController.registerTransaction(Transaction(
+            date: shippingDate,
+            createdAt: Date(),
+            type: .orderShipping,
+            amount: -shippingAmount,
+            paymentMethod: shippingPaymentMethod,
+            comment: shippingComment,
+            orderRefIn: order.id
+        ))
     }
 }
