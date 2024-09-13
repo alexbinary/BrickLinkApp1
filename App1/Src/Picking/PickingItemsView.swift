@@ -116,8 +116,8 @@ struct PickingItemsView: View {
                             }
                         }
                     }
-                    TableColumn("Image") { value in
-                        AsyncImage(url: appController.imageUrl(item: value))
+                    TableColumn("Image") { item in
+                        AsyncImage(url: appController.imageUrl(for: item))
                     }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Location", value: \.location)
@@ -203,8 +203,8 @@ struct PickingItemsView: View {
                             }
                         }
                     }
-                    TableColumn("Image") { value in
-                        AsyncImage(url: appController.imageUrl(item: value))
+                    TableColumn("Image") { item in
+                        AsyncImage(url: appController.imageUrl(for: item))
                     }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Quantity", value: \.quantity)
@@ -283,8 +283,8 @@ struct PickingItemsView: View {
                             }
                         }
                     }
-                    TableColumn("Image") { value in
-                        AsyncImage(url: appController.imageUrl(item: value))
+                    TableColumn("Image") { item in
+                        AsyncImage(url: appController.imageUrl(for: item))
                     }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Color") { item in

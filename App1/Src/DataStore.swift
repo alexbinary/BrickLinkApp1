@@ -186,6 +186,20 @@ class DataStore {
     }
     
     
+    public var uploadItems: [UploadItem] {
+        
+        data?.uploadItems ?? []
+    }
+    
+    
+    public func setUploadItems(_ uploadItems: [UploadItem]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.uploadItems = uploadItems
+    }
+    
+    
     public var transactions: [Transaction] {
         
         data?.transactions ?? []
@@ -220,5 +234,6 @@ struct DataRoot: Codable {
     var affranchissementMethodByOrderId: [OrderSummary.ID: String]?
     var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
     var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
+    var uploadItems: [UploadItem]?
     var transactions: [Transaction]?
 }

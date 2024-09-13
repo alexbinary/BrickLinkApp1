@@ -19,8 +19,8 @@ class AppController: ObservableObject {
         
         Task {
             await parallel([
-                { await self.loadColors() },
-                { await self.refresh() },
+//                { await self.loadColors() },
+//                { await self.refresh() },
             ])
         }
     }
@@ -30,13 +30,31 @@ class AppController: ObservableObject {
     // MARK: - Colors
     
     
-    public func color(for item: OrderItem) -> Color? {
+    public var allColors: [LegoColor] {
         
-        if let c = dataStore.colors.first(where: { $0.id == item.colorId }) {
+        dataStore.colors
+    }
+    
+    
+    public func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
+        
+        if let c = dataStore.colors.first(where: { $0.id == colorId }) {
             return Color(fromBLCode: c.colorCode)
         } else {
             return nil
         }
+    }
+    
+    
+    public func color(for item: OrderItem) -> Color? {
+        
+        return color(forLegoColorId: item.colorId)
+    }
+    
+    
+    public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
+        
+        return dataStore.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
     }
     
     
@@ -404,14 +422,32 @@ class AppController: ObservableObject {
     }
     
     
-    public func imageUrl(item: OrderItem) -> URL? {
+    public func imageUrl(forItemType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
         
-        switch item.type {
+        switch type {
         case .part:
-            return URL(string: "https://img.bricklink.com/P/\(item.colorId)/\(item.ref).jpg")
+            return imageUrl(forPartWithRef: ref, colorId: colorId)
         case .minifig:
-            return URL(string: "https://img.bricklink.com/M/\(item.ref).jpg")
+            return imageUrl(forMinifigWithRef: ref)
         }
+    }
+    
+    
+    public func imageUrl(forPartWithRef ref: String, colorId: String) -> URL? {
+        
+        return URL(string: "https://img.bricklink.com/P/\(colorId)/\(ref).jpg")
+    }
+    
+    
+    public func imageUrl(forMinifigWithRef ref: String) -> URL? {
+        
+        return URL(string: "https://img.bricklink.com/M/\(ref).jpg")
+    }
+    
+    
+    public func imageUrl(for item: OrderItem) -> URL? {
+        
+        return imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId)
     }
     
     
@@ -575,6 +611,40 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         await reloadOrderFeedbacks(forOrderWithId: orderId)
+    }
+    
+    
+    
+    // MARK: - Upload
+    
+    
+    public var uploadItems: [UploadItem] {
+        
+        dataStore.uploadItems
+    }
+    
+    
+    public func addUploadItem(_ uploadItem: UploadItem) {
+        
+        var uploadItems = dataStore.uploadItems
+        uploadItems.append(uploadItem)
+        
+        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func deleteUploadItem(_ uploadItem: UploadItem) {
+        
+        var uploadItems = dataStore.uploadItems
+        uploadItems.removeAll(where: { $0.id == uploadItem.id })
+        
+        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
     }
     
     

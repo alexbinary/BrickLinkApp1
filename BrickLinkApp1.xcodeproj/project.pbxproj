@@ -11,6 +11,8 @@
 		291386392C93359900E79E63 /* ResultDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386382C93359900E79E63 /* ResultDetailView.swift */; };
 		29B0913A2C9436840072F7BE /* ResultDetailDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */; };
 		29B0913C2C9438260072F7BE /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913B2C9438260072F7BE /* protocols.swift */; };
+		29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913D2C9486320072F7BE /* UploadContentView.swift */; };
+		29B091412C94902B0072F7BE /* UploadItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B091402C94902B0072F7BE /* UploadItem.swift */; };
 		29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */; };
 		29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */; };
 		29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949212C7F0A5E00CC7F26 /* OrdersContentView.swift */; };
@@ -53,6 +55,8 @@
 		291386382C93359900E79E63 /* ResultDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDetailView.swift; sourceTree = "<group>"; };
 		29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDetailDashboardView.swift; sourceTree = "<group>"; };
 		29B0913B2C9438260072F7BE /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
+		29B0913D2C9486320072F7BE /* UploadContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadContentView.swift; sourceTree = "<group>"; };
+		29B091402C94902B0072F7BE /* UploadItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadItem.swift; sourceTree = "<group>"; };
 		29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
 		29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderItem.swift; sourceTree = "<group>"; };
 		29B949212C7F0A5E00CC7F26 /* OrdersContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersContentView.swift; sourceTree = "<group>"; };
@@ -113,6 +117,14 @@
 			path = Result;
 			sourceTree = "<group>";
 		};
+		29B0913F2C9488630072F7BE /* Upload */ = {
+			isa = PBXGroup;
+			children = (
+				29B0913D2C9486320072F7BE /* UploadContentView.swift */,
+			);
+			path = Upload;
+			sourceTree = "<group>";
+		};
 		29B9491A2C7DB14D00CC7F26 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +145,7 @@
 				29B949312C86EA8E00CC7F26 /* Transaction.swift */,
 				29B9494C2C89CED200CC7F26 /* LegoColor.swift */,
 				29B949522C8F2AC400CC7F26 /* InventoryItem.swift */,
+				29B091402C94902B0072F7BE /* UploadItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -239,6 +252,7 @@
 				29B9493E2C87028300CC7F26 /* Modifiers */,
 				29B949202C7F0A3D00CC7F26 /* Orders */,
 				29B949252C7F0C0500CC7F26 /* Picking */,
+				29B0913F2C9488630072F7BE /* Upload */,
 				291386372C93354D00E79E63 /* Result */,
 				29B949392C86F34C00CC7F26 /* CashFlow */,
 			);
@@ -326,6 +340,7 @@
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
 				29B9493D2C87011F00CC7F26 /* CashFlowDetailView.swift in Sources */,
 				29B949492C87336300CC7F26 /* CashFlowDetailDashboardItemView.swift in Sources */,
+				29B091412C94902B0072F7BE /* UploadItem.swift in Sources */,
 				29B949342C86EEDF00CC7F26 /* CashFlowContentView.swift in Sources */,
 				29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */,
 				29B9492E2C81A5B400CC7F26 /* PickingItemsView.swift in Sources */,
@@ -347,6 +362,7 @@
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
+				29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
 				29B949552C8F3D0800CC7F26 /* utils.swift in Sources */,
 				29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */,
