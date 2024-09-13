@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct OrderDetails: Identifiable, Equatable, Codable {
+struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     
     let id: String
     let date: Date
