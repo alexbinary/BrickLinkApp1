@@ -11,6 +11,9 @@ struct ResultDetailView: View {
     
     let selectedOrderIds: Set<OrderDetails.ID>
     
+    @State private var selectedMonth: String? = nil
+    @State private var monthPositionRangesByMonth: [String: ClosedRange<CGFloat>] = [:]
+    
     
     var body: some View {
         
@@ -33,7 +36,7 @@ struct ResultDetailView: View {
                     
                 } else {
                     
-                    let month = Date.currentMonth
+                    let month = selectedMonth ?? Date.currentMonth
                     let orders = allOrdersByMonth
                         .first(where: { $0.month == month })?.elements ?? []
                     
@@ -123,7 +126,72 @@ struct ResultDetailView: View {
                         )
                     }
                 }
+                .chartOverlay { chart in
+                    
+                    Color.clear
+                        .onContinuousHover { phase in
+                            
+                            switch phase {
+                            case .active(let mouse):
+                                
+                                selectedMonth = chart.value(atX: mouse.x)
+                                
+                                for month in months {
+                                    monthPositionRangesByMonth[month] = chart.positionRange(forX: month)!
+                                }
+                                
+                            case .ended:
+                                break
+                            }
+                        }
+                }
+                .chartBackground { chart in
+                    
+                    GeometryReader { geometry in
+                        
+                        let plotFrame = geometry[chart.plotFrame!]
+
+                        if let month = selectedMonth,
+                           let range = monthPositionRangesByMonth[month] {
+                            Rectangle()
+                                .size(width: range.upperBound - range.lowerBound, height: plotFrame.maxY - plotFrame.minY)
+                                .fill(Color.accentColor)
+                                .offset(x: range.lowerBound, y: 0)
+                                .opacity(0.1)
+                        }
+                    }
+                }
                 .frame(minHeight: 200)
+                
+                if let month = selectedMonth {
+                    
+                    HStack {
+                        
+                        let activeIndex = months.firstIndex(where: { $0 == month })!
+                        
+                        let previousIndex = months.index(before: activeIndex)
+                        
+                        Button {
+                            guard previousIndex >= months.startIndex else { return }
+                            selectedMonth = months[previousIndex]
+                        } label: {
+                            Text("Previous")
+                        }
+                        .disabled(previousIndex < months.startIndex)
+                        
+                        Text(month)
+                        
+                        let nextIndex = months.index(after: activeIndex)
+                        
+                        Button {
+                            guard nextIndex < months.endIndex else { return }
+                            selectedMonth = months[nextIndex]
+                        } label: {
+                            Text("Next")
+                        }
+                        .disabled(nextIndex >= months.endIndex)
+                    }
+                }
             }
             .padding(24)
         }
