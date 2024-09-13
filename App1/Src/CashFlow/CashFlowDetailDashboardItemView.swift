@@ -74,20 +74,32 @@ struct CashFlowDetailDashboardItemView: View {
                     
                     HStack {
                         
-                        Chart {
-                            ForEach(totalIncomeByType, id: \.type) { item in
-                                SectorMark(
-                                    angle: .value(item.type.rawValue, abs(item.totalAmount))
-                                )
-                                .foregroundStyle(by: .value("", item.type.rawValue))
+                        Group {
+                            
+                            if abs(totalIncome) > 0 {
+                                
+                                Chart {
+                                    ForEach(totalIncomeByType, id: \.type) { item in
+                                        SectorMark(
+                                            angle: .value(item.type.rawValue, abs(item.totalAmount))
+                                        )
+                                        .foregroundStyle(by: .value("", item.type.rawValue))
+                                    }
+                                }
+                                .chartForegroundStyleScale { rawValue in
+                                    
+                                    TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
+                                }
+                                .chartLegend(.hidden)
+                                
+                            } else {
+                                
+                                Circle()
+                                    .fill(green)
+                                    .opacity(0.1)
                             }
                         }
-                        .chartForegroundStyleScale { rawValue in
-                            
-                            TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
-                        }
-                        .chartLegend(.hidden)
-                        .frame(minHeight: 75)
+                        .frame(maxWidth: .infinity, minHeight: 75, maxHeight: 100)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalIncomeByType, id: \.type) { item in
@@ -105,20 +117,31 @@ struct CashFlowDetailDashboardItemView: View {
                     
                     HStack {
                         
-                        Chart {
-                            ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
-                                SectorMark(
-                                    angle: .value(item.method.rawValue, abs(item.totalAmount))
-                                )
-                                .foregroundStyle(by: .value("", item.method.rawValue))
+                        Group {
+                            if abs(totalIncome) > 0 {
+                                
+                                Chart {
+                                    ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
+                                        SectorMark(
+                                            angle: .value(item.method.rawValue, abs(item.totalAmount))
+                                        )
+                                        .foregroundStyle(by: .value("", item.method.rawValue))
+                                    }
+                                }
+                                .chartForegroundStyleScale { rawValue in
+                                    
+                                    PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
+                                }
+                                .chartLegend(.hidden)
+                                
+                            } else {
+                                
+                                Circle()
+                                    .fill(green)
+                                    .opacity(0.1)
                             }
                         }
-                        .chartForegroundStyleScale { rawValue in
-                            
-                            PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
-                        }
-                        .chartLegend(.hidden)
-                        .frame(minHeight: 75)
+                        .frame(maxWidth: .infinity, minHeight: 75, maxHeight: 100)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
@@ -150,20 +173,32 @@ struct CashFlowDetailDashboardItemView: View {
                     
                     HStack {
                         
-                        Chart {
-                            ForEach(totalExpenseByType, id: \.type) { item in
-                                SectorMark(
-                                    angle: .value(item.type.rawValue, abs(item.totalAmount))
-                                )
-                                .foregroundStyle(by: .value("", item.type.rawValue))
+                        Group {
+                            
+                            if abs(totalExpense) > 0 {
+                                
+                                Chart {
+                                    ForEach(totalExpenseByType, id: \.type) { item in
+                                        SectorMark(
+                                            angle: .value(item.type.rawValue, abs(item.totalAmount))
+                                        )
+                                        .foregroundStyle(by: .value("", item.type.rawValue))
+                                    }
+                                }
+                                .chartForegroundStyleScale { rawValue in
+                                    
+                                    TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
+                                }
+                                .chartLegend(.hidden)
+                                
+                            } else {
+                                
+                                Circle()
+                                    .fill(red)
+                                    .opacity(0.1)
                             }
                         }
-                        .chartForegroundStyleScale { rawValue in
-                            
-                            TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
-                        }
-                        .chartLegend(.hidden)
-                        .frame(minHeight: 75)
+                        .frame(maxWidth: .infinity, minHeight: 75, maxHeight: 100)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalExpenseByType, id: \.type) { item in
@@ -181,20 +216,32 @@ struct CashFlowDetailDashboardItemView: View {
                     
                     HStack {
                         
-                        Chart {
-                            ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
-                                SectorMark(
-                                    angle: .value(item.method.rawValue, abs(item.totalAmount))
-                                )
-                                .foregroundStyle(by: .value("", item.method.rawValue))
+                        Group {
+                            
+                            if abs(totalExpense) > 0 {
+                                
+                                Chart {
+                                    ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
+                                        SectorMark(
+                                            angle: .value(item.method.rawValue, abs(item.totalAmount))
+                                        )
+                                        .foregroundStyle(by: .value("", item.method.rawValue))
+                                    }
+                                }
+                                .chartForegroundStyleScale { rawValue in
+                                    
+                                    PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
+                                }
+                                .chartLegend(.hidden)
+                                
+                            } else {
+                                
+                                Circle()
+                                    .fill(red)
+                                    .opacity(0.1)
                             }
                         }
-                        .chartForegroundStyleScale { rawValue in
-                            
-                            PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
-                        }
-                        .chartLegend(.hidden)
-                        .frame(minHeight: 75)
+                        .frame(maxWidth: .infinity, minHeight: 75, maxHeight: 100)
                         
                         Grid(alignment: .leading) {
                             ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
