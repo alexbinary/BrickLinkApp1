@@ -607,17 +607,16 @@ class AppController: ObservableObject {
     public func refresh() async {
         
         await self.loadOrderSummaries()
-        await self.loadAllOrdersDataIfMissing()
-    }
-    
-    
-    private func loadAllOrdersDataIfMissing() async {
-        
         for order in orderSummaries {
             
             await loadOrderDetailsIfMissing(forOrderWithId: order.id)
             await loadOrderItemsIfMissing(forOrderWithId: order.id)
-            await loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
+            
+            let feedbacks = dataStore.orderFeedbacksByOrderId[order.id] ?? []
+            if !(feedbacks.contains(where: { $0.ratingOfBs == "B" }) && feedbacks.contains(where: { $0.ratingOfBs == "S" })) {
+                
+                await loadOrderFeedbacks(forOrderWithId: order.id)
+            }
         }
     }
 }
