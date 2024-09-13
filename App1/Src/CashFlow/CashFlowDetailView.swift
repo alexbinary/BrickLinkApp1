@@ -37,7 +37,7 @@ struct CashFlowDetailView: View {
                     
                     let month = Date.currentMonth
                     let transactions = allTransactions.sorted { $0.date > $1.date } .grouppedByMonth
-                        .first(where: { $0.month == month })?.transactions ?? []
+                        .first(where: { $0.month == month })?.elements ?? []
                     
                     CashFlowDetailDashboardItemView(
                         transactions: transactions,
@@ -56,7 +56,7 @@ struct CashFlowDetailView: View {
                         
                         let month = transactionsForMonth.month
                         
-                        let incomeTransactionsForMonth = transactionsForMonth.transactions.filter { $0.type.isIncome }
+                        let incomeTransactionsForMonth = transactionsForMonth.elements.filter { $0.type.isIncome }
                         
                         let totalIncomeByTypeForMonth: [(type: TransactionType, totalAmount: Float)] = TransactionType.incomeTypes.map { type in
                             (
@@ -102,7 +102,7 @@ struct CashFlowDetailView: View {
                             .position(by: .value("Split", "Method"))
                         }
                         
-                        let expenseTransactionsForMonth = transactionsForMonth.transactions.filter { $0.type.isExpense }
+                        let expenseTransactionsForMonth = transactionsForMonth.elements.filter { $0.type.isExpense }
                         
                         let totalExpenseByTypeForMonth: [(type: TransactionType, totalAmount: Float)] = TransactionType.expenseTypes.map { type in
                             (
@@ -148,8 +148,6 @@ struct CashFlowDetailView: View {
                             .position(by: .value("Split", "Method"))
                         }
                     }
-                    
-                    
                 }
                 .chartForegroundStyleScale { rawValue in
                     

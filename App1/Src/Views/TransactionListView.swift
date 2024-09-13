@@ -49,7 +49,7 @@ struct TransactionListView: View {
                     
                     Section(item.month) {
                         
-                        ForEach(item.transactions) { TableRow($0) }
+                        ForEach(item.elements) { TableRow($0) }
                     }
                 }
                 
