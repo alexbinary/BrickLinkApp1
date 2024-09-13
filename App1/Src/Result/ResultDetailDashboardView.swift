@@ -23,10 +23,12 @@ struct ResultDetailDashboardView: View {
         
         let totalFees = orders.reduce(0) { (total: Float, order) in
             
-            let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount ?? 0
-            let totalPrice = order.grandTotal
+            var fees: Float = 0
             
-            let fees = totalPrice - income
+            if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+            
+                fees = order.grandTotal - income
+            }
             
             return total + fees
         }
