@@ -35,7 +35,7 @@ struct CashFlowDetailView: View {
                     
                 } else {
                     
-                    let month = Date.currentMonth
+                    let month = selectedMonth ?? Date.currentMonth
                     let transactions = allTransactions.sorted { $0.date > $1.date } .grouppedByMonth
                         .first(where: { $0.month == month })?.elements ?? []
                     
