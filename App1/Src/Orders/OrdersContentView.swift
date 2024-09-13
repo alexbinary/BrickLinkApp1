@@ -12,7 +12,7 @@ struct OrdersContentView: View {
     
     var body: some View {
         
-        Table(appController.orderSummaries, selection: $selectedOrderId) {
+        Table(of: OrderSummary.self, selection: $selectedOrderId) {
             
             Group {
                 
@@ -101,6 +101,16 @@ struct OrdersContentView: View {
                     if let t = appController.transactions.first(where: { $0.type == .orderShipping && $0.orderRefIn == order.id }) {
                         Text(t.createdAt, format: .dateTime)
                     }
+                }
+            }
+            
+        } rows: {
+            
+            ForEach(appController.orderSummaries.grouppedByMonth, id: \.month) { item in
+                
+                Section(item.month) {
+                    
+                    ForEach(item.elements) { TableRow($0) }
                 }
             }
         }

@@ -13,7 +13,7 @@ struct ResultContentView: View {
     
     var body: some View {
         
-        Table(appController.orderSummaries, selection: $selectedOrderIds) {
+        Table(of: OrderSummary.self, selection: $selectedOrderIds) {
             
             TableColumn("ID", value: \.id)
             
@@ -40,6 +40,16 @@ struct ResultContentView: View {
             TableColumn("Shipping cost") { order in
                 if let sc = appController.shippingCost(forOrderWithId: order.id) {
                     Text(sc, format: .currency(code: "EUR").presentation(.isoCode))
+                }
+            }
+            
+        } rows: {
+            
+            ForEach(appController.orderSummaries.grouppedByMonth, id: \.month) { item in
+                
+                Section(item.month) {
+                    
+                    ForEach(item.elements) { TableRow($0) }
                 }
             }
         }
