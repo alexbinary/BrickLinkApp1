@@ -652,6 +652,31 @@ class AppController: ObservableObject {
     // MARK: - Inventory
     
     
+    public func getInventory(for item: UploadItem) async -> InventoryItem? {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(item.type.rawValue)&color_id=\(item.colorId)")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<[BrickLinkInventoryItem]> = data.decode()
+        if let inventories = decoded.data {
+            
+            if let inv = inventories.first(where: { inv in
+                
+                inv.item.type == item.type
+                && inv.item.no == item.ref
+                && "\(inv.colorId)" == item.colorId
+            }) {
+                return InventoryItem(fromBlInventoryItem: inv)
+            }
+        }
+        
+        return nil
+    }
+    
+    
     public func createInventory(from item: UploadItem) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!)
@@ -670,6 +695,29 @@ class AppController: ObservableObject {
                 "is_stock_room": false,
                 "description": "\(item.comment)",
                 "remarks": "\(item.remarks ?? "")"
+            }
+            """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.addAuthentication(using: blCredentials)
+        
+        print(String(data: request.httpBody!, encoding: .utf8)!)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+    }
+    
+    
+    public func updateInventory(_ inventory: InventoryItem, from item: UploadItem) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(inventory.id)")!)
+        request.httpMethod = "PUT"
+        request.httpBody = """
+            {
+                "quantity": "+\(item.qty)",
+                "unit_price": "\(item.unitPrice ?? 0)",
+                "description": "\(item.comment)",
+                "remarks": "\(item.remarks ?? "")",
+                "sale_rate": 0
             }
             """.data(using: .utf8)
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -783,6 +831,16 @@ extension OrderDetails {
         self.shippingAddress = blOrder.shipping!.address.full
         self.shippingAddressCountryCode = blOrder.shipping!.address.countryCode
         self.shippingAddressName = blOrder.shipping!.address.name.full
+    }
+}
+
+
+extension InventoryItem {
+    
+    
+    init(fromBlInventoryItem blInventoryItem: BrickLinkInventoryItem) {
+        
+        self.id = "\(blInventoryItem.inventoryId)"
     }
 }
 

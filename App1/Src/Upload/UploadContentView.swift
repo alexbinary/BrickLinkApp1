@@ -17,6 +17,8 @@ struct UploadContentView: View {
     @State var remarks: String = ""
     @State var unitPrice: Float = 0
     
+    @State var inventoryItem: InventoryItem? = nil
+    
     
     var body: some View {
         
@@ -177,7 +179,30 @@ struct UploadContentView: View {
                     } label: {
                         Text("Create inventory")
                     }
-
+                    
+                    Button {
+                        Task {
+                            self.inventoryItem = await appController.getInventory(for: nextUploadItem)
+                        }
+                    } label: {
+                        Text("Pull inventory")
+                    }
+                    
+                    if let inventoryItem = self.inventoryItem {
+                        
+                        Text(inventoryItem.id)
+                        
+                        Button {
+                            Task {
+                                await appController.updateInventory(inventoryItem , from: nextUploadItem)
+                            }
+                        } label: {
+                            Text("Update inventory")
+                        }
+                        
+                    } else {
+                        Text("No inventory")
+                    }
                 }
             }
         }

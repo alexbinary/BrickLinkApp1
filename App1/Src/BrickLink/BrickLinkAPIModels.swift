@@ -124,6 +124,14 @@ struct BrickLinkColor: Decodable {
 }
 
 
+struct BrickLinkInventoryItem: Decodable {
+    
+    let inventoryId: Int
+    let item: BrickLinkCatalogItem
+    let colorId: Int
+}
+
+
 
 struct FixedPointNumber: Codable, ExpressibleByFloatLiteral, CustomStringConvertible {
     
