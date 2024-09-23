@@ -48,6 +48,7 @@
 		29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */; };
 		29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 29D674572C77C7E300BAA00A /* CryptoSwift */; };
 		29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */; };
+		29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */ = {isa = PBXBuildFile; productRef = 29EDBB502CA069E900F77959 /* HTMLEntities */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */,
 				29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +279,7 @@
 			name = App1;
 			packageProductDependencies = (
 				29D674572C77C7E300BAA00A /* CryptoSwift */,
+				29EDBB502CA069E900F77959 /* HTMLEntities */,
 			);
 			productName = BrickLinkApp1;
 			productReference = 29BB308C2C77B0CA000525CB /* App1.app */;
@@ -308,6 +311,7 @@
 			mainGroup = 29BB30832C77B0CA000525CB;
 			packageReferences = (
 				29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */,
 			);
 			productRefGroup = 29BB308D2C77B0CA000525CB /* Products */;
 			projectDirPath = "";
@@ -583,6 +587,14 @@
 				version = 1.8.3;
 			};
 		};
+		29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Kitura/swift-html-entities.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -590,6 +602,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
+		};
+		29EDBB502CA069E900F77959 /* HTMLEntities */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */;
+			productName = HTMLEntities;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

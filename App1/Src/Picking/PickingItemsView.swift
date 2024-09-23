@@ -1,5 +1,6 @@
 
 import SwiftUI
+import HTMLEntities
 
 
 
@@ -119,16 +120,16 @@ struct PickingItemsView: View {
                     TableColumn("Image") { item in
                         AsyncImage(url: appController.imageUrl(for: item))
                     }
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Location", value: \.location)
-                    TableColumn("Quantity", value: \.quantity)
-                    TableColumn("Left", value: \.quantityLeft)
                     TableColumn("Color") { item in
                         HStack {
                             appController.color(for: item).frame(width: 18, height: 18)
                             Text(appController.colorName(for: item))
                         }
                     }
+                    TableColumn("Condition", value: \.condition)
+                    TableColumn("Location", value: \.location)
+                    TableColumn("Quantity", value: \.quantity)
+                    TableColumn("Left", value: \.quantityLeft)
                     TableColumn("Name", value: \.name)
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
@@ -203,18 +204,20 @@ struct PickingItemsView: View {
                             }
                         }
                     }
+                    TableColumn("Condition", value: \.condition)
                     TableColumn("Image") { item in
                         AsyncImage(url: appController.imageUrl(for: item))
                     }
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Quantity", value: \.quantity)
                     TableColumn("Color") { item in
                         HStack {
                             appController.color(for: item).frame(width: 18, height: 18)
                             Text(appController.colorName(for: item))
                         }
                     }
-                    TableColumn("Name", value: \.name)
+                    TableColumn("Quantity", value: \.quantity)
+                    TableColumn("Name") { item in
+                        Text(item.name.htmlUnescape())
+                    }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     TableColumn("Location", value: \.location)
