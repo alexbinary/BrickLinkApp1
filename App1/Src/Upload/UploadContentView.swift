@@ -14,6 +14,8 @@ struct UploadContentView: View {
     @State var qty: Int = 1
     @State var condition: String = "U"
     @State var comment: String = ""
+    @State var remarks: String = ""
+    @State var unitPrice: Float = 0
     
     
     var body: some View {
@@ -46,6 +48,8 @@ struct UploadContentView: View {
                     
                     TextField("Qty", value: $qty, format: .number)
                     
+                    TextField("Price", value: $unitPrice, format: .number)
+                    
                     Picker("Condition", selection: $condition) {
                         
                         Text("New").tag("N")
@@ -53,6 +57,7 @@ struct UploadContentView: View {
                     }
                     
                     TextField("Comment", text: $comment)
+                    TextField("Remarks", text: $remarks)
                     
                     Button {
                         appController.addUploadItem(UploadItem(
@@ -61,8 +66,10 @@ struct UploadContentView: View {
                             colorId: colorId,
                             qty: qty,
                             condition: condition,
-                            comment: comment)
-                        )
+                            comment: comment,
+                            remarks: remarks,
+                            unitPrice: unitPrice
+                        ))
                     } label: {
                         Text("Add")
                     }
@@ -92,8 +99,16 @@ struct UploadContentView: View {
                 TableColumn("Quantity") { item in
                     Text(item.qty, format: .number)
                 }
+                TableColumn("Price") { item in
+                    if let price = item.unitPrice {
+                        Text(price, format: .number)
+                    }
+                }
                 
                 TableColumn("Comment", value: \.comment)
+                TableColumn("Remarks") { item in
+                    Text(item.remarks ?? "")
+                }
                 
                 TableColumn("Delete") { item in
                     Button {
