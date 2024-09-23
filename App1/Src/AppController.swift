@@ -649,6 +649,40 @@ class AppController: ObservableObject {
     
     
     
+    // MARK: - Inventory
+    
+    
+    public func createInventory(from item: UploadItem) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!)
+        request.httpMethod = "POST"
+        request.httpBody = """
+            {
+                "item": {
+                    "no": "\(item.ref)",
+                    "type": "\(item.type.rawValue)"
+                },
+                "color_id": \(item.colorId),
+                "quantity": \(item.qty),
+                "unit_price": "\(item.unitPrice ?? 0)",
+                "new_or_used": "\(item.condition)",
+                "is_retain": false,
+                "is_stock_room": false,
+                "description": "\(item.comment)",
+                "remarks": "\(item.remarks ?? "")"
+            }
+            """.data(using: .utf8)
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        request.addAuthentication(using: blCredentials)
+        
+        print(String(data: request.httpBody!, encoding: .utf8)!)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+    }
+    
+    
+    
     // MARK: - Transactions
     
     
