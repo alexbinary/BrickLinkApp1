@@ -1,5 +1,6 @@
 
 import SwiftUI
+import HTMLEntities
 
 
 
@@ -180,7 +181,9 @@ struct OrdersDetailDetailView: View {
                         Text(appController.colorName(for: item))
                     }
                 }
-                TableColumn("Name", value: \.name)
+                TableColumn("Name") { item in
+                    Text(item.name.htmlUnescape()).lineLimit(nil)
+                }
                 TableColumn("Ref", value: \.ref)
                 TableColumn("Comment", value: \.comment)
                 TableColumn("Quantity", value: \.quantity)

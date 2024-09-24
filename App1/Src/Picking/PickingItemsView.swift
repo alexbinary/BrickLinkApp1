@@ -131,7 +131,9 @@ struct PickingItemsView: View {
                     TableColumn("Location", value: \.location)
                     TableColumn("Quantity", value: \.quantity)
                     TableColumn("Left", value: \.quantityLeft)
-                    TableColumn("Name", value: \.name)
+                    TableColumn("Name") { item in
+                        Text(item.name.htmlUnescape()).lineLimit(nil)
+                    }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     
@@ -218,7 +220,7 @@ struct PickingItemsView: View {
                     }
                     TableColumn("Quantity", value: \.quantity)
                     TableColumn("Name") { item in
-                        Text(item.name.htmlUnescape())
+                        Text(item.name.htmlUnescape()).lineLimit(nil)
                     }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
@@ -299,7 +301,9 @@ struct PickingItemsView: View {
                             Text(appController.colorName(for: item))
                         }
                     }
-                    TableColumn("Name", value: \.name)
+                    TableColumn("Name") { item in
+                        Text(item.name.htmlUnescape()).lineLimit(nil)
+                    }
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
                     TableColumn("Quantity", value: \.quantity)
