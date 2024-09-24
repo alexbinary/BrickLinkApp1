@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		291386362C93354500E79E63 /* ResultContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386352C93354500E79E63 /* ResultContentView.swift */; };
 		291386392C93359900E79E63 /* ResultDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386382C93359900E79E63 /* ResultDetailView.swift */; };
+		295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadListView.swift */; };
 		29B0913A2C9436840072F7BE /* ResultDetailDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */; };
 		29B0913C2C9438260072F7BE /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913B2C9438260072F7BE /* protocols.swift */; };
 		29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913D2C9486320072F7BE /* UploadContentView.swift */; };
@@ -54,6 +55,7 @@
 /* Begin PBXFileReference section */
 		291386352C93354500E79E63 /* ResultContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultContentView.swift; sourceTree = "<group>"; };
 		291386382C93359900E79E63 /* ResultDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDetailView.swift; sourceTree = "<group>"; };
+		295B52FD2CA2B6820090CE1C /* UploadListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadListView.swift; sourceTree = "<group>"; };
 		29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDetailDashboardView.swift; sourceTree = "<group>"; };
 		29B0913B2C9438260072F7BE /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
 		29B0913D2C9486320072F7BE /* UploadContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadContentView.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				29B0913D2C9486320072F7BE /* UploadContentView.swift */,
+				295B52FD2CA2B6820090CE1C /* UploadListView.swift */,
 			);
 			path = Upload;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
 				29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
+				295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */,
 				29B949552C8F3D0800CC7F26 /* utils.swift in Sources */,
 				29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */,
 				29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */,
