@@ -10,6 +10,15 @@ struct UploadContentView: View {
     
     @State var inventoryItem: InventoryItem? = nil
     
+    @State var type: BrickLinkItemType = .part
+    @State var ref: String = ""
+    @State var colorId: LegoColor.ID = ""
+    @State var qty: Int = 1
+    @State var condition: String = "U"
+    @State var comment: String = ""
+    @State var remarks: String = ""
+    @State var unitPrice: Float = 0
+    
     
     var body: some View {
         
@@ -64,14 +73,6 @@ struct UploadContentView: View {
                         TableRow(nextUploadItem)
                     }
                     .frame(minHeight: 100)
-                    
-                    Button {
-                        Task {
-                            await appController.createInventory(from: nextUploadItem)
-                        }
-                    } label: {
-                        Text("Create inventory")
-                    }
                     
                     Button {
                         Task {
@@ -139,7 +140,61 @@ struct UploadContentView: View {
                         }
                         
                     } else {
+                        
                         Text("No inventory")
+                        
+                        Button {
+                            Task {
+                                await appController.createInventory(
+                                    ref: self.ref,
+                                    type: self.type,
+                                    colorId: self.colorId,
+                                    quantity: self.qty,
+                                    unitPrice: self.unitPrice,
+                                    condition: self.condition,
+                                    description: self.comment,
+                                    remarks: self.remarks
+                                )
+                            }
+                        } label: {
+                            Text("Create inventory")
+                        }
+                    }
+                    
+                    Form {
+                        
+                        Picker("Type", selection: $type) {
+                            
+                            ForEach(BrickLinkItemType.allCases, id: \.self) { type in
+                                
+                                Text(type.rawValue).tag(type)
+                            }
+                        }
+                        
+                        TextField("Ref", text: $ref)
+                        
+                        Picker("Color", selection: $colorId) {
+                            
+                            ForEach(appController.allColors) { color in
+                                
+                                Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
+                                    .tag(color.id)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        
+                        TextField("Qty", value: $qty, format: .number)
+                        
+                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                        
+                        Picker("Condition", selection: $condition) {
+                            
+                            Text("New").tag("N")
+                            Text("Used").tag("U")
+                        }
+                        
+                        TextField("Comment", text: $comment)
+                        TextField("Remarks", text: $remarks)
                     }
                 }
             }
