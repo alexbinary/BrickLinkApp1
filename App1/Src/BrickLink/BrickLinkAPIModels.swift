@@ -129,6 +129,11 @@ struct BrickLinkInventoryItem: Decodable {
     let inventoryId: Int
     let item: BrickLinkCatalogItem
     let colorId: Int
+    let quantity: Int
+    let newOrUsed: String
+    let description: String?
+    let remarks: String?
+    let unitPrice: FixedPointNumber
 }
 
 

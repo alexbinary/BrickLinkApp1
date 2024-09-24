@@ -50,7 +50,7 @@ struct UploadListView: View {
                     
                     TextField("Qty", value: $qty, format: .number)
                     
-                    TextField("Price", value: $unitPrice, format: .number)
+                    TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
                     
                     Picker("Condition", selection: $condition) {
                         
@@ -104,7 +104,7 @@ struct UploadListView: View {
                 }
                 TableColumn("Price") { item in
                     if let price = item.unitPrice {
-                        Text(price, format: .number)
+                        Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                     }
                 }
                 

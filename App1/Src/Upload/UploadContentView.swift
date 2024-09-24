@@ -49,7 +49,7 @@ struct UploadContentView: View {
                         
                         TableColumn("Price") { item in
                             if let price = item.unitPrice {
-                                Text(price, format: .number)
+                                Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                             }
                         }
                         
@@ -83,7 +83,52 @@ struct UploadContentView: View {
                     
                     if let inventoryItem = self.inventoryItem {
                         
-                        Text(inventoryItem.id)
+                        HStack {
+                            
+                            VStack(alignment: .leading) {
+                                
+                                HStack {
+                                    Text("ID:")
+                                    Text(inventoryItem.id)
+                                }
+                                HStack {
+                                    Text("Ref:")
+                                    Text(inventoryItem.ref)
+                                }
+                                HStack {
+                                    Text("Name:")
+                                    Text(inventoryItem.name)
+                                }
+                                HStack {
+                                    Text("Color:")
+                                    appController.color(forLegoColorId: inventoryItem.colorId).frame(width: 18, height: 18)
+                                    Text(appController.colorName(forLegoColorId: inventoryItem.colorId))
+                                }
+                                HStack {
+                                    Text("Condition:")
+                                    Text(inventoryItem.condition)
+                                }
+                                HStack {
+                                    Text("Description:")
+                                    Text(inventoryItem.description)
+                                }
+                                HStack {
+                                    Text("Remarks:")
+                                    Text(inventoryItem.remarks)
+                                }
+                                HStack {
+                                    Text("Qty:")
+                                    Text(inventoryItem.quantity, format: .number)
+                                }
+                                HStack {
+                                    Text("PU:")
+                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                                }
+                            }
+                            
+                            AsyncImage(url: appController.imageUrl(forItemType: inventoryItem.type, ref: inventoryItem.ref, colorId: inventoryItem.colorId))
+                                .frame(maxWidth: 100, maxHeight: 100)
+                        }
                         
                         Button {
                             Task {
