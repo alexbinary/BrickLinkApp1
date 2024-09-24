@@ -119,6 +119,7 @@ struct PickingItemsView: View {
                     }
                     TableColumn("Image") { item in
                         AsyncImage(url: appController.imageUrl(for: item))
+                            .frame(minHeight: 60)
                     }
                     TableColumn("Color") { item in
                         HStack {
@@ -207,6 +208,7 @@ struct PickingItemsView: View {
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Image") { item in
                         AsyncImage(url: appController.imageUrl(for: item))
+                            .frame(minHeight: 60)
                     }
                     TableColumn("Color") { item in
                         HStack {
@@ -288,6 +290,7 @@ struct PickingItemsView: View {
                     }
                     TableColumn("Image") { item in
                         AsyncImage(url: appController.imageUrl(for: item))
+                            .frame(minHeight: 60)
                     }
                     TableColumn("Condition", value: \.condition)
                     TableColumn("Color") { item in

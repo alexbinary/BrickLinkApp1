@@ -89,6 +89,7 @@ struct UploadContentView: View {
                     
                     TableColumn("Image") { item in
                         AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
+                            .frame(minHeight: 60)
                     }
                     
                     TableColumn("Condition", value: \.condition)
@@ -137,6 +138,7 @@ struct UploadContentView: View {
                         
                         TableColumn("Image") { item in
                             AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
+                                .frame(minHeight: 60)
                         }
                         
                         TableColumn("Condition", value: \.condition)

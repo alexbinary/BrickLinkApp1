@@ -171,6 +171,7 @@ struct OrdersDetailDetailView: View {
                 
                 TableColumn("Image") { item in
                     AsyncImage(url: appController.imageUrl(for: item))
+                        .frame(minHeight: 60)
                 }
                 TableColumn("Condition", value: \.condition)
                 TableColumn("Color") { item in
