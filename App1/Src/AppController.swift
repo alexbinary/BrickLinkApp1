@@ -718,19 +718,41 @@ class AppController: ObservableObject {
     }
     
     
-    public func updateInventory(_ inventory: InventoryItem, from item: UploadItem) async {
+    public func updateInventory(
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(inventory.id)")!)
+        id: InventoryItem.ID,
+        
+        addQuantity: Int,
+        unitPrice: Float? = nil,
+        remarks: String? = nil
+    
+    ) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!)
         request.httpMethod = "PUT"
-        request.httpBody = """
+        var body = """
             {
-                "quantity": "+\(item.qty)",
-                "unit_price": "\(item.unitPrice ?? 0)",
-                "description": "\(item.comment)",
-                "remarks": "\(item.remarks ?? "")",
-                "sale_rate": 0
+                "quantity": "+\(addQuantity)"
+            """
+
+        if let price = unitPrice {
+            
+            body += """
+                    ,"unit_price": "\(price)"
+            """
+        }
+        if let remarks = remarks {
+            
+            body += """
+                    ,"remarks": "\(remarks)"
+            """
+        }
+
+        body += """
             }
-            """.data(using: .utf8)
+            """
+        request.httpBody = body.data(using: .utf8)
+        
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
         request.addAuthentication(using: blCredentials)
         

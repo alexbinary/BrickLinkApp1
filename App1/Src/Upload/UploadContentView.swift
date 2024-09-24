@@ -133,7 +133,12 @@ struct UploadContentView: View {
                         
                         Button {
                             Task {
-                                await appController.updateInventory(inventoryItem , from: nextUploadItem)
+                                await appController.updateInventory(
+                                    id: inventoryItem.id,
+                                    addQuantity: self.qty,
+                                    unitPrice: self.unitPrice != 0 ? self.unitPrice : nil,
+                                    remarks: self.remarks.isEmpty ? nil : self.remarks
+                                )
                             }
                         } label: {
                             Text("Update inventory")
