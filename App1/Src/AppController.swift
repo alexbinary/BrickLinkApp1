@@ -137,7 +137,7 @@ class AppController: ObservableObject {
         if let blOrders = decoded.data {
             
             let orderSummaries = blOrders
-                .map { OrderSummary(fromBlOrder: $0) }
+                .map { OrderSummary(fromBl: $0) }
                 .sorted { $0.date > $1.date }
             
             try! dataStore.setOrderSummaries(orderSummaries)
@@ -191,7 +191,7 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<BrickLinkOrder> = data.decode()
         if let blOrder = decoded.data {
             
-            let order = OrderDetails(fromBlOrder: blOrder)
+            let order = OrderDetails(fromBl: blOrder)
             
             var orderDetails = dataStore.orderDetails
             
@@ -558,7 +558,7 @@ class AppController: ObservableObject {
         let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
         if let blFeedbacks = decoded.data {
             
-            let feedbacks = blFeedbacks.map { Feedback(fromBlFeedback: $0) }
+            let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
             
             var orderFeedbacksByOrderId = dataStore.orderFeedbacksByOrderId
             orderFeedbacksByOrderId[orderId] = feedbacks
@@ -669,7 +669,7 @@ class AppController: ObservableObject {
                 && inv.item.no == item.ref
                 && "\(inv.colorId)" == item.colorId
             }) {
-                return InventoryItem(fromBlInventoryItem: inv)
+                return InventoryItem(fromBl: inv)
             }
         }
         
@@ -811,24 +811,24 @@ class AppController: ObservableObject {
 extension OrderSummary {
     
     
-    init(fromBlOrder blOrder: BrickLinkOrder) {
+    init(fromBl bl: BrickLinkOrder) {
         
-        self.id = "\(blOrder.orderId)"
-        self.date = blOrder.dateOrdered
-        self.buyer = blOrder.buyerName
-        self.items = blOrder.totalCount
-        self.lots = blOrder.uniqueCount
+        self.id = "\(bl.orderId)"
+        self.date = bl.dateOrdered
+        self.buyer = bl.buyerName
+        self.items = bl.totalCount
+        self.lots = bl.uniqueCount
         
-        self.subTotal = blOrder.cost.subtotal.floatValue
-        self.grandTotal = blOrder.cost.grandTotal.floatValue
-        self.costCurrencyCode = blOrder.cost.currencyCode
+        self.subTotal = bl.cost.subtotal.floatValue
+        self.grandTotal = bl.cost.grandTotal.floatValue
+        self.costCurrencyCode = bl.cost.currencyCode
         
-        self.dispSubTotal = blOrder.dispCost.subtotal.floatValue
-        self.dispGrandTotal = blOrder.dispCost.grandTotal.floatValue
-        self.dispCostCurrencyCode = blOrder.dispCost.currencyCode
+        self.dispSubTotal = bl.dispCost.subtotal.floatValue
+        self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
+        self.dispCostCurrencyCode = bl.dispCost.currencyCode
         
-        self.status = blOrder.status
-        self.dateStatusChanged = blOrder.dateStatusChanged
+        self.status = bl.status
+        self.dateStatusChanged = bl.dateStatusChanged
     }
 }
 
@@ -836,34 +836,34 @@ extension OrderSummary {
 extension OrderDetails {
     
     
-    init(fromBlOrder blOrder: BrickLinkOrder) {
+    init(fromBl bl: BrickLinkOrder) {
         
-        self.id = "\(blOrder.orderId)"
-        self.date = blOrder.dateOrdered
-        self.buyer = blOrder.buyerName
-        self.items = blOrder.totalCount
-        self.lots = blOrder.uniqueCount
+        self.id = "\(bl.orderId)"
+        self.date = bl.dateOrdered
+        self.buyer = bl.buyerName
+        self.items = bl.totalCount
+        self.lots = bl.uniqueCount
         
-        self.subTotal = blOrder.cost.subtotal.floatValue
-        self.grandTotal = blOrder.cost.grandTotal.floatValue
-        self.shippingCost = blOrder.cost.shipping!.floatValue
-        self.costCurrencyCode = blOrder.cost.currencyCode
+        self.subTotal = bl.cost.subtotal.floatValue
+        self.grandTotal = bl.cost.grandTotal.floatValue
+        self.shippingCost = bl.cost.shipping!.floatValue
+        self.costCurrencyCode = bl.cost.currencyCode
         
-        self.dispSubTotal = blOrder.dispCost.subtotal.floatValue
-        self.dispGrandTotal = blOrder.dispCost.grandTotal.floatValue
-        self.dispShippingCost = blOrder.dispCost.shipping!.floatValue
-        self.dispCostCurrencyCode = blOrder.dispCost.currencyCode
+        self.dispSubTotal = bl.dispCost.subtotal.floatValue
+        self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
+        self.dispShippingCost = bl.dispCost.shipping!.floatValue
+        self.dispCostCurrencyCode = bl.dispCost.currencyCode
         
-        self.status = blOrder.status
-        self.driveThruSent = blOrder.driveThruSent!
-        self.trackingNo = blOrder.shipping!.trackingNo
-        self.totalWeight = blOrder.totalWeight!.floatValue
+        self.status = bl.status
+        self.driveThruSent = bl.driveThruSent!
+        self.trackingNo = bl.shipping!.trackingNo
+        self.totalWeight = bl.totalWeight!.floatValue
         
-        self.shippingMethodId = blOrder.shipping!.methodId
-        self.shippingMethodName = blOrder.shipping!.method
-        self.shippingAddress = blOrder.shipping!.address.full
-        self.shippingAddressCountryCode = blOrder.shipping!.address.countryCode
-        self.shippingAddressName = blOrder.shipping!.address.name.full
+        self.shippingMethodId = bl.shipping!.methodId
+        self.shippingMethodName = bl.shipping!.method
+        self.shippingAddress = bl.shipping!.address.full
+        self.shippingAddressCountryCode = bl.shipping!.address.countryCode
+        self.shippingAddressName = bl.shipping!.address.name.full
     }
 }
 
@@ -871,7 +871,7 @@ extension OrderDetails {
 extension InventoryItem {
     
     
-    init(fromBlInventoryItem bl: BrickLinkInventoryItem) {
+    init(fromBl bl: BrickLinkInventoryItem) {
         
         self.id = "\(bl.inventoryId)"
         self.condition = bl.newOrUsed
@@ -890,16 +890,16 @@ extension InventoryItem {
 extension Feedback {
     
     
-    init(fromBlFeedback blFeedback: BrickLinkOrderFeedback) {
+    init(fromBl bl: BrickLinkOrderFeedback) {
         
-        self.id = blFeedback.feedbackId
-        self.orderId = "\(blFeedback.orderId)"
-        self.from = blFeedback.from
-        self.to = blFeedback.to
-        self.dateRated = blFeedback.dateRated
-        self.rating = blFeedback.rating
-        self.ratingOfBs = blFeedback.ratingOfBs
-        self.comment = blFeedback.comment
+        self.id = bl.feedbackId
+        self.orderId = "\(bl.orderId)"
+        self.from = bl.from
+        self.to = bl.to
+        self.dateRated = bl.dateRated
+        self.rating = bl.rating
+        self.ratingOfBs = bl.ratingOfBs
+        self.comment = bl.comment
     }
 }
 
