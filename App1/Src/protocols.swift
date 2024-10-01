@@ -36,3 +36,14 @@ extension Array where Element: Datable {
         }
     }
 }
+
+
+
+extension Array where Element == (month: String, elements: [OrderDetails]) {
+    
+    
+    subscript(_ month: String) -> [OrderDetails] {
+        
+        return self.first(where: { $0.month == month })?.elements ?? []
+    }
+}

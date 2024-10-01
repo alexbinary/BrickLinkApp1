@@ -11,3 +11,17 @@ func parallel(
         }
     }
 }
+
+
+
+extension Array {
+    
+    
+    func limit(_ n: Int) -> Self {
+        
+        if self.isEmpty {
+            return []
+        }
+        return Array(self[0...Swift.min(n - 1, self.count - 1)])
+    }
+}

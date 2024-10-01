@@ -4,7 +4,7 @@ import Charts
 
 
 
-struct ResultDetailView: View {
+struct ResultHistoryView: View {
     
     
     @EnvironmentObject var appController: AppController
@@ -29,7 +29,7 @@ struct ResultDetailView: View {
                 
                 if !selectedOrderIds.isEmpty {
                     
-                    ResultDetailDashboardView(
+                    ResultHistoryNumbersView(
                         orders: allOrders.filter { selectedOrderIds.contains($0.id) },
                         title: "Selection"
                     )
@@ -40,7 +40,7 @@ struct ResultDetailView: View {
                     let orders = allOrdersByMonth
                         .first(where: { $0.month == month })?.elements ?? []
                     
-                    ResultDetailDashboardView(
+                    ResultHistoryNumbersView(
                         orders: orders,
                         title: month
                     )

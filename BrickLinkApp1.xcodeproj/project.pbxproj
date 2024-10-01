@@ -8,10 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		291386362C93354500E79E63 /* ResultContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386352C93354500E79E63 /* ResultContentView.swift */; };
-		291386392C93359900E79E63 /* ResultDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386382C93359900E79E63 /* ResultDetailView.swift */; };
+		291386392C93359900E79E63 /* ResultHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386382C93359900E79E63 /* ResultHistoryView.swift */; };
+		2951B3A52CABE24700DF454C /* ResultDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951B3A42CABE24700DF454C /* ResultDashboardView.swift */; };
 		295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadListView.swift */; };
-		29B0913A2C9436840072F7BE /* ResultDetailDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */; };
-		29B0913C2C9438260072F7BE /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913B2C9438260072F7BE /* protocols.swift */; };
+		29ACCDED2CAD8B870065C6E3 /* ResultCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEC2CAD8B870065C6E3 /* ResultCircleView.swift */; };
+		29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */; };
+		29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDF52CAD90800065C6E3 /* protocols.swift */; };
+		29B0913A2C9436840072F7BE /* ResultHistoryNumbersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B091392C9436840072F7BE /* ResultHistoryNumbersView.swift */; };
 		29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913D2C9486320072F7BE /* UploadContentView.swift */; };
 		29B091412C94902B0072F7BE /* UploadItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B091402C94902B0072F7BE /* UploadItem.swift */; };
 		29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */; };
@@ -54,10 +57,13 @@
 
 /* Begin PBXFileReference section */
 		291386352C93354500E79E63 /* ResultContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultContentView.swift; sourceTree = "<group>"; };
-		291386382C93359900E79E63 /* ResultDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDetailView.swift; sourceTree = "<group>"; };
+		291386382C93359900E79E63 /* ResultHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultHistoryView.swift; sourceTree = "<group>"; };
+		2951B3A42CABE24700DF454C /* ResultDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDashboardView.swift; sourceTree = "<group>"; };
 		295B52FD2CA2B6820090CE1C /* UploadListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadListView.swift; sourceTree = "<group>"; };
-		29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDetailDashboardView.swift; sourceTree = "<group>"; };
-		29B0913B2C9438260072F7BE /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
+		29ACCDEC2CAD8B870065C6E3 /* ResultCircleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultCircleView.swift; sourceTree = "<group>"; };
+		29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessMonth.swift; sourceTree = "<group>"; };
+		29ACCDF52CAD90800065C6E3 /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
+		29B091392C9436840072F7BE /* ResultHistoryNumbersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultHistoryNumbersView.swift; sourceTree = "<group>"; };
 		29B0913D2C9486320072F7BE /* UploadContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadContentView.swift; sourceTree = "<group>"; };
 		29B091402C94902B0072F7BE /* UploadItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadItem.swift; sourceTree = "<group>"; };
 		29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
@@ -115,10 +121,20 @@
 			isa = PBXGroup;
 			children = (
 				291386352C93354500E79E63 /* ResultContentView.swift */,
-				291386382C93359900E79E63 /* ResultDetailView.swift */,
-				29B091392C9436840072F7BE /* ResultDetailDashboardView.swift */,
+				2951B3A42CABE24700DF454C /* ResultDashboardView.swift */,
+				291386382C93359900E79E63 /* ResultHistoryView.swift */,
+				29B091392C9436840072F7BE /* ResultHistoryNumbersView.swift */,
+				29ACCDEC2CAD8B870065C6E3 /* ResultCircleView.swift */,
 			);
 			path = Result;
+			sourceTree = "<group>";
+		};
+		29ACCDEE2CAD8C620065C6E3 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */,
+			);
+			path = Types;
 			sourceTree = "<group>";
 		};
 		29B0913F2C9488630072F7BE /* Upload */ = {
@@ -245,13 +261,14 @@
 				29B949542C8F3D0800CC7F26 /* utils.swift */,
 				29B9494A2C898FEE00CC7F26 /* secrets.swift */,
 				29B949422C87039300CC7F26 /* constants.swift */,
-				29B0913B2C9438260072F7BE /* protocols.swift */,
 				29B949462C87317300CC7F26 /* extensions.swift */,
+				29ACCDF52CAD90800065C6E3 /* protocols.swift */,
 				29BB308F2C77B0CA000525CB /* App1.swift */,
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
 				29BB30912C77B0CA000525CB /* ContentView.swift */,
 				29B9492A2C80532F00CC7F26 /* BrickLink */,
+				29ACCDEE2CAD8C620065C6E3 /* Types */,
 				29B9491D2C7DB3AC00CC7F26 /* Models */,
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 				29B9493E2C87028300CC7F26 /* Modifiers */,
@@ -354,18 +371,20 @@
 				29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */,
 				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
 				29B949272C7F0C1500CC7F26 /* PickingContentView.swift in Sources */,
+				29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */,
 				29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */,
 				29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */,
+				29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */,
 				29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */,
-				291386392C93359900E79E63 /* ResultDetailView.swift in Sources */,
-				29B0913C2C9438260072F7BE /* protocols.swift in Sources */,
+				291386392C93359900E79E63 /* ResultHistoryView.swift in Sources */,
 				29B949512C8B25E400CC7F26 /* OrderDetails.swift in Sources */,
 				29B949532C8F2AC400CC7F26 /* InventoryItem.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
 				29B949472C87317300CC7F26 /* extensions.swift in Sources */,
 				29B9494B2C898FEE00CC7F26 /* secrets.swift in Sources */,
 				29B9494D2C89CED200CC7F26 /* LegoColor.swift in Sources */,
-				29B0913A2C9436840072F7BE /* ResultDetailDashboardView.swift in Sources */,
+				29B0913A2C9436840072F7BE /* ResultHistoryNumbersView.swift in Sources */,
+				29ACCDED2CAD8B870065C6E3 /* ResultCircleView.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
@@ -380,6 +399,7 @@
 				29B949432C87039300CC7F26 /* constants.swift in Sources */,
 				29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */,
 				29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */,
+				2951B3A52CABE24700DF454C /* ResultDashboardView.swift in Sources */,
 				29B9494F2C8B25DA00CC7F26 /* OrderSummary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

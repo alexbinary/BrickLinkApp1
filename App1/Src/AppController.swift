@@ -172,6 +172,12 @@ class AppController: ObservableObject {
     // MARK: - Orders details
     
     
+    public var orderDetails: [OrderDetails] {
+        
+        dataStore.orderDetails
+    }
+    
+    
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
         dataStore.orderDetails.first { $0.id == orderId }

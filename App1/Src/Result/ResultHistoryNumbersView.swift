@@ -4,7 +4,7 @@ import Charts
 
 
 
-struct ResultDetailDashboardView: View {
+struct ResultHistoryNumbersView: View {
     
     
     @EnvironmentObject var appController: AppController

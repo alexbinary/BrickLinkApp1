@@ -8,7 +8,8 @@ enum SidebarItem {
     case picking
     case upload
     
-    case result
+    case resultDashboard
+    case resultHistory
     case cashFlow
 }
 
@@ -18,7 +19,7 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .upload
+    @State var selectedSidebarItem: SidebarItem = .resultDashboard
     
     @State var ordersSelectedOrderId: OrderSummary.ID? = Secrets.Default.ordersSelectedOrderId
     @State var pickingSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.pickingSelectedOrderIds
@@ -44,10 +45,16 @@ struct ContentView: View {
                         .tag(SidebarItem.upload)
                 }
                 
-                Section("Accounting") {
+                Section("Result") {
                     
-                    Label("Result", systemImage: "eurosign.circle")
-                        .tag(SidebarItem.result)
+                    Label("Dashboard", systemImage: "gauge.open.with.lines.needle.33percent")
+                        .tag(SidebarItem.resultDashboard)
+                    
+                    Label("History", systemImage: "list.bullet")
+                        .tag(SidebarItem.resultHistory)
+                }
+                
+                Section("Accounting") {
                     
                     Label("Cash flow", systemImage: "eurosign.circle")
                         .tag(SidebarItem.cashFlow)
@@ -66,8 +73,8 @@ struct ContentView: View {
                 
             case .upload:
                 UploadContentView()
-            
-            case .result:
+                
+            case .resultDashboard, .resultHistory:
                 ResultContentView(selectedOrderIds: $resultSelectedOrderIds)
             
             case .cashFlow:
@@ -87,8 +94,11 @@ struct ContentView: View {
             case .upload:
                 Color.clear
             
-            case .result:
-                ResultDetailView(selectedOrderIds: resultSelectedOrderIds)
+            case .resultDashboard:
+                ResultDashboardView()
+                
+            case .resultHistory:
+                ResultHistoryView(selectedOrderIds: resultSelectedOrderIds)
             
             case .cashFlow:
                 CashFlowDetailView(selectedTransactions: selectedTransactions)
