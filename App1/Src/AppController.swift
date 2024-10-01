@@ -913,11 +913,13 @@ extension Data {
         
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate, .withTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
-        
         decoder.dateDecodingStrategy = .custom({ (decoder) in
+            
             let stringValue = try! decoder.singleValueContainer().decode(String.self)
+            
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions = [.withFullDate, .withTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
+            
             return dateFormatter.date(from: stringValue)!
         })
         
