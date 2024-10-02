@@ -9,10 +9,10 @@ struct ResultHistoryView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedOrderIds: Set<OrderDetails.ID>
+    @Binding var selectedOrderIds: Set<OrderDetails.ID>
     
-    @State private var selectedMonth: String? = nil
-    @State private var monthPositionRangesByMonth: [String: ClosedRange<CGFloat>] = [:]
+    @State var selectedMonth: String? = nil
+    @State var monthPositionRangesByMonth: [String: ClosedRange<CGFloat>] = [:]
     
     
     var body: some View {
@@ -22,6 +22,29 @@ struct ResultHistoryView: View {
         }
         
         let allOrdersByMonth = allOrders.sorted { $0.date < $1.date } .grouppedByMonth
+        
+        if !selectedOrderIds.isEmpty {
+            
+            HStack {
+                
+                Spacer()
+                
+                let n = selectedOrderIds.count
+                Text("􀱢 View restricted to \(n) selected order\(n == 1 ? "" : "s")")
+                
+                Button {
+                    self.selectedOrderIds.removeAll()
+                } label: {
+                    Text("􀁠")
+                }
+                .padding(.horizontal)
+                .buttonStyle(.plain)
+                
+                Spacer()
+            }
+            .padding()
+            .background(Color.accentColor.opacity(0.1))
+        }
         
         ScrollView {
             
