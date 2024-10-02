@@ -4,7 +4,7 @@ import SwiftUI
 
 
 
-extension String: Error { }
+extension String: @retroactive Error { }
 
 
 
