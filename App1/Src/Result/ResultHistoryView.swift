@@ -185,36 +185,6 @@ struct ResultHistoryView: View {
                     }
                 }
                 .frame(minHeight: 200)
-                
-                if let month = selectedMonth {
-                    
-                    HStack {
-                        
-                        let activeIndex = months.firstIndex(where: { $0 == month })!
-                        
-                        let previousIndex = months.index(before: activeIndex)
-                        
-                        Button {
-                            guard previousIndex >= months.startIndex else { return }
-                            selectedMonth = months[previousIndex]
-                        } label: {
-                            Text("Previous")
-                        }
-                        .disabled(previousIndex < months.startIndex)
-                        
-                        Text(month)
-                        
-                        let nextIndex = months.index(after: activeIndex)
-                        
-                        Button {
-                            guard nextIndex < months.endIndex else { return }
-                            selectedMonth = months[nextIndex]
-                        } label: {
-                            Text("Next")
-                        }
-                        .disabled(nextIndex >= months.endIndex)
-                    }
-                }
             }
             .padding(24)
         }
