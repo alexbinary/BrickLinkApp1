@@ -35,6 +35,20 @@ extension Array where Element: Datable {
             )
         }
     }
+    
+    
+    var grouppedByBusinessMonth: [(month: BusinessMonth, elements: [Self.Element])] {
+        
+        let months = self.map { $0.date.businessMonth } .stableUniqueByFirstOccurence
+        
+        return months.map { month in
+            
+            return (
+                month: month,
+                elements: self.filter { $0.date.businessMonth == month }
+            )
+        }
+    }
 }
 
 
@@ -43,6 +57,17 @@ extension Array where Element == (month: String, elements: [OrderDetails]) {
     
     
     subscript(_ month: String) -> [OrderDetails] {
+        
+        return self.first(where: { $0.month == month })?.elements ?? []
+    }
+}
+
+
+
+extension Array where Element == (month: BusinessMonth, elements: [OrderDetails]) {
+    
+    
+    subscript(_ month: BusinessMonth) -> [OrderDetails] {
         
         return self.first(where: { $0.month == month })?.elements ?? []
     }
