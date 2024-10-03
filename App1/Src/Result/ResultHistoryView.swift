@@ -245,7 +245,10 @@ struct ResultHistoryView: View {
                 }
             }
             
-            HStack {
+            HStack(alignment: .circlesAndGrid, spacing: 48) {
+                
+                let innerCircleSize: CGFloat = 100
+                let outerCircleSize: CGFloat = 140
                 
                 if let month = months.first(where: { $0.name == selectedMonth }) {
                     
@@ -280,7 +283,7 @@ struct ResultHistoryView: View {
                     VStack(spacing: 24) {
                         
                         VStack {
-                            Text("Selected").font(.title3)
+                            Text("Selected month").font(.title3)
                             Text(month.name).font(.title)
                         }
                         
@@ -295,9 +298,6 @@ struct ResultHistoryView: View {
                                 totalResult: totalResult
                             )
                             
-                            let innerCircleSize: CGFloat = 100
-                            let outerCircleSize: CGFloat = 140
-                            
                             ResultCircleView(
                                 totalItems: totalItems,
                                 totalShipping: totalShipping,
@@ -310,13 +310,14 @@ struct ResultHistoryView: View {
                             )
                             .frame(width: outerCircleSize, height: outerCircleSize)
                         }
+                        .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                     }
                     
-                    Color.clear.frame(width: 120, height: 0)
+                    Color.clear.frame(width: 24, height: 0)
                 }
                 
                 if selectedMonth == nil || self.monthClicked {
-                    
+                     
                     let orders = visibleOrders
                     
                     let totalItems = orders.reduce(0) { $0 + $1.subTotal }
@@ -364,85 +365,55 @@ struct ResultHistoryView: View {
                         let averageTotalFees = totalFees / Float(monthsSpan)
                         let averageTotalResult = totalResult / Float(monthsSpan)
                         
-                        let totalItems = averageTotalItems
-                        let totalShipping = averageTotalShipping
-                        let totalItemCost = averageTotalItemCost
-                        let totalShippingCost = averageTotalShippingCost
-                        let totalFees = averageTotalFees
-                        let totalResult = averageTotalResult
-                        let profitMargin = profitMargin
-                        
                         VStack(spacing: 24) {
                             
                             VStack {
-                                Text("").font(.title3)
-                                Text("Average").font(.title)
+                                Text("Monthly average").font(.title)
+                                Text(" ").font(.title3)
                             }
                             
-                            HStack(spacing: 48) {
-                                
-                                ResultGridView(
-                                    totalItems: totalItems,
-                                    totalShipping: totalShipping,
-                                    totalItemCost: totalItemCost,
-                                    totalShippingCost: totalShippingCost,
-                                    totalFees: totalFees,
-                                    totalResult: totalResult
-                                )
-                                
-                                let innerCircleSize: CGFloat = 100
-                                let outerCircleSize: CGFloat = 140
-                                
-                                ResultCircleView(
-                                    totalItems: totalItems,
-                                    totalShipping: totalShipping,
-                                    totalItemCost: totalItemCost,
-                                    totalShippingCost: totalShippingCost,
-                                    totalFees: totalFees,
-                                    profitMargin: profitMargin,
-                                    innerCircleSize: innerCircleSize,
-                                    outerCircleSize: outerCircleSize
-                                )
-                                .opacity(0)
-                                .frame(width: 0, height: outerCircleSize)
-                            }
+                            ResultGridView(
+                                totalItems: averageTotalItems,
+                                totalShipping: averageTotalShipping,
+                                totalItemCost: averageTotalItemCost,
+                                totalShippingCost: averageTotalShippingCost,
+                                totalFees: averageTotalFees,
+                                totalResult: averageTotalResult
+                            )
+                            .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                         }
                     }
                     
                     VStack(spacing: 24) {
                         
                         VStack {
-                            Text("").font(.title3)
-                            Text("Total").font(.title)
+                            Text("Period Total").font(.title)
+                            Text(" ").font(.title3)
                         }
-                        
-                        HStack(spacing: 48) {
                             
-                            ResultGridView(
-                                totalItems: totalItems,
-                                totalShipping: totalShipping,
-                                totalItemCost: totalItemCost,
-                                totalShippingCost: totalShippingCost,
-                                totalFees: totalFees,
-                                totalResult: totalResult
-                            )
-                            
-                            let innerCircleSize: CGFloat = 100
-                            let outerCircleSize: CGFloat = 140
-                            
-                            ResultCircleView(
-                                totalItems: totalItems,
-                                totalShipping: totalShipping,
-                                totalItemCost: totalItemCost,
-                                totalShippingCost: totalShippingCost,
-                                totalFees: totalFees,
-                                profitMargin: profitMargin,
-                                innerCircleSize: innerCircleSize,
-                                outerCircleSize: outerCircleSize
-                            )
-                            .frame(width: outerCircleSize, height: outerCircleSize)
-                        }
+                        ResultGridView(
+                            totalItems: totalItems,
+                            totalShipping: totalShipping,
+                            totalItemCost: totalItemCost,
+                            totalShippingCost: totalShippingCost,
+                            totalFees: totalFees,
+                            totalResult: totalResult
+                        )
+                        .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                     }
+                    
+                    ResultCircleView(
+                        totalItems: totalItems,
+                        totalShipping: totalShipping,
+                        totalItemCost: totalItemCost,
+                        totalShippingCost: totalShippingCost,
+                        totalFees: totalFees,
+                        profitMargin: profitMargin,
+                        innerCircleSize: innerCircleSize,
+                        outerCircleSize: outerCircleSize
+                    )
+                    .frame(width: outerCircleSize, height: outerCircleSize)
+                    .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                 }
             }
             
@@ -585,4 +556,18 @@ struct ResultHistoryView: View {
         self.firstVisibleMonth = max(first, earliestPossibleMonth)
         self.lastVisibleMonth = min(last, latestPossibleMonth)
     }
+}
+
+
+
+extension VerticalAlignment {
+    
+    struct CirclesAndGrid: AlignmentID {
+        
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[VerticalAlignment.center]
+        }
+    }
+    
+    static let circlesAndGrid = VerticalAlignment(CirclesAndGrid.self)
 }
