@@ -60,83 +60,80 @@ struct ResultDashboardView: View {
             
             Color.clear.frame(height: 128)
             
-            HStack {
+            VStack(alignment: .leading) {
                 
-                VStack(alignment: .leading) {
+                Text("Most profitable orders").font(.title3)
+                
+                Table(of: OrderDetails.self) {
                     
-                    Text("Most profitable orders").font(.title3)
+                    TableColumn("ID", value: \.id)
                     
-                    Table(of: OrderDetails.self) {
+                    TableColumn("Date") { order in
+                        Text(order.date, format: .dateTime)
+                    }
+                    
+                    TableColumn("Buyer", value: \.buyer)
+                    
+                    TableColumn("Profit margin") { order in
                         
-                        TableColumn("ID", value: \.id)
+                        let profitMargin = self.profitMargin(for: order)
                         
-                        TableColumn("Date") { order in
-                            Text(order.date, format: .dateTime)
-                        }
+                        Text(
+                            abs(profitMargin),
+                            format: .percent.precision(.fractionLength(0))
+                        ).signedAmountColor(profitMargin)
+                    }
+                    
+                    TableColumn("Subtotal (items)") { order in
+                        Text(
+                            abs(order.subTotal),
+                            format: .currency(code: "EUR").presentation(.isoCode)
+                        ).signedAmountColor(.income)
+                    }
+                    
+                    TableColumn("Total items cost") { order in
+                        Text(
+                            0,
+                            format: .currency(code: "EUR").presentation(.isoCode)
+                        ).signedAmountColor(.expense)
+                    }
+                    
+                    TableColumn("Shipping") { order in
+                        Text(
+                            abs(order.shippingCost),
+                            format: .currency(code: "EUR").presentation(.isoCode)
+                        ).signedAmountColor(.income)
+                    }
+                    
+                    TableColumn("Shipping cost") { order in
+                        Text(
+                            abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
+                            format: .currency(code: "EUR").presentation(.isoCode)
+                        ).signedAmountColor(.expense)
+                    }
+                    
+                    TableColumn("Fees") { order in
                         
-                        TableColumn("Buyer", value: \.buyer)
-                        
-                        TableColumn("Profit margin") { order in
+                        if let transactionAmount = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
                             
-                            let profitMargin = self.profitMargin(for: order)
+                            let fees = order.grandTotal - transactionAmount
                             
                             Text(
-                                abs(profitMargin),
-                                format: .percent.precision(.fractionLength(0))
-                            ).signedAmountColor(profitMargin)
-                        }
-                        
-                        TableColumn("Subtotal (items)") { order in
-                            Text(
-                                abs(order.subTotal),
-                                format: .currency(code: "EUR").presentation(.isoCode)
-                            ).signedAmountColor(.income)
-                        }
-                        
-                        TableColumn("Total items cost") { order in
-                            Text(
-                                0,
+                                abs(fees),
                                 format: .currency(code: "EUR").presentation(.isoCode)
                             ).signedAmountColor(.expense)
                         }
+                    }
+                    
+                } rows: {
+                    
+                    let orders = orders.sorted {
                         
-                        TableColumn("Shipping") { order in
-                            Text(
-                                abs(order.shippingCost),
-                                format: .currency(code: "EUR").presentation(.isoCode)
-                            ).signedAmountColor(.income)
-                        }
-                        
-                        TableColumn("Shipping cost") { order in
-                            Text(
-                                abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
-                                format: .currency(code: "EUR").presentation(.isoCode)
-                            ).signedAmountColor(.expense)
-                        }
-                        
-                        TableColumn("Fees") { order in
-                            
-                            if let transactionAmount = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
-                                
-                                let fees = order.grandTotal - transactionAmount
-                                
-                                Text(
-                                    abs(fees),
-                                    format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.expense)
-                            }
-                        }
-                        
-                    } rows: {
-                        
-                        let orders = orders.sorted {
-                            
-                            self.profitMargin(for: $0) > self.profitMargin(for: $1)
-                        }
-                        
-                        ForEach(orders.limit(5)) { order in
-                            TableRow(order)
-                        }
+                        self.profitMargin(for: $0) > self.profitMargin(for: $1)
+                    }
+                    
+                    ForEach(orders.limit(5)) { order in
+                        TableRow(order)
                     }
                 }
             }
