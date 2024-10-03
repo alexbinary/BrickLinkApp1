@@ -277,7 +277,7 @@ struct ResultHistoryView: View {
                     
                     let profitMargin = (totalIncome - totalExpense) / totalIncome
                     
-                    ResultCircleView(
+                    ResultGridAndCircleView(
                         title: month.name,
                         subtitle: "Selected",
                         totalItems: totalItems,
@@ -342,7 +342,7 @@ struct ResultHistoryView: View {
                         let averageTotalFees = totalFees / Float(monthsSpan)
                         let averageTotalResult = totalResult / Float(monthsSpan)
                         
-                        ResultCircleView(
+                        ResultGridAndCircleView(
                             title: "Average",
                             subtitle: "",
                             totalItems: averageTotalItems,
@@ -356,7 +356,7 @@ struct ResultHistoryView: View {
                         )
                     }
                     
-                    ResultCircleView(
+                    ResultGridAndCircleView(
                         title: "Total",
                         subtitle: "",
                         totalItems: totalItems,

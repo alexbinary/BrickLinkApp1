@@ -45,7 +45,7 @@ struct ResultDashboardView: View {
             
             Color.clear.frame(height: 128)
             
-            ResultCircleView(
+            ResultGridAndCircleView(
                 title: month.name,
                 subtitle: "Today",
                 totalItems: totalItems,
