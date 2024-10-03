@@ -47,6 +47,7 @@
 		29BB30942C77B0CB000525CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30932C77B0CB000525CB /* Assets.xcassets */; };
 		29BB30972C77B0CB000525CB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BB30962C77B0CB000525CB /* Preview Assets.xcassets */; };
 		29D34E322CAEEEEE009003B8 /* ResultCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D34E312CAEEEEE009003B8 /* ResultCircleView.swift */; };
+		29D34E342CAEEFE3009003B8 /* ResultGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D34E332CAEEFE3009003B8 /* ResultGridView.swift */; };
 		29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6744C2C77BE8100BAA00A /* AppController.swift */; };
 		29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6744E2C77C14F00BAA00A /* DataStore.swift */; };
 		29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */; };
@@ -98,6 +99,7 @@
 		29BB30962C77B0CB000525CB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		29BB30982C77B0CB000525CB /* App1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App1.entitlements; sourceTree = "<group>"; };
 		29D34E312CAEEEEE009003B8 /* ResultCircleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultCircleView.swift; sourceTree = "<group>"; };
+		29D34E332CAEEFE3009003B8 /* ResultGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultGridView.swift; sourceTree = "<group>"; };
 		29D6744C2C77BE8100BAA00A /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		29D6744E2C77C14F00BAA00A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIAuth.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				2951B3A42CABE24700DF454C /* ResultDashboardView.swift */,
 				291386382C93359900E79E63 /* ResultHistoryView.swift */,
 				29ACCDEC2CAD8B870065C6E3 /* ResultGridAndCircleView.swift */,
+				29D34E332CAEEFE3009003B8 /* ResultGridView.swift */,
 				29D34E312CAEEEEE009003B8 /* ResultCircleView.swift */,
 			);
 			path = Result;
@@ -359,6 +362,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29D34E342CAEEFE3009003B8 /* ResultGridView.swift in Sources */,
 				291386362C93354500E79E63 /* ResultContentView.swift in Sources */,
 				29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */,
 				29BB30922C77B0CA000525CB /* ContentView.swift in Sources */,
