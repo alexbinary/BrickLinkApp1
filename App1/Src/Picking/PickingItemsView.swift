@@ -222,9 +222,9 @@ struct PickingItemsView: View {
                     TableColumn("Name") { item in
                         Text(item.name.htmlUnescape()).lineLimit(nil)
                     }
+                    TableColumn("Location", value: \.location)
                     TableColumn("Ref", value: \.ref)
                     TableColumn("Comment", value: \.comment)
-                    TableColumn("Location", value: \.location)
                     
                 } rows: {
                     
