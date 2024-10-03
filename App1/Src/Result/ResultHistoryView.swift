@@ -277,18 +277,40 @@ struct ResultHistoryView: View {
                     
                     let profitMargin = (totalIncome - totalExpense) / totalIncome
                     
-                    ResultGridAndCircleView(
-                        title: month.name,
-                        subtitle: "Selected",
-                        totalItems: totalItems,
-                        totalShipping: totalShipping,
-                        totalItemCost: totalItemCost,
-                        totalShippingCost: totalShippingCost,
-                        totalFees: totalFees,
-                        totalResult: totalResult,
-                        profitMargin: profitMargin,
-                        circleViewVisible: true
-                    )
+                    VStack(spacing: 24) {
+                        
+                        VStack {
+                            Text("Selected").font(.title3)
+                            Text(month.name).font(.title)
+                        }
+                        
+                        HStack(spacing: 48) {
+                            
+                            ResultGridView(
+                                totalItems: totalItems,
+                                totalShipping: totalShipping,
+                                totalItemCost: totalItemCost,
+                                totalShippingCost: totalShippingCost,
+                                totalFees: totalFees,
+                                totalResult: totalResult
+                            )
+                            
+                            let innerCircleSize: CGFloat = 100
+                            let outerCircleSize: CGFloat = 140
+                            
+                            ResultCircleView(
+                                totalItems: totalItems,
+                                totalShipping: totalShipping,
+                                totalItemCost: totalItemCost,
+                                totalShippingCost: totalShippingCost,
+                                totalFees: totalFees,
+                                profitMargin: profitMargin,
+                                innerCircleSize: innerCircleSize,
+                                outerCircleSize: outerCircleSize
+                            )
+                            .frame(width: outerCircleSize, height: outerCircleSize)
+                        }
+                    }
                     
                     Color.clear.frame(width: 120, height: 0)
                 }
@@ -342,32 +364,85 @@ struct ResultHistoryView: View {
                         let averageTotalFees = totalFees / Float(monthsSpan)
                         let averageTotalResult = totalResult / Float(monthsSpan)
                         
-                        ResultGridAndCircleView(
-                            title: "Average",
-                            subtitle: "",
-                            totalItems: averageTotalItems,
-                            totalShipping: averageTotalShipping,
-                            totalItemCost: averageTotalItemCost,
-                            totalShippingCost: averageTotalShippingCost,
-                            totalFees: averageTotalFees,
-                            totalResult: averageTotalResult,
-                            profitMargin: profitMargin,
-                            circleViewVisible: false
-                        )
+                        let totalItems = averageTotalItems
+                        let totalShipping = averageTotalShipping
+                        let totalItemCost = averageTotalItemCost
+                        let totalShippingCost = averageTotalShippingCost
+                        let totalFees = averageTotalFees
+                        let totalResult = averageTotalResult
+                        let profitMargin = profitMargin
+                        
+                        VStack(spacing: 24) {
+                            
+                            VStack {
+                                Text("").font(.title3)
+                                Text("Average").font(.title)
+                            }
+                            
+                            HStack(spacing: 48) {
+                                
+                                ResultGridView(
+                                    totalItems: totalItems,
+                                    totalShipping: totalShipping,
+                                    totalItemCost: totalItemCost,
+                                    totalShippingCost: totalShippingCost,
+                                    totalFees: totalFees,
+                                    totalResult: totalResult
+                                )
+                                
+                                let innerCircleSize: CGFloat = 100
+                                let outerCircleSize: CGFloat = 140
+                                
+                                ResultCircleView(
+                                    totalItems: totalItems,
+                                    totalShipping: totalShipping,
+                                    totalItemCost: totalItemCost,
+                                    totalShippingCost: totalShippingCost,
+                                    totalFees: totalFees,
+                                    profitMargin: profitMargin,
+                                    innerCircleSize: innerCircleSize,
+                                    outerCircleSize: outerCircleSize
+                                )
+                                .opacity(0)
+                                .frame(width: 0, height: outerCircleSize)
+                            }
+                        }
                     }
                     
-                    ResultGridAndCircleView(
-                        title: "Total",
-                        subtitle: "",
-                        totalItems: totalItems,
-                        totalShipping: totalShipping,
-                        totalItemCost: totalItemCost,
-                        totalShippingCost: totalShippingCost,
-                        totalFees: totalFees,
-                        totalResult: totalResult,
-                        profitMargin: profitMargin,
-                        circleViewVisible: true
-                    )
+                    VStack(spacing: 24) {
+                        
+                        VStack {
+                            Text("").font(.title3)
+                            Text("Total").font(.title)
+                        }
+                        
+                        HStack(spacing: 48) {
+                            
+                            ResultGridView(
+                                totalItems: totalItems,
+                                totalShipping: totalShipping,
+                                totalItemCost: totalItemCost,
+                                totalShippingCost: totalShippingCost,
+                                totalFees: totalFees,
+                                totalResult: totalResult
+                            )
+                            
+                            let innerCircleSize: CGFloat = 100
+                            let outerCircleSize: CGFloat = 140
+                            
+                            ResultCircleView(
+                                totalItems: totalItems,
+                                totalShipping: totalShipping,
+                                totalItemCost: totalItemCost,
+                                totalShippingCost: totalShippingCost,
+                                totalFees: totalFees,
+                                profitMargin: profitMargin,
+                                innerCircleSize: innerCircleSize,
+                                outerCircleSize: outerCircleSize
+                            )
+                            .frame(width: outerCircleSize, height: outerCircleSize)
+                        }
+                    }
                 }
             }
             

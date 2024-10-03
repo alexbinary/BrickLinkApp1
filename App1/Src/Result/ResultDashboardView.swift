@@ -45,18 +45,40 @@ struct ResultDashboardView: View {
             
             Color.clear.frame(height: 128)
             
-            ResultGridAndCircleView(
-                title: month.name,
-                subtitle: "Today",
-                totalItems: totalItems,
-                totalShipping: totalShipping,
-                totalItemCost: totalItemCost,
-                totalShippingCost: totalShippingCost,
-                totalFees: totalFees,
-                totalResult: totalResult,
-                profitMargin: profitMargin,
-                circleViewVisible: true
-            )
+            VStack(spacing: 24) {
+                
+                VStack {
+                    Text("Today").font(.title3)
+                    Text(month.name).font(.title)
+                }
+                
+                HStack(spacing: 48) {
+                    
+                    ResultGridView(
+                        totalItems: totalItems,
+                        totalShipping: totalShipping,
+                        totalItemCost: totalItemCost,
+                        totalShippingCost: totalShippingCost,
+                        totalFees: totalFees,
+                        totalResult: totalResult
+                    )
+                    
+                    let innerCircleSize: CGFloat = 100
+                    let outerCircleSize: CGFloat = 140
+                    
+                    ResultCircleView(
+                        totalItems: totalItems,
+                        totalShipping: totalShipping,
+                        totalItemCost: totalItemCost,
+                        totalShippingCost: totalShippingCost,
+                        totalFees: totalFees,
+                        profitMargin: profitMargin,
+                        innerCircleSize: innerCircleSize,
+                        outerCircleSize: outerCircleSize
+                    )
+                    .frame(width: outerCircleSize, height: outerCircleSize)
+                }
+            }
             
             Color.clear.frame(height: 128)
             

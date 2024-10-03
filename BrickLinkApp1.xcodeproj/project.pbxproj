@@ -11,7 +11,6 @@
 		291386392C93359900E79E63 /* ResultHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386382C93359900E79E63 /* ResultHistoryView.swift */; };
 		2951B3A52CABE24700DF454C /* ResultDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951B3A42CABE24700DF454C /* ResultDashboardView.swift */; };
 		295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadListView.swift */; };
-		29ACCDED2CAD8B870065C6E3 /* ResultGridAndCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEC2CAD8B870065C6E3 /* ResultGridAndCircleView.swift */; };
 		29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */; };
 		29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDF52CAD90800065C6E3 /* protocols.swift */; };
 		29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B0913D2C9486320072F7BE /* UploadContentView.swift */; };
@@ -61,7 +60,6 @@
 		291386382C93359900E79E63 /* ResultHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultHistoryView.swift; sourceTree = "<group>"; };
 		2951B3A42CABE24700DF454C /* ResultDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDashboardView.swift; sourceTree = "<group>"; };
 		295B52FD2CA2B6820090CE1C /* UploadListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadListView.swift; sourceTree = "<group>"; };
-		29ACCDEC2CAD8B870065C6E3 /* ResultGridAndCircleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultGridAndCircleView.swift; sourceTree = "<group>"; };
 		29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessMonth.swift; sourceTree = "<group>"; };
 		29ACCDF52CAD90800065C6E3 /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
 		29B0913D2C9486320072F7BE /* UploadContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadContentView.swift; sourceTree = "<group>"; };
@@ -125,7 +123,6 @@
 				291386352C93354500E79E63 /* ResultContentView.swift */,
 				2951B3A42CABE24700DF454C /* ResultDashboardView.swift */,
 				291386382C93359900E79E63 /* ResultHistoryView.swift */,
-				29ACCDEC2CAD8B870065C6E3 /* ResultGridAndCircleView.swift */,
 				29D34E332CAEEFE3009003B8 /* ResultGridView.swift */,
 				29D34E312CAEEEEE009003B8 /* ResultCircleView.swift */,
 			);
@@ -388,7 +385,6 @@
 				29B949472C87317300CC7F26 /* extensions.swift in Sources */,
 				29B9494B2C898FEE00CC7F26 /* secrets.swift in Sources */,
 				29B9494D2C89CED200CC7F26 /* LegoColor.swift in Sources */,
-				29ACCDED2CAD8B870065C6E3 /* ResultGridAndCircleView.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
