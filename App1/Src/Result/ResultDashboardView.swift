@@ -76,7 +76,7 @@ struct ResultDashboardView: View {
                     
                     TableColumn("Profit margin") { order in
                         
-                        let profitMargin = self.profitMargin(for: order)
+                        let profitMargin = appController.profitMargin(for: order)
                         
                         Text(
                             abs(profitMargin),
@@ -129,7 +129,7 @@ struct ResultDashboardView: View {
                     
                     let orders = orders.sorted {
                         
-                        self.profitMargin(for: $0) > self.profitMargin(for: $1)
+                        appController.profitMargin(for: $0) > appController.profitMargin(for: $1)
                     }
                     
                     ForEach(orders.limit(5)) { order in
@@ -139,28 +139,5 @@ struct ResultDashboardView: View {
             }
         }
         .padding()
-    }
-    
-    
-    func profitMargin(for order: OrderDetails) -> Float {
-        
-        let totalItems = order.subTotal
-        let totalShipping = order.shippingCost
-        
-        let itemsCost: Float = 0
-        let shippingCost = appController.shippingCost(forOrderWithId: order.id) ?? 0
-        let fees = {
-            if let transactionAmount = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
-                return order.grandTotal - transactionAmount
-            } else {
-                return 0
-            }
-        }()
-        
-        let totalIncome = totalItems + totalShipping
-        let totalExpense = itemsCost + shippingCost + fees
-        
-        let profitMargin = (totalIncome - totalExpense) / totalIncome
-        return profitMargin
     }
 }

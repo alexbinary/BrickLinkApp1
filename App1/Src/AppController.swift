@@ -792,7 +792,7 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Load all orders data
+    // MARK: - Refresh
     
     
     public func refresh() async {
@@ -809,6 +809,33 @@ class AppController: ObservableObject {
                 await loadOrderFeedbacks(forOrderWithId: order.id)
             }
         }
+    }
+    
+    
+    
+    // MARK: - Profit margin
+    
+    
+    public func profitMargin(for order: OrderDetails) -> Float {
+        
+        let totalItems = order.subTotal
+        let totalShipping = order.shippingCost
+        
+        let itemsCost: Float = 0
+        let shippingCost = shippingCost(forOrderWithId: order.id) ?? 0
+        let fees = {
+            if let transactionAmount = transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                return order.grandTotal - transactionAmount
+            } else {
+                return 0
+            }
+        }()
+        
+        let totalIncome = totalItems + totalShipping
+        let totalExpense = itemsCost + shippingCost + fees
+        
+        let profitMargin = (totalIncome - totalExpense) / totalIncome
+        return profitMargin
     }
 }
 
