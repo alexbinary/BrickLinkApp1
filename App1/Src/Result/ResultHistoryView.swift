@@ -245,23 +245,130 @@ struct ResultHistoryView: View {
                 }
             }
             
-            if !selectedOrderIds.isEmpty {
+            HStack {
                 
-                ResultHistoryNumbersView(
-                    orders: orders.filter { selectedOrderIds.contains($0.id) },
-                    title: "Selection"
-                )
+                if let month = months.first(where: { $0.name == selectedMonth }) {
+                    
+                    let orders = ordersByMonth[month]
+                    
+                    let totalItems = orders.reduce(0) { $0 + $1.subTotal }
+                    let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                    
+                    let totalItemCost: Float = 0
+                    
+                    let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                    
+                    let totalFees = orders.reduce(0) { (total: Float, order) in
+                        
+                        var fees: Float = 0
+                        
+                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                            
+                            fees = order.grandTotal - income
+                        }
+                        
+                        return total + fees
+                    }
+                    
+                    let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+                    
+                    let totalIncome = totalItems + totalShipping
+                    let totalExpense = totalItemCost + totalShippingCost + totalFees
+                    
+                    let profitMargin = (totalIncome - totalExpense) / totalIncome
+                    
+                    ResultCircleView(
+                        title: month.name,
+                        subtitle: "Selected",
+                        totalItems: totalItems,
+                        totalShipping: totalShipping,
+                        totalItemCost: totalItemCost,
+                        totalShippingCost: totalShippingCost,
+                        totalFees: totalFees,
+                        totalResult: totalResult,
+                        profitMargin: profitMargin,
+                        circleViewVisible: true
+                    )
+                    
+                    Color.clear.frame(width: 120, height: 0)
+                }
                 
-            } else {
-                
-                let month = selectedMonth ?? Date.currentMonth
-                let orders = ordersByMonth
-                    .first(where: { $0.month.name == month })?.elements ?? []
-                
-                ResultHistoryNumbersView(
-                    orders: orders,
-                    title: month
-                )
+                if selectedMonth == nil || self.monthClicked {
+                    
+                    let orders = visibleOrders
+                    
+                    let totalItems = orders.reduce(0) { $0 + $1.subTotal }
+                    let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                    
+                    let totalItemCost: Float = 0
+                    
+                    let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                    
+                    let totalFees = orders.reduce(0) { (total: Float, order) in
+                        
+                        var fees: Float = 0
+                        
+                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                            
+                            fees = order.grandTotal - income
+                        }
+                        
+                        return total + fees
+                    }
+                    
+                    let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+                    
+                    let totalIncome = totalItems + totalShipping
+                    let totalExpense = totalItemCost + totalShippingCost + totalFees
+                    
+                    let profitMargin = (totalIncome - totalExpense) / totalIncome
+                    
+                    let monthsSpan = {
+                        if let first = visibleMonths.first,
+                           let last = visibleMonths.last {
+                            return BusinessMonth.allMonths(between: first, and: last)
+                        } else {
+                            return []
+                        }
+                    }().count
+                    
+                    let canAverage = monthsSpan > 0
+                    if canAverage {
+                        
+                        let averageTotalItems = totalItems / Float(monthsSpan)
+                        let averageTotalShipping = totalShipping / Float(monthsSpan)
+                        let averageTotalItemCost = totalItemCost / Float(monthsSpan)
+                        let averageTotalShippingCost = totalShippingCost / Float(monthsSpan)
+                        let averageTotalFees = totalFees / Float(monthsSpan)
+                        let averageTotalResult = totalResult / Float(monthsSpan)
+                        
+                        ResultCircleView(
+                            title: "Average",
+                            subtitle: "",
+                            totalItems: averageTotalItems,
+                            totalShipping: averageTotalShipping,
+                            totalItemCost: averageTotalItemCost,
+                            totalShippingCost: averageTotalShippingCost,
+                            totalFees: averageTotalFees,
+                            totalResult: averageTotalResult,
+                            profitMargin: profitMargin,
+                            circleViewVisible: false
+                        )
+                    }
+                    
+                    ResultCircleView(
+                        title: "Total",
+                        subtitle: "",
+                        totalItems: totalItems,
+                        totalShipping: totalShipping,
+                        totalItemCost: totalItemCost,
+                        totalShippingCost: totalShippingCost,
+                        totalFees: totalFees,
+                        totalResult: totalResult,
+                        profitMargin: profitMargin,
+                        circleViewVisible: true
+                    )
+                }
             }
             
             VStack(alignment: .leading) {

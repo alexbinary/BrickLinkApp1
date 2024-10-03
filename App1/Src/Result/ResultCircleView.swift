@@ -20,6 +20,8 @@ struct ResultCircleView: View {
     
     let circleViewVisible: Bool
     
+    @State var animateCircles = false
+    
     
     var body: some View {
         
@@ -110,19 +112,19 @@ struct ResultCircleView: View {
                 let innerCircleSize: CGFloat = 100
                 let outerCircleSize: CGFloat = 140
                 
-                ZStack(alignment: .center) {
+                let ratios: (income: CGFloat, expense: CGFloat) = {
                     
-                    let ratios: (income: CGFloat, expense: CGFloat) = {
-                        
-                        let income = CGFloat(abs(totalItems + totalShipping))
-                        let expense = CGFloat(abs(totalItemCost + totalShippingCost + totalFees))
-                        
-                        if income > expense {
-                            return (income: 1.0, expense: expense/income)
-                        } else {
-                            return (income: income/expense, expense: 1.0)
-                        }
-                    }()
+                    let income = CGFloat(abs(totalItems + totalShipping))
+                    let expense = CGFloat(abs(totalItemCost + totalShippingCost + totalFees))
+                    
+                    if income > expense {
+                        return (income: 1.0, expense: expense/income)
+                    } else {
+                        return (income: income/expense, expense: 1.0)
+                    }
+                }()
+                
+                ZStack(alignment: .center) {
                     
                     Circle()
                         .trim(from: 0, to: 0.95)
@@ -156,6 +158,12 @@ struct ResultCircleView: View {
                 }
                 .opacity(circleViewVisible ? 1 : 0)
                 .frame(width: circleViewVisible ? outerCircleSize : 0, height: outerCircleSize)
+                .animation(.easeOut(duration: 0.2), value: animateCircles ? [ratios.income, ratios.expense] : nil)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        self.animateCircles = true
+                    }
+                }
             }
         }
     }
