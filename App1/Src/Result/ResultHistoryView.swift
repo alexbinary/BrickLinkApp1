@@ -15,7 +15,10 @@ struct ResultHistoryView: View {
     @State var lastVisibleMonth: BusinessMonth = .current
     
     @State var selectedMonth: String? = nil
+    @State var monthClicked = false
     @State var monthPositionRangesByMonthName: [String: ClosedRange<CGFloat>] = [:]
+    
+    @State var animateGraph = false
     
     
     var orders: [OrderDetails] {
@@ -113,6 +116,135 @@ struct ResultHistoryView: View {
                 }
             }
             
+            Chart {
+                
+                ForEach(visibleMonths.sorted().reversed()) { month in
+                    
+                    let orders = ordersByMonth[month]
+                    
+                    let totalItems = orders.reduce(0) { $0 + $1.subTotal }
+                    let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                    
+                    let totalIncome = totalItems + totalShipping
+                    
+                    BarMark(
+                        x: .value("Month", month.name),
+                        y: .value("Total items", totalIncome),
+                        width: 20
+                    )
+                    .foregroundStyle(by: .value("Income type", "Income"))
+                    .annotation(position: .top) {
+                        if totalIncome != 0 {
+                            Text(String(format:"%.2f €", abs(totalIncome)))
+                                .signedAmountColor(.income)
+                        }
+                    }
+                    
+                    let totalItemCost: Float = 0
+                    
+                    let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                    
+                    let totalFees = orders.reduce(0) { (total: Float, order) in
+                        
+                        var fees: Float = 0
+                        
+                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                        
+                            fees = order.grandTotal - income
+                        }
+                        
+                        return total + fees
+                    }
+                    
+                    let totalExpense = totalItemCost + totalShippingCost + totalFees
+                    
+                    BarMark(
+                        x: .value("Month", month.name),
+                        y: .value("Total items cost", -totalExpense),
+                        width: 20
+                    )
+                    .foregroundStyle(by: .value("Cost type", "Expense"))
+                    .annotation(position: .bottom) {
+                        if totalExpense != 0 {
+                            Text(String(format:"%.2f €", abs(totalExpense)))
+                                .signedAmountColor(.expense)
+                        }
+                    }
+                }
+            }
+            .chartForegroundStyleScale { (value: String) in
+                
+                switch value {
+                case "Income": return green
+                case "Expense": return red
+                default: return Color.accentColor
+                }
+            }
+            .chartOverlay { chart in
+                
+                Color.clear
+                    .onContinuousHover { phase in
+                        
+                        switch phase {
+                        case .active(let mouse):
+                            
+                            selectedMonth = chart.value(atX: mouse.x)
+                            
+                            for month in visibleMonths {
+                                monthPositionRangesByMonthName[month.name] = chart.positionRange(forX: month.name)!
+                            }
+                            
+                        case .ended:
+                            
+                            if !monthClicked {
+                                selectedMonth = nil
+                            }
+                        }
+                    }
+                    .onTapGesture {
+                        
+                        self.monthClicked.toggle()
+                    }
+            }
+            .chartBackground { chart in
+                
+                GeometryReader { geometry in
+                    
+                    let plotFrame = geometry[chart.plotFrame!]
+
+                    if let monthName = selectedMonth,
+                       let range = monthPositionRangesByMonthName[monthName] {
+                        
+                        let size = CGSize(
+                            width: range.upperBound - range.lowerBound,
+                            height: plotFrame.maxY - plotFrame.minY
+                        )
+                        let offset = CGPoint(
+                            x: range.lowerBound,
+                            y: 0
+                        )
+                        ZStack {
+                            Rectangle()
+                                .size(size)
+                                .offset(offset)
+                                .fill(Color.accentColor)
+                                .opacity(0.1)
+                            Rectangle()
+                                .size(size)
+                                .offset(offset)
+                                .stroke(Color.accentColor, lineWidth: 3)
+                        }
+                    }
+                }
+            }
+            .frame(height: 200)
+            .animation(.easeOut(duration: 0.2), value: animateGraph ? visibleMonths : nil)
+            .onAppear {
+                DispatchQueue.main.async {
+                    self.animateGraph = true
+                }
+            }
+            
             if !selectedOrderIds.isEmpty {
                 
                 ResultHistoryNumbersView(
@@ -131,119 +263,6 @@ struct ResultHistoryView: View {
                     title: month
                 )
             }
-            
-            Divider()
-            
-            Chart {
-                
-                ForEach(visibleMonths.sorted().reversed()) { month in
-                    
-                    let orders = ordersByMonth[month]
-                    
-                    let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                    
-                    BarMark(
-                        x: .value("Month", month.name),
-                        y: .value("Total items", totalItems),
-                        width: 20
-                    )
-                    .foregroundStyle(by: .value("Income type", "Items"))
-                    .position(by: .value("Type", "Income"))
-                    
-                    let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
-                    
-                    BarMark(
-                        x: .value("Month", month.name),
-                        y: .value("Total shipping", totalShipping),
-                        width: 20
-                    )
-                    .foregroundStyle(by: .value("Income type", "Shipping"))
-                    .position(by: .value("Type", "Income"))
-                    
-                    let totalItemCost: Float = 0
-                    
-                    BarMark(
-                        x: .value("Month", month.name),
-                        y: .value("Total items cost", totalItemCost),
-                        width: 20
-                    )
-                    .foregroundStyle(by: .value("Cost type", "Items"))
-                    .position(by: .value("Type", "Cost"))
-                    
-                    let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
-                    
-                    BarMark(
-                        x: .value("Month", month.name),
-                        y: .value("Total shipping cost", totalShippingCost),
-                        width: 20
-                    )
-                    .foregroundStyle(by: .value("Cost type", "Shipping"))
-                    .position(by: .value("Type", "Cost"))
-                    
-                    let totalFees = orders.reduce(0) { (total: Float, order) in
-                        
-                        var fees: Float = 0
-                        
-                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
-                        
-                            fees = order.grandTotal - income
-                        }
-                        
-                        return total + fees
-                    }
-                    
-                    BarMark(
-                        x: .value("Month", month.name),
-                        y: .value("Total fees", totalFees),
-                        width: 20
-                    )
-                    .foregroundStyle(by: .value("Cost type", "Fees"))
-                    .position(by: .value("Type", "Cost"))
-                    
-                    let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
-                    
-                    LineMark(
-                        x: .value("Month", month.name),
-                        y: .value("Total result", totalResult)
-                    )
-                }
-            }
-            .chartOverlay { chart in
-                
-                Color.clear
-                    .onContinuousHover { phase in
-                        
-                        switch phase {
-                        case .active(let mouse):
-                            
-                            selectedMonth = chart.value(atX: mouse.x)
-                            
-                            for month in visibleMonths {
-                                monthPositionRangesByMonthName[month.name] = chart.positionRange(forX: month.name)!
-                            }
-                            
-                        case .ended:
-                            break
-                        }
-                    }
-            }
-            .chartBackground { chart in
-                
-                GeometryReader { geometry in
-                    
-                    let plotFrame = geometry[chart.plotFrame!]
-
-                    if let monthName = selectedMonth,
-                       let range = monthPositionRangesByMonthName[monthName] {
-                        Rectangle()
-                            .size(width: range.upperBound - range.lowerBound, height: plotFrame.maxY - plotFrame.minY)
-                            .fill(Color.accentColor)
-                            .offset(x: range.lowerBound, y: 0)
-                            .opacity(0.1)
-                    }
-                }
-            }
-            .frame(minHeight: 200)
             
             VStack(alignment: .leading) {
                 
