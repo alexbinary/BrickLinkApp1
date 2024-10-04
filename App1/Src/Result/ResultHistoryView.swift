@@ -26,9 +26,12 @@ struct ResultHistoryView: View {
     
     var orders: [OrderDetails] {
         
-        !selectedOrderIds.isEmpty
-            ? appController.orderDetails.filter { selectedOrderIds.contains($0.id) }
-            : appController.orderDetails
+        (
+            !selectedOrderIds.isEmpty
+                ? appController.orderDetails.filter { selectedOrderIds.contains($0.id) }
+                : appController.orderDetails
+        )
+        .filter { appController.profitMargin(for: $0) != nil }
     }
     
     
@@ -147,12 +150,7 @@ struct ResultHistoryView: View {
                     
                     let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                     
-                    let totalFees = orders.reduce(0) { (total: Float, order) in
-                        
-                        let fees = appController.fees(for: order) ?? 0
-                        
-                        return total + fees
-                    }
+                    let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
                     
                     let totalExpense = totalItemCost + totalShippingCost + totalFees
                     
@@ -243,44 +241,133 @@ struct ResultHistoryView: View {
                 }
             }
             
-            HStack(alignment: .circlesAndGrid, spacing: 48) {
+            VStack(spacing: 24) {
                 
-                let innerCircleSize: CGFloat = 100
-                let outerCircleSize: CGFloat = 140
-                
-                if let month = months.first(where: { $0.name == selectedMonth }) {
+                HStack(alignment: .circlesAndGrid, spacing: 48) {
                     
-                    let orders = ordersByMonth[month]
+                    let innerCircleSize: CGFloat = 100
+                    let outerCircleSize: CGFloat = 140
                     
-                    let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                    let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
-                    
-                    let totalItemCost: Float = 0
-                    
-                    let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
-                    
-                    let totalFees = orders.reduce(0) { (total: Float, order) in
+                    if let month = months.first(where: { $0.name == selectedMonth }) {
                         
-                        let fees = appController.fees(for: order) ?? 0
+                        let orders = ordersByMonth[month]
                         
-                        return total + fees
-                    }
-                    
-                    let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
-                    
-                    let totalIncome = totalItems + totalShipping
-                    let totalExpense = totalItemCost + totalShippingCost + totalFees
-                    
-                    let profitMargin = (totalIncome - totalExpense) / totalIncome
-                    
-                    VStack(spacing: 24) {
+                        let totalItems = orders.reduce(0) { $0 + $1.subTotal }
+                        let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
                         
-                        VStack {
-                            Text("Selected month").font(.title3)
-                            Text(month.name).font(.title)
+                        let totalItemCost: Float = 0
+                        
+                        let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                        
+                        let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
+                        
+                        let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+                        
+                        let totalIncome = totalItems + totalShipping
+                        let totalExpense = totalItemCost + totalShippingCost + totalFees
+                        
+                        let profitMargin = (totalIncome - totalExpense) / totalIncome
+                        
+                        VStack(spacing: 24) {
+                            
+                            VStack {
+                                Text("Selected month").font(.title3)
+                                Text(month.name).font(.title)
+                            }
+                            
+                            HStack(spacing: 48) {
+                                
+                                ResultGridView(
+                                    totalItems: totalItems,
+                                    totalShipping: totalShipping,
+                                    totalItemCost: totalItemCost,
+                                    totalShippingCost: totalShippingCost,
+                                    totalFees: totalFees,
+                                    totalResult: totalResult
+                                )
+                                
+                                ResultCircleView(
+                                    totalItems: totalItems,
+                                    totalShipping: totalShipping,
+                                    totalItemCost: totalItemCost,
+                                    totalShippingCost: totalShippingCost,
+                                    totalFees: totalFees,
+                                    profitMargin: profitMargin,
+                                    innerCircleSize: innerCircleSize,
+                                    outerCircleSize: outerCircleSize
+                                )
+                                .frame(width: outerCircleSize, height: outerCircleSize)
+                            }
+                            .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                         }
                         
-                        HStack(spacing: 48) {
+                        Color.clear.frame(width: 24, height: 0)
+                    }
+                    
+                    if selectedMonth == nil || self.monthClicked {
+                        
+                        let orders = visibleOrders
+                        
+                        let totalItems = orders.reduce(0) { $0 + $1.subTotal }
+                        let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                        
+                        let totalItemCost: Float = 0
+                        
+                        let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                        
+                        let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
+                        
+                        let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+                        
+                        let totalIncome = totalItems + totalShipping
+                        let totalExpense = totalItemCost + totalShippingCost + totalFees
+                        
+                        let profitMargin = (totalIncome - totalExpense) / totalIncome
+                        
+                        let monthsSpan = {
+                            if let first = visibleMonths.first,
+                               let last = visibleMonths.last {
+                                return BusinessMonth.allMonths(between: first, and: last)
+                            } else {
+                                return []
+                            }
+                        }().count
+                        
+                        let canAverage = monthsSpan > 0
+                        if canAverage {
+                            
+                            let averageTotalItems = totalItems / Float(monthsSpan)
+                            let averageTotalShipping = totalShipping / Float(monthsSpan)
+                            let averageTotalItemCost = totalItemCost / Float(monthsSpan)
+                            let averageTotalShippingCost = totalShippingCost / Float(monthsSpan)
+                            let averageTotalFees = totalFees / Float(monthsSpan)
+                            let averageTotalResult = totalResult / Float(monthsSpan)
+                            
+                            VStack(spacing: 24) {
+                                
+                                VStack {
+                                    Text("Monthly average").font(.title)
+                                    Text(" ").font(.title3)
+                                }
+                                
+                                ResultGridView(
+                                    totalItems: averageTotalItems,
+                                    totalShipping: averageTotalShipping,
+                                    totalItemCost: averageTotalItemCost,
+                                    totalShippingCost: averageTotalShippingCost,
+                                    totalFees: averageTotalFees,
+                                    totalResult: averageTotalResult
+                                )
+                                .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
+                            }
+                        }
+                        
+                        VStack(spacing: 24) {
+                            
+                            VStack {
+                                Text("Period Total").font(.title)
+                                Text(" ").font(.title3)
+                            }
                             
                             ResultGridView(
                                 totalItems: totalItems,
@@ -290,119 +377,25 @@ struct ResultHistoryView: View {
                                 totalFees: totalFees,
                                 totalResult: totalResult
                             )
-                            
-                            ResultCircleView(
-                                totalItems: totalItems,
-                                totalShipping: totalShipping,
-                                totalItemCost: totalItemCost,
-                                totalShippingCost: totalShippingCost,
-                                totalFees: totalFees,
-                                profitMargin: profitMargin,
-                                innerCircleSize: innerCircleSize,
-                                outerCircleSize: outerCircleSize
-                            )
-                            .frame(width: outerCircleSize, height: outerCircleSize)
-                        }
-                        .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
-                    }
-                    
-                    Color.clear.frame(width: 24, height: 0)
-                }
-                
-                if selectedMonth == nil || self.monthClicked {
-                     
-                    let orders = visibleOrders
-                    
-                    let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                    let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
-                    
-                    let totalItemCost: Float = 0
-                    
-                    let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
-                    
-                    let totalFees = orders.reduce(0) { (total: Float, order) in
-                        
-                        let fees = appController.fees(for: order) ?? 0
-                        
-                        return total + fees
-                    }
-                    
-                    let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
-                    
-                    let totalIncome = totalItems + totalShipping
-                    let totalExpense = totalItemCost + totalShippingCost + totalFees
-                    
-                    let profitMargin = (totalIncome - totalExpense) / totalIncome
-                    
-                    let monthsSpan = {
-                        if let first = visibleMonths.first,
-                           let last = visibleMonths.last {
-                            return BusinessMonth.allMonths(between: first, and: last)
-                        } else {
-                            return []
-                        }
-                    }().count
-                    
-                    let canAverage = monthsSpan > 0
-                    if canAverage {
-                        
-                        let averageTotalItems = totalItems / Float(monthsSpan)
-                        let averageTotalShipping = totalShipping / Float(monthsSpan)
-                        let averageTotalItemCost = totalItemCost / Float(monthsSpan)
-                        let averageTotalShippingCost = totalShippingCost / Float(monthsSpan)
-                        let averageTotalFees = totalFees / Float(monthsSpan)
-                        let averageTotalResult = totalResult / Float(monthsSpan)
-                        
-                        VStack(spacing: 24) {
-                            
-                            VStack {
-                                Text("Monthly average").font(.title)
-                                Text(" ").font(.title3)
-                            }
-                            
-                            ResultGridView(
-                                totalItems: averageTotalItems,
-                                totalShipping: averageTotalShipping,
-                                totalItemCost: averageTotalItemCost,
-                                totalShippingCost: averageTotalShippingCost,
-                                totalFees: averageTotalFees,
-                                totalResult: averageTotalResult
-                            )
                             .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                         }
-                    }
-                    
-                    VStack(spacing: 24) {
                         
-                        VStack {
-                            Text("Period Total").font(.title)
-                            Text(" ").font(.title3)
-                        }
-                            
-                        ResultGridView(
+                        ResultCircleView(
                             totalItems: totalItems,
                             totalShipping: totalShipping,
                             totalItemCost: totalItemCost,
                             totalShippingCost: totalShippingCost,
                             totalFees: totalFees,
-                            totalResult: totalResult
+                            profitMargin: profitMargin,
+                            innerCircleSize: innerCircleSize,
+                            outerCircleSize: outerCircleSize
                         )
+                        .frame(width: outerCircleSize, height: outerCircleSize)
                         .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                     }
-                    
-                    ResultCircleView(
-                        totalItems: totalItems,
-                        totalShipping: totalShipping,
-                        totalItemCost: totalItemCost,
-                        totalShippingCost: totalShippingCost,
-                        totalFees: totalFees,
-                        profitMargin: profitMargin,
-                        innerCircleSize: innerCircleSize,
-                        outerCircleSize: outerCircleSize
-                    )
-                    .frame(width: outerCircleSize, height: outerCircleSize)
-                    .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
                 }
+                
+                Text("Showing only for orders with complete data").font(.caption)
             }
             
             HStack {

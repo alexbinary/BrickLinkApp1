@@ -19,7 +19,9 @@ struct ResultDashboardView: View {
             
             let month: BusinessMonth = .current
             
-            let orders = appController.orderDetails.grouppedByMonth[month.name]
+            let orders = appController.orderDetails
+                .grouppedByMonth[month.name]
+                .filter { appController.profitMargin(for: $0) != nil }
             
             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
             let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
@@ -27,19 +29,20 @@ struct ResultDashboardView: View {
             let totalItemCost: Float = 0
             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
             
-            let totalFees = orders.reduce(0) { (total: Float, order) in
-                
-                let fees = appController.fees(for: order) ?? 0
-                
-                return total + fees
-            }
+            let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
             
             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
             
-            let totalIncome = totalItems + totalShipping
-            let totalExpense = totalItemCost + totalShippingCost + totalFees
-            
-            let profitMargin = (totalIncome - totalExpense) / totalIncome
+            let profitMargin = appController.profitMargin(
+                
+                totalItems: totalItems,
+                totalShipping: totalShipping,
+                
+                itemsCost: totalItemCost,
+                shippingCost: totalShippingCost,
+                fees: totalFees
+                
+            ) ?? 0
             
             Color.clear.frame(height: 128)
             
@@ -76,6 +79,8 @@ struct ResultDashboardView: View {
                     )
                     .frame(width: outerCircleSize, height: outerCircleSize)
                 }
+                
+                Text("Showing only for orders with complete data").font(.caption)
             }
             
             Color.clear.frame(height: 128)

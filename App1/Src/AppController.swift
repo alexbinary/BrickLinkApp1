@@ -830,20 +830,41 @@ class AppController: ObservableObject {
     
     public func profitMargin(for order: OrderDetails) -> Float? {
         
-        let totalItems = order.subTotal
-        let totalShipping = order.shippingCost
+        return profitMargin(
+            
+            totalItems: order.subTotal,
+            totalShipping: order.shippingCost,
         
-        let itemsCost: Float = 0
+            itemsCost: 0,
+            shippingCost: shippingCost(forOrderWithId: order.id),
+            fees: fees(for: order)
+        )
+    }
+    
+    
+    public func profitMargin(
+    
+        totalItems: Float?,
+        totalShipping: Float?,
+    
+        itemsCost: Float?,
+        shippingCost: Float?,
+        fees: Float?
+        
+    ) -> Float? {
         
         if
-            let shippingCost = shippingCost(forOrderWithId: order.id),
-            let fees = fees(for: order)
+            let totalItems = totalItems,
+            let totalShipping = totalShipping,
+            
+            let itemsCost = itemsCost,
+            let shippingCost = shippingCost,
+            let fees = fees
         {
             let totalIncome = totalItems + totalShipping
             let totalExpense = itemsCost + shippingCost + fees
             
-            let profitMargin = (totalIncome - totalExpense) / totalIncome
-            return profitMargin
+            return (totalIncome - totalExpense) / totalIncome
         }
         
         return nil

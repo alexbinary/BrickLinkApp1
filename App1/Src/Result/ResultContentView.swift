@@ -45,7 +45,9 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = appController.orderDetails.grouppedByBusinessMonth
+            let ordersByMonth = appController.orderDetails
+                .filter { appController.profitMargin(for: $0) != nil }
+                .grouppedByBusinessMonth
             
             let orderMonths = ordersByMonth.map { $0.month } .unique.sorted()
             
