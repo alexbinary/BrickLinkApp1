@@ -23,23 +23,53 @@ struct ResultContentView: View {
             
             TableColumn("Buyer", value: \.buyer)
             
-            TableColumn("Items") { order in
-                Text(order.subTotal, format: .currency(code: "EUR").presentation(.isoCode))
-            }
-            
-            TableColumn("Shipping") { order in
-                if let details = appController.orderDetails(forOrderWithId: order.id) {
-                    Text(details.shippingCost, format: .currency(code: "EUR").presentation(.isoCode))
+            TableColumn("Profit") { order in
+                
+                if let profitMargin = appController.profitMargin(for: order) {
+                    
+                    Text(
+                        abs(profitMargin),
+                        format: .percent.precision(.fractionLength(0))
+                    ).signedAmountColor(profitMargin)
                 }
             }
             
+            TableColumn("Items") { order in
+                Text(
+                    abs(order.subTotal),
+                    format: .currency(code: "EUR").presentation(.isoCode)
+                ).signedAmountColor(.income)
+            }
+            
             TableColumn("Items cost") { order in
-                Text(0, format: .currency(code: "EUR").presentation(.isoCode))
+                Text(
+                    0,
+                    format: .currency(code: "EUR").presentation(.isoCode)
+                ).signedAmountColor(.expense)
+            }
+            
+            TableColumn("Shipping") { order in
+                Text(
+                    abs(order.shippingCost),
+                    format: .currency(code: "EUR").presentation(.isoCode)
+                ).signedAmountColor(.income)
             }
             
             TableColumn("Shipping cost") { order in
-                if let sc = appController.shippingCost(forOrderWithId: order.id) {
-                    Text(sc, format: .currency(code: "EUR").presentation(.isoCode))
+                Text(
+                    abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
+                    format: .currency(code: "EUR").presentation(.isoCode)
+                ).signedAmountColor(.expense)
+            }
+            
+            TableColumn("Fees") { order in
+                
+                if let fees = appController.fees(for: order) {
+                    
+                    Text(
+                        abs(fees),
+                        format: .currency(code: "EUR").presentation(.isoCode)
+                    ).signedAmountColor(.expense)
                 }
             }
             

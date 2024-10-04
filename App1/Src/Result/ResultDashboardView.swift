@@ -111,7 +111,7 @@ struct ResultDashboardView: View {
                         
                         TableColumn("Buyer", value: \.buyer)
                         
-                        TableColumn("Profit margin") { order in
+                        TableColumn("Profit") { order in
                             
                             if let profitMargin = appController.profitMargin(for: order) {
                                 
@@ -122,14 +122,14 @@ struct ResultDashboardView: View {
                             }
                         }
                         
-                        TableColumn("Subtotal (items)") { order in
+                        TableColumn("Items") { order in
                             Text(
                                 abs(order.subTotal),
                                 format: .currency(code: "EUR").presentation(.isoCode)
                             ).signedAmountColor(.income)
                         }
                         
-                        TableColumn("Total items cost") { order in
+                        TableColumn("Items cost") { order in
                             Text(
                                 0,
                                 format: .currency(code: "EUR").presentation(.isoCode)
@@ -183,7 +183,7 @@ struct ResultDashboardView: View {
                         
                         TableColumn("Buyer", value: \.buyer)
                         
-                        TableColumn("Profit margin") { order in
+                        TableColumn("Profit") { order in
                             
                             if let profitMargin = appController.profitMargin(for: order) {
                                 
@@ -194,14 +194,14 @@ struct ResultDashboardView: View {
                             }
                         }
                         
-                        TableColumn("Subtotal (items)") { order in
+                        TableColumn("Items") { order in
                             Text(
                                 abs(order.subTotal),
                                 format: .currency(code: "EUR").presentation(.isoCode)
                             ).signedAmountColor(.income)
                         }
                         
-                        TableColumn("Total items cost") { order in
+                        TableColumn("Items cost") { order in
                             Text(
                                 0,
                                 format: .currency(code: "EUR").presentation(.isoCode)
