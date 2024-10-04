@@ -151,7 +151,7 @@ struct ResultHistoryView: View {
                         
                         var fees: Float = 0
                         
-                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                        if let income = appController.incomeTransaction(forOrderWithId: order.id)?.amount {
                         
                             fees = order.grandTotal - income
                         }
@@ -268,7 +268,7 @@ struct ResultHistoryView: View {
                         
                         var fees: Float = 0
                         
-                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                        if let income = appController.incomeTransaction(forOrderWithId: order.id)?.amount {
                             
                             fees = order.grandTotal - income
                         }
@@ -334,7 +334,7 @@ struct ResultHistoryView: View {
                         
                         var fees: Float = 0
                         
-                        if let income = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                        if let income = appController.incomeTransaction(forOrderWithId: order.id)?.amount {
                             
                             fees = order.grandTotal - income
                         }
@@ -497,7 +497,7 @@ struct ResultHistoryView: View {
                         
                         TableColumn("Fees") { order in
                             
-                            if let transactionAmount = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                            if let transactionAmount = appController.incomeTransaction(forOrderWithId: order.id)?.amount {
                                 
                                 let fees = order.grandTotal - transactionAmount
                                 
@@ -580,7 +580,7 @@ struct ResultHistoryView: View {
                         
                         TableColumn("Fees") { order in
                             
-                            if let transactionAmount = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+                            if let transactionAmount = appController.incomeTransaction(forOrderWithId: order.id)?.amount {
                                 
                                 let fees = order.grandTotal - transactionAmount
                                 

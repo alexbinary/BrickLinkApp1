@@ -92,13 +92,13 @@ struct OrdersContentView: View {
                 }
                 
                 TableColumn("Transaction in") { (order: OrderSummary) in
-                    if let t = appController.transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id }) {
+                    if let t = appController.incomeTransaction(forOrderWithId: order.id) {
                         Text(t.createdAt, format: .dateTime)
                     }
                 }
                 
                 TableColumn("Transaction out") { (order: OrderSummary) in
-                    if let t = appController.transactions.first(where: { $0.type == .orderShipping && $0.orderRefIn == order.id }) {
+                    if let t = appController.shippingTransaction(forOrderWithId: order.id) {
                         Text(t.createdAt, format: .dateTime)
                     }
                 }

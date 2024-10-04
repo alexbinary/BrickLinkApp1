@@ -791,6 +791,18 @@ class AppController: ObservableObject {
     }
     
     
+    public func incomeTransaction(forOrderWithId orderId: OrderDetails.ID) -> Transaction? {
+        
+        return transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == orderId })
+    }
+    
+    
+    public func shippingTransaction(forOrderWithId orderId: OrderDetails.ID) -> Transaction? {
+        
+        return transactions.first(where: { $0.type == .orderShipping && $0.orderRefIn == orderId })
+    }
+    
+    
     
     // MARK: - Refresh
     
@@ -824,7 +836,7 @@ class AppController: ObservableObject {
         let itemsCost: Float = 0
         let shippingCost = shippingCost(forOrderWithId: order.id) ?? 0
         let fees = {
-            if let transactionAmount = transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == order.id })?.amount {
+            if let transactionAmount = incomeTransaction(forOrderWithId: order.id)?.amount {
                 return order.grandTotal - transactionAmount
             } else {
                 return 0
