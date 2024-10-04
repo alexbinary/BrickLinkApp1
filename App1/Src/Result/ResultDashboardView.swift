@@ -82,10 +82,15 @@ struct ResultDashboardView: View {
             
             HStack {
                 
-                let orders = orders.sorted {
-                    
-                    appController.profitMargin(for: $0) > appController.profitMargin(for: $1)
-                }
+                let orders = orders
+                    .filter {
+                        appController.profitMargin(for: $0) != nil
+                    }
+                    .sorted {
+                        (appController.profitMargin(for: $0) ?? 0)
+                        >
+                        (appController.profitMargin(for: $1) ?? 0)
+                    }
                 
                 VStack(alignment: .leading) {
                     
@@ -103,12 +108,13 @@ struct ResultDashboardView: View {
                         
                         TableColumn("Profit margin") { order in
                             
-                            let profitMargin = appController.profitMargin(for: order)
-                            
-                            Text(
-                                abs(profitMargin),
-                                format: .percent.precision(.fractionLength(0))
-                            ).signedAmountColor(profitMargin)
+                            if let profitMargin = appController.profitMargin(for: order) {
+                                
+                                Text(
+                                    abs(profitMargin),
+                                    format: .percent.precision(.fractionLength(0))
+                                ).signedAmountColor(profitMargin)
+                            }
                         }
                         
                         TableColumn("Subtotal (items)") { order in
@@ -174,12 +180,13 @@ struct ResultDashboardView: View {
                         
                         TableColumn("Profit margin") { order in
                             
-                            let profitMargin = appController.profitMargin(for: order)
-                            
-                            Text(
-                                abs(profitMargin),
-                                format: .percent.precision(.fractionLength(0))
-                            ).signedAmountColor(profitMargin)
+                            if let profitMargin = appController.profitMargin(for: order) {
+                                
+                                Text(
+                                    abs(profitMargin),
+                                    format: .percent.precision(.fractionLength(0))
+                                ).signedAmountColor(profitMargin)
+                            }
                         }
                         
                         TableColumn("Subtotal (items)") { order in

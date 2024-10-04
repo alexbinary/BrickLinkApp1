@@ -421,7 +421,9 @@ struct ResultHistoryView: View {
                     } else {
                         return visibleOrders
                     }
-                }()
+                }().filter {
+                    appController.profitMargin(for: $0) != nil
+                }
                 
                 let baseNumber = 5
                 let number = selectedMonth == nil
@@ -444,12 +446,13 @@ struct ResultHistoryView: View {
                         
                         TableColumn("Profit margin") { order in
                             
-                            let profitMargin = appController.profitMargin(for: order)
-                            
-                            Text(
-                                abs(profitMargin),
-                                format: .percent.precision(.fractionLength(0))
-                            ).signedAmountColor(profitMargin)
+                            if let profitMargin = appController.profitMargin(for: order) {
+                                
+                                Text(
+                                    abs(profitMargin),
+                                    format: .percent.precision(.fractionLength(0))
+                                ).signedAmountColor(profitMargin)
+                            }
                         }
                         
                         TableColumn("Subtotal (items)") { order in
@@ -495,10 +498,10 @@ struct ResultHistoryView: View {
                         
                         let orders = sourceOrders.sorted {
                             (
-                                (appController.profitMargin(for: $0)*100).rounded(),
+                                ((appController.profitMargin(for: $0) ?? 0)*100).rounded(),
                                 $0.date
                             ) > (
-                                (appController.profitMargin(for: $1)*100).rounded(),
+                                ((appController.profitMargin(for: $1) ?? 0)*100).rounded(),
                                 $1.date
                             )
                         }
@@ -525,12 +528,13 @@ struct ResultHistoryView: View {
                         
                         TableColumn("Profit margin") { order in
                             
-                            let profitMargin = appController.profitMargin(for: order)
-                            
-                            Text(
-                                abs(profitMargin),
-                                format: .percent.precision(.fractionLength(0))
-                            ).signedAmountColor(profitMargin)
+                            if let profitMargin = appController.profitMargin(for: order) {
+                                
+                                Text(
+                                    abs(profitMargin),
+                                    format: .percent.precision(.fractionLength(0))
+                                ).signedAmountColor(profitMargin)
+                            }
                         }
                         
                         TableColumn("Subtotal (items)") { order in
@@ -576,10 +580,10 @@ struct ResultHistoryView: View {
                         
                         let orders = sourceOrders.sorted {
                             (
-                                -(appController.profitMargin(for: $0)*100).rounded(),
+                                -((appController.profitMargin(for: $0) ?? 0)*100).rounded(),
                                 $0.date
                             ) > (
-                                -(appController.profitMargin(for: $1)*100).rounded(),
+                                -((appController.profitMargin(for: $1) ?? 0)*100).rounded(),
                                 $1.date
                             )
                         }
