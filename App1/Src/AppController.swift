@@ -239,14 +239,14 @@ class AppController: ObservableObject {
     // MARK: - Order status, Tracking no, Drive thru
     
     
-    public func updateOrderStatus(orderId: OrderSummary.ID, status: String) async {
+    public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!)
         request.httpMethod = "PUT"
         request.httpBody = """
             {
                 "field" : "status",
-                "value" : "\(status)"
+                "value" : "\(status.rawValue)"
             }
             """.data(using: .utf8)
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -901,7 +901,7 @@ extension OrderSummary {
         self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
         self.dispCostCurrencyCode = bl.dispCost.currencyCode
         
-        self.status = bl.status
+        self.status = OrderStatus(rawValue: bl.status)!
         self.dateStatusChanged = bl.dateStatusChanged
     }
 }
@@ -928,7 +928,7 @@ extension OrderDetails {
         self.dispShippingCost = bl.dispCost.shipping!.floatValue
         self.dispCostCurrencyCode = bl.dispCost.currencyCode
         
-        self.status = bl.status
+        self.status = OrderStatus(rawValue: bl.status)!
         self.driveThruSent = bl.driveThruSent!
         self.trackingNo = bl.shipping!.trackingNo
         self.totalWeight = bl.totalWeight!.floatValue

@@ -50,7 +50,7 @@ struct OrdersContentView: View {
                     }
                 }
                 
-                TableColumn("Status", value: \OrderSummary.status)
+                TableColumn("Status", value: \OrderSummary.status.rawValue)
                 
                 TableColumn("Changed") { (order: OrderSummary) in
                     Text(order.dateStatusChanged, format: .dateTime)

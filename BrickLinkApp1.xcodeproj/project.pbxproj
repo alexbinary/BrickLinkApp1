@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		290CC49E2CAFF1CB006C2C20 /* OrderStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290CC49D2CAFF1C5006C2C20 /* OrderStatus.swift */; };
 		291386362C93354500E79E63 /* ResultContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386352C93354500E79E63 /* ResultContentView.swift */; };
 		291386392C93359900E79E63 /* ResultHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291386382C93359900E79E63 /* ResultHistoryView.swift */; };
 		2951B3A52CABE24700DF454C /* ResultDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951B3A42CABE24700DF454C /* ResultDashboardView.swift */; };
@@ -56,6 +57,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		290CC49D2CAFF1C5006C2C20 /* OrderStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderStatus.swift; sourceTree = "<group>"; };
 		291386352C93354500E79E63 /* ResultContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultContentView.swift; sourceTree = "<group>"; };
 		291386382C93359900E79E63 /* ResultHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultHistoryView.swift; sourceTree = "<group>"; };
 		2951B3A42CABE24700DF454C /* ResultDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDashboardView.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		29B9491D2C7DB3AC00CC7F26 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				290CC49D2CAFF1C5006C2C20 /* OrderStatus.swift */,
 				29B9494E2C8B25DA00CC7F26 /* OrderSummary.swift */,
 				29B949502C8B25E400CC7F26 /* OrderDetails.swift */,
 				29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */,
@@ -383,6 +386,7 @@
 				29B949532C8F2AC400CC7F26 /* InventoryItem.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,
 				29B949472C87317300CC7F26 /* extensions.swift in Sources */,
+				290CC49E2CAFF1CB006C2C20 /* OrderStatus.swift in Sources */,
 				29B9494B2C898FEE00CC7F26 /* secrets.swift in Sources */,
 				29B9494D2C89CED200CC7F26 /* LegoColor.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,

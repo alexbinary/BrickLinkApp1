@@ -75,7 +75,7 @@ struct OrdersDetailDetailView: View {
             
             HeaderTitleView(label: "􁊇 Update status")
             
-            let statuses = ["PAID", "PACKED", "SHIPPED", "COMPLETED"]
+            let statuses: [OrderStatus] = [.paid, .packed, .shipped, .completed]
             
             HStack {
                 ForEach(statuses, id: \.self) { status in
@@ -84,7 +84,7 @@ struct OrdersDetailDetailView: View {
                             await appController.updateOrderStatus(orderId: order.id, status: status)
                         }
                     } label: {
-                        Text(status)
+                        Text(status.rawValue)
                             .fontWeight(order.status == status ? .bold : .regular)
                     }
                 }

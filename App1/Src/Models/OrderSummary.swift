@@ -19,6 +19,6 @@ struct OrderSummary: Identifiable, Equatable, Codable, Datable {
     let dispGrandTotal: Float
     let dispCostCurrencyCode: String
     
-    let status: String
+    let status: OrderStatus
     let dateStatusChanged: Date
 }

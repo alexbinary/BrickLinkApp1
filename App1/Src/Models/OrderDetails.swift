@@ -21,7 +21,7 @@ struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     let dispShippingCost: Float
     let dispCostCurrencyCode: String
     
-    let status: String
+    let status: OrderStatus
     let driveThruSent: Bool
     let trackingNo: String?
     let totalWeight: Float
