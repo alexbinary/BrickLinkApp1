@@ -13,7 +13,7 @@ struct ResultContentView: View {
     
     var body: some View {
         
-        Table(of: OrderSummary.self, selection: $selectedOrderIds) {
+        Table(of: OrderDetails.self, selection: $selectedOrderIds) {
             
             TableColumn("ID", value: \.id)
             
@@ -45,11 +45,30 @@ struct ResultContentView: View {
             
         } rows: {
             
-            ForEach(appController.orderSummaries.grouppedByMonth, id: \.month) { item in
+            let ordersByMonth = appController.orderDetails.grouppedByBusinessMonth
+            
+            let orderMonths = ordersByMonth.map { $0.month } .unique.sorted()
+            
+            let allMonths: [BusinessMonth] = {
+                if let first = orderMonths.first {
+                    return BusinessMonth.allMonths(
+                        between: first, and: .current
+                    )
+                } else {
+                    return []
+                }
+            }()
+            
+            ForEach(allMonths.reversed()) { month in
                 
-                Section(item.month) {
+                Section(month.name) {
                     
-                    ForEach(item.elements) { TableRow($0) }
+                    let orders = ordersByMonth[month].sorted { $0.date > $1.date }
+                    
+                    ForEach(orders) { order in
+
+                        TableRow(order)
+                    }
                 }
             }
         }

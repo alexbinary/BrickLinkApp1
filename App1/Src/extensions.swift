@@ -23,6 +23,9 @@ extension Array where Element: Equatable {
         
         return uniqueItems
     }
+    
+    
+    var unique: Self { stableUniqueByFirstOccurence }
 }
 
 
