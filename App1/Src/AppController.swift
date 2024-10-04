@@ -835,19 +835,22 @@ class AppController: ObservableObject {
         
         let itemsCost: Float = 0
         let shippingCost = shippingCost(forOrderWithId: order.id) ?? 0
-        let fees = {
-            if let transactionAmount = incomeTransaction(forOrderWithId: order.id)?.amount {
-                return order.grandTotal - transactionAmount
-            } else {
-                return 0
-            }
-        }()
+        let fees = fees(for: order) ?? 0
         
         let totalIncome = totalItems + totalShipping
         let totalExpense = itemsCost + shippingCost + fees
         
         let profitMargin = (totalIncome - totalExpense) / totalIncome
         return profitMargin
+    }
+    
+    
+    public func fees(for order: OrderDetails) -> Float? {
+        
+        if let transactionAmount = incomeTransaction(forOrderWithId: order.id)?.amount {
+            return order.grandTotal - transactionAmount
+        }
+        return nil
     }
 }
 
