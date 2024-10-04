@@ -9,6 +9,9 @@ struct ResultDashboardView: View {
     
     @EnvironmentObject var appController: AppController
     
+    @State var selectedMostProfitableOrder: OrderDetails.ID? = nil
+    @State var selectedLeastProfitableOrder: OrderDetails.ID? = nil
+    
     
     var body: some View {
         
@@ -93,7 +96,7 @@ struct ResultDashboardView: View {
                     
                     Text("Most profitable orders").font(.title3)
                     
-                    Table(of: OrderDetails.self) {
+                    Table(of: OrderDetails.self, selection: $selectedMostProfitableOrder) {
                         
                         TableColumn("ID", value: \.id)
                         
@@ -166,7 +169,7 @@ struct ResultDashboardView: View {
                     
                     Text("Least profitable orders").font(.title3)
                     
-                    Table(of: OrderDetails.self) {
+                    Table(of: OrderDetails.self, selection: $selectedLeastProfitableOrder) {
                         
                         TableColumn("ID", value: \.id)
                         

@@ -20,6 +20,9 @@ struct ResultHistoryView: View {
     
     @State var animateGraph = false
     
+    @State var selectedMostProfitableOrder: OrderDetails.ID? = nil
+    @State var selectedLeastProfitableOrder: OrderDetails.ID? = nil
+    
     
     var orders: [OrderDetails] {
         
@@ -444,7 +447,7 @@ struct ResultHistoryView: View {
                     
                     Text("Most profitable orders"+titleSuffix).font(.title3)
                     
-                    Table(of: OrderDetails.self) {
+                    Table(of: OrderDetails.self, selection: $selectedMostProfitableOrder) {
                         
                         TableColumn("ID", value: \.id)
                         
@@ -527,7 +530,7 @@ struct ResultHistoryView: View {
                     
                     Text("Least profitable orders"+titleSuffix).font(.title3)
                     
-                    Table(of: OrderDetails.self) {
+                    Table(of: OrderDetails.self, selection: $selectedLeastProfitableOrder) {
                         
                         TableColumn("ID", value: \.id)
                         
