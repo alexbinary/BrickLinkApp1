@@ -11,3 +11,20 @@ enum OrderStatus: String, Codable {
     case purged = "PURGED"
     case cancelled = "CANCELLED"
 }
+
+
+
+extension OrderStatus {
+    
+    
+    func isOneOf(_ arr: [OrderStatus]) -> Bool {
+        
+        arr.contains(self)
+    }
+    
+    
+    func isNotOneOf(_ arr: [OrderStatus]) -> Bool {
+        
+        !self.isOneOf(arr)
+    }
+}

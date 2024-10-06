@@ -32,3 +32,26 @@ struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     let shippingAddressCountryCode: String
     let shippingAddressName: String
 }
+
+
+
+extension OrderDetails {
+    
+    
+    func differs(from summary: OrderSummary) -> Bool {
+        
+        return
+            self.id != summary.id
+         || self.date != summary.date
+         || self.buyer != summary.buyer
+         || self.items != summary.items
+         || self.lots != summary.lots
+         || self.subTotal != summary.subTotal
+         || self.grandTotal != summary.grandTotal
+         || self.costCurrencyCode != summary.costCurrencyCode
+         || self.dispSubTotal != summary.dispSubTotal
+         || self.dispGrandTotal != summary.dispGrandTotal
+         || self.dispCostCurrencyCode != summary.dispCostCurrencyCode
+         || self.status != summary.status
+    }
+}

@@ -202,31 +202,5 @@ struct OrdersDetailDetailView: View {
             
             Divider()
         }
-        .onChange(of: order) {
-            Task {
-                await parallel([
-                    { await loadOrderItems() },
-                    { await loadOrderFeedbacks() },
-                ])
-            }
-        }
-        .task {
-            await parallel([
-                { await loadOrderItems() },
-                { await loadOrderFeedbacks() },
-            ])
-        }
-    }
-    
-    
-    func loadOrderItems() async {
-        
-        await appController.loadOrderItemsIfMissing(forOrderWithId: order.id)
-    }
-    
-    
-    func loadOrderFeedbacks() async {
-        
-        await appController.loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
     }
 }

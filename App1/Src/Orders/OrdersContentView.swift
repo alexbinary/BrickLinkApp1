@@ -73,13 +73,13 @@ struct OrdersContentView: View {
                 TableColumn("Feedback") { (order: OrderSummary) in
                     HStack {
                         Text("Buyer:")
-                        if let ratingFromBuyer = appController.orderFeedbacks(forOrderWithId: order.id).first(where: { $0.ratingOfBs == "S" })?.rating {
+                        if let ratingFromBuyer = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback()?.rating {
                             Text(ratingFromBuyer, format: .number)
                         }
                     }
                     HStack {
                         Text("Me:")
-                        if let ratingFromSeller = appController.orderFeedbacks(forOrderWithId: order.id).first(where: { $0.ratingOfBs == "B" })?.rating {
+                        if let ratingFromSeller = appController.orderFeedbacks(forOrderWithId: order.id).sellerFeedback()?.rating {
                             Text(ratingFromSeller, format: .number)
                         }
                     }
@@ -119,7 +119,7 @@ struct OrdersContentView: View {
             
             Button {
                 Task {
-                    await appController.refresh()
+                    await appController.refreshAllOrders()
                 }
             } label: {
                 Text("Refresh everything")

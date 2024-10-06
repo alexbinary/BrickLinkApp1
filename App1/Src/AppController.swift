@@ -19,8 +19,10 @@ class AppController: ObservableObject {
         
         Task {
             await parallel([
-//                { await self.loadColors() },
-//                { await self.refresh() },
+                { await self.loadColors() },
+                { await self.loadOrderSummaries() },
+                { await self.loadMissingOrders() },
+                { await self.refreshAllOrders() },
             ])
         }
     }
@@ -120,6 +122,12 @@ class AppController: ObservableObject {
     public var orderSummaries: [OrderSummary] {
         
         dataStore.orderSummaries
+    }
+    
+    
+    public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+        
+        dataStore.orderSummaries.first { $0.id == orderId }
     }
     
     
@@ -804,23 +812,94 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Refresh
+    // MARK: - Import & Refresh
     
     
-    public func refresh() async {
+    private func loadMissingOrders() async {
         
-        await self.loadOrderSummaries()
         for order in orderSummaries {
             
             await loadOrderDetailsIfMissing(forOrderWithId: order.id)
             await loadOrderItemsIfMissing(forOrderWithId: order.id)
-            
-            let feedbacks = dataStore.orderFeedbacksByOrderId[order.id] ?? []
-            if !(feedbacks.contains(where: { $0.ratingOfBs == "B" }) && feedbacks.contains(where: { $0.ratingOfBs == "S" })) {
-                
-                await loadOrderFeedbacks(forOrderWithId: order.id)
-            }
+            await loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
         }
+    }
+    
+    
+    public func refreshAllOrders() async {
+        
+        await self.loadOrderSummaries()
+        
+        for order in orderSummaries {
+            
+            await refreshOrder(orderId: order.id)
+        }
+    }
+    
+    
+    public func refreshOrder(orderId: OrderSummary.ID) async {
+        
+        if shouldRefreshOrder(orderId: orderId) {
+            
+            await loadOrderDetails(forOrderWithId: orderId)
+            await loadOrderItems(forOrderWithId: orderId)
+            await loadOrderFeedbacks(forOrderWithId: orderId)
+        }
+    }
+    
+    
+    public func forceRefreshOrder(orderId: OrderSummary.ID) async {
+        
+        await loadOrderDetails(forOrderWithId: orderId)
+        await loadOrderItems(forOrderWithId: orderId)
+        await loadOrderFeedbacks(forOrderWithId: orderId)
+    }
+    
+    
+    private func orderIsClosedForMoreThan30Days(orderId: OrderSummary.ID) -> Bool {
+        
+        let orderSummary = orderSummary(forOrderWithId: orderId)!
+        
+        return
+            orderSummary.status.isOneOf([.completed, .cancelled, .purged])
+            &&
+            orderSummary.dateStatusChanged.days(to: Date()) > 30
+    }
+    
+    
+    private func shouldRefreshOrder(orderId: OrderSummary.ID) -> Bool {
+        
+        if !orderIsClosedForMoreThan30Days(orderId: orderId) {
+            
+            return true
+        }
+        
+        guard
+            let orderDetails = orderDetails(forOrderWithId: orderId)
+        else {
+            return true
+        }
+        
+        let orderItems = orderItems(forOrderWithId: orderId)
+        if orderItems.isEmpty {
+            
+            return true
+        }
+        
+        let orderSummary = orderSummary(forOrderWithId: orderId)!
+        if orderDetails.differs(from: orderSummary) {
+            
+            return true
+        }
+        
+        let feedbacks = orderFeedbacks(forOrderWithId: orderId)
+        
+        if !feedbacks.hasSellerFeedback() {
+            
+            return true
+        }
+        
+        return false
     }
     
     
@@ -972,8 +1051,24 @@ extension Feedback {
         self.to = bl.to
         self.dateRated = bl.dateRated
         self.rating = bl.rating
-        self.ratingOfBs = bl.ratingOfBs
+        self.author = FeedbackAuthor(fromBl: bl.ratingOfBs)!
         self.comment = bl.comment
+    }
+}
+
+
+extension FeedbackAuthor {
+    
+    
+    init?(fromBl ratingOfBs: String) {
+        
+        switch ratingOfBs {
+          
+        case "B": self = .seller
+        case "S": self = .buyer
+            
+        default: return nil
+        }
     }
 }
 

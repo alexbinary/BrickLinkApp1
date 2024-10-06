@@ -10,8 +10,6 @@ struct OrdersDetailView: View {
     
     let selectedOrderId: OrderDetails.ID?
     
-    @State var order: OrderDetails? = nil
-    
     
     var body: some View {
         
@@ -57,21 +55,21 @@ struct OrdersDetailView: View {
             }
             .padding()
             .task {
-                await loadOrder()
+                await refreshOrder()
             }
             .onChange(of: selectedOrderId) { oldValue, newValue in
                 Task {
-                    await loadOrder()
+                    await refreshOrder()
                 }
             }
         }
     }
     
     
-    func loadOrder() async {
+    func refreshOrder() async {
         
         guard let orderId = selectedOrderId else { return }
         
-        await appController.loadOrderDetailsIfMissing(forOrderWithId: orderId)
+        await appController.forceRefreshOrder(orderId: orderId)
     }
 }

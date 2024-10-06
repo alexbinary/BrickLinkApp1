@@ -80,6 +80,14 @@ extension Date {
         
         return calendar.date(bySettingHour: 0, minute: 0, second: 0, of: self)!
     }
+    
+    
+    func days(to date: Date) -> Int {
+        
+        let calendar = Calendar.current
+        
+        return calendar.dateComponents([.day], from: self, to: date).day!
+    }
 }
 
 
