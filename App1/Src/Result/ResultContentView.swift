@@ -56,10 +56,13 @@ struct ResultContentView: View {
             }
             
             TableColumn("Shipping cost") { order in
-                Text(
-                    abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                ).signedAmountColor(.expense)
+                
+                if let cost = appController.shippingCost(forOrderWithId: order.id) {
+                    
+                    Text(
+                        abs(cost),
+                        format: .currency(code: "EUR").presentation(.isoCode)
+                    ).signedAmountColor(.expense)}
             }
             
             TableColumn("Fees") { order in
@@ -76,7 +79,6 @@ struct ResultContentView: View {
         } rows: {
             
             let ordersByMonth = appController.orderDetails
-                .filter { appController.profitMargin(for: $0) != nil }
                 .grouppedByBusinessMonth
             
             let orderMonths = ordersByMonth.map { $0.month } .unique.sorted()
