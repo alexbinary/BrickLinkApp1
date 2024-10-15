@@ -119,6 +119,7 @@ struct OrdersContentView: View {
             
             Button {
                 Task {
+                    await appController.reloadOrderSummaries()
                     await appController.refreshAllOrders()
                 }
             } label: {

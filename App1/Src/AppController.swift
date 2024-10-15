@@ -19,10 +19,16 @@ class AppController: ObservableObject {
         
         Task {
             await parallel([
-                { await self.loadColors() },
-                { await self.loadOrderSummaries() },
-                { await self.loadMissingOrders() },
-                { await self.refreshAllOrders() },
+                {
+                    await self.loadColors()
+                },
+                {
+                    await self.loadOrderSummaries()
+                    await parallel([
+                        { await self.loadMissingOrders() },
+                        { await self.refreshAllOrders() },
+                    ])
+                },
             ])
         }
     }
@@ -827,8 +833,6 @@ class AppController: ObservableObject {
     
     
     public func refreshAllOrders() async {
-        
-        await self.loadOrderSummaries()
         
         for order in orderSummaries {
             
