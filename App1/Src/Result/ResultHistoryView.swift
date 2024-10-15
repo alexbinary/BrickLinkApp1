@@ -233,6 +233,7 @@ struct ResultHistoryView: View {
                     }
                 }
             }
+            .chartLegend(.hidden)
             .frame(height: 200)
             .animation(.easeOut(duration: 0.2), value: animateGraph ? visibleMonths : nil)
             .onAppear {
@@ -270,10 +271,7 @@ struct ResultHistoryView: View {
                         
                         VStack(spacing: 24) {
                             
-                            VStack {
-                                Text("Selected month").font(.title3)
-                                Text(month.name).font(.title)
-                            }
+                            Text(month.name).font(.title)
                             
                             HStack(spacing: 48) {
                                 
@@ -345,10 +343,7 @@ struct ResultHistoryView: View {
                             
                             VStack(spacing: 24) {
                                 
-                                VStack {
-                                    Text("Monthly average").font(.title)
-                                    Text(" ").font(.title3)
-                                }
+                                Text("Monthly average").font(.title)
                                 
                                 ResultGridView(
                                     totalItems: averageTotalItems,
@@ -364,10 +359,7 @@ struct ResultHistoryView: View {
                         
                         VStack(spacing: 24) {
                             
-                            VStack {
-                                Text("Period Total").font(.title)
-                                Text(" ").font(.title3)
-                            }
+                            Text("Period Total").font(.title)
                             
                             ResultGridView(
                                 totalItems: totalItems,
@@ -395,7 +387,7 @@ struct ResultHistoryView: View {
                     }
                 }
                 
-                Text("Showing only for orders with complete data").font(.caption)
+                Text("Counting only orders with complete data").font(.caption)
             }
             
             HStack {
