@@ -873,37 +873,38 @@ class AppController: ObservableObject {
     
     private func shouldRefreshOrder(orderId: OrderSummary.ID) -> Bool {
         
-        if !orderIsClosedForMoreThan30Days(orderId: orderId) {
+        if orderIsClosedForMoreThan30Days(orderId: orderId) {
             
-            return true
-        }
-        
-        guard
-            let orderDetails = orderDetails(forOrderWithId: orderId)
-        else {
-            return true
-        }
-        
-        let orderItems = orderItems(forOrderWithId: orderId)
-        if orderItems.isEmpty {
+            guard
+                let orderDetails = orderDetails(forOrderWithId: orderId)
+            else {
+                return true
+            }
             
-            return true
-        }
-        
-        let orderSummary = orderSummary(forOrderWithId: orderId)!
-        if orderDetails.differs(from: orderSummary) {
+            let orderItems = orderItems(forOrderWithId: orderId)
+            if orderItems.isEmpty {
+                
+                return true
+            }
             
-            return true
-        }
-        
-        let feedbacks = orderFeedbacks(forOrderWithId: orderId)
-        
-        if !feedbacks.hasSellerFeedback() {
+            let orderSummary = orderSummary(forOrderWithId: orderId)!
+            if orderDetails.differs(from: orderSummary) {
+                
+                return true
+            }
             
+            let feedbacks = orderFeedbacks(forOrderWithId: orderId)
+            if !feedbacks.hasSellerFeedback() {
+                
+                return true
+            }
+            
+            return false
+            
+        } else {
+        
             return true
         }
-        
-        return false
     }
     
     
