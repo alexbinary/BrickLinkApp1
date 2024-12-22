@@ -162,7 +162,7 @@ struct UploadContentView: View {
                                 }
                             }
                             HStack {
-                                Text("Qty:")
+                                Text("ΔQty:")
                                 Text(qty, format: .number)
                             }
                             HStack {
@@ -193,7 +193,12 @@ struct UploadContentView: View {
                         
                         Text("No inventory")
                             
-                        let remarks = self.remarks
+                        let remarks: String? = {
+                            if self.remarks.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+                                return self.remarks
+                            }
+                            return nil
+                        }()
                         let qty = self.qty ?? nextUploadItem.qty
                         let unitPrice = self.unitPrice ?? {
                             if (nextUploadItem.unitPrice ?? 0) > 0 {
@@ -208,7 +213,11 @@ struct UploadContentView: View {
                             
                             HStack {
                                 Text("Remarks:")
-                                Text(remarks)
+                                if let remarks = remarks {
+                                    Text(remarks)
+                                } else {
+                                    Text("MISSING")
+                                }
                             }
                             HStack {
                                 Text("Qty:")
@@ -224,7 +233,15 @@ struct UploadContentView: View {
                             }
                         }
                         
-                        if let unitPrice = unitPrice {
+                        if remarks == nil {
+                            
+                            Text("cannot create inventory, missing remarks")
+                            
+                        } else if unitPrice == nil {
+                            
+                            Text("cannot create inventory, invalid unitPrice")
+                            
+                        } else {
                             
                             Button {
                                 
@@ -234,19 +251,15 @@ struct UploadContentView: View {
                                         type: nextUploadItem.type,
                                         colorId: nextUploadItem.colorId,
                                         quantity: qty,
-                                        unitPrice: unitPrice,
+                                        unitPrice: unitPrice!,
                                         condition: nextUploadItem.condition,
                                         description: nextUploadItem.comment,
-                                        remarks: remarks
+                                        remarks: remarks!
                                     )
                                 }
                             } label: {
                                 Text("Create inventory")
                             }
-                            
-                        } else {
-                            
-                            Text("cannot create inventory, invalid unitPrice")
                         }
                     }
                     
