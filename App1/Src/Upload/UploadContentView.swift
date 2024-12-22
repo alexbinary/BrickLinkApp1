@@ -73,6 +73,19 @@ struct UploadContentView: View {
                         Text("Pull inventory")
                     }
                     
+                    Button {
+                        
+                        Task {
+                            appController.deleteUploadItem(nextUploadItem)
+                            
+                            self.qty = nil
+                            self.remarks = ""
+                            self.unitPrice = nil
+                        }
+                    } label: {
+                        Text("Done")
+                    }
+                    
                     if let inventoryItem = self.inventoryItem {
                         
                         HStack {
