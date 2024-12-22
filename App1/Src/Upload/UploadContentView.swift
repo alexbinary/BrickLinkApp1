@@ -10,6 +10,10 @@ struct UploadContentView: View {
     
     @State var inventoryItem: InventoryItem? = nil
     
+    @State var qty: Int? = nil
+    @State var remarks: String = ""
+    @State var unitPrice: Float? = nil
+    
     
     var body: some View {
         
@@ -118,9 +122,14 @@ struct UploadContentView: View {
                                 .frame(maxWidth: 100, maxHeight: 100)
                         }
                         
-                        let remarks: String? = nil
-                        let qty = nextUploadItem.qty
-                        let unitPrice = {
+                        let remarks: String? = {
+                            if self.remarks.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+                                return self.remarks
+                            }
+                            return nil
+                        }()
+                        let qty = self.qty ?? nextUploadItem.qty
+                        let unitPrice = self.unitPrice ?? {
                             if (nextUploadItem.unitPrice ?? 0) > 0 {
                                 return nextUploadItem.unitPrice
                             }
@@ -170,29 +179,39 @@ struct UploadContentView: View {
                     } else {
                         
                         Text("No inventory")
+                            
+                        let remarks = self.remarks
+                        let qty = self.qty ?? nextUploadItem.qty
+                        let unitPrice = self.unitPrice ?? {
+                            if (nextUploadItem.unitPrice ?? 0) > 0 {
+                                return nextUploadItem.unitPrice
+                            }
+                            return nil
+                        }()
                         
-                        if let unitPrice = nextUploadItem.unitPrice, unitPrice > 0 {
+                        VStack(alignment: .leading) {
                             
-                            let remarks = ""
-                            let qty = nextUploadItem.qty
+                            Text("Will create inventory with:").font(.title3)
                             
-                            VStack(alignment: .leading) {
-                                
-                                Text("Will create inventory with:").font(.title3)
-                                
-                                HStack {
-                                    Text("Remarks:")
-                                    Text(remarks)
-                                }
-                                HStack {
-                                    Text("Qty:")
-                                    Text(qty, format: .number)
-                                }
-                                HStack {
-                                    Text("PU:")
+                            HStack {
+                                Text("Remarks:")
+                                Text(remarks)
+                            }
+                            HStack {
+                                Text("Qty:")
+                                Text(qty, format: .number)
+                            }
+                            HStack {
+                                Text("PU:")
+                                if let unitPrice = unitPrice {
                                     Text(unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                                } else {
+                                    Text("INVALID")
                                 }
                             }
+                        }
+                        
+                        if let unitPrice = unitPrice {
                             
                             Button {
                                 
@@ -216,6 +235,15 @@ struct UploadContentView: View {
                             
                             Text("cannot create inventory, invalid unitPrice")
                         }
+                    }
+                    
+                    Form {
+                        
+                        TextField("Qty", value: $qty, format: .number)
+                        
+                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                        
+                        TextField("Remarks", text: $remarks)
                     }
                 }
             }
