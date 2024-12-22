@@ -135,9 +135,9 @@ struct UploadContentView: View {
                             Task {
                                 await appController.updateInventory(
                                     id: inventoryItem.id,
-                                    addQuantity: self.qty,
-                                    unitPrice: self.unitPrice != 0 ? self.unitPrice : nil,
-                                    remarks: self.remarks.isEmpty ? nil : self.remarks
+                                    addQuantity: nextUploadItem.qty,
+                                    unitPrice: nextUploadItem.unitPrice,
+                                    remarks: nextUploadItem.remarks
                                 )
                             }
                         } label: {
@@ -170,42 +170,6 @@ struct UploadContentView: View {
                         } label: {
                             Text("Create inventory")
                         }
-                    }
-                    
-                    Form {
-                        
-                        Picker("Type", selection: $type) {
-                            
-                            ForEach(BrickLinkItemType.allCases, id: \.self) { type in
-                                
-                                Text(type.rawValue).tag(type)
-                            }
-                        }
-                        
-                        TextField("Ref", text: $ref)
-                        
-                        Picker("Color", selection: $colorId) {
-                            
-                            ForEach(appController.allColors) { color in
-                                
-                                Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
-                                    .tag(color.id)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        
-                        TextField("Qty", value: $qty, format: .number)
-                        
-                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                        
-                        Picker("Condition", selection: $condition) {
-                            
-                            Text("New").tag("N")
-                            Text("Used").tag("U")
-                        }
-                        
-                        TextField("Comment", text: $comment)
-                        TextField("Remarks", text: $remarks)
                     }
                 }
             }
