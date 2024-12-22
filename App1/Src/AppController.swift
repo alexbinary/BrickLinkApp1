@@ -706,13 +706,13 @@ class AppController: ObservableObject {
         unitPrice: Float,
         condition: String,
         description: String,
-        remarks: String? = nil
+        remarks: String
         
     ) async {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!)
         request.httpMethod = "POST"
-        var body = """
+        let body = """
             {
                 "item": {
                     "no": "\(ref)",
@@ -724,17 +724,8 @@ class AppController: ObservableObject {
                 "new_or_used": "\(condition)",
                 "is_retain": false,
                 "is_stock_room": false,
-                "description": "\(description)"
-            """
-        
-        if let remarks = remarks {
-         
-            body += """
-                ,"remarks": "\(remarks)"
-            """
-        }
-        
-        body += """
+                "description": "\(description)",
+                "remarks": "\(remarks)"
             }
             """
         request.httpBody = body.data(using: .utf8)

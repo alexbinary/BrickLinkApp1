@@ -12,6 +12,5 @@ struct UploadItem: Identifiable, Codable {
     let qty: Int
     let condition: String
     let comment: String
-    let remarks: String?
     let unitPrice: Float?
 }

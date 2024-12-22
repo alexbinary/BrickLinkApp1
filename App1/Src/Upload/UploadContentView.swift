@@ -64,10 +64,6 @@ struct UploadContentView: View {
                         
                         TableColumn("Comment", value: \.comment)
                         
-                        TableColumn("Remarks") { item in
-                            Text(item.remarks ?? "")
-                        }
-                        
                     } rows: {
                         
                         TableRow(nextUploadItem)
@@ -132,12 +128,15 @@ struct UploadContentView: View {
                         }
                         
                         Button {
+                            
+                            let remarks = ""
+                            
                             Task {
                                 await appController.updateInventory(
                                     id: inventoryItem.id,
                                     addQuantity: nextUploadItem.qty,
                                     unitPrice: nextUploadItem.unitPrice,
-                                    remarks: nextUploadItem.remarks
+                                    remarks: remarks
                                 )
                             }
                         } label: {
@@ -155,6 +154,8 @@ struct UploadContentView: View {
                                 return
                             }
                             
+                            let remarks = ""
+                            
                             Task {
                                 await appController.createInventory(
                                     ref: nextUploadItem.ref,
@@ -164,7 +165,7 @@ struct UploadContentView: View {
                                     unitPrice: unitPrice,
                                     condition: nextUploadItem.condition,
                                     description: nextUploadItem.comment,
-                                    remarks: nextUploadItem.remarks
+                                    remarks: remarks
                                 )
                             }
                         } label: {

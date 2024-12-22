@@ -14,7 +14,6 @@ struct UploadListView: View {
     @State var qty: Int = 1
     @State var condition: String = "U"
     @State var comment: String = ""
-    @State var remarks: String = ""
     @State var unitPrice: Float = 0
     
     
@@ -59,7 +58,6 @@ struct UploadListView: View {
                     }
                     
                     TextField("Comment", text: $comment)
-                    TextField("Remarks", text: $remarks)
                     
                     Button {
                         appController.addUploadItem(UploadItem(
@@ -69,7 +67,6 @@ struct UploadListView: View {
                             qty: qty,
                             condition: condition,
                             comment: comment,
-                            remarks: remarks,
                             unitPrice: unitPrice
                         ))
                     } label: {
@@ -109,10 +106,6 @@ struct UploadListView: View {
                 }
                 
                 TableColumn("Comment", value: \.comment)
-                
-                TableColumn("Remarks") { item in
-                    Text(item.remarks ?? "")
-                }
                 
                 TableColumn("Delete") { item in
                     Button {
