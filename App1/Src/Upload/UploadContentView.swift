@@ -140,16 +140,35 @@ struct UploadContentView: View {
                         
                         if let unitPrice = nextUploadItem.unitPrice, unitPrice > 0 {
                             
-                            Button {
+                            let remarks = ""
+                            let qty = nextUploadItem.qty
+                            
+                            VStack(alignment: .leading) {
                                 
-                                let remarks = ""
+                                Text("Will create inventory with:").font(.title3)
+                                
+                                HStack {
+                                    Text("Remarks:")
+                                    Text(remarks)
+                                }
+                                HStack {
+                                    Text("Qty:")
+                                    Text(qty, format: .number)
+                                }
+                                HStack {
+                                    Text("PU:")
+                                    Text(unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                                }
+                            }
+                            
+                            Button {
                                 
                                 Task {
                                     await appController.createInventory(
                                         ref: nextUploadItem.ref,
                                         type: nextUploadItem.type,
                                         colorId: nextUploadItem.colorId,
-                                        quantity: nextUploadItem.qty,
+                                        quantity: qty,
                                         unitPrice: unitPrice,
                                         condition: nextUploadItem.condition,
                                         description: nextUploadItem.comment,
