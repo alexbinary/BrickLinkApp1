@@ -138,29 +138,31 @@ struct UploadContentView: View {
                         
                         Text("No inventory")
                         
-                        Button {
+                        if let unitPrice = nextUploadItem.unitPrice, unitPrice > 0 {
                             
-                            guard let unitPrice = nextUploadItem.unitPrice, unitPrice > 0 else {
-                                print("trying to create inventory with unitPrice nil or <= 0, aborting")
-                                return
+                            Button {
+                                
+                                let remarks = ""
+                                
+                                Task {
+                                    await appController.createInventory(
+                                        ref: nextUploadItem.ref,
+                                        type: nextUploadItem.type,
+                                        colorId: nextUploadItem.colorId,
+                                        quantity: nextUploadItem.qty,
+                                        unitPrice: unitPrice,
+                                        condition: nextUploadItem.condition,
+                                        description: nextUploadItem.comment,
+                                        remarks: remarks
+                                    )
+                                }
+                            } label: {
+                                Text("Create inventory")
                             }
                             
-                            let remarks = ""
+                        } else {
                             
-                            Task {
-                                await appController.createInventory(
-                                    ref: nextUploadItem.ref,
-                                    type: nextUploadItem.type,
-                                    colorId: nextUploadItem.colorId,
-                                    quantity: nextUploadItem.qty,
-                                    unitPrice: unitPrice,
-                                    condition: nextUploadItem.condition,
-                                    description: nextUploadItem.comment,
-                                    remarks: remarks
-                                )
-                            }
-                        } label: {
-                            Text("Create inventory")
+                            Text("cannot create inventory, invalid unitPrice")
                         }
                     }
                 }
