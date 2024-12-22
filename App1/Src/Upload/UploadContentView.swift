@@ -10,15 +10,6 @@ struct UploadContentView: View {
     
     @State var inventoryItem: InventoryItem? = nil
     
-    @State var type: BrickLinkItemType = .part
-    @State var ref: String = ""
-    @State var colorId: LegoColor.ID = ""
-    @State var qty: Int = 1
-    @State var condition: String = "U"
-    @State var comment: String = ""
-    @State var remarks: String = ""
-    @State var unitPrice: Float = 0
-    
     
     var body: some View {
         
