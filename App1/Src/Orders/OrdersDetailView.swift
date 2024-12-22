@@ -38,6 +38,12 @@ struct OrdersDetailView: View {
                                         Text("Compta")
                                     }
                                     .tag(1)
+                                
+                                PickingDetailView(selectedOrderIds: [orderId])
+                                    .tabItem {
+                                        Text("Picking")
+                                    }
+                                    .tag(2)
                             }
                             
                             Spacer()
