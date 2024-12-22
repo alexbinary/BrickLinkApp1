@@ -118,15 +118,48 @@ struct UploadContentView: View {
                                 .frame(maxWidth: 100, maxHeight: 100)
                         }
                         
-                        Button {
+                        let remarks: String? = nil
+                        let qty = nextUploadItem.qty
+                        let unitPrice = {
+                            if (nextUploadItem.unitPrice ?? 0) > 0 {
+                                return nextUploadItem.unitPrice
+                            }
+                            return nil
+                        }()
+                        
+                        VStack(alignment: .leading) {
                             
-                            let remarks = ""
+                            Text("Will update inventory with:").font(.title3)
+                            
+                            HStack {
+                                Text("Remarks:")
+                                if let remarks = remarks {
+                                    Text(remarks)
+                                } else {
+                                    Text("UNCHANGED")
+                                }
+                            }
+                            HStack {
+                                Text("Qty:")
+                                Text(qty, format: .number)
+                            }
+                            HStack {
+                                Text("PU:")
+                                if let unitPrice = unitPrice {
+                                    Text(unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                                } else {
+                                    Text("UNCHANGED")
+                                }
+                            }
+                        }
+                        
+                        Button {
                             
                             Task {
                                 await appController.updateInventory(
                                     id: inventoryItem.id,
-                                    addQuantity: nextUploadItem.qty,
-                                    unitPrice: nextUploadItem.unitPrice,
+                                    addQuantity: qty,
+                                    unitPrice: unitPrice,
                                     remarks: remarks
                                 )
                             }
