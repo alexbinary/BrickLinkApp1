@@ -149,16 +149,22 @@ struct UploadContentView: View {
                         Text("No inventory")
                         
                         Button {
+                            
+                            guard let unitPrice = nextUploadItem.unitPrice, unitPrice > 0 else {
+                                print("trying to create inventory with unitPrice nil or <= 0, aborting")
+                                return
+                            }
+                            
                             Task {
                                 await appController.createInventory(
-                                    ref: self.ref,
-                                    type: self.type,
-                                    colorId: self.colorId,
-                                    quantity: self.qty,
-                                    unitPrice: self.unitPrice,
-                                    condition: self.condition,
-                                    description: self.comment,
-                                    remarks: self.remarks
+                                    ref: nextUploadItem.ref,
+                                    type: nextUploadItem.type,
+                                    colorId: nextUploadItem.colorId,
+                                    quantity: nextUploadItem.qty,
+                                    unitPrice: unitPrice,
+                                    condition: nextUploadItem.condition,
+                                    description: nextUploadItem.comment,
+                                    remarks: nextUploadItem.remarks
                                 )
                             }
                         } label: {
