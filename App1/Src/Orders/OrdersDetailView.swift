@@ -12,61 +12,62 @@ struct OrdersDetailView: View {
     
     
     var body: some View {
-        
-        ScrollView {
             
-            VStack {
+        VStack {
+            
+            if let orderId = selectedOrderId {
                 
-                if let orderId = selectedOrderId {
+                if let order = appController.orderDetails(forOrderWithId: orderId) {
                     
-                    if let order = appController.orderDetails(forOrderWithId: orderId) {
+                    VStack(alignment: .leading, spacing: 12) {
                         
-                        VStack(alignment: .leading, spacing: 12) {
+                        TabView {
                             
-                            TabView {
-                                
+                            ScrollView {
                                 OrdersDetailDetailView(order: order)
-                                    .padding()
-                                    .tabItem {
-                                        Text("Details & Actions")
-                                    }
-                                    .tag(0)
-                                
-                                OrdersDetailComptaView(order: order)
-                                    .padding()
-                                    .tabItem {
-                                        Text("Compta")
-                                    }
-                                    .tag(1)
-                                
-                                PickingDetailView(selectedOrderIds: [orderId])
-                                    .tabItem {
-                                        Text("Picking")
-                                    }
-                                    .tag(2)
                             }
+                                .padding()
+                                .tabItem {
+                                    Text("Details & Actions")
+                                }
+                                .tag(0)
                             
-                            Spacer()
+                            ScrollView {
+                                PickingDetailView(selectedOrderIds: [orderId])
+                            }
+                                .tabItem {
+                                    Text("Picking")
+                                }
+                                .tag(1)
+                            
+                            ScrollView {
+                                OrdersDetailComptaView(order: order)
+                            }
+                                .padding()
+                                .tabItem {
+                                    Text("Compta")
+                                }
+                                .tag(2)
                         }
-                        
-                    } else {
-                        
-                        Text("loading order...")
                     }
                     
                 } else {
                     
-                    Text("select an order")
+                    Text("loading order...")
                 }
+                
+            } else {
+                
+                Text("select an order")
             }
-            .padding()
-            .task {
+        }
+        .padding()
+        .task {
+            await refreshOrder()
+        }
+        .onChange(of: selectedOrderId) { oldValue, newValue in
+            Task {
                 await refreshOrder()
-            }
-            .onChange(of: selectedOrderId) { oldValue, newValue in
-                Task {
-                    await refreshOrder()
-                }
             }
         }
     }

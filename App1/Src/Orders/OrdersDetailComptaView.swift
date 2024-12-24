@@ -99,8 +99,6 @@ struct OrdersDetailComptaView: View {
                 selectedTransactions: .constant([])
             )
             .frame(minHeight: 100)
-            
-            Divider()
         }
         .onAppear {
             
