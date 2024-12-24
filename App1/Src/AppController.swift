@@ -688,6 +688,7 @@ class AppController: ObservableObject {
                 inv.item.type == item.type
                 && inv.item.no == item.ref
                 && "\(inv.colorId)" == item.colorId
+                && inv.newOrUsed == item.condition
             }) {
                 return InventoryItem(fromBl: inv)
             }
