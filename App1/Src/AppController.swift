@@ -668,6 +668,134 @@ class AppController: ObservableObject {
     }
     
     
+    public func importUploadList(fromXml xml: String) {
+        
+        let parser = XMLParser(data: Data(xml.utf8))
+        let delegate = UploadListXMLParser()
+        parser.delegate = delegate
+        
+        let success = parser.parse()
+        guard success else {
+            print("parsing failed")
+            return
+        }
+        
+        var uploadItems = dataStore.uploadItems
+        uploadItems.append(contentsOf: delegate.uploadItems)
+        
+        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    class UploadListXMLParser : NSObject, XMLParserDelegate {
+
+        var uploadItems: [UploadItem] = []
+        
+        var ref: String = ""
+        var colorId: String = ""
+        var type: String = ""
+        var qty: String = ""
+        var unitPrice: String = ""
+        var condition: String = ""
+        
+        var currentElementName: String? = nil
+        
+        func parser(
+            _ parser: XMLParser,
+            didStartElement elementName: String,
+            namespaceURI: String?,
+            qualifiedName qName: String?,
+            attributes attributeDict: [String : String] = [:]
+        ) {
+            self.currentElementName = elementName
+        }
+        
+        func parser(
+            _ parser: XMLParser,
+            didEndElement elementName: String,
+            namespaceURI: String?,
+            qualifiedName qName: String?
+        ) {
+            self.currentElementName = nil
+            
+            if elementName == "ITEM" {
+                
+                let ref: String = self.ref
+                let type: BrickLinkItemType? = {
+                    if self.type == "P" {
+                        return BrickLinkItemType.part
+                    }
+                    return nil
+                }()
+                let colorId = self.colorId
+                let qty = Int(self.qty)
+                let condition = self.condition
+                let unitPrice = Float(self.unitPrice)
+                
+                defer {
+                    self.ref = ""
+                    self.colorId = ""
+                    self.type = ""
+                    self.qty = ""
+                    self.unitPrice = ""
+                    self.condition = ""
+                }
+                
+                guard let type = type else {
+                    print("could not parse type: \(self.type)")
+                    return
+                }
+                guard let qty = qty else {
+                    print("could not parse qty: \(self.qty)")
+                    return
+                }
+                guard let unitPrice = unitPrice else {
+                    print("could not parse price: \(self.unitPrice)")
+                    return
+                }
+                    
+                self.uploadItems.append(UploadItem(
+                    type: type,
+                    ref: ref,
+                    colorId: colorId,
+                    qty: qty,
+                    condition: condition,
+                    comment: "",
+                    unitPrice: unitPrice
+                ))
+            }
+        }
+        
+        func parser(
+            _ parser: XMLParser,
+            foundCharacters string: String
+        ) {
+            if let elementName = self.currentElementName {
+                
+                switch elementName {
+                case "ITEMID":
+                    ref = string
+                case "COLOR":
+                    colorId = string
+                case "ITEMTYPE":
+                    type = string
+                case "QTY":
+                    qty = string
+                case "PRICE":
+                    unitPrice = string
+                case "CONDITION":
+                    condition = string
+                default:
+                    break
+                }
+            }
+        }
+    }
+    
+    
     
     // MARK: - Inventory
     

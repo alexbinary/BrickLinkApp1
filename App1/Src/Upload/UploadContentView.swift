@@ -65,7 +65,7 @@ struct UploadContentView: View {
                     
                     TableRow(nextUploadItem)
                 }
-                .frame(minHeight: 100)
+                .frame(minHeight: 100, maxHeight: 100)
                 
                 if let inventoryResult = inventoryResult {
                     
