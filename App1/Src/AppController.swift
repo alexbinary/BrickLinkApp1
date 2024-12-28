@@ -822,6 +822,7 @@ class AppController: ObservableObject {
                 && inv.item.no == item.ref
                 && "\(inv.colorId)" == item.colorId
                 && inv.newOrUsed == item.condition
+                && (inv.description ?? "") == item.comment
             }) {
                 return InventoryItem(fromBl: inv)
             }
