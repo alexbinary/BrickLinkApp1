@@ -700,6 +700,7 @@ class AppController: ObservableObject {
         var qty: String = ""
         var unitPrice: String = ""
         var condition: String = ""
+        var comment: String = ""
         
         var currentElementName: String? = nil
         
@@ -734,6 +735,7 @@ class AppController: ObservableObject {
                 let qty = Int(self.qty)
                 let condition = self.condition
                 let unitPrice = Float(self.unitPrice)
+                let comment = self.comment
                 
                 defer {
                     self.ref = ""
@@ -742,6 +744,7 @@ class AppController: ObservableObject {
                     self.qty = ""
                     self.unitPrice = ""
                     self.condition = ""
+                    self.comment = ""
                 }
                 
                 guard let type = type else {
@@ -763,7 +766,7 @@ class AppController: ObservableObject {
                     colorId: colorId,
                     qty: qty,
                     condition: condition,
-                    comment: "",
+                    comment: comment,
                     unitPrice: unitPrice
                 ))
             }
@@ -788,6 +791,8 @@ class AppController: ObservableObject {
                     unitPrice = string
                 case "CONDITION":
                     condition = string
+                case "DESCRIPTION":
+                    comment = string
                 default:
                     break
                 }
