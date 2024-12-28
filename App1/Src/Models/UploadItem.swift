@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct UploadItem: Identifiable, Codable {
+struct UploadItem: Identifiable, Codable, Equatable {
     
     var id = UUID()
     let type: BrickLinkItemType

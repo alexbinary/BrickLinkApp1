@@ -18,9 +18,13 @@ struct UploadContentView: View {
     
     @State var inventoryResult: InventoryResult? = nil
     
-    @State var qty: Int? = nil
-    @State var remarks: String = ""
-    @State var unitPrice: Float? = nil
+    @State var editQtyCreate: Int? = nil
+    @State var editRemarksCreate: String = ""
+    @State var editUnitPriceCreate: Float? = nil
+    
+    @State var editQtyUpdate: Int? = nil
+    @State var editRemarksUpdate: String = ""
+    @State var editUnitPriceUpdate: Float? = nil
     
     
     var body: some View {
@@ -29,7 +33,7 @@ struct UploadContentView: View {
             
             if let nextUploadItem = nextUploadItem {
                 
-                HeaderTitleView(label: "􀈧 Inventory")
+                HeaderTitleView(label: "􀈧 Upload item")
                 
                 Table(of: UploadItem.self) {
                     
@@ -55,7 +59,7 @@ struct UploadContentView: View {
                     
                     TableColumn("Price") { item in
                         if let price = item.unitPrice {
-                            Text(price, format: .currency(code: "EUR").presentation(.isoCode))
+                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         }
                     }
                     
@@ -70,228 +74,245 @@ struct UploadContentView: View {
                 if let inventoryResult = inventoryResult {
                     
                     switch inventoryResult {
-                     
+                        
                     case .found(let inventoryItem):
-                        
-                        HStack {
-                            
-                            VStack(alignment: .leading) {
-                                
-                                HStack {
-                                    Text("ID:")
-                                    Text(inventoryItem.id)
-                                }
-                                HStack {
-                                    Text("Ref:")
-                                    Text(inventoryItem.ref)
-                                }
-                                HStack {
-                                    Text("Name:")
-                                    Text(inventoryItem.name)
-                                }
-                                HStack {
-                                    Text("Color:")
-                                    appController.color(forLegoColorId: inventoryItem.colorId).frame(width: 18, height: 18)
-                                    Text(appController.colorName(forLegoColorId: inventoryItem.colorId))
-                                }
-                                HStack {
-                                    Text("Condition:")
-                                    Text(inventoryItem.condition)
-                                }
-                                HStack {
-                                    Text("Description:")
-                                    Text(inventoryItem.description)
-                                }
-                                HStack {
-                                    Text("Remarks:")
-                                    Text(inventoryItem.remarks)
-                                }
-                                HStack {
-                                    Text("Qty:")
-                                    Text(inventoryItem.quantity, format: .number)
-                                }
-                                HStack {
-                                    Text("PU:")
-                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                                }
-                            }
-                            
-                            AsyncImage(url: appController.imageUrl(forItemType: inventoryItem.type, ref: inventoryItem.ref, colorId: inventoryItem.colorId))
-                                .frame(maxWidth: 100, maxHeight: 100)
-                        }
-                        
-                        let remarks: String? = {
-                            if self.remarks.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
-                                return self.remarks
-                            }
-                            return nil
-                        }()
-                        let qty = self.qty ?? nextUploadItem.qty
-                        let unitPrice = self.unitPrice ?? {
-                            if (nextUploadItem.unitPrice ?? 0) > 0 {
-                                return nextUploadItem.unitPrice
-                            }
-                            return nil
-                        }()
                         
                         VStack(alignment: .leading) {
                             
-                            Text("Will update inventory with:").font(.title3)
-                            
-                            HStack {
-                                Text("Remarks:")
-                                if let remarks = remarks {
-                                    Text(remarks)
-                                } else {
-                                    Text("UNCHANGED")
-                                }
-                            }
-                            HStack {
-                                Text("ΔQty:")
-                                Text(qty, format: .number)
-                            }
-                            HStack {
-                                Text("PU:")
-                                if let unitPrice = unitPrice {
-                                    Text(unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                                } else {
-                                    Text("UNCHANGED")
-                                }
-                            }
-                        }
+                            Text("Found inventory")
                         
-                        Button {
-                            
-                            Task {
-                                await appController.updateInventory(
-                                    id: inventoryItem.id,
-                                    addQuantity: qty,
-                                    unitPrice: unitPrice,
-                                    remarks: remarks
-                                )
+                            let qty = self.editQtyUpdate
+                            let unitPrice = self.editUnitPriceUpdate
+                            let remarks: String? = {
+                                let trimmed = self.editRemarksUpdate.trimmingCharacters(in: .whitespacesAndNewlines)
+                                if trimmed == "" {
+                                    return nil
+                                } else {
+                                    return trimmed
+                                }
+                            }()
+                        
+                            HStack {
+                                Text("Inventory update").font(.title3)
+                                Text("#\(inventoryItem.id)")
                             }
-                        } label: {
-                            Text("Update inventory")
+                                
+                            Grid(alignment: .leading) {
+                                
+                                GridRow {
+                                    Text("Qty").gridColumnAlignment(.trailing)
+                                    TextField("Qty", value: $editQtyUpdate, format: .number)
+                                    
+                                    HStack {
+                                        Text("Current:")
+                                        Text("\(inventoryItem.quantity)")
+                                    }
+                                    
+                                    Button {
+                                        self.editQtyUpdate = nextUploadItem.qty
+                                    } label: {
+                                        Text("Reset")
+                                    }
+                                }
+                                
+                                GridRow {
+                                    Text("Price").gridColumnAlignment(.trailing)
+                                    TextField("Price", value: $editUnitPriceUpdate, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                    
+                                    HStack {
+                                        Text("Current:")
+                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                        Button {
+                                            self.editUnitPriceUpdate = inventoryItem.unitPrice
+                                        } label: {
+                                            Text("Reset to current")
+                                        }
+                                    }
+                                    
+                                    Button {
+                                        self.editUnitPriceUpdate = nextUploadItem.unitPrice
+                                    } label: {
+                                        Text("Reset")
+                                    }
+                                }
+                                
+                                GridRow {
+                                    Text("Remarks").gridColumnAlignment(.trailing)
+                                    TextField("Remarks", text: $editRemarksUpdate, prompt: Text("Required"))
+                                    
+                                    Color.clear.frame(width: 2, height: 2)
+                                    
+                                    Button {
+                                        self.editRemarksUpdate = inventoryItem.remarks
+                                    } label: {
+                                        Text("Reset")
+                                    }
+                                }
+                                
+                                GridRow {
+                                    
+                                    Color.clear.frame(width: 2, height: 2)
+                                    
+                                    HStack {
+                                        Button {
+                                            Task {
+                                                await appController.updateInventory(
+                                                    id: inventoryItem.id,
+                                                    addQuantity: qty!,
+                                                    unitPrice: unitPrice!,
+                                                    remarks: remarks!
+                                                )
+                                                appController.deleteUploadItem(nextUploadItem)
+                                                await self.pullInventory()
+                                            }
+                                        } label: {
+                                            Text("Update inventory")
+                                        }
+                                        .disabled(qty == nil || unitPrice == nil || remarks == nil)
+                                        
+                                        let errors = {
+                                            
+                                            var errs = [String]()
+                                            
+                                            if qty == nil {
+                                                
+                                                errs.append("invalid qty")
+                                            }
+                                            if unitPrice == nil {
+                                                
+                                                errs.append("invalid unitPrice")
+                                            }
+                                            if remarks == nil {
+                                                
+                                                errs.append("missing remarks")
+                                            }
+                                            
+                                            return errs
+                                        }()
+                                        
+                                        if !errors.isEmpty {
+                                            
+                                            Text(errors.joined(separator: "; "))
+                                                .foregroundStyle(.red)
+                                        }
+                                        
+                                    }.gridCellColumns(2)
+                                }
+                            }
                         }
                         
                     case .notFound:
                         
-                        Text("No inventory")
-                        
-                        let remarks: String? = {
-                            if self.remarks.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
-                                return self.remarks
-                            }
-                            return nil
-                        }()
-                        let qty = self.qty ?? nextUploadItem.qty
-                        let unitPrice = self.unitPrice ?? {
-                            if (nextUploadItem.unitPrice ?? 0) > 0 {
-                                return nextUploadItem.unitPrice
-                            }
-                            return nil
-                        }()
-                        
                         VStack(alignment: .leading) {
                             
-                            Text("Will create inventory with:").font(.title3)
+                            Text("No existing inventory found")
                             
-                            HStack {
-                                Text("Remarks:")
-                                if let remarks = remarks {
-                                    Text(remarks)
+                            let qty = self.editQtyCreate
+                            let unitPrice = self.editUnitPriceCreate
+                            let remarks: String? = {
+                                let trimmed = self.editRemarksCreate.trimmingCharacters(in: .whitespacesAndNewlines)
+                                if trimmed == "" {
+                                    return nil
                                 } else {
-                                    Text("MISSING")
+                                    return trimmed
                                 }
-                            }
-                            HStack {
-                                Text("Qty:")
-                                Text(qty, format: .number)
-                            }
-                            HStack {
-                                Text("PU:")
-                                if let unitPrice = unitPrice {
-                                    Text(unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                                } else {
-                                    Text("INVALID")
-                                }
-                            }
-                        }
-                        
-                        if remarks == nil {
+                            }()
                             
-                            Text("cannot create inventory, missing remarks")
+                            Text("New inventory").font(.title3)
                             
-                        } else if unitPrice == nil {
-                            
-                            Text("cannot create inventory, invalid unitPrice")
-                            
-                        } else {
-                            
-                            Button {
+                            Form {
                                 
-                                Task {
-                                    await appController.createInventory(
-                                        ref: nextUploadItem.ref,
-                                        type: nextUploadItem.type,
-                                        colorId: nextUploadItem.colorId,
-                                        quantity: qty,
-                                        unitPrice: unitPrice!,
-                                        condition: nextUploadItem.condition,
-                                        description: nextUploadItem.comment,
-                                        remarks: remarks!
-                                    )
+                                HStack {
+                                    TextField("Qty", value: $editQtyCreate, format: .number)
+                                    Button {
+                                        self.editQtyCreate = nextUploadItem.qty
+                                    } label: {
+                                        Text("Reset")
+                                    }
                                 }
-                            } label: {
-                                Text("Create inventory")
+                                
+                                HStack {
+                                    TextField("Price", value: $editUnitPriceCreate, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                    Button {
+                                        self.editUnitPriceCreate = nextUploadItem.unitPrice
+                                    } label: {
+                                        Text("Reset")
+                                    }
+                                }
+                                
+                                TextField("Remarks", text: $editRemarksCreate, prompt: Text("Required"))
+                                
+                                HStack {
+                                    
+                                    Button {
+                                        Task {
+                                            await appController.createInventory(
+                                                ref: nextUploadItem.ref,
+                                                type: nextUploadItem.type,
+                                                colorId: nextUploadItem.colorId,
+                                                quantity: qty!,
+                                                unitPrice: unitPrice!,
+                                                condition: nextUploadItem.condition,
+                                                description: nextUploadItem.comment,
+                                                remarks: remarks!
+                                            )
+                                            appController.deleteUploadItem(nextUploadItem)
+                                            await self.pullInventory()
+                                        }
+                                    } label: {
+                                        Text("Create inventory")
+                                    }
+                                    .disabled(qty == nil || unitPrice == nil || remarks == nil)
+                                    
+                                    let errors = {
+                                    
+                                        var errs = [String]()
+                                        
+                                        if qty == nil {
+                                            
+                                            errs.append("invalid qty")
+                                        }
+                                        if unitPrice == nil {
+                                            
+                                            errs.append("invalid unitPrice")
+                                        }
+                                        if remarks == nil {
+                                            
+                                            errs.append("missing remarks")
+                                        }
+                                        
+                                        return errs
+                                    }()
+                                    
+                                    if !errors.isEmpty {
+                                        
+                                        Text(errors.joined(separator: "; "))
+                                            .foregroundStyle(.red)
+                                    }
+                                }
                             }
                         }
-                    }
-                    
-                    Form {
-                        
-                        TextField("Qty", value: $qty, format: .number)
-                        
-                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                        
-                        TextField("Remarks", text: $remarks)
                     }
                     
                 } else {
                     
-                    Button {
-                        Task {
-                            let item = await appController.getInventory(for: nextUploadItem)
-                            if let item = item {
-                                self.inventoryResult = .found(item)
-                            } else {
-                                self.inventoryResult = .notFound
-                            }
-                        }
-                    } label: {
-                        Text("Pull inventory")
-                    }
-                }
-                
-                Button {
-                    
-                    Task {
-                        appController.deleteUploadItem(nextUploadItem)
-                        
-                        self.inventoryResult = nil
-                        
-                        self.qty = nil
-                        self.remarks = ""
-                        self.unitPrice = nil
-                    }
-                } label: {
-                    Text("Done")
+                    Text("Loading inventory...")
                 }
             }
             
             Divider()
             
             UploadListView()
+        }
+        .onAppear {
+            Task {
+                await self.pullInventory()
+            }
+        }
+        .onChange(of: nextUploadItem) {
+            Task {
+                await self.pullInventory()
+            }
         }
         .padding()
         .navigationTitle("Upload")
@@ -301,5 +322,30 @@ struct UploadContentView: View {
     var nextUploadItem: UploadItem? {
         
         return appController.uploadItems.first
+    }
+    
+    
+    func pullInventory() async {
+        
+        guard let nextUploadItem = nextUploadItem else { return }
+        
+        self.inventoryResult = nil
+        
+        if let item = await appController.getInventory(for: nextUploadItem) {
+            
+            self.inventoryResult = .found(item)
+            
+            self.editQtyUpdate = nextUploadItem.qty
+            self.editUnitPriceUpdate = nextUploadItem.unitPrice
+            self.editRemarksUpdate = item.remarks
+            
+        } else {
+            
+            self.inventoryResult = .notFound
+            
+            self.editQtyCreate = nextUploadItem.qty
+            self.editUnitPriceCreate = nextUploadItem.unitPrice
+            self.editRemarksCreate = ""
+        }
     }
 }

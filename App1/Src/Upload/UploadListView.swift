@@ -69,7 +69,7 @@ struct UploadListView: View {
                         
                         TextField("Qty", value: $qty, format: .number)
                         
-                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         
                         Picker("Condition", selection: $condition) {
                             
@@ -140,7 +140,6 @@ struct UploadListView: View {
                     }
                 }
             }
-            .frame(minHeight: 400)
         }
     }
 }
