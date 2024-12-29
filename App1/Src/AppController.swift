@@ -832,6 +832,30 @@ class AppController: ObservableObject {
     }
     
     
+    public func getInventoriesForAllColors(for item: UploadItem) async -> [InventoryItem] {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(item.type.rawValue)")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<[BrickLinkInventoryItem]> = data.decode()
+        if let inventories = decoded.data {
+            
+            return inventories.filter { inv in
+                
+                inv.item.type == item.type
+                && inv.item.no == item.ref
+                && inv.newOrUsed == item.condition
+                
+            } .map { InventoryItem(fromBl: $0) }
+        }
+        
+        return []
+    }
+    
+    
     public func createInventory(
         
         ref: String,

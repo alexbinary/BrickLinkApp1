@@ -17,6 +17,7 @@ struct UploadContentView: View {
     @EnvironmentObject var appController: AppController
     
     @State var inventoryResult: InventoryResult? = nil
+    @State var relatedInventories: [InventoryItem]? = nil
     
     @State var editQtyCreate: Int? = nil
     @State var editRemarksCreate: String = ""
@@ -242,6 +243,33 @@ struct UploadContentView: View {
                                 
                                 TextField("Remarks", text: $editRemarksCreate, prompt: Text("Required"))
                                 
+                                if let relatedInventories = self.relatedInventories {
+                                    
+                                    if relatedInventories.isEmpty {
+                                        
+                                        Text("no related inventory found")
+                                        
+                                    } else {
+                                        
+                                        let remarks = relatedInventories.map { $0.remarks }
+                                            .unique .sorted()
+                                        
+                                        HStack {
+                                            ForEach(remarks, id: \.self) { rem in
+                                                Button {
+                                                    self.editRemarksCreate = rem
+                                                } label: {
+                                                    Text(rem)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                } else {
+                                    
+                                    Text("Loading related inventories...")
+                                }
+                                
                                 HStack {
                                     
                                     Button {
@@ -330,6 +358,7 @@ struct UploadContentView: View {
         guard let nextUploadItem = nextUploadItem else { return }
         
         self.inventoryResult = nil
+        self.relatedInventories = nil
         
         if let item = await appController.getInventory(for: nextUploadItem) {
             
@@ -346,6 +375,8 @@ struct UploadContentView: View {
             self.editQtyCreate = nextUploadItem.qty
             self.editUnitPriceCreate = nextUploadItem.unitPrice
             self.editRemarksCreate = ""
+            
+            self.relatedInventories = await appController.getInventoriesForAllColors(for: nextUploadItem)
         }
     }
 }
