@@ -95,7 +95,7 @@ struct UploadContentView: View {
                         
                             HStack {
                                 Text("Inventory update").font(.title3)
-                                Text("#\(inventoryItem.id)")
+                                Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
                             }
                                 
                             Grid(alignment: .leading) {
