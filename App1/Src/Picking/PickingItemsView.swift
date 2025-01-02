@@ -10,7 +10,6 @@ struct PickingItemsView: View {
     @EnvironmentObject var appController: AppController
     
     let orderId: OrderSummary.ID
-    let orderItems: [OrderItem]
     
     
     var body: some View {
@@ -313,6 +312,9 @@ struct PickingItemsView: View {
         }
     }
     
+    var orderItems: [OrderItem] {
+        appController.orderItems(forOrderWithId: orderId)
+    }
     
     var pickedItems: [OrderItem.ID] {
         appController.pickedItems(forOrderWithId: orderId)

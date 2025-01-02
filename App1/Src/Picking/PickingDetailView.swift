@@ -162,11 +162,9 @@ struct PickingDetailView: View {
         
         VStack {
             
-            let orderItems = appController.orderItems(forOrderWithId: orderId)
-            
             VStack(alignment: .leading, spacing: 12) {
                 
-                PickingItemsView(orderId: orderId, orderItems: orderItems)
+                PickingItemsView(orderId: orderId)
                 
                 Divider()
                 
