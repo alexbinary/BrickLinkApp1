@@ -36,35 +36,35 @@ let shippingCostFrance = [
     
     ShippingCostTableRow(
         minWeight: 0, maxWeight: 20,
-        priceLetter: 1.79, priceParcel: 4.99
+        priceLetter: 1.89, priceParcel: 5.25
     ),
     ShippingCostTableRow(
         minWeight: 20, maxWeight: 100,
-        priceLetter: 3.08, priceParcel: 4.99
+        priceLetter: 3.28, priceParcel: 5.25
     ),
     ShippingCostTableRow(
         minWeight: 100, maxWeight: 250,
-        priceLetter: 4.80, priceParcel: 4.99
+        priceLetter: 5.22, priceParcel: 5.25
     ),
     ShippingCostTableRow(
         minWeight: 250, maxWeight: 500,
-        priceLetter: 6.80, priceParcel: 6.99
+        priceLetter: 7.20, priceParcel: 7.35
     ),
     ShippingCostTableRow(
         minWeight: 500, maxWeight: 750,
-        priceLetter: 8.20, priceParcel: 8.10
+        priceLetter: 8.90, priceParcel: 8.65
     ),
     ShippingCostTableRow(
         minWeight: 750, maxWeight: 1000,
-        priceLetter: 8.20, priceParcel: 8.80
+        priceLetter: 8.90, priceParcel: 9.40
     ),
     ShippingCostTableRow(
         minWeight: 1000, maxWeight: 2000,
-        priceLetter: 9.79, priceParcel: 10.15
+        priceLetter: 10.75, priceParcel: 10.70
     ),
     ShippingCostTableRow(
         minWeight: 2000, maxWeight: 5000,
-        priceLetter: nil, priceParcel: 15.60
+        priceLetter: nil, priceParcel: 16.60
     ),
 ]
 
@@ -72,35 +72,35 @@ let shippingCostEurope = [
     
     ShippingCostTableRow(
         minWeight: 0, maxWeight: 20,
-        priceLetter: 4.76, priceParcel: 14.25
+        priceLetter: 4.90, priceParcel: 14.85
     ),
     ShippingCostTableRow(
         minWeight: 20, maxWeight: 100,
-        priceLetter: 6.95, priceParcel: 14.25
+        priceLetter: 7.30, priceParcel: 14.85
     ),
     ShippingCostTableRow(
         minWeight: 100, maxWeight: 250,
-        priceLetter: 12.65, priceParcel: 14.25
+        priceLetter: 13.60, priceParcel: 14.85
     ),
     ShippingCostTableRow(
         minWeight: 250, maxWeight: 500,
-        priceLetter: 17.35, priceParcel: 14.25
+        priceLetter: 18.30, priceParcel: 14.85
     ),
     ShippingCostTableRow(
         minWeight: 500, maxWeight: 750,
-        priceLetter: 29.30, priceParcel: 17.60
+        priceLetter: 32.30, priceParcel: 18.45
     ),
     ShippingCostTableRow(
         minWeight: 750, maxWeight: 1000,
-        priceLetter: 29.30, priceParcel: 17.60
+        priceLetter: 32.30, priceParcel: 18.45
     ),
     ShippingCostTableRow(
         minWeight: 1000, maxWeight: 2000,
-        priceLetter: 29.30, priceParcel: 19.95
+        priceLetter: 32.30, priceParcel: 20.90
     ),
     ShippingCostTableRow(
         minWeight: 2000, maxWeight: 5000,
-        priceLetter: nil, priceParcel: 25.50
+        priceLetter: nil, priceParcel: 26.80
     ),
 ]
 
@@ -108,35 +108,35 @@ let shippingCostWorld = [
     
     ShippingCostTableRow(
         minWeight: 0, maxWeight: 20,
-        priceLetter: 4.76, priceParcelZB: 21.40, priceParcelZC: 31.60
+        priceLetter: 4.90, priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
     ShippingCostTableRow(
         minWeight: 20, maxWeight: 100,
-        priceLetter: 6.95, priceParcelZB: 21.40, priceParcelZC: 31.60
+        priceLetter: 7.30, priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
     ShippingCostTableRow(
         minWeight: 100, maxWeight: 250,
-        priceLetter: 12.65, priceParcelZB: 21.40, priceParcelZC: 31.60
+        priceLetter: 13.60, priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
     ShippingCostTableRow(
         minWeight: 250, maxWeight: 500,
-        priceLetter: 17.35, priceParcelZB: 21.40, priceParcelZC: 31.60
+        priceLetter: 18.30, priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
     ShippingCostTableRow(
         minWeight: 500, maxWeight: 750,
-        priceLetter: 29.30, priceParcelZB: 25.55, priceParcelZC: 35.15
+        priceLetter: 32.30, priceParcelZB: 27.10, priceParcelZC: 37.30
     ),
     ShippingCostTableRow(
         minWeight: 750, maxWeight: 1000,
-        priceLetter: 29.30, priceParcelZB: 25.55, priceParcelZC: 35.15
+        priceLetter: 32.30, priceParcelZB: 29.65, priceParcelZC: 51.40
     ),
     ShippingCostTableRow(
         minWeight: 1000, maxWeight: 2000,
-        priceLetter: 29.30, priceParcelZB: 27.95, priceParcelZC: 48.50
+        priceLetter: 32.30, priceParcelZB: 29.65, priceParcelZC: 51.40
     ),
     ShippingCostTableRow(
         minWeight: 2000, maxWeight: 5000,
-        priceLetter: nil, priceParcelZB: 35.90, priceParcelZC: 70.80
+        priceLetter: nil, priceParcelZB: 38.00, priceParcelZC: 75.00
     ),
 ]
 
@@ -155,7 +155,7 @@ struct ShippingCostView: View {
         Text("Shipping cost").font(.title2)
         
         HStack {
-            Text("Tarifs La Poste 2024 - ")
+            Text("Tarifs La Poste 2025 - ")
             
             if order.shippingMethodId == shippingMethodId_France {
                 Text("France")

@@ -49,10 +49,10 @@ struct SelectedAffranchissement {
 }
 
 
-let priceTimbreFrance: Float = 1.29
+let priceTimbreFrance: Float = 1.39
 let priceTrackingFrance: Float = 0.50
 
-let priceTimbreWorld: Float = 1.96
+let priceTimbreWorld: Float = 2.10
 let priceTrackingWorld: Float = 2.80
 
 
@@ -62,43 +62,43 @@ let affranchissementValuesFrance = [
         minWeight: 0, maxWeight: 20,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 1.79, timbresParMultiples: 1
+        tarifRef: 1.89, timbresParMultiples: 1
     ),
     AffranchissementTableRow(
         minWeight: 20, maxWeight: 100,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 3.08, timbresParMultiples: 2
+        tarifRef: 3.28, timbresParMultiples: 2
     ),
     AffranchissementTableRow(
         minWeight: 100, maxWeight: 250,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 4.80, timbresParMultiples: 5
+        tarifRef: 5.22, timbresParMultiples: nil
     ),
     AffranchissementTableRow(
         minWeight: 250, maxWeight: 500,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 6.80, timbresParMultiples: 8
+        tarifRef: 7.20, timbresParMultiples: nil
     ),
     AffranchissementTableRow(
         minWeight: 500, maxWeight: 750,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 8.20, timbresParMultiples: nil
+        tarifRef: 8.90, timbresParMultiples: nil
     ),
     AffranchissementTableRow(
         minWeight: 750, maxWeight: 1000,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 8.20, timbresParMultiples: nil
+        tarifRef: 8.90, timbresParMultiples: nil
     ),
     AffranchissementTableRow(
         minWeight: 1000, maxWeight: 2000,
         priceTimbre: priceTimbreFrance,
         priceTracking: priceTrackingFrance,
-        tarifRef: 9.79, timbresParMultiples: nil
+        tarifRef: 10.75, timbresParMultiples: nil
     ),
 ]
 
@@ -108,43 +108,43 @@ let affranchissementValuesWorld = [
         minWeight: 0, maxWeight: 20,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 4.76, timbresParMultiples: 1
+        tarifRef: 4.90, timbresParMultiples: 1
     ),
     AffranchissementTableRow(
         minWeight: 20, maxWeight: 100,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 6.95, timbresParMultiples: 2
+        tarifRef: 7.30, timbresParMultiples: 2
     ),
     AffranchissementTableRow(
         minWeight: 100, maxWeight: 250,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 12.65, timbresParMultiples: 5
+        tarifRef: 13.60, timbresParMultiples: 5
     ),
     AffranchissementTableRow(
         minWeight: 250, maxWeight: 500,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 17.35, timbresParMultiples: 8
+        tarifRef: 18.30, timbresParMultiples: 8
     ),
     AffranchissementTableRow(
         minWeight: 500, maxWeight: 750,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 29.30, timbresParMultiples: nil
+        tarifRef: 32.30, timbresParMultiples: nil
     ),
     AffranchissementTableRow(
         minWeight: 750, maxWeight: 1000,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 29.30, timbresParMultiples: nil
+        tarifRef: 32.30, timbresParMultiples: nil
     ),
     AffranchissementTableRow(
         minWeight: 1000, maxWeight: 2000,
         priceTimbre: priceTimbreWorld,
         priceTracking: priceTrackingWorld,
-        tarifRef: 29.30, timbresParMultiples: nil
+        tarifRef: 32.30, timbresParMultiples: nil
     ),
 ]
 
