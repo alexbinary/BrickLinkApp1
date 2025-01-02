@@ -166,7 +166,7 @@ struct PickingDetailView: View {
             
             VStack(alignment: .leading, spacing: 12) {
                 
-                PickingItemsView(selectedOrderIds: [orderId], orderItems: orderItems)
+                PickingItemsView(orderId: orderId, orderItems: orderItems)
                 
                 Divider()
                 

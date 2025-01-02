@@ -9,7 +9,7 @@ struct PickingItemsView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedOrderIds: Set<OrderSummary.ID>
+    let orderId: OrderSummary.ID
     let orderItems: [OrderItem]
     
     
@@ -315,23 +315,11 @@ struct PickingItemsView: View {
     
     
     var pickedItems: [OrderItem.ID] {
-        
-        var items: [OrderItem.ID] = []
-        
-        for orderId in selectedOrderIds {
-            items.append(contentsOf: appController.pickedItems(forOrderWithId: orderId))
-        }
-        return items
+        appController.pickedItems(forOrderWithId: orderId)
     }
     
     var verifiedItems: [OrderItem.ID] {
-        
-        var items: [OrderItem.ID] = []
-        
-        for orderId in selectedOrderIds {
-            items.append(contentsOf: appController.verifiedItems(forOrderWithId: orderId))
-        }
-        return items
+        appController.verifiedItems(forOrderWithId: orderId)
     }
     
     
