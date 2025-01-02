@@ -155,161 +155,148 @@ struct PickingDetailView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedOrderIds: Set<OrderDetails.ID>
+    let orderId: OrderDetails.ID
     
     
     var body: some View {
         
         VStack {
             
-            if selectedOrderIds.isEmpty {
+            let orderItems = appController.orderItems(forOrderWithId: orderId)
+            
+            VStack(alignment: .leading, spacing: 12) {
                 
-                Text("select an order")
+                PickingItemsView(selectedOrderIds: [orderId], orderItems: orderItems)
                 
-            } else {
+                Divider()
                 
-                let orderItems = selectedOrderIds.reduce([]) { items, orderId in
-                    items + appController.orderItems(forOrderWithId: orderId)
-                }
+                HeaderTitleView(label: "􁊇 Packing")
                 
-                VStack(alignment: .leading, spacing: 12) {
+                if let order = appController.orderDetails(forOrderWithId: orderId) {
                     
-                    PickingItemsView(selectedOrderIds: selectedOrderIds, orderItems: orderItems)
+                    Text("Address").font(.title2)
                     
-                    Divider()
+                    Text(order.shippingAddressName)
+                    Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
+                    Text(order.shippingAddressCountryCode)
                     
-                    HeaderTitleView(label: "􁊇 Packing")
+                    Text("Shipping price").font(.title2)
                     
-                    if selectedOrderIds.count != 1 {
-                        
-                        Text("select only one order")
-                        
-                    } else if let order = appController.orderDetails(forOrderWithId: selectedOrderIds.first!) {
-                        
-                        Text("Address").font(.title2)
-                        
-                        Text(order.shippingAddressName)
-                        Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
-                        Text(order.shippingAddressCountryCode)
-                        
-                        Text("Shipping price").font(.title2)
-                        
-                        HStack {
-                            Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                            Text(" - \(order.shippingMethodName ?? "") \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
-                        }
-                        
-                        ShippingCostView(order: order)
-                        
-                        Text("Affranchissement").font(.title2)
-                        
-                        HStack {
-                            Text("Recommended method : ")
-                            
-                            let method = {
-                                
-                                var s = ""
-                                
-                                if let selectedAffranchissement = selectedAffranchissement {
-                                    
-                                    if selectedAffranchissement.usePostOffice {
-                                        return "Bureau de poste"
-                                    } else {
-                                        s = "\(selectedAffranchissement.nbTimbres) timbres"
-                                        
-                                        if order.shippingMethodId != shippingMethodId_France {
-                                            s += " international"
-                                        }
-                                        
-                                        return s
-                                    }
-                                }
-                                
-                                return s
-                            }()
-                            
-                            Text(method)
-                            
-                            Button {
-                                appController.updateAffranchissement(forOrderWithId: order.id, method: method)
-                            } label: {
-                                Text("Confirm affranchissement")
-                            }
-                            
-                            Button {
-                                appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
-                            } label: {
-                                Text("Affranchissement Bureau de poste")
-                            }
-                            
-                            if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
-                                
-                                HStack {
-                                    Text("Confirmed")
-                                    Text(confirmedMethod)
-                                }
-                            }
-                        }
-                        
-                        HStack {
-                            Text("Timbre : ")
-                            Text(order.shippingMethodId == shippingMethodId_France ? priceTimbreFrance : priceTimbreWorld, format: .currency(code: "EUR").presentation(.isoCode))
-                        }
-                        HStack {
-                            Text("Suivi : ")
-                            Text(order.shippingMethodId == shippingMethodId_France ? priceTrackingFrance : priceTrackingWorld, format: .currency(code: "EUR").presentation(.isoCode))
-                        }
-                        
-                        Table(of: AffranchissementTableRow.self, selection: .constant(selectedAffranchissement?.maxWeight)) {
-                            
-                            TableColumn("Weight band") { item in
-                                Text("\(item.minWeight)-\(item.maxWeight)g")
-                            }
-                            
-                            TableColumn("Timbres par multiples") { item in
-                                if let n = item.timbresParMultiples,
-                                   let p = item.timbresParMultiplesTotalPrice {
-                                    HStack {
-                                        Text("\(n)   =>")
-                                        Text(p, format: .currency(code: "EUR").presentation(.isoCode))
-                                            .foregroundStyle(item.preferTimbresParMultiples ? green : red)
-                                            .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.useTimbresParMultiples ?? false ? .bold : .regular)
-                                    }
-                                }
-                            }
-                            
-                            TableColumn("Tarif ref") { item in
-                                
-                                Text(item.tarifRef, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .foregroundStyle((!item.preferTimbresParMultiples && !item.preferTimbres) ? green : red)
-                                    .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.usePostOffice ?? false ? .bold : .regular)
-                            }
-                            TableColumn("Nb timbres required") { item in
-                                HStack {
-                                    Text("\(item.nbTimbresRequired)   =>")
-                                    Text(item.nbTimbresRequiredTotalPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .foregroundStyle(item.preferTimbres ? green : red)
-                                        .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.useTimbres ?? false ? .bold : .regular)
-                                }
-                            }
-                            
-                        } rows: {
-                            
-                            if order.shippingMethodId == shippingMethodId_France {
-                                
-                                ForEach(affranchissementValuesFrance) { item in
-                                    TableRow(item)
-                                }
-                                
-                            } else {
-                                
-                                ForEach(affranchissementValuesWorld) { item in
-                                    TableRow(item)
-                                }
-                            }
-                        }
-                        .frame(minHeight: 200)
+                    HStack {
+                        Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                        Text(" - \(order.shippingMethodName ?? "") \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
                     }
+                    
+                    ShippingCostView(order: order)
+                    
+                    Text("Affranchissement").font(.title2)
+                    
+                    HStack {
+                        Text("Recommended method : ")
+                        
+                        let method = {
+                            
+                            var s = ""
+                            
+                            if let selectedAffranchissement = selectedAffranchissement {
+                                
+                                if selectedAffranchissement.usePostOffice {
+                                    return "Bureau de poste"
+                                } else {
+                                    s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                    
+                                    if order.shippingMethodId != shippingMethodId_France {
+                                        s += " international"
+                                    }
+                                    
+                                    return s
+                                }
+                            }
+                            
+                            return s
+                        }()
+                        
+                        Text(method)
+                        
+                        Button {
+                            appController.updateAffranchissement(forOrderWithId: order.id, method: method)
+                        } label: {
+                            Text("Confirm affranchissement")
+                        }
+                        
+                        Button {
+                            appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
+                        } label: {
+                            Text("Affranchissement Bureau de poste")
+                        }
+                        
+                        if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                            
+                            HStack {
+                                Text("Confirmed")
+                                Text(confirmedMethod)
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        Text("Timbre : ")
+                        Text(order.shippingMethodId == shippingMethodId_France ? priceTimbreFrance : priceTimbreWorld, format: .currency(code: "EUR").presentation(.isoCode))
+                    }
+                    HStack {
+                        Text("Suivi : ")
+                        Text(order.shippingMethodId == shippingMethodId_France ? priceTrackingFrance : priceTrackingWorld, format: .currency(code: "EUR").presentation(.isoCode))
+                    }
+                    
+                    Table(of: AffranchissementTableRow.self, selection: .constant(selectedAffranchissement?.maxWeight)) {
+                        
+                        TableColumn("Weight band") { item in
+                            Text("\(item.minWeight)-\(item.maxWeight)g")
+                        }
+                        
+                        TableColumn("Timbres par multiples") { item in
+                            if let n = item.timbresParMultiples,
+                               let p = item.timbresParMultiplesTotalPrice {
+                                HStack {
+                                    Text("\(n)   =>")
+                                    Text(p, format: .currency(code: "EUR").presentation(.isoCode))
+                                        .foregroundStyle(item.preferTimbresParMultiples ? green : red)
+                                        .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.useTimbresParMultiples ?? false ? .bold : .regular)
+                                }
+                            }
+                        }
+                        
+                        TableColumn("Tarif ref") { item in
+                            
+                            Text(item.tarifRef, format: .currency(code: "EUR").presentation(.isoCode))
+                                .foregroundStyle((!item.preferTimbresParMultiples && !item.preferTimbres) ? green : red)
+                                .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.usePostOffice ?? false ? .bold : .regular)
+                        }
+                        TableColumn("Nb timbres required") { item in
+                            HStack {
+                                Text("\(item.nbTimbresRequired)   =>")
+                                Text(item.nbTimbresRequiredTotalPrice, format: .currency(code: "EUR").presentation(.isoCode))
+                                    .foregroundStyle(item.preferTimbres ? green : red)
+                                    .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.useTimbres ?? false ? .bold : .regular)
+                            }
+                        }
+                        
+                    } rows: {
+                        
+                        if order.shippingMethodId == shippingMethodId_France {
+                            
+                            ForEach(affranchissementValuesFrance) { item in
+                                TableRow(item)
+                            }
+                            
+                        } else {
+                            
+                            ForEach(affranchissementValuesWorld) { item in
+                                TableRow(item)
+                            }
+                        }
+                    }
+                    .frame(minHeight: 200)
                 }
             }
         }
@@ -320,7 +307,7 @@ struct PickingDetailView: View {
                 { await loadOrderItems() },
             ])
         }
-        .onChange(of: selectedOrderIds) { oldValue, newValue in
+        .onChange(of: orderId) { oldValue, newValue in
             Task {
                 await parallel([
                     { await loadOrder() },
@@ -333,29 +320,19 @@ struct PickingDetailView: View {
     
     func loadOrder() async {
         
-        if selectedOrderIds.count == 1 {
-            await appController.loadOrderDetailsIfMissing(forOrderWithId: selectedOrderIds.first!)
-        }
+        await appController.loadOrderDetailsIfMissing(forOrderWithId: orderId)
     }
     
     
     func loadOrderItems() async {
         
-        await withTaskGroup(of: Void.self) { group in
-            for orderId in selectedOrderIds {
-                group.addTask {
-                    await appController.loadOrderItemsIfMissing(forOrderWithId: orderId)
-                }
-            }
-        }
+        await appController.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     
     var selectedAffranchissement: SelectedAffranchissement? {
         
-        guard !selectedOrderIds.isEmpty,
-              let order = appController.orderDetails(forOrderWithId: selectedOrderIds.first!)
-        else {
+        guard let order = appController.orderDetails(forOrderWithId: orderId) else {
             return nil
         }
         

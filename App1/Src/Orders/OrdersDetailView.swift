@@ -33,7 +33,7 @@ struct OrdersDetailView: View {
                                 .tag(0)
                             
                             ScrollView {
-                                PickingDetailView(selectedOrderIds: [orderId])
+                                PickingDetailView(orderId: orderId)
                             }
                                 .tabItem {
                                     Text("Picking")
