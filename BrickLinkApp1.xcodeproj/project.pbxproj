@@ -20,14 +20,14 @@
 		29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */; };
 		29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949212C7F0A5E00CC7F26 /* OrdersContentView.swift */; };
 		29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */; };
-		29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */; };
+		29B949292C7F0CC400CC7F26 /* OrderPickingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */; };
 		29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492B2C80603900CC7F26 /* Feedback.swift */; };
 		29B9492E2C81A5B400CC7F26 /* PickingItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */; };
 		29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */; };
 		29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949312C86EA8E00CC7F26 /* Transaction.swift */; };
 		29B949342C86EEDF00CC7F26 /* CashFlowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949332C86EEDF00CC7F26 /* CashFlowContentView.swift */; };
-		29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */; };
-		29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */; };
+		29B949362C86F0BB00CC7F26 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949352C86F0BB00CC7F26 /* OrderDetailView.swift */; };
+		29B949382C86F2AA00CC7F26 /* OrderComptaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */; };
 		29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493A2C86F45800CC7F26 /* TransactionListView.swift */; };
 		29B9493D2C87011F00CC7F26 /* CashFlowDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493C2C87011F00CC7F26 /* CashFlowDetailView.swift */; };
 		29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */; };
@@ -69,14 +69,14 @@
 		29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderItem.swift; sourceTree = "<group>"; };
 		29B949212C7F0A5E00CC7F26 /* OrdersContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersContentView.swift; sourceTree = "<group>"; };
 		29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailView.swift; sourceTree = "<group>"; };
-		29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickingDetailView.swift; sourceTree = "<group>"; };
+		29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderPickingView.swift; sourceTree = "<group>"; };
 		29B9492B2C80603900CC7F26 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickingItemsView.swift; sourceTree = "<group>"; };
 		29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingCostView.swift; sourceTree = "<group>"; };
 		29B949312C86EA8E00CC7F26 /* Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		29B949332C86EEDF00CC7F26 /* CashFlowContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CashFlowContentView.swift; sourceTree = "<group>"; };
-		29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailDetailView.swift; sourceTree = "<group>"; };
-		29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailComptaView.swift; sourceTree = "<group>"; };
+		29B949352C86F0BB00CC7F26 /* OrderDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
+		29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderComptaView.swift; sourceTree = "<group>"; };
 		29B9493A2C86F45800CC7F26 /* TransactionListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionListView.swift; sourceTree = "<group>"; };
 		29B9493C2C87011F00CC7F26 /* CashFlowDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CashFlowDetailView.swift; sourceTree = "<group>"; };
 		29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signedAmountColor.swift; sourceTree = "<group>"; };
@@ -177,20 +177,13 @@
 			children = (
 				29B949212C7F0A5E00CC7F26 /* OrdersContentView.swift */,
 				29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */,
-				29B949352C86F0BB00CC7F26 /* OrdersDetailDetailView.swift */,
-				29B949372C86F2AA00CC7F26 /* OrdersDetailComptaView.swift */,
-			);
-			path = Orders;
-			sourceTree = "<group>";
-		};
-		29B949252C7F0C0500CC7F26 /* Picking */ = {
-			isa = PBXGroup;
-			children = (
-				29B949282C7F0CC400CC7F26 /* PickingDetailView.swift */,
+				29B949352C86F0BB00CC7F26 /* OrderDetailView.swift */,
+				29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */,
+				29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */,
 				29B9492D2C81A5B400CC7F26 /* PickingItemsView.swift */,
 				29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */,
 			);
-			path = Picking;
+			path = Orders;
 			sourceTree = "<group>";
 		};
 		29B9492A2C80532F00CC7F26 /* BrickLink */ = {
@@ -273,7 +266,6 @@
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 				29B9493E2C87028300CC7F26 /* Modifiers */,
 				29B949202C7F0A3D00CC7F26 /* Orders */,
-				29B949252C7F0C0500CC7F26 /* Picking */,
 				29B0913F2C9488630072F7BE /* Upload */,
 				291386372C93354D00E79E63 /* Result */,
 				29B949392C86F34C00CC7F26 /* CashFlow */,
@@ -376,7 +368,7 @@
 				29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */,
 				29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */,
 				29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */,
-				29B949292C7F0CC400CC7F26 /* PickingDetailView.swift in Sources */,
+				29B949292C7F0CC400CC7F26 /* OrderPickingView.swift in Sources */,
 				291386392C93359900E79E63 /* ResultHistoryView.swift in Sources */,
 				29B949512C8B25E400CC7F26 /* OrderDetails.swift in Sources */,
 				29B949532C8F2AC400CC7F26 /* InventoryItem.swift in Sources */,
@@ -387,7 +379,7 @@
 				29B9494D2C89CED200CC7F26 /* LegoColor.swift in Sources */,
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				29B949402C87029E00CC7F26 /* signedAmountColor.swift in Sources */,
-				29B949382C86F2AA00CC7F26 /* OrdersDetailComptaView.swift in Sources */,
+				29B949382C86F2AA00CC7F26 /* OrderComptaView.swift in Sources */,
 				29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
 				295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */,
@@ -397,7 +389,7 @@
 				29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */,
 				29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */,
 				29B949432C87039300CC7F26 /* constants.swift in Sources */,
-				29B949362C86F0BB00CC7F26 /* OrdersDetailDetailView.swift in Sources */,
+				29B949362C86F0BB00CC7F26 /* OrderDetailView.swift in Sources */,
 				29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */,
 				2951B3A52CABE24700DF454C /* ResultDashboardView.swift in Sources */,
 				29B9494F2C8B25DA00CC7F26 /* OrderSummary.swift in Sources */,

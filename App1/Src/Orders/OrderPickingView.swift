@@ -150,7 +150,7 @@ let affranchissementValuesWorld = [
 
 
 
-struct PickingDetailView: View {
+struct OrderPickingView: View {
     
     
     @EnvironmentObject var appController: AppController

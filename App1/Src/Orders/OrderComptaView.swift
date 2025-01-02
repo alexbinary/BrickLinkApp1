@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrdersDetailComptaView: View {
+struct OrderComptaView: View {
     
     
     @EnvironmentObject var appController: AppController

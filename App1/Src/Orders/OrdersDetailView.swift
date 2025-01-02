@@ -24,7 +24,7 @@ struct OrdersDetailView: View {
                         TabView {
                             
                             ScrollView {
-                                OrdersDetailDetailView(order: order)
+                                OrderDetailView(order: order)
                             }
                                 .padding()
                                 .tabItem {
@@ -33,7 +33,7 @@ struct OrdersDetailView: View {
                                 .tag(0)
                             
                             ScrollView {
-                                PickingDetailView(orderId: orderId)
+                                OrderPickingView(orderId: orderId)
                             }
                                 .tabItem {
                                     Text("Picking")
@@ -41,7 +41,7 @@ struct OrdersDetailView: View {
                                 .tag(1)
                             
                             ScrollView {
-                                OrdersDetailComptaView(order: order)
+                                OrderComptaView(order: order)
                             }
                                 .padding()
                                 .tabItem {

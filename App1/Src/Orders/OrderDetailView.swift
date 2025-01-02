@@ -13,7 +13,7 @@ struct PriceTableRow: Identifiable {
 }
 
 
-struct OrdersDetailDetailView: View {
+struct OrderDetailView: View {
     
     
     @EnvironmentObject var appController: AppController
