@@ -23,7 +23,6 @@
 		29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */; };
 		29B949292C7F0CC400CC7F26 /* OrderPickingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */; };
 		29B9492C2C80603900CC7F26 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492B2C80603900CC7F26 /* Feedback.swift */; };
-		29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */; };
 		29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949312C86EA8E00CC7F26 /* Transaction.swift */; };
 		29B949342C86EEDF00CC7F26 /* CashFlowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949332C86EEDF00CC7F26 /* CashFlowContentView.swift */; };
 		29B949362C86F0BB00CC7F26 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B949352C86F0BB00CC7F26 /* OrderDetailView.swift */; };
@@ -72,7 +71,6 @@
 		29B949232C7F0AD500CC7F26 /* OrdersDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersDetailView.swift; sourceTree = "<group>"; };
 		29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderPickingView.swift; sourceTree = "<group>"; };
 		29B9492B2C80603900CC7F26 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
-		29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingCostView.swift; sourceTree = "<group>"; };
 		29B949312C86EA8E00CC7F26 /* Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		29B949332C86EEDF00CC7F26 /* CashFlowContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CashFlowContentView.swift; sourceTree = "<group>"; };
 		29B949352C86F0BB00CC7F26 /* OrderDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 				29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */,
 				292619FE2D26F4A800F1BE16 /* OrderPackingAndShippingView.swift */,
 				29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */,
-				29B9492F2C81B7CE00CC7F26 /* ShippingCostView.swift */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -364,7 +361,6 @@
 				29B949242C7F0AD500CC7F26 /* OrdersDetailView.swift in Sources */,
 				29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */,
 				29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */,
-				29B949302C81B7CE00CC7F26 /* ShippingCostView.swift in Sources */,
 				29B949322C86EA8E00CC7F26 /* Transaction.swift in Sources */,
 				29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */,
 				29B949292C7F0CC400CC7F26 /* OrderPickingView.swift in Sources */,
