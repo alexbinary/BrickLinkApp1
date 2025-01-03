@@ -7,12 +7,10 @@ struct OrdersContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @Binding var selectedOrderId: OrderSummary.ID?
-    
     
     var body: some View {
         
-        Table(of: OrderSummary.self, selection: $selectedOrderId) {
+        Table(of: OrderSummary.self) {
             
             Group {
                 

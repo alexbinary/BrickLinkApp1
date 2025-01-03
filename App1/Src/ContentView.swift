@@ -20,7 +20,7 @@ struct ContentView: View {
     
     @State var selectedSidebarItem: SidebarItem = .orders
     
-    @State var ordersSelectedOrderId: OrderSummary.ID? = Secrets.Default.ordersSelectedOrderId
+    @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Default.ordersActiveNavigationPath
     @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.resultSelectedOrderIds
     @State var selectedTransactions: Set<Transaction.ID> = []
     
@@ -60,8 +60,8 @@ struct ContentView: View {
             switch selectedSidebarItem {
                 
             case .orders:
-                NavigationStack {
-                    OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
+                NavigationStack(path: $ordersActiveNavigationPath) {
+                    OrdersContentView()
                 }
                 
             case .upload:
