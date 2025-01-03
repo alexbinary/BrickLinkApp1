@@ -14,6 +14,7 @@
 		2951B3A52CABE24700DF454C /* ResultDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951B3A42CABE24700DF454C /* ResultDashboardView.swift */; };
 		295560722D282591000DC139 /* OrderCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560712D282591000DC139 /* OrderCardView.swift */; };
 		295560742D283D83000DC139 /* PaymentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560732D283D83000DC139 /* PaymentStatus.swift */; };
+		295560762D286474000DC139 /* IsOneOfAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560752D286474000DC139 /* IsOneOfAble.swift */; };
 		295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadListView.swift */; };
 		29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */; };
 		29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDF52CAD90800065C6E3 /* protocols.swift */; };
@@ -64,6 +65,7 @@
 		2951B3A42CABE24700DF454C /* ResultDashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultDashboardView.swift; sourceTree = "<group>"; };
 		295560712D282591000DC139 /* OrderCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardView.swift; sourceTree = "<group>"; };
 		295560732D283D83000DC139 /* PaymentStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentStatus.swift; sourceTree = "<group>"; };
+		295560752D286474000DC139 /* IsOneOfAble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsOneOfAble.swift; sourceTree = "<group>"; };
 		295B52FD2CA2B6820090CE1C /* UploadListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadListView.swift; sourceTree = "<group>"; };
 		29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessMonth.swift; sourceTree = "<group>"; };
 		29ACCDF52CAD90800065C6E3 /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */,
+				295560752D286474000DC139 /* IsOneOfAble.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */,
 				29B949292C7F0CC400CC7F26 /* OrderPickingView.swift in Sources */,
 				291386392C93359900E79E63 /* ResultHistoryView.swift in Sources */,
+				295560762D286474000DC139 /* IsOneOfAble.swift in Sources */,
 				29B949512C8B25E400CC7F26 /* OrderDetails.swift in Sources */,
 				29B949532C8F2AC400CC7F26 /* InventoryItem.swift in Sources */,
 				29B949222C7F0A5E00CC7F26 /* OrdersContentView.swift in Sources */,

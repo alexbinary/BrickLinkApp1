@@ -1026,7 +1026,7 @@ class AppController: ObservableObject {
         let orderSummary = orderSummary(forOrderWithId: orderId)!
         
         return
-            orderSummary.status.isOneOf([.completed, .cancelled, .purged])
+            orderSummary.status.isOneOf(.completed, .cancelled, .purged)
             &&
             orderSummary.dateStatusChanged.days(to: Date()) > 30
     }
@@ -1133,7 +1133,7 @@ class AppController: ObservableObject {
         
         let order = orderSummary(forOrderWithId: orderId)!
         
-        return order.paymentStatus.isOneOf([.completed, .received])
+        return order.paymentStatus.isOneOf(.completed, .received)
     }
     
     
@@ -1186,7 +1186,7 @@ class AppController: ObservableObject {
         
         let order = orderSummary(forOrderWithId: orderId)!
         
-        return order.status.isOneOf([.packed, .shipped, .received, .completed])
+        return order.status.isOneOf(.packed, .shipped, .received, .completed)
     }
     
     
@@ -1194,7 +1194,7 @@ class AppController: ObservableObject {
         
         let order = orderSummary(forOrderWithId: orderId)!
         
-        return order.status.isOneOf([.shipped, .received, .completed])
+        return order.status.isOneOf(.shipped, .received, .completed)
     }
     
     
@@ -1226,7 +1226,7 @@ class AppController: ObservableObject {
         
         let order = orderSummary(forOrderWithId: orderId)!
         
-        return order.status.isOneOf([.received, .completed])
+        return order.status.isOneOf(.received, .completed)
     }
     
     
@@ -1265,35 +1265,53 @@ class AppController: ObservableObject {
         var validatedStatus: OrderBusinessStatus = .pendingPayment
         
         let conditionsStatus: [
-            (status: OrderBusinessStatus, condition: () -> Bool)
+            (condition: () -> Bool, status: OrderBusinessStatus)
         ] = [
-            (status: .readyForPicking, condition: {
+            (condition: {
                 self.orderChecklistPayment(orderId)
-                && self.orderChecklistIncomeTransaction(orderId)
-            }),
-            (status: .readyToShip, condition: {
+                
+            }, status: .validatePayment
+            ),
+            (condition: {
+                self.orderChecklistIncomeTransaction(orderId)
+                
+            }, status: .readyForPicking
+            ),
+            (condition: {
                 self.orderChecklistPicking(orderId)
                 && self.orderChecklistVerification(orderId)
                 && self.orderChecklistPacked(orderId)
-            }),
-            (status: .validateShipping, condition: {
+                
+            }, status: .readyToShip
+            ),
+            (condition: {
                 self.orderChecklistShipped(orderId)
-            }),
-            (status: .inTransit, condition: {
+                
+            }, status: .validateShipping
+            ),
+            (condition: {
                 self.orderChecklistTrackingNo(orderId)
                 && self.orderChecklistDriveThru(orderId)
                 && self.orderChecklistAffranchissement(orderId)
                 && self.orderChecklistShippingTransaction(orderId)
-            }),
-            (status: .received, condition: {
+                
+            }, status: .inTransit
+            ),
+            (condition: {
                 self.orderChecklistReceived(orderId)
-            }),
-            (status: .done, condition: {
+                
+            }, status: .received
+            ),
+            (condition: {
                 self.orderChecklistSellerFeedback(orderId)
-            }),
-            (status: .closed, condition: {
+                
+            }, status: .done
+            ),
+            (condition: {
                 self.orderChecklistUnchangedFor30Days(orderId)
-            })
+                
+            }, status: .closed
+            )
         ]
         
         for c in conditionsStatus {
@@ -1310,9 +1328,10 @@ class AppController: ObservableObject {
 
 
 
-enum OrderBusinessStatus: String {
+enum OrderBusinessStatus: String, IsOneOfAble {
     
     case pendingPayment
+    case validatePayment
     case readyForPicking
     case readyToShip
     case validateShipping
