@@ -68,13 +68,14 @@ struct OrderPackingAndShippingView: View {
                 
                 Divider()
                 
-                HeaderTitleView(label: "􀐚 Shipping method")
+                HeaderTitleView(label: "􀐚 Shipping")
                 
                 Grid(alignment: .leading, verticalSpacing: 8) {
                 
                     GridRow {
-                        Text("Recommended method :")
+                        Text("Method :")
                         
+                        Text("Recommended :").gridColumnAlignment(.trailing)
                         HStack {
                             Toggle("letter", isOn: .constant(selectedShippingCost?.chooseLetter ?? false))
                             Toggle("parcel", isOn: .constant(selectedShippingCost?.chooseParcel ?? false))
@@ -82,26 +83,45 @@ struct OrderPackingAndShippingView: View {
                     }
                 
                     GridRow {
-                        Text("Predicted cost :")
+                        Text("Shipping cost :")
                         
+                        Text("Predicted :").gridColumnAlignment(.trailing)
                         if let selectedShippingCost = selectedShippingCost,
                            let value = selectedShippingCost.value {
                             
                             Text(value, format: .currency(code: "EUR").presentation(.isoCode))
                         
-                            HStack {
-                                Button {
-                                    appController.updateShippingCost(forOrderWithId: order.id, cost: value)
-                                } label: {
-                                    Text("Confirm shipping cost")
-                                }
-                                
-                                if let cost = appController.shippingCost(forOrderWithId: order.id) {
-                                    
-                                    HStack {
-                                        Text("Confirmed")
-                                        Text(cost, format: .currency(code: "EUR").presentation(.isoCode))
-                                    }
+                        } else {
+                            Text("")
+                        }
+                        
+                        Text("Actual :")
+                        
+                        var value = appController.shippingCost(forOrderWithId: order.id) ?? 0
+                        
+                        let shippingCostBinding = Binding<Float> {
+                            return value
+                        } set: { newValue in
+                            value = newValue
+                        }
+                        
+                        TextField("Shipping cost", value: shippingCostBinding,
+                                  format: .currency(code: "EUR").presentation(.isoCode)
+                        )
+                        .onSubmit {
+                            appController.updateShippingCost(forOrderWithId: order.id, cost: value)
+                        }
+                        .frame(maxWidth: 100)
+                        
+                        if let selectedShippingCost = selectedShippingCost,
+                           let value = selectedShippingCost.value {
+                        
+                            Button {
+                                appController.updateShippingCost(forOrderWithId: order.id, cost: value)
+                            } label: {
+                                HStack {
+                                    Text("Confirm")
+                                    Text(value, format: .currency(code: "EUR").presentation(.isoCode))
                                 }
                             }
                         }
@@ -110,7 +130,7 @@ struct OrderPackingAndShippingView: View {
                     GridRow {
                         Text("Affranchissement :")
                         
-                        let method = {
+                        let recommendedMethod = {
                             
                             var s = ""
                             
@@ -131,27 +151,27 @@ struct OrderPackingAndShippingView: View {
                             
                             return s
                         }()
-                        Text(method)
+                        Text("Recommended :").gridColumnAlignment(.trailing)
+                        Text(recommendedMethod)
+                        
+                        Text("Actual :")
+                        if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                            Text(confirmedMethod)
+                        } else {
+                            Text("")
+                        }
                         
                         HStack {
                             Button {
-                                appController.updateAffranchissement(forOrderWithId: order.id, method: method)
+                                appController.updateAffranchissement(forOrderWithId: order.id, method: recommendedMethod)
                             } label: {
-                                Text("Confirm affranchissement")
+                                Text("Confirm \(recommendedMethod)")
                             }
                             
                             Button {
                                 appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
                             } label: {
-                                Text("Affranchissement Bureau de poste")
-                            }
-                            
-                            if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
-                                
-                                HStack {
-                                    Text("Confirmed")
-                                    Text(confirmedMethod)
-                                }
+                                Text("Bureau de poste")
                             }
                         }
                     }

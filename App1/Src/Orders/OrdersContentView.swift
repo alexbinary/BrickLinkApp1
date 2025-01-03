@@ -63,7 +63,6 @@ struct OrdersContentView: View {
                                             appController.updateShippingCost(forOrderWithId: order.id, cost: value)
                                         }
                                     }
-                                    
                                 }
                                 
                                 VStack(alignment: .leading) {
