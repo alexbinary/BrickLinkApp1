@@ -60,9 +60,8 @@ struct ContentView: View {
             switch selectedSidebarItem {
                 
             case .orders:
-                HSplitView {
+                NavigationStack {
                     OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
-                    OrdersDetailView(selectedOrderId: ordersSelectedOrderId)
                 }
                 
             case .upload:

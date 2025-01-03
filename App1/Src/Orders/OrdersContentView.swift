@@ -16,6 +16,10 @@ struct OrdersContentView: View {
             
             Group {
                 
+                TableColumn("Details") { (order: OrderSummary) in
+                    NavigationLink("Details", value: order.id)
+                }
+                
                 TableColumn("ID", value: \OrderSummary.id)
                 
                 TableColumn("Date") { (order: OrderSummary) in
@@ -61,14 +65,14 @@ struct OrdersContentView: View {
                         Text(no)
                     }
                 }
+            }
+            Group {
                 
                 TableColumn("Drive thru") { (order: OrderSummary) in
                     if let driveThruSent = appController.orderDetails(forOrderWithId: order.id)?.driveThruSent {
                         Text("\(driveThruSent)")
                     }
                 }
-            }
-            Group {
                 
                 TableColumn("Feedback") { (order: OrderSummary) in
                     HStack {
@@ -115,6 +119,9 @@ struct OrdersContentView: View {
             }
         }
         .navigationTitle("Orders")
+        .navigationDestination(for: OrderSummary.ID.self) { orderId in
+            OrdersDetailView(orderId: orderId)
+        }
         .toolbar {
             
             Button {
