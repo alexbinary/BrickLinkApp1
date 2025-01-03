@@ -8,6 +8,7 @@ enum OrderStatus: String, Codable {
     case shipped = "SHIPPED"
     case received = "RECEIVED"
     case completed = "COMPLETED"
+    
     case purged = "PURGED"
     case cancelled = "CANCELLED"
 }

@@ -88,12 +88,60 @@ struct OrderCardView: View {
                 Grid(alignment: .leading) {
                     
                     GridRow {
-                        Text("Paid")
-                        if appController.orderIsPaid(orderId) {
-                            Text("􀁣").foregroundStyle(Color(NSColor(red: 0.3, green: 0.6, blue: 0.3, alpha: 1)))
-                        } else {
-                            Text("􀀀").foregroundStyle(.secondary)
-                        }
+                        Text("Payment")
+                        checkStatus(appController.orderChecklistPayment(orderId))
+                    }
+                    GridRow {
+                        Text("Income transaction")
+                        checkStatus(appController.orderChecklistIncomeTransaction(orderId))
+                    }
+                    GridRow {
+                        Text("Picked")
+                        checkStatus(appController.orderChecklistPicking(orderId))
+                    }
+                    GridRow {
+                        Text("Verification")
+                        checkStatus(appController.orderChecklistVerification(orderId))
+                    }
+                    GridRow {
+                        Text("Packed")
+                        checkStatus(appController.orderChecklistPacked(orderId))
+                    }
+                    GridRow {
+                        Text("Shipped")
+                        checkStatus(appController.orderChecklistShipped(orderId))
+                    }
+                    GridRow {
+                        Text("Tracking no")
+                        checkStatus(appController.orderChecklistTrackingNo(orderId))
+                    }
+                    GridRow {
+                        Text("Drive thru")
+                        checkStatus(appController.orderChecklistDriveThru(orderId))
+                    }
+                    GridRow {
+                        Text("Affranchissement")
+                        checkStatus(appController.orderChecklistAffranchissement(orderId))
+                    }
+                    GridRow {
+                        Text("Shipping transaction")
+                        checkStatus(appController.orderChecklistShippingTransaction(orderId))
+                    }
+                    GridRow {
+                        Text("Received")
+                        checkStatus(appController.orderChecklistReceived(orderId))
+                    }
+                    GridRow {
+                        Text("Seller feedback")
+                        checkStatus(appController.orderChecklistSellerFeedback(orderId))
+                    }
+                    GridRow {
+                        Text("Unchanged for 30+ days")
+                        checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
+                    }
+                    GridRow {
+                        Text("Purged or cancelled")
+                        checkStatus(appController.orderChecklistPurgedOrCancelled(orderId))
                     }
                 }
                 
@@ -111,6 +159,15 @@ struct OrderCardView: View {
             .background(Color(nsColor: .quaternarySystemFill))
             .border(Color(nsColor: .tertiarySystemFill))
             .cornerRadius(6)
+        }
+    }
+    
+    @ViewBuilder
+    func checkStatus(_ status: Bool) -> some View {
+        if status {
+            Text("􀁣").foregroundStyle(green)
+        } else {
+            Text("􀀀").foregroundStyle(red)
         }
     }
 }

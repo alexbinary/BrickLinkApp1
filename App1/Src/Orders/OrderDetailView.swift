@@ -25,6 +25,10 @@ struct OrderDetailView: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
+            HeaderTitleView(label: "􁊇 Status")
+            
+            
+            
             HeaderTitleView(label: "􁊇 Address")
             
             Text(order.shippingAddressName)

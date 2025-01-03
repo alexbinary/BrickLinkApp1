@@ -1126,14 +1126,129 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Order status
+    // MARK: - Order checklist
     
     
-    public func orderIsPaid(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistPayment(_ orderId: OrderSummary.ID) -> Bool {
         
-        guard let order = orderSummary(forOrderWithId: orderId) else { return false }
+        let order = orderSummary(forOrderWithId: orderId)!
         
         return order.paymentStatus.isOneOf([.completed, .received])
+    }
+    
+    
+    public func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
+        
+        return incomeTransaction(forOrderWithId: orderId) != nil
+    }
+    
+    
+    public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let affranchissement = affranchissement(forOrderWithId: orderId)
+        
+        if (affranchissement ?? "").isEmpty {
+            
+            return false
+            
+        } else if affranchissement == "Bureau de poste" {
+            
+            return shippingTransaction(forOrderWithId: orderId) != nil
+            
+        } else {
+            
+            return true
+        }
+    }
+    
+    
+    public func orderChecklistPicking(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let items = orderItems(forOrderWithId: orderId)
+        
+        let pickedItemIds = pickedItems(forOrderWithId: orderId)
+        
+        return items.allSatisfy { pickedItemIds.contains($0.id) }
+    }
+    
+    
+    public func orderChecklistVerification(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let items = orderItems(forOrderWithId: orderId)
+        
+        let verifiedItemIds = verifiedItems(forOrderWithId: orderId)
+        
+        return items.allSatisfy { verifiedItemIds.contains($0.id) }
+    }
+    
+    
+    public func orderChecklistPacked(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderSummary(forOrderWithId: orderId)!
+        
+        return order.status.isOneOf([.packed, .shipped, .received, .completed])
+    }
+    
+    
+    public func orderChecklistShipped(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderSummary(forOrderWithId: orderId)!
+        
+        return order.status.isOneOf([.shipped, .received, .completed])
+    }
+    
+    
+    public func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderDetails(forOrderWithId: orderId)!
+        
+        return !(order.trackingNo ?? "").isEmpty
+    }
+    
+    
+    public func orderChecklistDriveThru(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderDetails(forOrderWithId: orderId)!
+        
+        return order.driveThruSent
+    }
+    
+    
+    public func orderChecklistAffranchissement(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let affranchissement = affranchissement(forOrderWithId: orderId)
+        
+        return !(affranchissement ?? "").isEmpty
+    }
+    
+    
+    public func orderChecklistReceived(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderSummary(forOrderWithId: orderId)!
+        
+        return order.status.isOneOf([.received, .completed])
+    }
+    
+    
+    public func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+        
+        return orderFeedbacks(forOrderWithId: orderId).sellerFeedback() != nil
+    }
+    
+    
+    public func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderSummary(forOrderWithId: orderId)!
+        
+        return order.dateStatusChanged.days(to: Date()) > 30
+    }
+    
+    
+    public func orderChecklistPurgedOrCancelled(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderSummary(forOrderWithId: orderId)!
+        
+        return order.status.isOneOf([.purged, .cancelled])
     }
 }
 
