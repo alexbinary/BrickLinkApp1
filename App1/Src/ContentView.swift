@@ -61,7 +61,7 @@ struct ContentView: View {
                 
             case .orders:
                 NavigationStack(path: $ordersActiveNavigationPath) {
-                    OrdersContentView()
+                    OrdersContentView(ordersActiveNavigationPath: $ordersActiveNavigationPath)
                 }
                 
             case .upload:
