@@ -19,6 +19,8 @@ struct OrdersDetailView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     
+                    OrderCardView(orderId: orderId, disclosureIndicatorVisible: false)
+                    
                     TabView {
                         
                         ScrollView {
@@ -69,7 +71,7 @@ struct OrdersDetailView: View {
                 await refreshOrder()
             }
         }
-        .navigationTitle("Order #\(orderId)")
+        .navigationTitle("Order \(orderId)")
     }
     
     
