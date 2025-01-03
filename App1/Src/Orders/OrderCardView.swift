@@ -83,6 +83,18 @@ struct OrderCardView: View {
                     }
                 }
                 
+                Grid(alignment: .leading) {
+                    
+                    GridRow {
+                        Text("Paid")
+                        if appController.orderIsPaid(orderId) {
+                            Text("􀁣").foregroundStyle(Color(NSColor(red: 0.3, green: 0.6, blue: 0.3, alpha: 1)))
+                        } else {
+                            Text("􀀀").foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                
                 Spacer()
                 
                 if disclosureIndicatorVisible {

@@ -1123,6 +1123,18 @@ class AppController: ObservableObject {
         }
         return nil
     }
+    
+    
+    
+    // MARK: - Order status
+    
+    
+    public func orderIsPaid(_ orderId: OrderSummary.ID) -> Bool {
+        
+        guard let order = orderSummary(forOrderWithId: orderId) else { return false }
+        
+        return order.paymentStatus.isOneOf([.completed, .received])
+    }
 }
 
 
@@ -1148,6 +1160,8 @@ extension OrderSummary {
         
         self.status = OrderStatus(rawValue: bl.status)!
         self.dateStatusChanged = bl.dateStatusChanged
+        
+        self.paymentStatus = PaymentStatus(rawValue: bl.payment.status)!
     }
 }
 

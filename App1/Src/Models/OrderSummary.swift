@@ -21,4 +21,6 @@ struct OrderSummary: Identifiable, Equatable, Codable, Datable {
     
     let status: OrderStatus
     let dateStatusChanged: Date
+    
+    let paymentStatus: PaymentStatus
 }
