@@ -23,7 +23,9 @@ struct OrderCardView: View {
                     VStack(alignment: .leading) {
                         
                         HStack {
-                            Text(order.id).font(.title2)
+                            Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
+                                Text(order.id).font(.title2)
+                            }
                             Text(order.date, format: .dateTime).font(.title3)
                         }
                         
