@@ -55,41 +55,36 @@ struct ContentView: View {
                 }
             }
             
-        } content : {
+        } detail: {
             
             switch selectedSidebarItem {
                 
             case .orders:
-                OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
+                HSplitView {
+                    OrdersContentView(selectedOrderId: $ordersSelectedOrderId)
+                    OrdersDetailView(selectedOrderId: ordersSelectedOrderId)
+                }
                 
             case .upload:
                 UploadContentView()
                 
-            case .resultDashboard, .resultHistory:
-                ResultContentView(selectedOrderIds: $resultSelectedOrderIds)
-            
-            case .cashFlow:
-                CashFlowContentView(selectedTransactions: $selectedTransactions)
-            }
-            
-        } detail: {
-            
-            switch selectedSidebarItem {
-            
-            case .orders:
-                OrdersDetailView(selectedOrderId: ordersSelectedOrderId)
-                
-            case .upload:
-                Color.clear
-            
             case .resultDashboard:
-                ResultDashboardView()
+                HSplitView {
+                    ResultContentView(selectedOrderIds: $resultSelectedOrderIds)
+                    ResultDashboardView()
+                }
                 
             case .resultHistory:
-                ResultHistoryView(selectedOrderIds: $resultSelectedOrderIds)
-            
+                HSplitView {
+                    ResultContentView(selectedOrderIds: $resultSelectedOrderIds)
+                    ResultHistoryView(selectedOrderIds: $resultSelectedOrderIds)
+                }
+                
             case .cashFlow:
-                CashFlowDetailView(selectedTransactions: selectedTransactions)
+                HSplitView {
+                    CashFlowContentView(selectedTransactions: $selectedTransactions)
+                    CashFlowDetailView(selectedTransactions: selectedTransactions)
+                }
             }
         }
     }

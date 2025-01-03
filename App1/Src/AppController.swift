@@ -17,20 +17,20 @@ class AppController: ObservableObject {
         self.dataStore = dataStore
         self.blCredentials = blCredentials
         
-        Task {
-            await parallel([
-                {
-                    await self.loadColors()
-                },
-                {
-                    await self.loadOrderSummaries()
-                    await parallel([
-                        { await self.loadMissingOrders() },
-                        { await self.refreshAllOrders() },
-                    ])
-                },
-            ])
-        }
+//        Task {
+//            await parallel([
+//                {
+//                    await self.loadColors()
+//                },
+//                {
+//                    await self.loadOrderSummaries()
+//                    await parallel([
+//                        { await self.loadMissingOrders() },
+//                        { await self.refreshAllOrders() },
+//                    ])
+//                },
+//            ])
+//        }
     }
     
     

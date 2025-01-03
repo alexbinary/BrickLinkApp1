@@ -326,9 +326,9 @@ struct UploadContentView: View {
                     
                     Text("Loading inventory...")
                 }
+                
+                Divider()
             }
-            
-            Divider()
             
             UploadListView()
         }
