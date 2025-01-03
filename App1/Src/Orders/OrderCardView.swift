@@ -139,10 +139,11 @@ struct OrderCardView: View {
                         Text("Unchanged for 30+ days")
                         checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
                     }
-                    GridRow {
-                        Text("Purged or cancelled")
-                        checkStatus(appController.orderChecklistPurgedOrCancelled(orderId))
-                    }
+                }
+                
+                HStack {
+                    Text("Status: ")
+                    Text(appController.orderBusinessStatus(orderId).rawValue)
                 }
                 
                 Spacer()

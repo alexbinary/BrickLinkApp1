@@ -1244,12 +1244,82 @@ class AppController: ObservableObject {
     }
     
     
-    public func orderChecklistPurgedOrCancelled(_ orderId: OrderSummary.ID) -> Bool {
+    // MARK: - Order business status
+    
+    
+    public func orderBusinessStatus(_ orderId: OrderSummary.ID) -> OrderBusinessStatus {
         
         let order = orderSummary(forOrderWithId: orderId)!
+        if order.status == .purged {
+            return .closed
+        }
         
-        return order.status.isOneOf([.purged, .cancelled])
+        if order.status == .cancelled {
+            if orderChecklistUnchangedFor30Days(orderId) {
+                return .closed
+            } else {
+                return .done
+            }
+        }
+        
+        var validatedStatus: OrderBusinessStatus = .pendingPayment
+        
+        let conditionsStatus: [
+            (status: OrderBusinessStatus, condition: () -> Bool)
+        ] = [
+            (status: .readyForPicking, condition: {
+                self.orderChecklistPayment(orderId)
+                && self.orderChecklistIncomeTransaction(orderId)
+            }),
+            (status: .readyToShip, condition: {
+                self.orderChecklistPicking(orderId)
+                && self.orderChecklistVerification(orderId)
+                && self.orderChecklistPacked(orderId)
+            }),
+            (status: .validateShipping, condition: {
+                self.orderChecklistShipped(orderId)
+            }),
+            (status: .inTransit, condition: {
+                self.orderChecklistTrackingNo(orderId)
+                && self.orderChecklistDriveThru(orderId)
+                && self.orderChecklistAffranchissement(orderId)
+                && self.orderChecklistShippingTransaction(orderId)
+            }),
+            (status: .received, condition: {
+                self.orderChecklistReceived(orderId)
+            }),
+            (status: .done, condition: {
+                self.orderChecklistSellerFeedback(orderId)
+            }),
+            (status: .closed, condition: {
+                self.orderChecklistUnchangedFor30Days(orderId)
+            })
+        ]
+        
+        for c in conditionsStatus {
+            if c.condition() {
+                validatedStatus = c.status
+            } else {
+                return validatedStatus
+            }
+        }
+                
+        return validatedStatus
     }
+}
+
+
+
+enum OrderBusinessStatus: String {
+    
+    case pendingPayment
+    case readyForPicking
+    case readyToShip
+    case validateShipping
+    case inTransit
+    case received
+    case done
+    case closed
 }
 
 
