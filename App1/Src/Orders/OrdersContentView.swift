@@ -14,7 +14,7 @@ struct OrdersContentView: View {
         
         ScrollView {
             
-            LazyVStack(spacing: 12, pinnedViews: .sectionHeaders) {
+            LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                 
                 let allOrders = appController.orderSummaries
                 

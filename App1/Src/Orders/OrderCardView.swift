@@ -162,7 +162,7 @@ struct OrderCardView: View {
                     }
                 }
                 
-                Spacer()
+                Text("")
                 
                 Image(systemName: "chevron.right")
                     .font(.footnote)
