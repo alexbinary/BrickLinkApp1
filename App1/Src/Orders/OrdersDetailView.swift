@@ -10,6 +10,8 @@ struct OrdersDetailView: View {
     
     let orderId: OrderDetails.ID
     
+    @State private var columnWidth: CGFloat?
+    
     
     var body: some View {
             
@@ -57,10 +59,12 @@ struct OrdersDetailView: View {
                             }
                         }
                         .padding()
+                        .equalWidths()
+                        .frame(width: columnWidth)
                         .background(Color(nsColor: .quaternarySystemFill))
                         .border(Color(nsColor: .tertiarySystemFill))
                         .cornerRadius(6)
-                        .padding(.top, 9)
+                        .padding(.top, 10)
                         
                         VStack(alignment: .leading, spacing: 12) {
                             
@@ -129,10 +133,14 @@ struct OrdersDetailView: View {
                             Spacer()
                         }
                         .padding()
+                        .equalWidths()
+                        .frame(width: columnWidth, alignment: .leading)
                         .background(Color(nsColor: .quaternarySystemFill))
                         .border(Color(nsColor: .tertiarySystemFill))
                         .cornerRadius(6)
+                        
                     }
+                    .equalWidths($columnWidth)
                     
                     TabView {
                         

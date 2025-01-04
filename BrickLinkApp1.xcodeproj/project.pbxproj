@@ -15,6 +15,7 @@
 		295560722D282591000DC139 /* OrderCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560712D282591000DC139 /* OrderCardView.swift */; };
 		295560742D283D83000DC139 /* PaymentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560732D283D83000DC139 /* PaymentStatus.swift */; };
 		295560762D286474000DC139 /* IsOneOfAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560752D286474000DC139 /* IsOneOfAble.swift */; };
+		2955607A2D294182000DC139 /* widthEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560792D294182000DC139 /* widthEqualizer.swift */; };
 		295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadListView.swift */; };
 		29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */; };
 		29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDF52CAD90800065C6E3 /* protocols.swift */; };
@@ -66,6 +67,7 @@
 		295560712D282591000DC139 /* OrderCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardView.swift; sourceTree = "<group>"; };
 		295560732D283D83000DC139 /* PaymentStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentStatus.swift; sourceTree = "<group>"; };
 		295560752D286474000DC139 /* IsOneOfAble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsOneOfAble.swift; sourceTree = "<group>"; };
+		295560792D294182000DC139 /* widthEqualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widthEqualizer.swift; sourceTree = "<group>"; };
 		295B52FD2CA2B6820090CE1C /* UploadListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadListView.swift; sourceTree = "<group>"; };
 		29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessMonth.swift; sourceTree = "<group>"; };
 		29ACCDF52CAD90800065C6E3 /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				29B9493F2C87029E00CC7F26 /* signedAmountColor.swift */,
+				295560792D294182000DC139 /* widthEqualizer.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 				29B9493B2C86F45800CC7F26 /* TransactionListView.swift in Sources */,
 				29D6744D2C77BE8100BAA00A /* AppController.swift in Sources */,
 				29B949432C87039300CC7F26 /* constants.swift in Sources */,
+				2955607A2D294182000DC139 /* widthEqualizer.swift in Sources */,
 				29B949362C86F0BB00CC7F26 /* OrderDetailView.swift in Sources */,
 				292619FF2D26F4A800F1BE16 /* OrderPackingAndShippingView.swift in Sources */,
 				29B949452C870C0900CC7F26 /* ProgressView.swift in Sources */,
