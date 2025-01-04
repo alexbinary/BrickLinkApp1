@@ -23,14 +23,23 @@ struct OrderCardView: View {
                         
                         VStack(alignment: .leading) {
                             
-                            HStack {
-                                Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
-                                    Text(order.id).font(.title2)
+                            Grid(alignment: .leading, verticalSpacing: 0) {
+                                
+                                GridRow {
+                                    Text("order").cardCaption()
+                                    Text("placed").cardCaption()
+                                    
                                 }
-                                .monospacedDigit()
-                                Text(order.date, format: .dateTime).font(.title3)
-                                    .frame(width: 150, alignment: .leading)
+                                
+                                GridRow {
+                                    Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
+                                        Text(order.id).font(.title2)
+                                    }
                                     .monospacedDigit()
+                                    Text(order.date, format: .dateTime)
+                                        .frame(width: 150, alignment: .leading)
+                                        .monospacedDigit()
+                                }
                             }
                             
                             Text("")
@@ -38,18 +47,21 @@ struct OrderCardView: View {
                             Grid(alignment: .leading) {
                                 
                                 GridRow {
-                                    Text("􀉩").gridColumnAlignment(.center)
+                                    Text("􀉩").foregroundStyle(.secondary).gridColumnAlignment(.center)
                                     Text(order.buyer)
                                 }
                                 
                                 GridRow {
-                                    Text("􀍩").gridColumnAlignment(.center)
+                                    Text("􀍩").foregroundStyle(.secondary).gridColumnAlignment(.center)
                                     
                                     HStack {
                                         Text("\(order.items) (\(order.lots))")
-                                            .frame(width: 80, alignment: .leading)
-                                        Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
-                                            .monospacedDigit()
+                                            .frame(width: 75, alignment: .leading)
+                                        HStack {
+                                            Text("􀖧").foregroundStyle(.secondary)
+                                            Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
+                                                .monospacedDigit()
+                                        }
                                     }
                                 }
                             }
@@ -57,10 +69,17 @@ struct OrderCardView: View {
                         
                         VStack(alignment: .leading) {
                             
-                            HStack {
-                                Text(order.status.rawValue).font(.title2)
-                                Text(order.dateStatusChanged, format: .dateTime).font(.title3)
-                                    .monospacedDigit()
+                            Grid(alignment: .leading, verticalSpacing: 0) {
+                                
+                                GridRow {
+                                    Text("status").cardCaption()
+                                    Text("changed").cardCaption()
+                                }
+                                GridRow {
+                                    Text(order.status.rawValue).font(.title3)
+                                    Text(order.dateStatusChanged, format: .dateTime)
+                                        .monospacedDigit()
+                                }
                                     
                             }
                             .frame(width: 274, alignment: .trailing)
@@ -167,7 +186,7 @@ struct OrderCardView: View {
                 Image(systemName: "chevron.right")
                     .font(.footnote)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
+                    .foregroundStyle(.tertiary)
             }
             .padding()
             .background(Color(nsColor: .quaternarySystemFill))
@@ -184,5 +203,16 @@ struct OrderCardView: View {
         } else {
             Text("􀀀").foregroundStyle(red)
         }
+    }
+}
+
+
+
+extension View {
+    
+    
+    @ViewBuilder func cardCaption() -> some View {
+        
+        self.font(.caption).foregroundStyle(.secondary)
     }
 }
