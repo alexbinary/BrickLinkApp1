@@ -10,6 +10,8 @@ struct OrderCardView: View {
     
     let orderId: OrderSummary.ID
     
+    @State var hover: Bool = false
+    
     
     var body: some View {
         
@@ -228,9 +230,12 @@ struct OrderCardView: View {
                     .foregroundStyle(.tertiary)
             }
             .padding()
-            .background(Color(nsColor: .quaternarySystemFill))
+            .background(Color(nsColor: hover ? .tertiarySystemFill : .quaternarySystemFill))
             .border(Color(nsColor: .tertiarySystemFill))
             .cornerRadius(6)
+            .onHover { hover in
+                self.hover = hover
+            }
         }
     }
     
