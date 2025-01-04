@@ -194,7 +194,7 @@ struct OrdersDetailView: View {
                     }
                     .equalWidths($columnWidth)
                     
-                    TabView {
+                    TabView(selection: .constant(2)) {
                         
                         ScrollView {
                             OrderDetailView(order: order)
@@ -212,7 +212,7 @@ struct OrdersDetailView: View {
                             .tag(1)
                         
                         ScrollView {
-                            OrderPackingAndShippingView(orderId: orderId)
+                            OrderShippingView(orderId: orderId)
                         }
                         .tabItem {
                             Text("􀐚 Shipping")

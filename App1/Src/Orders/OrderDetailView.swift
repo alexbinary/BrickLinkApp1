@@ -92,49 +92,6 @@ struct OrderDetailView: View {
             
             Divider()
             
-            HeaderTitleView(label: "􁊇 Tracking")
-            
-            if (order.trackingNo ?? "").isEmpty {
-                Text("Tracking no not set")
-            } else {
-                Text("Tracking no set")
-            }
-            
-            var trackingNoEditValue = order.trackingNo
-            
-            let trackingNoBinding = Binding<String> {
-                return trackingNoEditValue ?? ""
-            } set: { newValue in
-                trackingNoEditValue = newValue
-            }
-            
-            TextField("Tracking No", text: trackingNoBinding)
-                .onSubmit {
-                    Task {
-                        await appController.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
-                    }
-                }
-            
-            Divider()
-            
-            HeaderTitleView(label: "􁊇 Drive thru")
-            
-            if order.driveThruSent {
-                Text("Drive through sent")
-            } else {
-                Text("Drive through not sent")
-            }
-            
-            Button {
-                Task {
-                    await appController.sendDriveThru(orderId: order.id)
-                }
-            } label: {
-                Text("Send drive thru")
-            }
-            
-            Divider()
-            
             HeaderTitleView(label: "􁊇 Items")
             
             Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")

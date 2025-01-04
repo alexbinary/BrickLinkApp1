@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderPackingAndShippingView: View {
+struct OrderShippingView: View {
     
     
     @EnvironmentObject var appController: AppController
@@ -68,110 +68,168 @@ struct OrderPackingAndShippingView: View {
                 
                 Divider()
                 
-                HeaderTitleView(label: "􀐚 Shipping")
-                
-                Grid(alignment: .leading, verticalSpacing: 8) {
-                
-                    GridRow {
-                        Text("Method :")
+                HStack(alignment: .top, spacing: 48) {
+                    
+                    VStack(alignment: .leading, spacing: 12) {
                         
-                        Text("Recommended :").gridColumnAlignment(.trailing)
-                        HStack {
-                            Toggle("letter", isOn: .constant(selectedShippingCost?.chooseLetter ?? false))
-                            Toggle("parcel", isOn: .constant(selectedShippingCost?.chooseParcel ?? false))
-                        }
-                    }
-                
-                    GridRow {
-                        Text("Shipping cost :")
+                        HeaderTitleView(label: "􀐚 Packing & Stamping")
                         
-                        Text("Predicted :").gridColumnAlignment(.trailing)
-                        if let selectedShippingCost = selectedShippingCost,
-                           let value = selectedShippingCost.value {
+                        Grid(alignment: .leading, verticalSpacing: 8) {
                             
-                            Text(value, format: .currency(code: "EUR").presentation(.isoCode))
-                        
-                        } else {
-                            Text("")
-                        }
-                        
-                        Text("Actual :")
-                        
-                        var value = appController.shippingCost(forOrderWithId: order.id) ?? 0
-                        
-                        let shippingCostBinding = Binding<Float> {
-                            return value
-                        } set: { newValue in
-                            value = newValue
-                        }
-                        
-                        TextField("Shipping cost", value: shippingCostBinding,
-                                  format: .currency(code: "EUR").presentation(.isoCode)
-                        )
-                        .onSubmit {
-                            appController.updateShippingCost(forOrderWithId: order.id, cost: value)
-                        }
-                        .frame(maxWidth: 100)
-                        
-                        if let selectedShippingCost = selectedShippingCost,
-                           let value = selectedShippingCost.value {
-                        
-                            Button {
-                                appController.updateShippingCost(forOrderWithId: order.id, cost: value)
-                            } label: {
+                            GridRow {
+                                Text("Recommended method :")
+                                
                                 HStack {
-                                    Text("Confirm")
-                                    Text(value, format: .currency(code: "EUR").presentation(.isoCode))
+                                    Toggle("letter", isOn: .constant(selectedShippingCost?.chooseLetter ?? false))
+                                    Toggle("parcel", isOn: .constant(selectedShippingCost?.chooseParcel ?? false))
+                                }
+                            }
+                            
+                            GridRow {
+                                Text("Shipping cost :")
+                                
+                                var shippingCostEditValue = appController.shippingCost(forOrderWithId: order.id) ?? 0
+                                
+                                let shippingCostBinding = Binding<Float> {
+                                    return shippingCostEditValue
+                                } set: { newValue in
+                                    shippingCostEditValue = newValue
+                                }
+                                
+                                TextField("Shipping cost", value: shippingCostBinding,
+                                          format: .currency(code: "EUR").presentation(.isoCode)
+                                )
+                                .onSubmit {
+                                    appController.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                }
+                                .frame(maxWidth: 120)
+                                
+                                HStack {
+                                    Button {
+                                        Task {
+                                            appController.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                        }
+                                    } label: {
+                                        Text("Save")
+                                    }
+                                    
+                                    if let selectedShippingCost = selectedShippingCost,
+                                       let shippingCostPredictedValue = selectedShippingCost.value {
+                                        
+                                        Button {
+                                            appController.updateShippingCost(forOrderWithId: order.id, cost: shippingCostPredictedValue)
+                                        } label: {
+                                            HStack {
+                                                Text("Predicted:")
+                                                Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            GridRow {
+                                Text("Stamping :")
+                                
+                                let recommendedMethod = {
+                                    
+                                    var s = ""
+                                    
+                                    if let selectedAffranchissement = selectedAffranchissement {
+                                        
+                                        if selectedAffranchissement.usePostOffice {
+                                            return "Bureau de poste"
+                                        } else {
+                                            s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                            
+                                            if order.shippingMethodId != shippingMethodId_France {
+                                                s += " international"
+                                            }
+                                            
+                                            return s
+                                        }
+                                    }
+                                    
+                                    return s
+                                }()
+                                
+                                if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                                    Text(confirmedMethod)
+                                } else {
+                                    Text("")
+                                }
+                                
+                                HStack {
+                                    Button {
+                                        appController.updateAffranchissement(forOrderWithId: order.id, method: recommendedMethod)
+                                    } label: {
+                                        Text("Recommended: \(recommendedMethod)")
+                                    }
+                                    
+                                    if recommendedMethod != "Bureau de poste" {
+                                        Button {
+                                            appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
+                                        } label: {
+                                            Text("Bureau de poste")
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                     
-                    GridRow {
-                        Text("Affranchissement :")
+                    VStack(alignment: .leading, spacing: 12) {
                         
-                        let recommendedMethod = {
+                        HeaderTitleView(label: "􁁾 Shipping")
+                        
+                        Grid(alignment: .leading, verticalSpacing: 8) {
                             
-                            var s = ""
-                            
-                            if let selectedAffranchissement = selectedAffranchissement {
+                            GridRow {
                                 
-                                if selectedAffranchissement.usePostOffice {
-                                    return "Bureau de poste"
-                                } else {
-                                    s = "\(selectedAffranchissement.nbTimbres) timbres"
-                                    
-                                    if order.shippingMethodId != shippingMethodId_France {
-                                        s += " international"
+                                Text("Tracking no :")
+                                
+                                var trackingNoEditValue = order.trackingNo
+                                
+                                let trackingNoBinding = Binding<String> {
+                                    return trackingNoEditValue ?? ""
+                                } set: { newValue in
+                                    trackingNoEditValue = newValue
+                                }
+                                
+                                TextField("Tracking No", text: trackingNoBinding)
+                                    .onSubmit {
+                                        Task {
+                                            await appController.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
+                                        }
                                     }
-                                    
-                                    return s
+                                    .frame(maxWidth: 120)
+                                
+                                Button {
+                                    Task {
+                                        await appController.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
+                                    }
+                                } label: {
+                                    Text("Save")
                                 }
                             }
                             
-                            return s
-                        }()
-                        Text("Recommended :").gridColumnAlignment(.trailing)
-                        Text(recommendedMethod)
-                        
-                        Text("Actual :")
-                        if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
-                            Text(confirmedMethod)
-                        } else {
-                            Text("")
-                        }
-                        
-                        HStack {
-                            Button {
-                                appController.updateAffranchissement(forOrderWithId: order.id, method: recommendedMethod)
-                            } label: {
-                                Text("Confirm \(recommendedMethod)")
-                            }
-                            
-                            Button {
-                                appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
-                            } label: {
-                                Text("Bureau de poste")
+                            GridRow {
+                                
+                                Text("Drive thru :")
+                                
+                                if order.driveThruSent {
+                                    Text("sent")
+                                } else {
+                                    Text("not sent")
+                                }
+                                
+                                Button {
+                                    Task {
+                                        await appController.sendDriveThru(orderId: order.id)
+                                    }
+                                } label: {
+                                    Text("Send")
+                                }
                             }
                         }
                     }
