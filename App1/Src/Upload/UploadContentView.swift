@@ -173,7 +173,6 @@ struct UploadContentView: View {
                                                     remarks: remarks!
                                                 )
                                                 appController.deleteUploadItem(nextUploadItem)
-                                                await self.pullInventory()
                                             }
                                         } label: {
                                             Text("Update inventory")
@@ -294,7 +293,6 @@ struct UploadContentView: View {
                                                 remarks: remarks!
                                             )
                                             appController.deleteUploadItem(nextUploadItem)
-                                            await self.pullInventory()
                                         }
                                     } label: {
                                         Text("Create inventory")
