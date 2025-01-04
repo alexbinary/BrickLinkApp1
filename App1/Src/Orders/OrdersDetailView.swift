@@ -194,7 +194,7 @@ struct OrdersDetailView: View {
                     }
                     .equalWidths($columnWidth)
                     
-                    TabView(selection: .constant(2)) {
+                    TabView {
                         
                         ScrollView {
                             OrderDetailView(order: order)
