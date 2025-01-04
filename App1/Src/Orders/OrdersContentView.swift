@@ -18,66 +18,32 @@ struct OrdersContentView: View {
                 
                 let allOrders = appController.orderSummaries
                 
-                Group {
-                    section(header: "􁕍 Validate payment", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .validatePayment
-                    })
-                }
+                let statuses: [OrderBusinessStatus] = [
+                    .validatePayment,
+                    .readyForPicking,
+                    .readyToShip,
+                    .validateShipping,
+                    .received,
+                    .pendingPayment,
+                    .inTransit,
+                    .done,
+                ]
                 
-                Group {
-                    section(header: "􀈥 Ready to pick", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .readyForPicking
-                    })
-                }
-                
-                Group {
-                    section(header: "􀐚 Ready to ship", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .readyToShip
-                    })
-                }
-                
-                Group {
-                    section(header: "􁕍 Validate shipping", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .validateShipping
-                    })
-                }
-                
-                Group {
-                    section(header: "􀐛 Received", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .received
-                    })
-                }
-                
-                Group {
-                    section(header: "􀖧 Pending payment", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .pendingPayment
-                    })
-                }
-                
-                Group {
-                    section(header: "􁁾 In transit", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .inTransit
-                    })
-                }
-                
-                Group {
-                    section(header: "􁙕 Done", orders: allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .done
-                    })
-                }
-                
-                Section {
+                ForEach(statuses, id: \.self) { status in
                     
-                    let closedOrders = allOrders.filter {
-                        appController.orderBusinessStatus($0.id) == .closed
+                    Group {
+                        section(header: status.descriptionWithPicto, orders: allOrders.filter {
+                            appController.orderBusinessStatus($0.id) == status
+                        })
                     }
-                    ForEach(closedOrders.grouppedByMonth, id: \.month) { item in
-                        
-                        section(header: "item.month", orders: item.elements)
-                    }
+                }
+                
+                let closedOrders = allOrders.filter {
+                    appController.orderBusinessStatus($0.id) == .closed
+                }
+                ForEach(closedOrders.grouppedByMonth, id: \.month) { item in
                     
-                } header: {
-                    headerView("􀹴 Closed")
+                    section(header: "\(OrderBusinessStatus.closed.descriptionWithPicto) - \(item.month)", orders: item.elements)
                 }
             }
         }

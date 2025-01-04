@@ -30,14 +30,14 @@ struct OrdersDetailView: View {
                                 
                                 GridRow {
                                     Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
-                                        Text(order.id).font(.title2)
+                                        Text(order.id).font(.title3)
                                     }
-                                    Text(order.date, format: .dateTime).font(.title3)
+                                    Text(order.date, format: .dateTime)
                                 }
                                 
                                 GridRow {
-                                    Text(order.status.rawValue).font(.title2)
-                                    Text(orderSummary.dateStatusChanged, format: .dateTime).font(.title3)
+                                    Text(order.status.rawValue).font(.title3)
+                                    Text(orderSummary.dateStatusChanged, format: .dateTime)
                                 }
                             }
                             
@@ -70,65 +70,101 @@ struct OrdersDetailView: View {
                             
                             HeaderTitleView(label: "􀼏 Status")
                             
-                            Text(appController.orderBusinessStatus(order.id).rawValue).font(.title2)
-                            
-                            HeaderTitleView(label: "􀼏 Checklist")
-                            
-                            Grid(alignment: .leading) {
+                            ScrollView {
                                 
-                                GridRow {
-                                    checkStatus(appController.orderChecklistPayment(orderId))
-                                    Text("Payment")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistIncomeTransaction(orderId))
-                                    Text("Income transaction")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistPicking(orderId))
-                                    Text("Picked")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistVerification(orderId))
-                                    Text("Verification")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistPacked(orderId))
-                                    Text("Packed")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistShipped(orderId))
-                                    Text("Shipped")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistTrackingNo(orderId))
-                                    Text("Tracking no")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistDriveThru(orderId))
-                                    Text("Drive thru")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistAffranchissement(orderId))
-                                    Text("Affranchissement")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistShippingTransaction(orderId))
-                                    Text("Shipping transaction")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistReceived(orderId))
-                                    Text("Received")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistSellerFeedback(orderId))
-                                    Text("Seller feedback")
-                                }
-                                GridRow {
-                                    checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
-                                    Text("Unchanged for 30+ days")
+                                Grid(alignment: .leading) {
+                                    
+                                    let padding: CGFloat = 4
+                                    
+                                    Text(OrderBusinessStatus.pendingPayment.descriptionWithPicto).font(.title3)
+                                        .padding(.bottom, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistPayment(orderId))
+                                        Text("Payment")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistIncomeTransaction(orderId))
+                                        Text("Income transaction")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.readyForPicking.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistPicking(orderId))
+                                        Text("Picked")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistVerification(orderId))
+                                        Text("Verification")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistPacked(orderId))
+                                        Text("Packed")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.readyToShip.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistShipped(orderId))
+                                        Text("Shipped")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.validateShipping.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistTrackingNo(orderId))
+                                        Text("Tracking no")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistDriveThru(orderId))
+                                        Text("Drive thru")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistAffranchissement(orderId))
+                                        Text("Affranchissement")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistShippingTransaction(orderId))
+                                        Text("Shipping transaction")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.inTransit.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistReceived(orderId))
+                                        Text("Received")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.received.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistSellerFeedback(orderId))
+                                        Text("Seller feedback")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.done.descriptionWithPicto).font(.title3)
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
+                                        Text("Inactive for 30 days")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.closed.descriptionWithPicto).font(.title3)
+                                        .padding(.top, padding)
                                 }
                             }
+                            .scrollIndicators(.hidden)
                             
                             Spacer()
                         }

@@ -1328,21 +1328,6 @@ class AppController: ObservableObject {
 
 
 
-enum OrderBusinessStatus: String, IsOneOfAble {
-    
-    case pendingPayment
-    case validatePayment
-    case readyForPicking
-    case readyToShip
-    case validateShipping
-    case inTransit
-    case received
-    case done
-    case closed
-}
-
-
-
 extension OrderSummary {
     
     
