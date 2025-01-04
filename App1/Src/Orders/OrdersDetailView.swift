@@ -26,34 +26,52 @@ struct OrdersDetailView: View {
                         
                         VStack(alignment: .leading, spacing: 12) {
                             
-                            Grid(alignment: .leading) {
+                            Grid(alignment: .leading, verticalSpacing: 0) {
                                 
                                 GridRow {
-                                    Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
-                                        Text(order.id).font(.title3)
-                                    }
-                                    Text(order.date, format: .dateTime)
+                                    Text("order").cardCaption()
+                                    Text("placed").cardCaption()
+                                    
                                 }
-                                
+                                GridRow {
+                                    Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
+                                        Text(order.id).font(.title2)
+                                    }
+                                    .monospacedDigit()
+                                    Text(order.date, format: .dateTime)
+                                        .frame(width: 150, alignment: .leading)
+                                        .monospacedDigit()
+                                }
+                            
+                                GridRow {
+                                    Text("status").cardCaption()
+                                    Text("changed").cardCaption()
+                                }
                                 GridRow {
                                     Text(order.status.rawValue).font(.title3)
                                     Text(orderSummary.dateStatusChanged, format: .dateTime)
+                                        .monospacedDigit()
                                 }
                             }
                             
                             Grid(alignment: .leading) {
                                 
                                 GridRow {
-                                    Text("􀉩").gridColumnAlignment(.center)
+                                    Text("􀉩").foregroundStyle(.secondary).gridColumnAlignment(.center)
                                     Text(order.buyer)
                                 }
                                 
                                 GridRow {
-                                    Text("􀍩").gridColumnAlignment(.center)
+                                    Text("􀍩").foregroundStyle(.secondary).gridColumnAlignment(.center)
                                     
                                     HStack {
                                         Text("\(order.items) (\(order.lots))")
-                                        Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
+                                            .frame(width: 75, alignment: .leading)
+                                        HStack {
+                                            Text("􀖧").foregroundStyle(.secondary)
+                                            Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
+                                                .monospacedDigit()
+                                        }
                                     }
                                 }
                             }
@@ -69,19 +87,20 @@ struct OrdersDetailView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             
                             HeaderTitleView(label: "􀼏 Status")
+                                .padding(.bottom, 6)
                             
                             ScrollView {
                                 
                                 Grid(alignment: .leading) {
                                     
-                                    let padding: CGFloat = 4
+                                    let padding: CGFloat = 6
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistPayment(orderId))
                                         Text("Payment received")
                                     }
                                     
-                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -89,7 +108,7 @@ struct OrdersDetailView: View {
                                         Text("Register transaction")
                                     }
                                     
-                                    Text(OrderBusinessStatus.pickAndPack.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.pickAndPack.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -105,7 +124,7 @@ struct OrdersDetailView: View {
                                         Text("Pack order")
                                     }
                                     
-                                    Text(OrderBusinessStatus.ship.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.ship.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -113,7 +132,7 @@ struct OrdersDetailView: View {
                                         Text("Mark Shipped")
                                     }
                                     
-                                    Text(OrderBusinessStatus.validateShipping.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.validateShipping.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -133,7 +152,7 @@ struct OrdersDetailView: View {
                                         Text("Register transaction")
                                     }
                                     
-                                    Text(OrderBusinessStatus.inTransit.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.inTransit.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -141,7 +160,7 @@ struct OrdersDetailView: View {
                                         Text("Received or Completed")
                                     }
                                     
-                                    Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -149,7 +168,7 @@ struct OrdersDetailView: View {
                                         Text("Give feedback")
                                     }
                                     
-                                    Text(OrderBusinessStatus.done.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.done.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -157,13 +176,13 @@ struct OrdersDetailView: View {
                                         Text("Inactive for 30 days")
                                     }
                                     
-                                    Text(OrderBusinessStatus.closed.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.closed.descriptionWithPicto).checklistTitle()
                                         .padding(.top, padding)
                                 }
+                                
+                                Spacer()
                             }
                             .scrollIndicators(.hidden)
-                            
-                            Spacer()
                         }
                         .padding()
                         .equalWidths()
@@ -242,5 +261,16 @@ struct OrdersDetailView: View {
         } else {
             Text("􀀀").foregroundStyle(red)
         }
+    }
+}
+
+
+
+extension View {
+    
+    
+    @ViewBuilder func checklistTitle() -> some View {
+        
+        self.font(.title3).opacity(0.5)
     }
 }
