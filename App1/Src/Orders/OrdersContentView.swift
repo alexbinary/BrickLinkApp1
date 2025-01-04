@@ -19,22 +19,34 @@ struct OrdersContentView: View {
                 let allOrders = appController.orderSummaries
                 
                 let statuses: [OrderBusinessStatus] = [
+                    .paymentPending,
                     .validatePayment,
                     .pickAndPack,
                     .ship,
                     .validateShipping,
-                    .giveFeedback,
-                    .paymentPending,
                     .inTransit,
+                    .giveFeedback,
                     .done,
                 ]
                 
                 ForEach(statuses, id: \.self) { status in
                     
                     Group {
-                        section(header: status.descriptionWithPicto, orders: allOrders.filter {
-                            appController.orderBusinessStatus($0.id) == status
-                        })
+                        
+                        let orders = {
+                            var orders = allOrders.filter {
+                                appController.orderBusinessStatus($0.id) == status
+                            }
+                            switch status {
+                            case .pickAndPack:
+                                orders = orders.sorted { $0.lots < $1.lots }
+                            default:
+                                orders = orders.sorted { $0.date > $1.date }
+                            }
+                            return orders
+                        }()
+                        
+                        section(header: status.descriptionWithPicto, orders: orders)
                     }
                 }
                 
