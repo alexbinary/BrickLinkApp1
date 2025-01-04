@@ -141,7 +141,7 @@ struct OrdersContentView: View {
     @ViewBuilder
     func itemView(_ orderId: OrderSummary.ID) -> some View {
         
-        OrderCardView(orderId: orderId, disclosureIndicatorVisible: true)
+        OrderCardView(orderId: orderId)
             .onTapGesture {
                 ordersActiveNavigationPath.append(orderId)
             }

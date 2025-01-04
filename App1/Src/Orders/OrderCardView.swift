@@ -9,7 +9,6 @@ struct OrderCardView: View {
     @EnvironmentObject var appController: AppController
     
     let orderId: OrderSummary.ID
-    let disclosureIndicatorVisible: Bool
     
     
     var body: some View {
@@ -169,13 +168,10 @@ struct OrderCardView: View {
                 
                 Spacer()
                 
-                if disclosureIndicatorVisible {
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
-                }
+                Image(systemName: "chevron.right")
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
             }
             .padding()
             .background(Color(nsColor: .quaternarySystemFill))
