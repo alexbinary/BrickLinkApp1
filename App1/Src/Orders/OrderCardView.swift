@@ -80,54 +80,81 @@ struct OrderCardView: View {
                                     Text(order.dateStatusChanged, format: .dateTime)
                                         .monospacedDigit()
                                 }
-                                    
                             }
-                            .frame(width: 274, alignment: .trailing)
                             
                             Text("")
                             
-                            let items = {
+                            let items: [(text: String, status: TodoStatus)] = {
                                 
-                                var items = [String]()
+                                var items: [(text: String, status: TodoStatus)] = []
                                 
-                                if !appController.orderChecklistPayment(orderId) {
-                                    items.append("Payment received")
-                                }
-                                if !appController.orderChecklistIncomeTransaction(orderId) {
-                                    items.append("Register transaction")
-                                }
-                                if !appController.orderChecklistPicking(orderId) {
-                                    items.append("Pick items")
-                                }
-                                if !appController.orderChecklistVerification(orderId) {
-                                    items.append("Verify items")
-                                }
-                                if !appController.orderChecklistPacked(orderId) {
-                                    items.append("Pack order")
-                                }
-                                if !appController.orderChecklistShipped(orderId) {
-                                    items.append("Mark Shipped")
-                                }
-                                if !appController.orderChecklistTrackingNo(orderId) {
-                                    items.append("Input tracking no")
-                                }
-                                if !appController.orderChecklistDriveThru(orderId) {
-                                    items.append("Send drive thru")
-                                }
-                                if !appController.orderChecklistAffranchissement(orderId) {
-                                    items.append("Validate stamping")
-                                }
-                                if !appController.orderChecklistShippingTransaction(orderId) {
-                                    items.append("Register transaction")
-                                }
-                                if !appController.orderChecklistReceived(orderId) {
-                                    items.append("Received or Completed")
-                                }
-                                if !appController.orderChecklistSellerFeedback(orderId) {
-                                    items.append("Give feedback")
-                                }
-                                if !appController.orderChecklistUnchangedFor30Days(orderId) {
-                                    items.append("Inactive for 30 days")
+                                switch appController.orderBusinessStatus(orderId) {
+                                case .paymentPending:
+                                    
+                                    if !appController.orderChecklistPayment(orderId) {
+                                        items.append((text: "Payment pending", status: .waitingOnExternalAction))
+                                    }
+                                    
+                                case .validatePayment:
+                                    
+                                    if !appController.orderChecklistIncomeTransaction(orderId) {
+                                        items.append((text: "Missing payment transaction", status: .actionRequired))
+                                    }
+                                    
+                                case .pickAndPack:
+                                    
+                                    if !appController.orderChecklistPicking(orderId) {
+                                        items.append((text: "Needs picking", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistVerification(orderId) {
+                                        items.append((text: "Needs verify items", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistPacked(orderId) {
+                                        items.append((text: "Needs packing", status: .actionRequired))
+                                    }
+                                    
+                                case .ship:
+                                    
+                                    if !appController.orderChecklistShipped(orderId) {
+                                        items.append((text: "Mark Shipped", status: .actionRequired))
+                                    }
+                                    
+                                case .validateShipping:
+                                    
+                                    if !appController.orderChecklistTrackingNo(orderId) {
+                                        items.append((text: "Missing tracking no", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistDriveThru(orderId) {
+                                        items.append((text: "Drive thru not sent", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistAffranchissement(orderId) {
+                                        items.append((text: "Stamping not validated", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistShippingTransaction(orderId) {
+                                        items.append((text: "Missing shipping transaction", status: .actionRequired))
+                                    }
+                                    
+                                case .inTransit:
+                                    
+                                    if !appController.orderChecklistReceived(orderId) {
+                                        items.append((text: "Waiting for Received/Completed", status: .waitingOnExternalAction))
+                                    }
+                                    
+                                case .giveFeedback:
+                                    
+                                    if !appController.orderChecklistSellerFeedback(orderId) {
+                                        items.append((text: "Needs feedback", status: .actionRequired))
+                                    }
+                                    
+                                case .done:
+                                    
+                                    if !appController.orderChecklistUnchangedFor30Days(orderId) {
+                                        items.append((text: "Active in the last 30 days", status: .waitingOnExternalAction))
+                                    }
+                                    
+                                case .closed:
+                                    
+                                    items.append((text: "Closed", status: .completed))
                                 }
                                 
                                 return items
@@ -167,15 +194,27 @@ struct OrderCardView: View {
                                 
                                 VStack(alignment: .trailing) {
                                     
-                                    ForEach(displayItems, id: \.self) { item in
-                                        Text(item)
-                                            .padding(.horizontal, 4)
+                                    ForEach(displayItems, id: \.text) { item in
+                                        
+                                        let color: Color = {
+                                            switch item.status {
+                                            case .actionRequired:
+                                                    .red
+                                            case .waitingOnExternalAction:
+                                                    .yellow
+                                            case .completed:
+                                                    .green
+                                            }
+                                        }()
+                                        
+                                        Text(item.text)
+                                            .padding(.horizontal, 8)
                                             .padding(.vertical, 2)
-                                            .background(.red.opacity(0.1))
+                                            .background(color.gradient.opacity(0.1))
                                             .cornerRadius(3)
                                     }
                                 }
-                                .frame(width: 150, alignment: .trailing)
+                                .frame(width: 220, alignment: .trailing)
                             }
                         }
                     }
@@ -215,4 +254,12 @@ extension View {
         
         self.font(.caption).foregroundStyle(.secondary)
     }
+}
+
+
+enum TodoStatus {
+    
+    case actionRequired
+    case waitingOnExternalAction
+    case completed
 }
