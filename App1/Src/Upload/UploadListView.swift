@@ -126,7 +126,7 @@ struct UploadListView: View {
                 }
                 TableColumn("Price") { item in
                     if let price = item.unitPrice {
-                        Text(price, format: .currency(code: "EUR").presentation(.isoCode))
+                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                     }
                 }
                 
