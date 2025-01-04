@@ -17,151 +17,147 @@ struct OrderCardView: View {
             
             HStack {
                 
-                HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .trailing) {
                     
-                    VStack(alignment: .leading) {
+                    HStack(alignment: .top, spacing: 16) {
                         
-                        HStack {
-                            Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
-                                Text(order.id).font(.title2)
-                            }
-                            Text(order.date, format: .dateTime).font(.title3)
-                        }
-                        
-                        Text("")
-                        
-                        Grid(alignment: .leading) {
+                        VStack(alignment: .leading) {
                             
-                            GridRow {
-                                Text("􀉩").gridColumnAlignment(.center)
-                                Text(order.buyer)
+                            HStack {
+                                Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
+                                    Text(order.id).font(.title2)
+                                }
+                                .monospacedDigit()
+                                Text(order.date, format: .dateTime).font(.title3)
+                                    .frame(width: 150, alignment: .leading)
+                                    .monospacedDigit()
                             }
                             
-                            GridRow {
-                                Text("􀍩").gridColumnAlignment(.center)
+                            Text("")
+                            
+                            Grid(alignment: .leading) {
                                 
-                                HStack {
-                                    Text("\(order.items) (\(order.lots))")
-                                    Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
+                                GridRow {
+                                    Text("􀉩").gridColumnAlignment(.center)
+                                    Text(order.buyer)
+                                }
+                                
+                                GridRow {
+                                    Text("􀍩").gridColumnAlignment(.center)
+                                    
+                                    HStack {
+                                        Text("\(order.items) (\(order.lots))")
+                                            .frame(width: 80, alignment: .leading)
+                                        Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
+                                            .monospacedDigit()
+                                    }
                                 }
                             }
                         }
-                    }
-                    
-                    VStack(alignment: .leading) {
                         
-                        HStack {
-                            Text(order.status.rawValue).font(.title2)
-                            Text(order.dateStatusChanged, format: .dateTime).font(.title3)
-                        }
-                        
-                        Text("")
-                        
-                        HStack {
-                            Text("Buyer:")
-                            if let rating = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback()?.rating {
-                                if rating == 0 {
-                                    Text("􀉿")
-                                } else if rating == 2 {
-                                    Text("􀊁")
-                                } else {
-                                    Text("Neutral")
-                                }
+                        VStack(alignment: .leading) {
+                            
+                            HStack {
+                                Text(order.status.rawValue).font(.title2)
+                                Text(order.dateStatusChanged, format: .dateTime).font(.title3)
+                                    .monospacedDigit()
+                                    
                             }
-                        }
-                        HStack {
-                            Text("Seller:")
-                            if let rating = appController.orderFeedbacks(forOrderWithId: order.id).sellerFeedback()?.rating {
-                                if rating == 0 {
-                                    Text("􀉿")
-                                } else if rating == 2 {
-                                    Text("􀊁")
-                                } else {
-                                    Text("Neutral")
+                            .frame(width: 274, alignment: .trailing)
+                            
+                            Text("")
+                            
+                            let items = {
+                                
+                                var items = [String]()
+                                
+                                if !appController.orderChecklistPayment(orderId) {
+                                    items.append("Payment received")
                                 }
+                                if !appController.orderChecklistIncomeTransaction(orderId) {
+                                    items.append("Register transaction")
+                                }
+                                if !appController.orderChecklistPicking(orderId) {
+                                    items.append("Pick items")
+                                }
+                                if !appController.orderChecklistVerification(orderId) {
+                                    items.append("Verify items")
+                                }
+                                if !appController.orderChecklistPacked(orderId) {
+                                    items.append("Pack order")
+                                }
+                                if !appController.orderChecklistShipped(orderId) {
+                                    items.append("Mark Shipped")
+                                }
+                                if !appController.orderChecklistTrackingNo(orderId) {
+                                    items.append("Input tracking no")
+                                }
+                                if !appController.orderChecklistDriveThru(orderId) {
+                                    items.append("Send drive thru")
+                                }
+                                if !appController.orderChecklistAffranchissement(orderId) {
+                                    items.append("Validate stamping")
+                                }
+                                if !appController.orderChecklistShippingTransaction(orderId) {
+                                    items.append("Register transaction")
+                                }
+                                if !appController.orderChecklistReceived(orderId) {
+                                    items.append("Received or Completed")
+                                }
+                                if !appController.orderChecklistSellerFeedback(orderId) {
+                                    items.append("Give feedback")
+                                }
+                                if !appController.orderChecklistUnchangedFor30Days(orderId) {
+                                    items.append("Inactive for 30 days")
+                                }
+                                
+                                return items
+                            }()
+                            
+                            let displayItems = items.limit(2)
+                            
+                            HStack(alignment: displayItems.count == 1 ? .bottom : .top, spacing: 24) {
+                                
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("Buyer:")
+                                        if let rating = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback()?.rating {
+                                            if rating == 0 {
+                                                Text("􀉿")
+                                            } else if rating == 2 {
+                                                Text("􀊁")
+                                            } else {
+                                                Text("Neutral")
+                                            }
+                                        }
+                                    }
+                                    HStack {
+                                        Text("Seller:")
+                                        if let rating = appController.orderFeedbacks(forOrderWithId: order.id).sellerFeedback()?.rating {
+                                            if rating == 0 {
+                                                Text("􀉿")
+                                            } else if rating == 2 {
+                                                Text("􀊁")
+                                            } else {
+                                                Text("Neutral")
+                                            }
+                                        }
+                                    }
+                                }
+                                .frame(width: 100, alignment: .leading)
+                                
+                                VStack(alignment: .trailing) {
+                                    
+                                    ForEach(displayItems, id: \.self) { item in
+                                        Text(item)
+                                            .padding(.horizontal, 4)
+                                            .padding(.vertical, 2)
+                                            .background(.red.opacity(0.1))
+                                            .cornerRadius(3)
+                                    }
+                                }
+                                .frame(width: 150, alignment: .trailing)
                             }
-                        }
-                    }
-                }
-                
-                Grid(alignment: .leading) {
-                    
-                    switch appController.orderBusinessStatus(orderId) {
-                    
-                    case .paymentPending:
-                        
-                        GridRow {
-                            Text("Payment")
-                            checkStatus(appController.orderChecklistPayment(orderId))
-                        }
-                        
-                    case .validatePayment:
-                        
-                        GridRow {
-                            Text("Income transaction")
-                            checkStatus(appController.orderChecklistIncomeTransaction(orderId))
-                        }
-                        
-                    case .pickAndPack:
-                        
-                        GridRow {
-                            Text("Picked")
-                            checkStatus(appController.orderChecklistPicking(orderId))
-                        }
-                        GridRow {
-                            Text("Verification")
-                            checkStatus(appController.orderChecklistVerification(orderId))
-                        }
-                        GridRow {
-                            Text("Packed")
-                            checkStatus(appController.orderChecklistPacked(orderId))
-                        }
-                        
-                    case .ship:
-                        
-                        GridRow {
-                            Text("Shipped")
-                            checkStatus(appController.orderChecklistShipped(orderId))
-                        }
-                        
-                    case .validateShipping:
-                        
-                        GridRow {
-                            Text("Tracking no")
-                            checkStatus(appController.orderChecklistTrackingNo(orderId))
-                        }
-                        GridRow {
-                            Text("Drive thru")
-                            checkStatus(appController.orderChecklistDriveThru(orderId))
-                        }
-                        GridRow {
-                            Text("Affranchissement")
-                            checkStatus(appController.orderChecklistAffranchissement(orderId))
-                        }
-                        GridRow {
-                            Text("Shipping transaction")
-                            checkStatus(appController.orderChecklistShippingTransaction(orderId))
-                        }
-                        
-                    case .inTransit:
-                        
-                        GridRow {
-                            Text("Received")
-                            checkStatus(appController.orderChecklistReceived(orderId))
-                        }
-                        
-                    case .giveFeedback:
-                        
-                        GridRow {
-                            Text("Seller feedback")
-                            checkStatus(appController.orderChecklistSellerFeedback(orderId))
-                        }
-                        
-                    case .done, .closed:
-                        
-                        GridRow {
-                            Text("Unchanged for 30+ days")
-                            checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
                         }
                     }
                 }
