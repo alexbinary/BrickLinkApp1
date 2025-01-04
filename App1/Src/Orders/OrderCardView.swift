@@ -230,12 +230,41 @@ struct OrderCardView: View {
                     .foregroundStyle(.tertiary)
             }
             .padding()
-            .background(Color(nsColor: hover ? .tertiarySystemFill : .quaternarySystemFill))
-            .border(Color(nsColor: .tertiarySystemFill))
+            .background(Color(nsColor: hover ? .tertiarySystemFill : .windowBackgroundColor))
             .cornerRadius(6)
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(statusColor.opacity(0.25), lineWidth: 1)
+            )
             .onHover { hover in
                 self.hover = hover
             }
+        }
+    }
+    
+    
+    var statusColor: Color {
+        
+        switch appController.orderBusinessStatus(orderId) {
+            
+        case .paymentPending:
+                .red
+        case .validatePayment:
+                .red
+        case .pickAndPack:
+                .red
+        case .ship:
+                .yellow
+        case .validateShipping:
+                .orange
+        case .inTransit:
+                .orange
+        case .giveFeedback:
+                .green
+        case .done:
+                .green
+        case .closed:
+                .green
         }
     }
     
