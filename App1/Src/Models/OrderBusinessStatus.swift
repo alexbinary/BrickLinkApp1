@@ -6,13 +6,13 @@ import Foundation
 enum OrderBusinessStatus: String, IsOneOfAble {
     
     
-    case pendingPayment
+    case paymentPending
     case validatePayment
-    case readyForPicking
-    case readyToShip
+    case pickAndPack
+    case ship
     case validateShipping
     case inTransit
-    case received
+    case giveFeedback
     case done
     case closed
     
@@ -21,17 +21,17 @@ enum OrderBusinessStatus: String, IsOneOfAble {
         
         switch self {
         
-        case .pendingPayment:
-            "􀖧 Pending payment"
+        case .paymentPending:
+            "􀖧 Payment pending"
         
         case .validatePayment:
             "􁕍 Validate payment"
         
-        case .readyForPicking:
-            "􀈥 Ready to pick"
+        case .pickAndPack:
+            "􀈥 Pick and pack"
         
-        case .readyToShip:
-            "􀐚 Ready to ship"
+        case .ship:
+            "􀐚 Ship"
         
         case .validateShipping:
             "􁕍 Validate shipping"
@@ -39,7 +39,7 @@ enum OrderBusinessStatus: String, IsOneOfAble {
         case .inTransit:
             "􁁾 In transit"
         
-        case .received:
+        case .giveFeedback:
             "􀐛 Received"
         
         case .done:

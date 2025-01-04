@@ -88,7 +88,7 @@ struct OrderCardView: View {
                     
                     switch appController.orderBusinessStatus(orderId) {
                     
-                    case .pendingPayment:
+                    case .paymentPending:
                         
                         GridRow {
                             Text("Payment")
@@ -102,7 +102,7 @@ struct OrderCardView: View {
                             checkStatus(appController.orderChecklistIncomeTransaction(orderId))
                         }
                         
-                    case .readyForPicking:
+                    case .pickAndPack:
                         
                         GridRow {
                             Text("Picked")
@@ -117,7 +117,7 @@ struct OrderCardView: View {
                             checkStatus(appController.orderChecklistPacked(orderId))
                         }
                         
-                    case .readyToShip:
+                    case .ship:
                         
                         GridRow {
                             Text("Shipped")
@@ -150,7 +150,7 @@ struct OrderCardView: View {
                             checkStatus(appController.orderChecklistReceived(orderId))
                         }
                         
-                    case .received:
+                    case .giveFeedback:
                         
                         GridRow {
                             Text("Seller feedback")

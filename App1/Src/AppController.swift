@@ -1262,7 +1262,7 @@ class AppController: ObservableObject {
             }
         }
         
-        var validatedStatus: OrderBusinessStatus = .pendingPayment
+        var validatedStatus: OrderBusinessStatus = .paymentPending
         
         let conditionsStatus: [
             (condition: () -> Bool, status: OrderBusinessStatus)
@@ -1275,14 +1275,14 @@ class AppController: ObservableObject {
             (condition: {
                 self.orderChecklistIncomeTransaction(orderId)
                 
-            }, status: .readyForPicking
+            }, status: .pickAndPack
             ),
             (condition: {
                 self.orderChecklistPicking(orderId)
                 && self.orderChecklistVerification(orderId)
                 && self.orderChecklistPacked(orderId)
                 
-            }, status: .readyToShip
+            }, status: .ship
             ),
             (condition: {
                 self.orderChecklistShipped(orderId)
@@ -1300,7 +1300,7 @@ class AppController: ObservableObject {
             (condition: {
                 self.orderChecklistReceived(orderId)
                 
-            }, status: .received
+            }, status: .giveFeedback
             ),
             (condition: {
                 self.orderChecklistSellerFeedback(orderId)

@@ -20,11 +20,11 @@ struct OrdersContentView: View {
                 
                 let statuses: [OrderBusinessStatus] = [
                     .validatePayment,
-                    .readyForPicking,
-                    .readyToShip,
+                    .pickAndPack,
+                    .ship,
                     .validateShipping,
-                    .received,
-                    .pendingPayment,
+                    .giveFeedback,
+                    .paymentPending,
                     .inTransit,
                     .done,
                 ]

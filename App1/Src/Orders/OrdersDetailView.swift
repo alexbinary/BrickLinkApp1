@@ -60,7 +60,7 @@ struct OrdersDetailView: View {
                         }
                         .padding()
                         .equalWidths()
-                        .frame(width: columnWidth)
+                        .frame(width: columnWidth, alignment: .leading)
                         .background(Color(nsColor: .quaternarySystemFill))
                         .border(Color(nsColor: .tertiarySystemFill))
                         .cornerRadius(6)
@@ -76,12 +76,9 @@ struct OrdersDetailView: View {
                                     
                                     let padding: CGFloat = 4
                                     
-                                    Text(OrderBusinessStatus.pendingPayment.descriptionWithPicto).font(.title3)
-                                        .padding(.bottom, padding)
-                                    
                                     GridRow {
                                         checkStatus(appController.orderChecklistPayment(orderId))
-                                        Text("Payment")
+                                        Text("Payment received")
                                     }
                                     
                                     Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).font(.title3)
@@ -89,31 +86,31 @@ struct OrdersDetailView: View {
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistIncomeTransaction(orderId))
-                                        Text("Income transaction")
+                                        Text("Register transaction")
                                     }
                                     
-                                    Text(OrderBusinessStatus.readyForPicking.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.pickAndPack.descriptionWithPicto).font(.title3)
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistPicking(orderId))
-                                        Text("Picked")
+                                        Text("Pick items")
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistVerification(orderId))
-                                        Text("Verification")
+                                        Text("Verify items")
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistPacked(orderId))
-                                        Text("Packed")
+                                        Text("Pack order")
                                     }
                                     
-                                    Text(OrderBusinessStatus.readyToShip.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.ship.descriptionWithPicto).font(.title3)
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistShipped(orderId))
-                                        Text("Shipped")
+                                        Text("Mark Shipped")
                                     }
                                     
                                     Text(OrderBusinessStatus.validateShipping.descriptionWithPicto).font(.title3)
@@ -121,19 +118,19 @@ struct OrdersDetailView: View {
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistTrackingNo(orderId))
-                                        Text("Tracking no")
+                                        Text("Input tracking no")
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistDriveThru(orderId))
-                                        Text("Drive thru")
+                                        Text("Send drive thru")
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistAffranchissement(orderId))
-                                        Text("Affranchissement")
+                                        Text("Validate stamping")
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistShippingTransaction(orderId))
-                                        Text("Shipping transaction")
+                                        Text("Register transaction")
                                     }
                                     
                                     Text(OrderBusinessStatus.inTransit.descriptionWithPicto).font(.title3)
@@ -141,15 +138,15 @@ struct OrdersDetailView: View {
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistReceived(orderId))
-                                        Text("Received")
+                                        Text("Received or Completed")
                                     }
                                     
-                                    Text(OrderBusinessStatus.received.descriptionWithPicto).font(.title3)
+                                    Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).font(.title3)
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistSellerFeedback(orderId))
-                                        Text("Seller feedback")
+                                        Text("Give feedback")
                                     }
                                     
                                     Text(OrderBusinessStatus.done.descriptionWithPicto).font(.title3)
