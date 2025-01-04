@@ -135,35 +135,6 @@ struct OrderDetailView: View {
             
             Divider()
             
-            HeaderTitleView(label: "􁊇 Feedback")
-            
-            let orderFeedbacks = appController.orderFeedbacks(forOrderWithId: order.id)
-            
-            Table(orderFeedbacks.sorted { $0.dateRated < $1.dateRated }) {
-                TableColumn("From", value: \.from)
-                TableColumn("Rating") { feedback in
-                    Text("\(feedback.rating)")
-                }
-                TableColumn("Comment", value: \.comment)
-                TableColumn("Date") { feedback in
-                    Text(feedback.dateRated, format: .dateTime)
-                }
-            }
-            .frame(minHeight: 100)
-            
-            Button {
-                Task {
-                    await appController.postOrderFeedback(
-                        orderId: order.id, rating: 0,
-                        comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
-                    )
-                }
-            } label: {
-                Text("Post Praise feedback")
-            }
-            
-            Divider()
-            
             HeaderTitleView(label: "􁊇 Items")
             
             Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")

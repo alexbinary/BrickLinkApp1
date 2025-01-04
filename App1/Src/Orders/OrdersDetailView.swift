@@ -201,13 +201,13 @@ struct OrdersDetailView: View {
                         }
                         .padding()
                         .tabItem {
-                            Text("Details & Actions")
+                            Text("􀅴 General")
                         }
                         .tag(0)
                         
                         OrderPickingView(orderId: orderId)
                             .tabItem {
-                                Text("Picking")
+                                Text("􀈥 Picking")
                             }
                             .tag(1)
                         
@@ -215,18 +215,26 @@ struct OrdersDetailView: View {
                             OrderPackingAndShippingView(orderId: orderId)
                         }
                         .tabItem {
-                            Text("Packing & Shipping")
+                            Text("􀐚 Shipping")
                         }
                         .tag(2)
+                        
+                        ScrollView {
+                            OrderFeedbackView(orderId: orderId)
+                        }
+                        .tabItem {
+                            Text("􀉿 Feedback")
+                        }
+                        .tag(3)
                         
                         ScrollView {
                             OrderComptaView(order: order)
                         }
                         .padding()
                         .tabItem {
-                            Text("Compta")
+                            Text("􀖧 Compta")
                         }
-                        .tag(3)
+                        .tag(4)
                     }
                 }
                 
