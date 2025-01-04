@@ -66,6 +66,15 @@ struct UploadContentView: View {
                     
                     TableColumn("Comment", value: \.comment)
                     
+                    TableColumn("") { item in
+                    
+                        Button {
+                            appController.skipUploadItem(nextUploadItem)
+                        } label: {
+                            Text("Skip item")
+                        }
+                    }
+                    
                 } rows: {
                     
                     TableRow(nextUploadItem)
