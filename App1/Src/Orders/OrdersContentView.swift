@@ -86,16 +86,17 @@ struct OrdersContentView: View {
             
         } header: {
             
-            headerView(header)
+            headerView(header, secondaryText: "\(orders.count) orders")
         }
     }
     
     
     @ViewBuilder
-    func headerView(_ text: String) -> some View {
+    func headerView(_ primaryText: String, secondaryText: String) -> some View {
         
-        HStack {
-            Text(text).font(.title3)
+        HStack(spacing: 24) {
+            Text(primaryText).font(.title3)
+            Text(secondaryText).foregroundStyle(.secondary)
             Spacer()
         }
         .padding()
