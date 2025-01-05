@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderCardView: View {
+struct OrderListItemView: View {
     
     
     @EnvironmentObject var appController: AppController
@@ -100,40 +100,37 @@ struct OrderCardView: View {
                                 case .validatePayment:
                                     
                                     if !appController.orderChecklistIncomeTransaction(orderId) {
-                                        items.append((text: "Missing payment transaction", status: .actionRequired))
+                                        items.append((text: "No payment transaction", status: .actionRequired))
                                     }
                                     
                                 case .pickAndPack:
                                     
                                     if !appController.orderChecklistPicking(orderId) {
-                                        items.append((text: "Needs picking", status: .actionRequired))
+                                        items.append((text: "Items not picked", status: .actionRequired))
                                     }
                                     if !appController.orderChecklistVerification(orderId) {
-                                        items.append((text: "Needs verify items", status: .actionRequired))
+                                        items.append((text: "Items not verified", status: .actionRequired))
                                     }
                                     if !appController.orderChecklistPacked(orderId) {
-                                        items.append((text: "Needs packing", status: .actionRequired))
+                                        items.append((text: "Not packed", status: .actionRequired))
                                     }
                                     
                                 case .ship:
                                     
-                                    if !appController.orderChecklistShipped(orderId) {
-                                        items.append((text: "Mark Shipped", status: .actionRequired))
-                                    }
-                                    
-                                case .validateShipping:
-                                    
-                                    if !appController.orderChecklistTrackingNo(orderId) {
-                                        items.append((text: "Missing tracking no", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistDriveThru(orderId) {
-                                        items.append((text: "Drive thru not sent", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistAffranchissement(orderId) {
+                                    if !appController.orderChecklistStamping(orderId) {
                                         items.append((text: "Stamping not validated", status: .actionRequired))
                                     }
                                     if !appController.orderChecklistShippingTransaction(orderId) {
-                                        items.append((text: "Missing shipping transaction", status: .actionRequired))
+                                        items.append((text: "No shipping transaction", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistTrackingNo(orderId) {
+                                        items.append((text: "Missing tracking no", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistShipped(orderId) {
+                                        items.append((text: "Not marked Shipped", status: .actionRequired))
+                                    }
+                                    if !appController.orderChecklistDriveThru(orderId) {
+                                        items.append((text: "Drive thru not sent", status: .actionRequired))
                                     }
                                     
                                 case .inTransit:
@@ -145,7 +142,7 @@ struct OrderCardView: View {
                                 case .giveFeedback:
                                     
                                     if !appController.orderChecklistSellerFeedback(orderId) {
-                                        items.append((text: "Needs feedback", status: .actionRequired))
+                                        items.append((text: "No seller feedback", status: .actionRequired))
                                     }
                                     
                                 case .done:
@@ -255,8 +252,6 @@ struct OrderCardView: View {
                 .red
         case .ship:
                 .yellow
-        case .validateShipping:
-                .orange
         case .inTransit:
                 .orange
         case .giveFeedback:

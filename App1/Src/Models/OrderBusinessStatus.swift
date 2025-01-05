@@ -10,7 +10,6 @@ enum OrderBusinessStatus: String, IsOneOfAble {
     case validatePayment
     case pickAndPack
     case ship
-    case validateShipping
     case inTransit
     case giveFeedback
     case done
@@ -32,9 +31,6 @@ enum OrderBusinessStatus: String, IsOneOfAble {
         
         case .ship:
             "􀐚 Ship"
-        
-        case .validateShipping:
-            "􁕍 Validate shipping"
         
         case .inTransit:
             "􁁾 In transit"

@@ -18,7 +18,7 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .upload
+    @State var selectedSidebarItem: SidebarItem = .orders
     
     @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Default.ordersActiveNavigationPath
     @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.resultSelectedOrderIds
@@ -61,7 +61,7 @@ struct ContentView: View {
                 
             case .orders:
                 NavigationStack(path: $ordersActiveNavigationPath) {
-                    OrdersContentView(ordersActiveNavigationPath: $ordersActiveNavigationPath)
+                    OrdersListView(ordersActiveNavigationPath: $ordersActiveNavigationPath)
                 }
                 
             case .upload:

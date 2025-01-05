@@ -2,7 +2,7 @@
 import SwiftUI
 
 
-struct OrdersContentView: View {
+struct OrdersListView: View {
     
     
     @EnvironmentObject var appController: AppController
@@ -23,7 +23,6 @@ struct OrdersContentView: View {
                     .validatePayment,
                     .pickAndPack,
                     .ship,
-                    .validateShipping,
                     .inTransit,
                     .giveFeedback,
                     .done,
@@ -61,7 +60,7 @@ struct OrdersContentView: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: OrderSummary.ID.self) { orderId in
-            OrdersDetailView(orderId: orderId)
+            OrderDetailView(orderId: orderId)
         }
         .toolbar {
             
@@ -120,7 +119,7 @@ struct OrdersContentView: View {
     @ViewBuilder
     func itemView(_ orderId: OrderSummary.ID) -> some View {
         
-        OrderCardView(orderId: orderId)
+        OrderListItemView(orderId: orderId)
             .onTapGesture {
                 ordersActiveNavigationPath.append(orderId)
             }

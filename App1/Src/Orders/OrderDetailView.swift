@@ -1,16 +1,6 @@
 
 import SwiftUI
-import HTMLEntities
 
-
-
-struct PriceTableRow: Identifiable {
-    
-    var id: String { label }
-    let label: String
-    let cost: Float?
-    let displayCost: Float?
-}
 
 
 struct OrderDetailView: View {
@@ -18,118 +8,253 @@ struct OrderDetailView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let order: OrderDetails
+    let orderId: OrderDetails.ID
+    
+    @State private var columnWidth: CGFloat?
     
     
     var body: some View {
-        
-        VStack(alignment: .leading, spacing: 12) {
             
-            HeaderTitleView(label: "􁊇 Address")
+        VStack {
             
-            Text(order.shippingAddressName)
-            Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
-            Text(order.shippingAddressCountryCode)
-            
-            Divider()
-            
-            HeaderTitleView(label: "􁊇 Cost")
-            
-            Table(of: PriceTableRow.self) {
-                TableColumn("") { row in
-                    Text(row.label).fontWeight(.bold)
-                }
-                TableColumn("Cost") { row in
-                    if let cost = row.cost {
-                        Text(cost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                    }
-                }
-                if order.dispCostCurrencyCode != order.costCurrencyCode {
-                    TableColumn("Display") { row in
-                        if let cost = row.displayCost {
-                            Text(cost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
-                        }
-                    }
-                }
-            } rows: {
-                TableRow(PriceTableRow(
-                    label: "Subtotal",
-                    cost: order.subTotal,
-                    displayCost: order.dispSubTotal
-                ))
-                TableRow(PriceTableRow(
-                    label: "Shipping",
-                    cost: order.shippingCost,
-                    displayCost: order.dispShippingCost
-                ))
-                TableRow(PriceTableRow(
-                    label: "Grand total",
-                    cost: order.grandTotal,
-                    displayCost: order.dispGrandTotal
-                ))
-            }
-            .tableColumnHeaders(.hidden)
-            .frame(minHeight: 100)
-            
-            Divider()
-            
-            HeaderTitleView(label: "􁊇 Update status")
-            
-            let statuses: [OrderStatus] = [.paid, .packed, .shipped, .completed]
-            
-            HStack {
-                ForEach(statuses, id: \.self) { status in
-                    Button {
-                        Task {
-                            await appController.updateOrderStatus(orderId: order.id, status: status)
-                        }
-                    } label: {
-                        Text(status.rawValue)
-                            .fontWeight(order.status == status ? .bold : .regular)
-                    }
-                }
-            }
-            
-            Divider()
-            
-            HeaderTitleView(label: "􁊇 Items")
-            
-            Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")
-            
-            Table(appController.orderItems(forOrderWithId: order.id)) {
+            if let order = appController.orderDetails(forOrderWithId: orderId),
+               let orderSummary = appController.orderSummary(forOrderWithId: orderId) {
                 
-                TableColumn("Image") { item in
-                    AsyncImage(url: appController.imageUrl(for: item))
-                        .frame(minHeight: 60)
-                }
-                TableColumn("Condition", value: \.condition)
-                TableColumn("Color") { item in
-                    HStack {
-                        appController.color(for: item).frame(width: 18, height: 18)
-                        Text(appController.colorName(for: item))
-                    }
-                }
-                TableColumn("Name") { item in
-                    Text(item.name.htmlUnescape()).lineLimit(nil)
-                }
-                TableColumn("Ref", value: \.ref)
-                TableColumn("Comment", value: \.comment)
-                TableColumn("Quantity", value: \.quantity)
-                TableColumn("Left", value: \.quantityLeft)
-                TableColumn("PU") { item in
+                HStack(alignment: .top, spacing: 12) {
                     
-                    if item.unitPriceFinal != item.unitPrice {
+                    VStack(alignment: .leading, spacing: 12) {
                         
-                        Text(item.unitPrice, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                            .strikethrough()
+                        VStack(alignment: .leading, spacing: 12) {
+                            
+                            Grid(alignment: .leading, verticalSpacing: 0) {
+                                
+                                GridRow {
+                                    Text("order").cardCaption()
+                                    Text("placed").cardCaption()
+                                    
+                                }
+                                GridRow {
+                                    Link(destination: URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(order.id)#/")!) {
+                                        Text(order.id).font(.title2)
+                                    }
+                                    .monospacedDigit()
+                                    Text(order.date, format: .dateTime)
+                                        .frame(width: 150, alignment: .leading)
+                                        .monospacedDigit()
+                                }
+                            
+                                GridRow {
+                                    Text("status").cardCaption()
+                                    Text("changed").cardCaption()
+                                }
+                                GridRow {
+                                    Text(order.status.rawValue).font(.title3)
+                                    Text(orderSummary.dateStatusChanged, format: .dateTime)
+                                        .monospacedDigit()
+                                }
+                            }
+                            
+                            Grid(alignment: .leading) {
+                                
+                                GridRow {
+                                    Text("􀉩").foregroundStyle(.secondary).gridColumnAlignment(.center)
+                                    Text(order.buyer)
+                                }
+                                
+                                GridRow {
+                                    Text("􀍩").foregroundStyle(.secondary).gridColumnAlignment(.center)
+                                    
+                                    HStack {
+                                        Text("\(order.items) (\(order.lots))")
+                                            .frame(width: 75, alignment: .leading)
+                                        HStack {
+                                            Text("􀖧").foregroundStyle(.secondary)
+                                            Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode))
+                                                .monospacedDigit()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                        .equalWidths()
+                        .frame(width: columnWidth, alignment: .leading)
+                        .background(Color(nsColor: .quaternarySystemFill))
+                        .border(Color(nsColor: .tertiarySystemFill))
+                        .cornerRadius(6)
+                        .padding(.top, 10)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            
+                            HeaderTitleView(label: "􀼏 Status")
+                                .padding(.bottom, 6)
+                            
+                            ScrollView {
+                                
+                                Grid(alignment: .leading) {
+                                    
+                                    let padding: CGFloat = 6
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistPayment(orderId))
+                                        Text("Payment received")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistIncomeTransaction(orderId))
+                                        Text("Register transaction")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.pickAndPack.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistPicking(orderId))
+                                        Text("Pick items")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistVerification(orderId))
+                                        Text("Verify items")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistPacked(orderId))
+                                        Text("Pack order")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.ship.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistStamping(orderId))
+                                        Text("Validate stamping")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistShippingTransaction(orderId))
+                                        Text("Register transaction")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistTrackingNo(orderId))
+                                        Text("Input tracking no")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistShipped(orderId))
+                                        Text("Mark Shipped")
+                                    }
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistDriveThru(orderId))
+                                        Text("Send drive thru")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.inTransit.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistReceived(orderId))
+                                        Text("Received or Completed")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistSellerFeedback(orderId))
+                                        Text("Give feedback")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.done.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
+                                        Text("Inactive for 30 days")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.closed.descriptionWithPicto).checklistTitle()
+                                        .padding(.top, padding)
+                                }
+                                
+                                Spacer()
+                            }
+                            .scrollIndicators(.hidden)
+                        }
+                        .padding()
+                        .equalWidths()
+                        .frame(width: columnWidth, alignment: .leading)
+                        .background(Color(nsColor: .quaternarySystemFill))
+                        .border(Color(nsColor: .tertiarySystemFill))
+                        .cornerRadius(6)
+                        
                     }
-                    Text(item.unitPriceFinal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                    .equalWidths($columnWidth)
+                    
+                    TabView {
+                        
+                        ScrollView {
+                            OrderGeneralView(order: order)
+                        }
+                        .padding()
+                        .tabItem {
+                            Text("􀅴 General")
+                        }
+                        .tag(0)
+                        
+                        OrderPickingView(orderId: orderId)
+                            .tabItem {
+                                Text("􀈥 Picking")
+                            }
+                            .tag(1)
+                        
+                        ScrollView {
+                            OrderShippingView(orderId: orderId)
+                        }
+                        .tabItem {
+                            Text("􀐚 Shipping")
+                        }
+                        .tag(2)
+                        
+                        ScrollView {
+                            OrderFeedbackView(orderId: orderId)
+                        }
+                        .tabItem {
+                            Text("􀉿 Feedback")
+                        }
+                        .tag(3)
+                        
+                        ScrollView {
+                            OrderComptaView(order: order)
+                        }
+                        .padding()
+                        .tabItem {
+                            Text("􀖧 Compta")
+                        }
+                        .tag(4)
+                    }
                 }
+                
+            } else {
+                
+                Text("loading order...")
             }
-            .frame(minHeight: 400)
-            
-            Divider()
         }
+        .padding()
+        .task {
+            await refreshOrder()
+        }
+        .onChange(of: orderId) { oldValue, newValue in
+            Task {
+                await refreshOrder()
+            }
+        }
+        .navigationTitle("Order \(orderId)")
+    }
+    
+    
+    func refreshOrder() async {
+        
+        await appController.forceRefreshOrder(orderId: orderId)
     }
     
     
@@ -140,5 +265,16 @@ struct OrderDetailView: View {
         } else {
             Text("􀀀").foregroundStyle(red)
         }
+    }
+}
+
+
+
+extension View {
+    
+    
+    @ViewBuilder func checklistTitle() -> some View {
+        
+        self.font(.title3).opacity(0.5)
     }
 }

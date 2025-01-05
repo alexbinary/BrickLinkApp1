@@ -1240,7 +1240,7 @@ class AppController: ObservableObject {
     }
     
     
-    public func orderChecklistAffranchissement(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
         
         let affranchissement = affranchissement(forOrderWithId: orderId)
         
@@ -1311,15 +1311,11 @@ class AppController: ObservableObject {
             }, status: .ship
             ),
             (condition: {
-                self.orderChecklistShipped(orderId)
-                
-            }, status: .validateShipping
-            ),
-            (condition: {
-                self.orderChecklistTrackingNo(orderId)
-                && self.orderChecklistDriveThru(orderId)
-                && self.orderChecklistAffranchissement(orderId)
+                self.orderChecklistStamping(orderId)
                 && self.orderChecklistShippingTransaction(orderId)
+                && self.orderChecklistTrackingNo(orderId)
+                && self.orderChecklistShipped(orderId)
+                && self.orderChecklistDriveThru(orderId)
                 
             }, status: .inTransit
             ),
