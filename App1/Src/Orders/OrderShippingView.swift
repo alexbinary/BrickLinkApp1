@@ -202,7 +202,7 @@ struct OrderShippingView: View {
                                             await appController.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
                                         }
                                     }
-                                    .frame(maxWidth: 120)
+                                    .frame(maxWidth: 140)
                                 
                                 Button {
                                     Task {
