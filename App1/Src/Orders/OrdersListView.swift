@@ -50,16 +50,16 @@ struct OrdersListView: View {
                             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                     ),
                     (
-                        label: "􀐫 Reception overdue",
+                        label: "􀐫 In transit for 30+ days",
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
                             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                     ),
                     (
-                        label: OrderBusinessStatus.done.descriptionWithPicto,
+                        label: "􀐫 Recently closed",
                         orders: allOrders
-                            .filter { appController.orderBusinessStatus($0.id) == .done }
-                            .sorted { $0.date > $1.date }
+                            .filter { appController.orderBusinessStatus($0.id) == .closed && !appController.orderChecklistUnchangedFor30Days($0.id) }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                     ),
                 ]
                 ForEach(sections, id: \.label) { s in
@@ -67,9 +67,12 @@ struct OrdersListView: View {
                     section(header: s.label, orders: s.orders)
                 }
                 
-                let closedOrders = allOrders.filter {
-                    appController.orderBusinessStatus($0.id) == .closed
-                }
+                let closedOrders = allOrders
+                    .filter {
+                        appController.orderBusinessStatus($0.id) == .closed && appController.orderChecklistUnchangedFor30Days($0.id)
+                    }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                
                 ForEach(closedOrders.grouppedByMonth, id: \.month) { item in
                     
                     section(header: "\(OrderBusinessStatus.closed.descriptionWithPicto) - \(item.month)", orders: item.elements)

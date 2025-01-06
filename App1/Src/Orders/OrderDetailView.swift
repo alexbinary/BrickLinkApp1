@@ -163,14 +163,6 @@ struct OrderDetailView: View {
                                         Text("Give feedback")
                                     }
                                     
-                                    Text(OrderBusinessStatus.done.descriptionWithPicto).checklistTitle()
-                                        .padding(.vertical, padding)
-                                    
-                                    GridRow {
-                                        checkStatus(appController.orderChecklistUnchangedFor30Days(orderId))
-                                        Text("Inactive for 30 days")
-                                    }
-                                    
                                     Text(OrderBusinessStatus.closed.descriptionWithPicto).checklistTitle()
                                         .padding(.top, padding)
                                 }

@@ -1410,16 +1410,9 @@ class AppController: ObservableObject {
     public func orderBusinessStatus(_ orderId: OrderSummary.ID) -> OrderBusinessStatus {
         
         let order = orderSummary(forOrderWithId: orderId)!
-        if order.status == .purged {
-            return .closed
-        }
         
-        if order.status == .cancelled {
-            if orderChecklistUnchangedFor30Days(orderId) {
-                return .closed
-            } else {
-                return .done
-            }
+        if order.status.isOneOf(.cancelled, .purged) {
+            return .closed
         }
         
         var validatedStatus: OrderBusinessStatus = .validatePayment
@@ -1455,11 +1448,6 @@ class AppController: ObservableObject {
             ),
             (condition: {
                 self.orderChecklistSellerFeedback(orderId)
-                
-            }, status: .done
-            ),
-            (condition: {
-                self.orderChecklistUnchangedFor30Days(orderId)
                 
             }, status: .closed
             )

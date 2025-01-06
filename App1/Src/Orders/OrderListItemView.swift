@@ -88,6 +88,9 @@ struct OrderListItemView: View {
                             
                             let items: [(text: String, status: TodoStatus)] = {
                                 
+                                let formatter = RelativeDateTimeFormatter()
+                                formatter.unitsStyle = .full
+                                
                                 var items: [(text: String, status: TodoStatus)] = []
                                 
                                 switch appController.orderBusinessStatus(orderId) {
@@ -134,7 +137,9 @@ struct OrderListItemView: View {
                                 case .inTransit:
                                     
                                     if !appController.orderChecklistReceived(orderId) {
-                                        items.append((text: "Waiting for Received/Completed", status: .waitingOnExternalAction))
+                                        
+                                        let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+                                        items.append((text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
                                     }
                                     
                                 case .giveFeedback:
@@ -143,15 +148,10 @@ struct OrderListItemView: View {
                                         items.append((text: "No seller feedback", status: .actionRequired))
                                     }
                                     
-                                case .done:
-                                    
-                                    if !appController.orderChecklistUnchangedFor30Days(orderId) {
-                                        items.append((text: "Active in the last 30 days", status: .waitingOnExternalAction))
-                                    }
-                                    
                                 case .closed:
                                     
-                                    items.append((text: "Closed", status: .completed))
+                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+                                    items.append((text: "Closed \(formattedDate)", status: .completed))
                                 }
                                 
                                 return items
@@ -251,8 +251,6 @@ struct OrderListItemView: View {
         case .inTransit:
                 .orange
         case .giveFeedback:
-                .green
-        case .done:
                 .green
         case .closed:
                 .green
