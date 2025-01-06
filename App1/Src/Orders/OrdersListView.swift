@@ -18,34 +18,53 @@ struct OrdersListView: View {
                 
                 let allOrders = appController.orderSummaries
                 
-                let statuses: [OrderBusinessStatus] = [
-                    .validatePayment,
-                    .pickAndPack,
-                    .ship,
-                    .inTransit,
-                    .giveFeedback,
-                    .done,
+                let sections: [(label: String, orders: [OrderSummary])] = [
+                    (
+                        label: OrderBusinessStatus.validatePayment.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .validatePayment }
+                            .sorted { $0.date > $1.date }
+                    ),
+                    (
+                        label: OrderBusinessStatus.pickAndPack.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .pickAndPack }
+                            .sorted { $0.lots < $1.lots }
+                    ),
+                    (
+                        label: OrderBusinessStatus.ship.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .ship }
+                            .sorted { $0.date > $1.date }
+                    ),
+                    (
+                        label: OrderBusinessStatus.giveFeedback.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
+                            .sorted { $0.date > $1.date }
+                    ),
+                    (
+                        label: OrderBusinessStatus.inTransit.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .inTransit && !appController.orderChecklistUnchangedFor30Days($0.id) }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                    ),
+                    (
+                        label: "􀐫 Reception overdue",
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                    ),
+                    (
+                        label: OrderBusinessStatus.done.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .done }
+                            .sorted { $0.date > $1.date }
+                    ),
                 ]
-                
-                ForEach(statuses, id: \.self) { status in
+                ForEach(sections, id: \.label) { s in
                     
-                    Group {
-                        
-                        let orders = {
-                            var orders = allOrders.filter {
-                                appController.orderBusinessStatus($0.id) == status
-                            }
-                            switch status {
-                            case .pickAndPack:
-                                orders = orders.sorted { $0.lots < $1.lots }
-                            default:
-                                orders = orders.sorted { $0.date > $1.date }
-                            }
-                            return orders
-                        }()
-                        
-                        section(header: status.descriptionWithPicto, orders: orders)
-                    }
+                    section(header: s.label, orders: s.orders)
                 }
                 
                 let closedOrders = allOrders.filter {
