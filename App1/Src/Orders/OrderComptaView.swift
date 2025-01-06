@@ -43,10 +43,21 @@ struct OrderComptaView: View {
                 TextField("Comment", text: $incomeComment, axis: .vertical)
                     .lineLimit(3...5)
                 
-                Button {
-                    self.submitIncomeTransaction()
-                } label: {
-                    Text("Register transaction")
+                HStack {
+                    Button {
+                        self.submitIncomeTransaction()
+                    } label: {
+                        Text("Register transaction")
+                    }
+                    Button {
+                        self.appController.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                    } label: {
+                        Text("Validate without transaction")
+                    }
+                    if let date = appController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                        Text("Validated without transaction on")
+                        Text(date, format: .dateTime)
+                    }
                 }
             }
 
@@ -85,10 +96,21 @@ struct OrderComptaView: View {
                 TextField("Comment", text: $shippingComment, axis: .vertical)
                     .lineLimit(3...5)
                 
-                Button {
-                    self.submitShippingTransaction()
-                } label: {
-                    Text("Register transaction")
+                HStack {
+                    Button {
+                        self.submitShippingTransaction()
+                    } label: {
+                        Text("Register transaction")
+                    }
+                    Button {
+                        self.appController.validateOrderWithoutShippingTransaction(orderId: order.id)
+                    } label: {
+                        Text("Validate without transaction")
+                    }
+                    if let date = appController.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
+                        Text("Validated without transaction on")
+                        Text(date, format: .dateTime)
+                    }
                 }
             }
             

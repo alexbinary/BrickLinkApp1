@@ -175,6 +175,22 @@ struct OrderShippingView: View {
                                     }
                                 }
                             }
+                            
+                            GridRow {
+                                Text("")
+                                Text("")
+                                HStack {
+                                    Button {
+                                        self.appController.validateOrderWithoutStamping(orderId: order.id)
+                                    } label: {
+                                        Text("Validate without stamping")
+                                    }
+                                    if let date = appController.dateOrderValidatedWithoutStamping(orderId: order.id) {
+                                        Text("Validated without stamping on")
+                                        Text(date, format: .dateTime)
+                                    }
+                                }
+                            }
                         }
                     }
                     

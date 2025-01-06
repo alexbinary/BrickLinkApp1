@@ -354,13 +354,42 @@ class AppController: ObservableObject {
     public func updateAffranchissement(forOrderWithId orderId: OrderSummary.ID, method: String) {
         
         var affranchissementMethodByOrderId = dataStore.affranchissementMethodByOrderId
-        
         affranchissementMethodByOrderId[orderId] = method
         
         try! dataStore.setAffranchissementMethodByOrderId(affranchissementMethodByOrderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
+    }
+    
+    
+    public var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
+        
+        dataStore.dateValidatedWithoutStampingByOrderId
+    }
+    
+    
+    public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
+        
+        var dateValidatedWithoutStampingByOrderId = dataStore.dateValidatedWithoutStampingByOrderId
+        dateValidatedWithoutStampingByOrderId[orderId] = Date()
+        
+        try! dataStore.setDateValidatedWithoutStampingByOrderId(dateValidatedWithoutStampingByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func dateOrderValidatedWithoutStamping(orderId: OrderDetails.ID) -> Date? {
+        
+        return dateValidatedWithoutStampingByOrderId[orderId]
+    }
+    
+    
+    public func orderIsValidatedWithoutStamping(orderId: OrderDetails.ID) -> Bool {
+        
+        return dateValidatedWithoutStampingByOrderId[orderId] != nil
     }
     
     
@@ -631,6 +660,36 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         await reloadOrderFeedbacks(forOrderWithId: orderId)
+    }
+    
+    
+    public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
+        
+        dataStore.dateValidatedWithoutFeedbackByOrderId
+    }
+    
+    
+    public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
+        
+        var dateValidatedWithoutFeedbackByOrderId = dataStore.dateValidatedWithoutFeedbackByOrderId
+        dateValidatedWithoutFeedbackByOrderId[orderId] = Date()
+        
+        try! dataStore.setDateValidatedWithoutFeedbackByOrderId(dateValidatedWithoutFeedbackByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
+        
+        return dateValidatedWithoutFeedbackByOrderId[orderId]
+    }
+    
+    
+    public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
+        
+        return dateValidatedWithoutFeedbackByOrderId[orderId] != nil
     }
     
     
@@ -1004,6 +1063,66 @@ class AppController: ObservableObject {
     }
     
     
+    public var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
+        
+        dataStore.dateValidatedWithoutIncomeTransactionByOrderId
+    }
+    
+    
+    public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
+        
+        var dateValidatedWithoutIncomeTransactionByOrderId = dataStore.dateValidatedWithoutIncomeTransactionByOrderId
+        dateValidatedWithoutIncomeTransactionByOrderId[orderId] = Date()
+        
+        try! dataStore.setDateValidatedWithoutIncomeTransactionByOrderId(dateValidatedWithoutIncomeTransactionByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func dateOrderValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Date? {
+        
+        return dateValidatedWithoutIncomeTransactionByOrderId[orderId]
+    }
+    
+    
+    public func orderIsValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Bool {
+        
+        return dateValidatedWithoutIncomeTransactionByOrderId[orderId] != nil
+    }
+    
+    
+    public var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
+        
+        dataStore.dateValidatedWithoutShippingTransactionByOrderId
+    }
+    
+    
+    public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
+        
+        var dateValidatedWithoutShippingTransactionByOrderId = dataStore.dateValidatedWithoutShippingTransactionByOrderId
+        dateValidatedWithoutShippingTransactionByOrderId[orderId] = Date()
+        
+        try! dataStore.setDateValidatedWithoutShippingTransactionByOrderId(dateValidatedWithoutShippingTransactionByOrderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func dateOrderValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Date? {
+        
+        return dateValidatedWithoutShippingTransactionByOrderId[orderId]
+    }
+    
+    
+    public func orderIsValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Bool {
+        
+        return dateValidatedWithoutShippingTransactionByOrderId[orderId] != nil
+    }
+    
+    
     
     // MARK: - Import & Refresh
     
@@ -1165,14 +1284,21 @@ class AppController: ObservableObject {
     
     public func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
+        if orderIsValidatedWithoutIncomeTransaction(orderId: orderId) {
+            return true
+        }
         return incomeTransaction(forOrderWithId: orderId) != nil
     }
     
     
     public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
-        let affranchissement = affranchissement(forOrderWithId: orderId)
+        if orderIsValidatedWithoutShippingTransaction(orderId: orderId) {
+            
+            return true
+        }
         
+        let affranchissement = affranchissement(forOrderWithId: orderId)
         if (affranchissement ?? "").isEmpty {
             
             return false
@@ -1242,6 +1368,10 @@ class AppController: ObservableObject {
     
     public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
         
+        if orderIsValidatedWithoutStamping(orderId: orderId) {
+            return true
+        }
+        
         let affranchissement = affranchissement(forOrderWithId: orderId)
         
         return !(affranchissement ?? "").isEmpty
@@ -1257,6 +1387,10 @@ class AppController: ObservableObject {
     
     
     public func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+        
+        if orderIsValidatedWithoutFeedback(orderId: orderId) {
+            return true
+        }
         
         return orderFeedbacks(forOrderWithId: orderId).sellerFeedback() != nil
     }

@@ -186,6 +186,62 @@ class DataStore {
     }
     
     
+    public var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
+        
+        data?.dateValidatedWithoutIncomeTransactionByOrderId ?? [:]
+    }
+    
+    
+    public func setDateValidatedWithoutIncomeTransactionByOrderId(_ dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.dateValidatedWithoutIncomeTransactionByOrderId = dateValidatedWithoutIncomeTransactionByOrderId
+    }
+    
+    
+    public var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
+        
+        data?.dateValidatedWithoutShippingTransactionByOrderId ?? [:]
+    }
+    
+    
+    public func setDateValidatedWithoutShippingTransactionByOrderId(_ dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.dateValidatedWithoutShippingTransactionByOrderId = dateValidatedWithoutShippingTransactionByOrderId
+    }
+    
+    
+    public var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
+        
+        data?.dateValidatedWithoutStampingByOrderId ?? [:]
+    }
+    
+    
+    public func setDateValidatedWithoutStampingByOrderId(_ dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.dateValidatedWithoutStampingByOrderId = dateValidatedWithoutStampingByOrderId
+    }
+    
+    
+    public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
+        
+        data?.dateValidatedWithoutFeedbackByOrderId ?? [:]
+    }
+    
+    
+    public func setDateValidatedWithoutFeedbackByOrderId(_ dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.dateValidatedWithoutFeedbackByOrderId = dateValidatedWithoutFeedbackByOrderId
+    }
+    
+    
     public var uploadItems: [UploadItem] {
         
         data?.uploadItems ?? []
@@ -234,6 +290,10 @@ struct DataRoot: Codable {
     var affranchissementMethodByOrderId: [OrderSummary.ID: String]?
     var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
     var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
+    var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]?
+    var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]?
+    var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]?
+    var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]?
     var uploadItems: [UploadItem]?
     var transactions: [Transaction]?
 }

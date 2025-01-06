@@ -39,15 +39,26 @@ struct OrderFeedbackView: View {
                 }
                 .frame(minHeight: 100)
                 
-                Button {
-                    Task {
-                        await appController.postOrderFeedback(
-                            orderId: order.id, rating: 0,
-                            comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
-                        )
+                HStack {
+                    Button {
+                        Task {
+                            await appController.postOrderFeedback(
+                                orderId: order.id, rating: 0,
+                                comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
+                            )
+                        }
+                    } label: {
+                        Text("Post Praise feedback")
                     }
-                } label: {
-                    Text("Post Praise feedback")
+                    Button {
+                        self.appController.validateOrderWithoutFeedback(orderId: order.id)
+                    } label: {
+                        Text("Validate without feedback")
+                    }
+                    if let date = appController.dateOrderValidatedWithoutFeedback(orderId: order.id) {
+                        Text("Validated without feedback on")
+                        Text(date, format: .dateTime)
+                    }
                 }
             }
         }
