@@ -192,9 +192,7 @@ struct OrderDetailView: View {
                     
                     TabView {
                         
-                        ScrollView {
-                            OrderGeneralView(order: order)
-                        }
+                        OrderGeneralView(order: order)
                         .padding()
                         .tabItem {
                             Text("􀅴 General")

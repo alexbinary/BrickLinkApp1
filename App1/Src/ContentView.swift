@@ -18,7 +18,7 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = .orders
+    @State var selectedSidebarItem: SidebarItem = Secrets.Default.selectedSidebarItem
     
     @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Default.ordersActiveNavigationPath
     @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.resultSelectedOrderIds

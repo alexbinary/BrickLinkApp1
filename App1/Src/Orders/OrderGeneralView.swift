@@ -4,15 +4,6 @@ import HTMLEntities
 
 
 
-struct PriceTableRow: Identifiable {
-    
-    var id: String { label }
-    let label: String
-    let cost: Float?
-    let displayCost: Float?
-}
-
-
 struct OrderGeneralView: View {
     
     
@@ -25,55 +16,72 @@ struct OrderGeneralView: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
-            HeaderTitleView(label: "􁊇 Address")
-            
-            Text(order.shippingAddressName)
-            Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
-            Text(order.shippingAddressCountryCode)
-            
-            Divider()
-            
-            HeaderTitleView(label: "􁊇 Cost")
-            
-            Table(of: PriceTableRow.self) {
-                TableColumn("") { row in
-                    Text(row.label).fontWeight(.bold)
+            HStack(alignment: .top, spacing: 96) {
+                
+                VStack(alignment: .leading) {
+                    
+                    Text("􂙡 Address")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(order.shippingAddressName)
+                    Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
+                    Text(order.shippingAddressCountryCode)
                 }
-                TableColumn("Cost") { row in
-                    if let cost = row.cost {
-                        Text(cost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                .font(.title3)
+                
+                HStack(spacing: 48) {
+                    
+                    HStack {
+                        
+                        VStack(alignment: .leading) {
+                            
+                            Text("􀖧 Subtotal")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(order.subTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                .font(.title3)
+                            
+                            if order.dispCostCurrencyCode != order.costCurrencyCode {
+                                Text(order.dispSubTotal, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                                    .font(.title3)
+                            }
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            
+                            Text("􀖧 Shipping")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                .font(.title3)
+                            
+                            if order.dispCostCurrencyCode != order.costCurrencyCode {
+                                Text(order.dispShippingCost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                                    .font(.title3)
+                            }
+                        }
                     }
-                }
-                if order.dispCostCurrencyCode != order.costCurrencyCode {
-                    TableColumn("Display") { row in
-                        if let cost = row.displayCost {
-                            Text(cost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text("􀖧 Grand total")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        
+                        Text(order.grandTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                            .font(.title2)
+                        
+                        if order.dispCostCurrencyCode != order.costCurrencyCode {
+                            Text(order.dispGrandTotal, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                                .font(.title2)
                         }
                     }
                 }
-            } rows: {
-                TableRow(PriceTableRow(
-                    label: "Subtotal",
-                    cost: order.subTotal,
-                    displayCost: order.dispSubTotal
-                ))
-                TableRow(PriceTableRow(
-                    label: "Shipping",
-                    cost: order.shippingCost,
-                    displayCost: order.dispShippingCost
-                ))
-                TableRow(PriceTableRow(
-                    label: "Grand total",
-                    cost: order.grandTotal,
-                    displayCost: order.dispGrandTotal
-                ))
             }
-            .tableColumnHeaders(.hidden)
-            .frame(minHeight: 100)
             
             Divider()
-            
-            HeaderTitleView(label: "􁊇 Update status")
             
             let statuses: [OrderStatus] = [.paid, .packed, .shipped, .completed]
             
@@ -91,8 +99,6 @@ struct OrderGeneralView: View {
             }
             
             Divider()
-            
-            HeaderTitleView(label: "􁊇 Items")
             
             Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")
             
@@ -115,7 +121,6 @@ struct OrderGeneralView: View {
                 TableColumn("Ref", value: \.ref)
                 TableColumn("Comment", value: \.comment)
                 TableColumn("Quantity", value: \.quantity)
-                TableColumn("Left", value: \.quantityLeft)
                 TableColumn("PU") { item in
                     
                     if item.unitPriceFinal != item.unitPrice {
@@ -126,9 +131,6 @@ struct OrderGeneralView: View {
                     Text(item.unitPriceFinal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                 }
             }
-            .frame(minHeight: 400)
-            
-            Divider()
         }
     }
     
