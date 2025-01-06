@@ -95,14 +95,13 @@ struct OrderDetailView: View {
                                     
                                     let padding: CGFloat = 6
                                     
+                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
                                     GridRow {
                                         checkStatus(appController.orderChecklistPayment(orderId))
                                         Text("Payment received")
                                     }
-                                    
-                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).checklistTitle()
-                                        .padding(.vertical, padding)
-                                    
                                     GridRow {
                                         checkStatus(appController.orderChecklistIncomeTransaction(orderId))
                                         Text("Register transaction")

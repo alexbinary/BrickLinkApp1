@@ -6,7 +6,6 @@ import Foundation
 enum OrderBusinessStatus: String, IsOneOfAble {
     
     
-    case paymentPending
     case validatePayment
     case pickAndPack
     case ship
@@ -19,9 +18,6 @@ enum OrderBusinessStatus: String, IsOneOfAble {
     var descriptionWithPicto: String {
         
         switch self {
-        
-        case .paymentPending:
-            "􀖧 Payment pending"
         
         case .validatePayment:
             "􁕍 Validate payment"

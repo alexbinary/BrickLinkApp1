@@ -1288,16 +1288,11 @@ class AppController: ObservableObject {
             }
         }
         
-        var validatedStatus: OrderBusinessStatus = .paymentPending
+        var validatedStatus: OrderBusinessStatus = .validatePayment
         
         let conditionsStatus: [
             (condition: () -> Bool, status: OrderBusinessStatus)
         ] = [
-            (condition: {
-                self.orderChecklistPayment(orderId)
-                
-            }, status: .validatePayment
-            ),
             (condition: {
                 self.orderChecklistIncomeTransaction(orderId)
                 

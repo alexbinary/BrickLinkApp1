@@ -19,7 +19,6 @@ struct OrdersListView: View {
                 let allOrders = appController.orderSummaries
                 
                 let statuses: [OrderBusinessStatus] = [
-                    .paymentPending,
                     .validatePayment,
                     .pickAndPack,
                     .ship,

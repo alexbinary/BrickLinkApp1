@@ -91,14 +91,12 @@ struct OrderListItemView: View {
                                 var items: [(text: String, status: TodoStatus)] = []
                                 
                                 switch appController.orderBusinessStatus(orderId) {
-                                case .paymentPending:
+                                
+                                case .validatePayment:
                                     
                                     if !appController.orderChecklistPayment(orderId) {
                                         items.append((text: "Payment pending", status: .waitingOnExternalAction))
                                     }
-                                    
-                                case .validatePayment:
-                                    
                                     if !appController.orderChecklistIncomeTransaction(orderId) {
                                         items.append((text: "No payment transaction", status: .actionRequired))
                                     }
@@ -244,8 +242,6 @@ struct OrderListItemView: View {
         
         switch appController.orderBusinessStatus(orderId) {
             
-        case .paymentPending:
-                .red
         case .validatePayment:
                 .red
         case .pickAndPack:
