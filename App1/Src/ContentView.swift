@@ -23,7 +23,7 @@ struct ContentView: View {
     @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Default.ordersActiveNavigationPath
     @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.resultSelectedOrderIds
     @State var selectedTransactions: Set<Transaction.ID> = []
-    
+        
     var body: some View {
         
         NavigationSplitView {
@@ -32,7 +32,9 @@ struct ContentView: View {
                 
                 Section("Operations") {
                     
-                    Label("Orders", systemImage: "list.bullet")
+                    let openOrders = appController.orderSummaries.filter { appController.orderBusinessStatus($0.id) != .closed }
+                    
+                    Label("Orders (\(openOrders.count))", systemImage: "list.bullet")
                         .tag(SidebarItem.orders)
                     
                     Label("Upload", systemImage: "tray.and.arrow.down")
