@@ -167,6 +167,37 @@ struct UploadUploadView: View {
                                 }
                                 
                                 GridRow {
+                                    Text("")
+                                    
+                                    if let relatedInventories = self.relatedInventories {
+                                        
+                                        if relatedInventories.isEmpty {
+                                            
+                                            Text("no related inventory found")
+                                            
+                                        } else {
+                                            
+                                            let remarks = relatedInventories.map { $0.remarks }
+                                                .unique .sorted()
+                                            
+                                            HStack {
+                                                ForEach(remarks, id: \.self) { rem in
+                                                    Button {
+                                                        self.editRemarksUpdate = rem
+                                                    } label: {
+                                                        Text(rem)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        
+                                        Text("Loading related inventories...")
+                                    }
+                                }
+                                
+                                GridRow {
                                     
                                     Color.clear.frame(width: 2, height: 2)
                                     
@@ -381,23 +412,28 @@ struct UploadUploadView: View {
         self.inventoryResult = nil
         self.relatedInventories = nil
         
-        if let item = await appController.getInventory(for: nextUploadItem) {
-            
-            self.inventoryResult = .found(item)
-            
-            self.editQtyUpdate = nextUploadItem.qty
-            self.editUnitPriceUpdate = nextUploadItem.unitPrice
-            self.editRemarksUpdate = item.remarks
-            
-        } else {
-            
-            self.inventoryResult = .notFound
-            
-            self.editQtyCreate = nextUploadItem.qty
-            self.editUnitPriceCreate = nextUploadItem.unitPrice
-            self.editRemarksCreate = ""
-            
-            self.relatedInventories = await appController.getInventoriesForAllColors(for: nextUploadItem)
-        }
+        await parallel([
+            {
+                if let item = await appController.getInventory(for: nextUploadItem) {
+                    
+                    self.inventoryResult = .found(item)
+                    
+                    self.editQtyUpdate = nextUploadItem.qty
+                    self.editUnitPriceUpdate = nextUploadItem.unitPrice
+                    self.editRemarksUpdate = item.remarks
+                    
+                } else {
+                    
+                    self.inventoryResult = .notFound
+                    
+                    self.editQtyCreate = nextUploadItem.qty
+                    self.editUnitPriceCreate = nextUploadItem.unitPrice
+                    self.editRemarksCreate = ""
+                }
+            },
+            {
+                self.relatedInventories = await appController.getInventoriesForAllColors(for: nextUploadItem)
+            }
+        ])
     }
 }

@@ -2,7 +2,7 @@
 
 
 func parallel(
-    _ tasks: [@Sendable () async -> Void]
+    _ tasks: [@MainActor () async -> Void]
 ) async {
     
     await withTaskGroup(of: Void.self) { group in
