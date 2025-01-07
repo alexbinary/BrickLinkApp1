@@ -145,6 +145,10 @@ struct OrderListItemView: View {
                                 case .giveFeedback:
                                     
                                     if !appController.orderChecklistSellerFeedback(orderId) {
+                                        
+                                        let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+                                        items.append((text: "Received \(formattedDate)", status: .completed))
+                                        
                                         items.append((text: "No seller feedback", status: .actionRequired))
                                     }
                                     
