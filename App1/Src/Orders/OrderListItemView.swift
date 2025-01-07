@@ -211,8 +211,12 @@ struct OrderListItemView: View {
                                         Text(item.text)
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 2)
-                                            .background(color.gradient.opacity(0.1))
+                                            .background(color.opacity(0.1))
                                             .cornerRadius(3)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 3)
+                                                    .stroke(color.opacity(0.7), lineWidth: 0.5)
+                                            )
                                     }
                                 }
                                 .frame(width: 220, alignment: .trailing)
