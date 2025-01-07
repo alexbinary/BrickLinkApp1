@@ -99,21 +99,18 @@ struct OrderListItemView: View {
                                     
                                     if !appController.orderChecklistPayment(orderId) {
                                         items.append((text: "Payment pending", status: .waitingOnExternalAction))
-                                    }
-                                    if !appController.orderChecklistIncomeTransaction(orderId) {
+                                        
+                                    } else if !appController.orderChecklistIncomeTransaction(orderId) {
                                         items.append((text: "No payment transaction", status: .actionRequired))
                                     }
                                     
                                 case .pickAndPack:
                                     
                                     if !appController.orderChecklistPicking(orderId) {
-                                        items.append((text: "Items not picked", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistVerification(orderId) {
-                                        items.append((text: "Items not verified", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistPacked(orderId) {
-                                        items.append((text: "Not packed", status: .actionRequired))
+                                        items.append((text: "Not picked", status: .actionRequired))
+                                        
+                                    } else if !appController.orderChecklistPacked(orderId) {
+                                        items.append((text: "Not packed yet", status: .actionRequired))
                                     }
                                     
                                 case .ship:
@@ -136,21 +133,15 @@ struct OrderListItemView: View {
                                     
                                 case .inTransit:
                                     
-                                    if !appController.orderChecklistReceived(orderId) {
-                                        
-                                        let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                        items.append((text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
-                                    }
+                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+                                    items.append((text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
                                     
                                 case .giveFeedback:
+                                        
+                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+                                    items.append((text: "Received \(formattedDate)", status: .completed))
                                     
-                                    if !appController.orderChecklistSellerFeedback(orderId) {
-                                        
-                                        let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                        items.append((text: "Received \(formattedDate)", status: .completed))
-                                        
-                                        items.append((text: "No seller feedback", status: .actionRequired))
-                                    }
+                                    items.append((text: "No seller feedback", status: .actionRequired))
                                     
                                 case .closed:
                                     
