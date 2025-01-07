@@ -74,16 +74,58 @@ struct OrderShippingView: View {
                         
                         HeaderTitleView(label: "􀐚 Packing & Stamping")
                         
-                        Grid(alignment: .leading, verticalSpacing: 8) {
+                        let recommendedStampingMethod = {
                             
-                            GridRow {
-                                Text("Recommended method :")
+                            var s = ""
+                            
+                            if let selectedAffranchissement = selectedAffranchissement {
                                 
+                                if selectedAffranchissement.usePostOffice {
+                                    return "Bureau de poste"
+                                } else {
+                                    s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                    
+                                    if order.shippingMethodId != shippingMethodId_France {
+                                        s += " international"
+                                    }
+                                    
+                                    return s
+                                }
+                            }
+                            
+                            return s
+                        }()
+                        
+                        Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 4) {
+                            GridRow {
+                                Text("Recommended method").font(.caption).foregroundStyle(.secondary)
+                                Text("Cost").font(.caption).foregroundStyle(.secondary)
+                                Text("Stamping").font(.caption).foregroundStyle(.secondary)
+                            }
+                            GridRow {
                                 HStack {
                                     Toggle("letter", isOn: .constant(selectedShippingCost?.chooseLetter ?? false))
                                     Toggle("parcel", isOn: .constant(selectedShippingCost?.chooseParcel ?? false))
                                 }
+                                if let selectedShippingCost = selectedShippingCost,
+                                   let shippingCostPredictedValue = selectedShippingCost.value {
+                                    
+                                    Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
+                                } else {
+                                    Text("")
+                                }
+                                Text(recommendedStampingMethod)
                             }
+                        }
+                        .padding()
+                        .background(Color(nsColor: .windowBackgroundColor))
+                        .cornerRadius(6)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color(nsColor: .secondarySystemFill))
+                        )
+                        
+                        Grid(alignment: .leading, verticalSpacing: 8) {
                             
                             GridRow {
                                 Text("Shipping cost :")
@@ -131,28 +173,6 @@ struct OrderShippingView: View {
                             GridRow {
                                 Text("Stamping :")
                                 
-                                let recommendedMethod = {
-                                    
-                                    var s = ""
-                                    
-                                    if let selectedAffranchissement = selectedAffranchissement {
-                                        
-                                        if selectedAffranchissement.usePostOffice {
-                                            return "Bureau de poste"
-                                        } else {
-                                            s = "\(selectedAffranchissement.nbTimbres) timbres"
-                                            
-                                            if order.shippingMethodId != shippingMethodId_France {
-                                                s += " international"
-                                            }
-                                            
-                                            return s
-                                        }
-                                    }
-                                    
-                                    return s
-                                }()
-                                
                                 if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
                                     Text(confirmedMethod)
                                 } else {
@@ -161,12 +181,12 @@ struct OrderShippingView: View {
                                 
                                 HStack {
                                     Button {
-                                        appController.updateAffranchissement(forOrderWithId: order.id, method: recommendedMethod)
+                                        appController.updateAffranchissement(forOrderWithId: order.id, method: recommendedStampingMethod)
                                     } label: {
-                                        Text("Recommended: \(recommendedMethod)")
+                                        Text("Recommended: \(recommendedStampingMethod)")
                                     }
                                     
-                                    if recommendedMethod != "Bureau de poste" {
+                                    if recommendedStampingMethod != "Bureau de poste" {
                                         Button {
                                             appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
                                         } label: {
