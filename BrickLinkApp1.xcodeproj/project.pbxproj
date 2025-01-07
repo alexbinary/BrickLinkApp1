@@ -18,7 +18,7 @@
 		2955607A2D294182000DC139 /* widthEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295560792D294182000DC139 /* widthEqualizer.swift */; };
 		2955607E2D2949BD000DC139 /* OrderBusinessStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2955607D2D2949BD000DC139 /* OrderBusinessStatus.swift */; };
 		295560802D2971F8000DC139 /* OrderFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2955607F2D2971F8000DC139 /* OrderFeedbackView.swift */; };
-		295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadListView.swift */; };
+		295B52FE2CA2B6820090CE1C /* UploadAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B52FD2CA2B6820090CE1C /* UploadAddView.swift */; };
 		29ACCDF02CAD8C700065C6E3 /* BusinessMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */; };
 		29ACCDF62CAD90800065C6E3 /* protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ACCDF52CAD90800065C6E3 /* protocols.swift */; };
 		29AE70572D29C64900FE140C /* UploadUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AE70562D29C64900FE140C /* UploadUploadView.swift */; };
@@ -73,7 +73,7 @@
 		295560792D294182000DC139 /* widthEqualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widthEqualizer.swift; sourceTree = "<group>"; };
 		2955607D2D2949BD000DC139 /* OrderBusinessStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBusinessStatus.swift; sourceTree = "<group>"; };
 		2955607F2D2971F8000DC139 /* OrderFeedbackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderFeedbackView.swift; sourceTree = "<group>"; };
-		295B52FD2CA2B6820090CE1C /* UploadListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadListView.swift; sourceTree = "<group>"; };
+		295B52FD2CA2B6820090CE1C /* UploadAddView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadAddView.swift; sourceTree = "<group>"; };
 		29ACCDEF2CAD8C6A0065C6E3 /* BusinessMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessMonth.swift; sourceTree = "<group>"; };
 		29ACCDF52CAD90800065C6E3 /* protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = protocols.swift; sourceTree = "<group>"; };
 		29AE70562D29C64900FE140C /* UploadUploadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadUploadView.swift; sourceTree = "<group>"; };
@@ -154,8 +154,8 @@
 			isa = PBXGroup;
 			children = (
 				29B0913D2C9486320072F7BE /* UploadContentView.swift */,
+				295B52FD2CA2B6820090CE1C /* UploadAddView.swift */,
 				29AE70562D29C64900FE140C /* UploadUploadView.swift */,
-				295B52FD2CA2B6820090CE1C /* UploadListView.swift */,
 			);
 			path = Upload;
 			sourceTree = "<group>";
@@ -403,7 +403,7 @@
 				29B949382C86F2AA00CC7F26 /* OrderComptaView.swift in Sources */,
 				29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */,
 				29BB30902C77B0CA000525CB /* App1.swift in Sources */,
-				295B52FE2CA2B6820090CE1C /* UploadListView.swift in Sources */,
+				295B52FE2CA2B6820090CE1C /* UploadAddView.swift in Sources */,
 				29B949552C8F3D0800CC7F26 /* utils.swift in Sources */,
 				29B9491F2C7DB3D600CC7F26 /* OrderItem.swift in Sources */,
 				29B949192C7DB11200CC7F26 /* HeaderTitleView.swift in Sources */,

@@ -16,6 +16,8 @@ struct UploadUploadView: View {
     
     @EnvironmentObject var appController: AppController
     
+    let selectedItemId: UploadItem.ID?
+    
     @State var inventoryResult: InventoryResult? = nil
     @State var relatedInventories: [InventoryItem]? = nil
     
@@ -32,7 +34,7 @@ struct UploadUploadView: View {
         
         VStack(alignment: .leading) {
             
-            if let nextUploadItem = nextUploadItem {
+            if let nextUploadItem = activeUploadItem {
                 
                 Table(of: UploadItem.self) {
                     
@@ -66,10 +68,17 @@ struct UploadUploadView: View {
                     
                     TableColumn("") { item in
                     
-                        Button {
-                            appController.skipUploadItem(nextUploadItem)
-                        } label: {
-                            Text("Skip item")
+                        HStack {
+                            Button {
+                                appController.skipUploadItem(nextUploadItem)
+                            } label: {
+                                Text("􁉂 Skip")
+                            }
+                            Button {
+                                appController.deleteUploadItem(item)
+                            } label: {
+                                Text("􀈑 Delete")
+                            }
                         }
                     }
                     
@@ -344,7 +353,7 @@ struct UploadUploadView: View {
                 await self.pullInventory()
             }
         }
-        .onChange(of: nextUploadItem) {
+        .onChange(of: activeUploadItem) {
             Task {
                 await self.pullInventory()
             }
@@ -353,7 +362,13 @@ struct UploadUploadView: View {
     }
     
     
-    var nextUploadItem: UploadItem? {
+    var activeUploadItem: UploadItem? {
+        
+        if let id = selectedItemId,
+           let item = appController.uploadItems.first(where: { $0.id == id }) {
+            
+            return item
+        }
         
         return appController.uploadItems.first
     }
@@ -361,7 +376,7 @@ struct UploadUploadView: View {
     
     func pullInventory() async {
         
-        guard let nextUploadItem = nextUploadItem else { return }
+        guard let nextUploadItem = activeUploadItem else { return }
         
         self.inventoryResult = nil
         self.relatedInventories = nil

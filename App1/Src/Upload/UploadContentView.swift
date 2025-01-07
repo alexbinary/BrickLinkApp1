@@ -8,6 +8,8 @@ struct UploadContentView: View {
     
     @EnvironmentObject var appController: AppController
     
+    @State var selectedItemId: UploadItem.ID?
+    
     
     var body: some View {
      
@@ -15,19 +17,19 @@ struct UploadContentView: View {
             
             TabView {
                 
-                UploadListView()
-                    .tabItem {
-                        Text("􀋲 Edit list")
-                    }
-                
-                UploadUploadView()
+                UploadUploadView(selectedItemId: selectedItemId)
                     .tabItem {
                         Text("􀈧 Upload")
+                    }
+                
+                UploadAddView()
+                    .tabItem {
+                        Text("􀋲 Edit list")
                     }
             }
             .padding()
             
-            Table(appController.uploadItems) {
+            Table(appController.uploadItems, selection: $selectedItemId) {
                 
                 TableColumn("Image") { item in
                     AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
@@ -59,14 +61,14 @@ struct UploadContentView: View {
                 TableColumn("Delete") { item in
                     HStack {
                         Button {
-                            appController.deleteUploadItem(item)
-                        } label: {
-                            Text("􀈑 Delete")
-                        }
-                        Button {
                             appController.hoistUploadItem(item)
                         } label: {
                             Text("􁾨 Hoist")
+                        }
+                        Button {
+                            appController.deleteUploadItem(item)
+                        } label: {
+                            Text("􀈑 Delete")
                         }
                     }
                 }

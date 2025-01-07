@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct UploadListView: View {
+struct UploadAddView: View {
     
     
     @EnvironmentObject var appController: AppController
