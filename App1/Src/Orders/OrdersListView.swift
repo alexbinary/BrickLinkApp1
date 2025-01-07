@@ -20,6 +20,18 @@ struct OrdersListView: View {
                 
                 let sections: [(label: String, orders: [OrderSummary])] = [
                     (
+                        label: "􀐫 In transit for 30+ days",
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                    ),
+                    (
+                        label: OrderBusinessStatus.giveFeedback.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                    ),
+                    (
                         label: OrderBusinessStatus.validatePayment.descriptionWithPicto,
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .validatePayment }
@@ -38,21 +50,9 @@ struct OrdersListView: View {
                             .sorted { $0.date > $1.date }
                     ),
                     (
-                        label: OrderBusinessStatus.giveFeedback.descriptionWithPicto,
-                        orders: allOrders
-                            .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
-                            .sorted { $0.date > $1.date }
-                    ),
-                    (
                         label: OrderBusinessStatus.inTransit.descriptionWithPicto,
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .inTransit && !appController.orderChecklistUnchangedFor30Days($0.id) }
-                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                    ),
-                    (
-                        label: "􀐫 In transit for 30+ days",
-                        orders: allOrders
-                            .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
                             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                     ),
                     (
@@ -75,7 +75,7 @@ struct OrdersListView: View {
                 
                 ForEach(closedOrders.grouppedByMonth, id: \.month) { item in
                     
-                    section(header: "\(OrderBusinessStatus.closed.descriptionWithPicto) - \(item.month)", orders: item.elements)
+                    section(header: "􀤟 \(item.month)", orders: item.elements)
                 }
             }
         }
@@ -100,25 +100,28 @@ struct OrdersListView: View {
     @ViewBuilder
     func section(header: String, orders: [OrderSummary]) -> some View {
         
-        Section {
+        if orders.count > 0 {
             
-            if orders.isEmpty {
+            Section {
                 
-                Text("")
-                
-            } else {
-                
-                ForEach(orders) { order in
+                if orders.isEmpty {
                     
-                    itemView(order.id)
+                    Text("")
+                    
+                } else {
+                    
+                    ForEach(orders) { order in
+                        
+                        itemView(order.id)
+                    }
                 }
+                
+                Color.clear.frame(width: 0, height: 24)
+                
+            } header: {
+                
+                headerView(header, secondaryText: "\(orders.count) orders")
             }
-            
-            Color.clear.frame(width: 0, height: 24)
-            
-        } header: {
-            
-            headerView(header, secondaryText: "\(orders.count) orders")
         }
     }
     
