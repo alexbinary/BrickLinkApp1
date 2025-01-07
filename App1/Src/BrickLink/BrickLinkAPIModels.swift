@@ -145,7 +145,6 @@ struct BrickLinkInventoryItem: Decodable {
 }
 
 
-
 struct FixedPointNumber: Codable, ExpressibleByFloatLiteral, CustomStringConvertible {
     
     

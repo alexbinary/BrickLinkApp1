@@ -3,10 +3,10 @@ import SwiftUI
 
 
 
-enum InventoryResult {
+enum Result<T> {
     
     case notFound
-    case found(InventoryItem)
+    case found(T)
 }
 
 
@@ -18,7 +18,8 @@ struct UploadUploadView: View {
     
     let selectedItemId: UploadItem.ID?
     
-    @State var inventoryResult: InventoryResult? = nil
+    @State var catalogResult: Result<CatalogItem>? = nil
+    @State var inventoryResult: Result<InventoryItem>? = nil
     @State var relatedInventories: [InventoryItem]? = nil
     
     @State var editQtyCreate: Int? = nil
@@ -34,7 +35,7 @@ struct UploadUploadView: View {
         
         VStack(alignment: .leading) {
             
-            if let nextUploadItem = activeUploadItem {
+            if let activeUploadItem = activeUploadItem {
                 
                 Table(of: UploadItem.self) {
                     
@@ -70,7 +71,7 @@ struct UploadUploadView: View {
                     
                         HStack {
                             Button {
-                                appController.skipUploadItem(nextUploadItem)
+                                appController.skipUploadItem(activeUploadItem)
                             } label: {
                                 Text("􁉂 Skip")
                             }
@@ -84,7 +85,7 @@ struct UploadUploadView: View {
                     
                 } rows: {
                     
-                    TableRow(nextUploadItem)
+                    TableRow(activeUploadItem)
                 }
                 .frame(minHeight: 100, maxHeight: 100)
                 
@@ -129,7 +130,7 @@ struct UploadUploadView: View {
                                     }
                                     
                                     Button {
-                                        self.editQtyUpdate = nextUploadItem.qty
+                                        self.editQtyUpdate = activeUploadItem.qty
                                     } label: {
                                         Text("Reset")
                                     }
@@ -150,7 +151,7 @@ struct UploadUploadView: View {
                                     }
                                     
                                     Button {
-                                        self.editUnitPriceUpdate = nextUploadItem.unitPrice
+                                        self.editUnitPriceUpdate = activeUploadItem.unitPrice
                                     } label: {
                                         Text("Reset")
                                     }
@@ -213,7 +214,7 @@ struct UploadUploadView: View {
                                                     unitPrice: unitPrice!,
                                                     remarks: remarks!
                                                 )
-                                                appController.deleteUploadItem(nextUploadItem)
+                                                appController.deleteUploadItem(activeUploadItem)
                                             }
                                         } label: {
                                             Text("Update inventory")
@@ -270,12 +271,32 @@ struct UploadUploadView: View {
                             
                             Text("New inventory").font(.title3)
                             
+                            if let catalogResult = catalogResult {
+                                
+                                switch catalogResult {
+                                    
+                                case .found(let catalogItem):
+                                    
+                                    Text(catalogItem.name).font(.title3)
+                                    
+                                case .notFound:
+                                    
+                                    Text("Catalog entry not found")
+                                }
+                                
+                            } else {
+                                
+                                Text("Loading catalog...")
+                            }
+                            
+                            Text(activeUploadItem.comment).foregroundStyle(.secondary)
+                            
                             Form {
                                 
                                 HStack {
                                     TextField("Qty", value: $editQtyCreate, format: .number)
                                     Button {
-                                        self.editQtyCreate = nextUploadItem.qty
+                                        self.editQtyCreate = activeUploadItem.qty
                                     } label: {
                                         Text("Reset")
                                     }
@@ -284,7 +305,7 @@ struct UploadUploadView: View {
                                 HStack {
                                     TextField("Price", value: $editUnitPriceCreate, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                                     Button {
-                                        self.editUnitPriceCreate = nextUploadItem.unitPrice
+                                        self.editUnitPriceCreate = activeUploadItem.unitPrice
                                     } label: {
                                         Text("Reset")
                                     }
@@ -324,16 +345,16 @@ struct UploadUploadView: View {
                                     Button {
                                         Task {
                                             await appController.createInventory(
-                                                ref: nextUploadItem.ref,
-                                                type: nextUploadItem.type,
-                                                colorId: nextUploadItem.colorId,
+                                                ref: activeUploadItem.ref,
+                                                type: activeUploadItem.type,
+                                                colorId: activeUploadItem.colorId,
                                                 quantity: qty!,
                                                 unitPrice: unitPrice!,
-                                                condition: nextUploadItem.condition,
-                                                description: nextUploadItem.comment,
+                                                condition: activeUploadItem.condition,
+                                                description: activeUploadItem.comment,
                                                 remarks: remarks!
                                             )
-                                            appController.deleteUploadItem(nextUploadItem)
+                                            appController.deleteUploadItem(activeUploadItem)
                                         }
                                     } label: {
                                         Text("Create inventory")
@@ -410,32 +431,41 @@ struct UploadUploadView: View {
     
     func pullInventory() async {
         
-        guard let nextUploadItem = activeUploadItem else { return }
+        guard let activeUploadItem = activeUploadItem else { return }
         
         self.inventoryResult = nil
         self.relatedInventories = nil
         
         await parallel([
             {
-                if let item = await appController.getInventory(for: nextUploadItem) {
+                if let item = await appController.getInventory(for: activeUploadItem) {
                     
                     self.inventoryResult = .found(item)
                     
-                    self.editQtyUpdate = nextUploadItem.qty
-                    self.editUnitPriceUpdate = nextUploadItem.unitPrice
+                    self.editQtyUpdate = activeUploadItem.qty
+                    self.editUnitPriceUpdate = activeUploadItem.unitPrice
                     self.editRemarksUpdate = item.remarks
                     
                 } else {
                     
                     self.inventoryResult = .notFound
                     
-                    self.editQtyCreate = nextUploadItem.qty
-                    self.editUnitPriceCreate = nextUploadItem.unitPrice
+                    self.editQtyCreate = activeUploadItem.qty
+                    self.editUnitPriceCreate = activeUploadItem.unitPrice
                     self.editRemarksCreate = ""
+                    
+                    self.catalogResult = nil
+                    
+                    if let catalog = await appController.getCatalogItem(for: activeUploadItem) {
+                        
+                        self.catalogResult = .found(catalog)
+                    } else {
+                        self.catalogResult = .notFound
+                    }
                 }
             },
             {
-                self.relatedInventories = await appController.getInventoriesForAllColors(for: nextUploadItem)
+                self.relatedInventories = await appController.getInventoriesForAllColors(for: activeUploadItem)
             }
         ])
     }

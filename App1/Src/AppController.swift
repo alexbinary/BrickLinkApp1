@@ -1030,6 +1030,28 @@ class AppController: ObservableObject {
     
     
     
+    // MARK: - Catalog
+    
+    
+    public func getCatalogItem(for uploadItem: UploadItem) async -> CatalogItem? {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/items/\(uploadItem.type.rawValue)/\(uploadItem.ref)")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<BrickLinkCatalogItem> = data.decode()
+        if let catalogItem = decoded.data {
+            
+            return CatalogItem(fromBl: catalogItem)
+        }
+        
+        return nil
+    }
+    
+    
+    
     // MARK: - Transactions
     
     
@@ -1544,6 +1566,16 @@ extension InventoryItem {
         self.remarks = bl.remarks ?? ""
         self.quantity = bl.quantity
         self.unitPrice = bl.unitPrice.floatValue
+    }
+}
+
+
+extension CatalogItem {
+    
+    
+    init(fromBl bl: BrickLinkCatalogItem) {
+        
+        self.name = bl.name.htmlEscape()
     }
 }
 
