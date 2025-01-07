@@ -214,6 +214,18 @@ struct UploadUploadView: View {
                                                     unitPrice: unitPrice!,
                                                     remarks: remarks!
                                                 )
+                                                appController.addUploadedItem(UploadedItem(
+                                                    type: activeUploadItem.type,
+                                                    ref: activeUploadItem.ref,
+                                                    colorId: activeUploadItem.colorId,
+                                                    qty: qty!,
+                                                    condition: activeUploadItem.condition,
+                                                    comment: activeUploadItem.comment,
+                                                    remarks: remarks!,
+                                                    unitPrice: unitPrice!,
+                                                    inventoryId: inventoryItem.id,
+                                                    uploadDate: .now
+                                                ))
                                                 appController.deleteUploadItem(activeUploadItem)
                                             }
                                         } label: {
@@ -344,7 +356,7 @@ struct UploadUploadView: View {
                                     
                                     Button {
                                         Task {
-                                            await appController.createInventory(
+                                            if let inventoryItem = await appController.createInventory(
                                                 ref: activeUploadItem.ref,
                                                 type: activeUploadItem.type,
                                                 colorId: activeUploadItem.colorId,
@@ -353,7 +365,20 @@ struct UploadUploadView: View {
                                                 condition: activeUploadItem.condition,
                                                 description: activeUploadItem.comment,
                                                 remarks: remarks!
-                                            )
+                                            ) {
+                                                appController.addUploadedItem(UploadedItem(
+                                                    type: activeUploadItem.type,
+                                                    ref: activeUploadItem.ref,
+                                                    colorId: activeUploadItem.colorId,
+                                                    qty: qty!,
+                                                    condition: activeUploadItem.condition,
+                                                    comment: activeUploadItem.comment,
+                                                    remarks: remarks!,
+                                                    unitPrice: unitPrice!,
+                                                    inventoryId: inventoryItem.id,
+                                                    uploadDate: .now
+                                                ))
+                                            }
                                             appController.deleteUploadItem(activeUploadItem)
                                         }
                                     } label: {

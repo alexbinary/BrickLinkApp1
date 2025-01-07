@@ -29,48 +29,99 @@ struct UploadContentView: View {
             }
             .padding()
             
-            Table(appController.uploadItems, selection: $selectedItemId) {
+            TabView {
                 
-                TableColumn("Image") { item in
-                    AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
-                        .frame(minHeight: 60)
-                }
-                
-                TableColumn("Condition", value: \.condition)
-                
-                TableColumn("Color") { item in
-                    HStack {
-                        appController.color(forLegoColorId: item.colorId).frame(width: 18, height: 18)
-                        Text(appController.colorName(forLegoColorId: item.colorId))
+                Table(appController.uploadItems, selection: $selectedItemId) {
+                    
+                    TableColumn("Image") { item in
+                        AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
+                            .frame(minHeight: 60)
                     }
-                }
-                
-                TableColumn("Ref", value: \.ref)
-                
-                TableColumn("Quantity") { item in
-                    Text(item.qty, format: .number)
-                }
-                TableColumn("Price") { item in
-                    if let price = item.unitPrice {
-                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                    }
-                }
-                
-                TableColumn("Comment", value: \.comment)
-                
-                TableColumn("Delete") { item in
-                    HStack {
-                        Button {
-                            appController.hoistUploadItem(item)
-                        } label: {
-                            Text("􁾨 Hoist")
-                        }
-                        Button {
-                            appController.deleteUploadItem(item)
-                        } label: {
-                            Text("􀈑 Delete")
+                    
+                    TableColumn("Condition", value: \.condition)
+                    
+                    TableColumn("Color") { item in
+                        HStack {
+                            appController.color(forLegoColorId: item.colorId).frame(width: 18, height: 18)
+                            Text(appController.colorName(forLegoColorId: item.colorId))
                         }
                     }
+                    
+                    TableColumn("Ref", value: \.ref)
+                    
+                    TableColumn("Quantity") { item in
+                        Text(item.qty, format: .number)
+                    }
+                    TableColumn("Price") { item in
+                        if let price = item.unitPrice {
+                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                        }
+                    }
+                    
+                    TableColumn("Comment", value: \.comment)
+                    
+                    TableColumn("Delete") { item in
+                        HStack {
+                            Button {
+                                appController.hoistUploadItem(item)
+                            } label: {
+                                Text("􁾨 Hoist")
+                            }
+                            Button {
+                                appController.deleteUploadItem(item)
+                            } label: {
+                                Text("􀈑 Delete")
+                            }
+                        }
+                    }
+                }
+                .padding()
+                .tabItem {
+                    Text("􀋲 Upload items")
+                }
+                
+                Table(appController.uploadedItems) {
+                    
+                    TableColumn("Image") { item in
+                        AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
+                            .frame(minHeight: 60)
+                    }
+                    
+                    TableColumn("Condition", value: \.condition)
+                    
+                    TableColumn("Color") { item in
+                        HStack {
+                            appController.color(forLegoColorId: item.colorId).frame(width: 18, height: 18)
+                            Text(appController.colorName(forLegoColorId: item.colorId))
+                        }
+                    }
+                    
+                    TableColumn("Ref", value: \.ref)
+                    
+                    TableColumn("Quantity") { item in
+                        Text(item.qty, format: .number)
+                    }
+                    TableColumn("Price") { item in
+                        if let price = item.unitPrice {
+                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                        }
+                    }
+                    
+                    TableColumn("Comment", value: \.comment)
+                    
+                    TableColumn("Remarks", value: \.remarks)
+                    
+                    TableColumn("Inventory ID") { item in
+                        Link("\(item.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(item.inventoryId)#/")!)
+                    }
+                    
+                    TableColumn("Date") { item in
+                        Text(item.uploadDate, format: .dateTime)
+                    }
+                }
+                .padding()
+                .tabItem {
+                    Text("􀐫 History")
                 }
             }
         }

@@ -256,6 +256,20 @@ class DataStore {
     }
     
     
+    public var uploadedItems: [UploadedItem] {
+        
+        data?.uploadedItems ?? []
+    }
+    
+    
+    public func setUploadedItems(_ uploadedItems: [UploadedItem]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.uploadedItems = uploadedItems
+    }
+    
+    
     public var transactions: [Transaction] {
         
         data?.transactions ?? []
@@ -295,5 +309,6 @@ struct DataRoot: Codable {
     var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]?
     var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]?
     var uploadItems: [UploadItem]?
+    var uploadedItems: [UploadedItem]?
     var transactions: [Transaction]?
 }

@@ -887,6 +887,28 @@ class AppController: ObservableObject {
     
     
     
+    // MARK: - Uploaded items
+    
+    
+    public var uploadedItems: [UploadedItem] {
+        
+        dataStore.uploadedItems
+    }
+    
+    
+    public func addUploadedItem(_ uploadedItem: UploadedItem) {
+        
+        var uploadedItems = dataStore.uploadedItems
+        uploadedItems.append(uploadedItem)
+        
+        try! dataStore.setUploadedItems(uploadedItems)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    
     // MARK: - Inventory
     
     
@@ -952,7 +974,7 @@ class AppController: ObservableObject {
         description: String,
         remarks: String
         
-    ) async {
+    ) async -> InventoryItem? {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!)
         request.httpMethod = "POST"
@@ -981,6 +1003,14 @@ class AppController: ObservableObject {
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<BrickLinkInventoryItem> = data.decode()
+        if let inventory = decoded.data {
+            
+            return InventoryItem(fromBl: inventory)
+        }
+        
+        return nil
     }
     
     
