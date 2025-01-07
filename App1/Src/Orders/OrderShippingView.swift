@@ -268,6 +268,23 @@ struct OrderShippingView: View {
                 }()
                 HeaderTitleView(label: title)
                 
+                Grid(alignment: .leading) {
+                    GridRow {
+                        Text("Timbre").font(.caption).foregroundStyle(.secondary)
+                        Text("Suivi").font(.caption).foregroundStyle(.secondary)
+                    }
+                    GridRow {
+                        Text(
+                            order.shippingMethodId == shippingMethodId_France ? priceTimbreFrance : priceTimbreWorld,
+                            format: .currency(code: "EUR").presentation(.isoCode)
+                        )
+                        Text(
+                            order.shippingMethodId == shippingMethodId_France ? priceTrackingFrance : priceTrackingWorld,
+                            format: .currency(code: "EUR").presentation(.isoCode)
+                        )
+                    }
+                }
+                
                 Table(of: ShippingCostTableRow.self, selection: .constant(selectedShippingCost?.maxWeight)) {
                     
                     TableColumn("Weight band") { item in
@@ -335,71 +352,6 @@ struct OrderShippingView: View {
                                         *Zone C : Autres destinations
                                     """).font(.footnote)
                 }
-            
-                Divider()
-                
-                HeaderTitleView(label: "􀅴 Letter affranchissement")
-                
-                Grid(alignment: .leading) {
-                    GridRow {
-                        Text("Timbre : ")
-                        Text(order.shippingMethodId == shippingMethodId_France ? priceTimbreFrance : priceTimbreWorld, format: .currency(code: "EUR").presentation(.isoCode))
-                    }
-                    GridRow {
-                        Text("Suivi : ")
-                        Text(order.shippingMethodId == shippingMethodId_France ? priceTrackingFrance : priceTrackingWorld, format: .currency(code: "EUR").presentation(.isoCode))
-                    }
-                }
-                
-                Table(of: AffranchissementTableRow.self, selection: .constant(selectedAffranchissement?.maxWeight)) {
-                    
-                    TableColumn("Weight band") { item in
-                        Text("\(item.minWeight)-\(item.maxWeight)g")
-                    }
-                    
-                    TableColumn("Timbres par multiples") { item in
-                        if let n = item.timbresParMultiples,
-                           let p = item.timbresParMultiplesTotalPrice {
-                            HStack {
-                                Text("\(n)   =>")
-                                Text(p, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .foregroundStyle(item.preferTimbresParMultiples ? green : red)
-                                    .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.useTimbresParMultiples ?? false ? .bold : .regular)
-                            }
-                        }
-                    }
-                    
-                    TableColumn("Tarif ref") { item in
-                        
-                        Text(item.tarifRef, format: .currency(code: "EUR").presentation(.isoCode))
-                            .foregroundStyle((!item.preferTimbresParMultiples && !item.preferTimbres) ? green : red)
-                            .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.usePostOffice ?? false ? .bold : .regular)
-                    }
-                    TableColumn("Nb timbres required") { item in
-                        HStack {
-                            Text("\(item.nbTimbresRequired)   =>")
-                            Text(item.nbTimbresRequiredTotalPrice, format: .currency(code: "EUR").presentation(.isoCode))
-                                .foregroundStyle(item.preferTimbres ? green : red)
-                                .fontWeight(selectedAffranchissement?.maxWeight == item.maxWeight && selectedAffranchissement?.useTimbres ?? false ? .bold : .regular)
-                        }
-                    }
-                    
-                } rows: {
-                    
-                    if order.shippingMethodId == shippingMethodId_France {
-                        
-                        ForEach(affranchissementValuesFrance) { item in
-                            TableRow(item)
-                        }
-                        
-                    } else {
-                        
-                        ForEach(affranchissementValuesWorld) { item in
-                            TableRow(item)
-                        }
-                    }
-                }
-                .frame(minHeight: 220)
             }
         }
         .padding()
