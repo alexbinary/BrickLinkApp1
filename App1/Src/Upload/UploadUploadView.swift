@@ -113,6 +113,9 @@ struct UploadUploadView: View {
                                 Text("Inventory update").font(.title3)
                                 Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
                             }
+                            
+                            Text(inventoryItem.name.htmlUnescape()).font(.title3)
+                            Text(inventoryItem.description).foregroundStyle(.secondary)
                                 
                             Grid(alignment: .leading) {
                                 
