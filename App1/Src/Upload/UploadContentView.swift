@@ -61,17 +61,10 @@ struct UploadContentView: View {
                     TableColumn("Comment", value: \.comment)
                     
                     TableColumn("Delete") { item in
-                        HStack {
-                            Button {
-                                appController.hoistUploadItem(item)
-                            } label: {
-                                Text("􁾨 Hoist")
-                            }
-                            Button {
-                                appController.deleteUploadItem(item)
-                            } label: {
-                                Text("􀈑 Delete")
-                            }
+                        Button {
+                            appController.deleteUploadItem(item)
+                        } label: {
+                            Text("􀈑 Delete")
                         }
                     }
                 }
