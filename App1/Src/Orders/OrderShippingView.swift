@@ -27,7 +27,7 @@ struct OrderShippingView: View {
                             Text(order.shippingAddressName)
                             Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
                             Text(order.shippingAddressCountryCode)
-                        }
+                        }.font(.title3)
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
