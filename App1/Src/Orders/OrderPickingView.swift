@@ -57,11 +57,6 @@ struct OrderPickingView: View {
                 } label: {
                     Text("Pick or verify next")
                 }
-            }
-            
-            if !orderItemsToPick.isEmpty {
-                
-                Text("Pick").font(.title2)
                 
                 Button {
                     nextPick()
@@ -69,241 +64,25 @@ struct OrderPickingView: View {
                     Text("Pick next")
                 }
                 
-                Table(of: OrderItem.self) {
-                    
-                    TableColumn("Status") { item in
-                        
-                        let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
-                        let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
-                        
-                        if !picked {
-                            Button {
-                                appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Pick")
-                            }
-                        }
-                        
-                        if picked && !verified {
-                            
-                            Button {
-                                appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unpick")
-                            }
-                            Button {
-                                appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Verify")
-                            }
-                        }
-                        
-                        if picked && verified {
-                            
-                            Button {
-                                appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                                appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unpick")
-                            }
-                            Button {
-                                appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unverify")
-                            }
-                        }
-                    }
-                    TableColumn("Image") { item in
-                        AsyncImage(url: appController.imageUrl(for: item))
-                            .frame(minHeight: 60)
-                    }
-                    TableColumn("Color") { item in
-                        HStack {
-                            appController.color(for: item).frame(width: 18, height: 18)
-                            Text(appController.colorName(for: item))
-                        }
-                    }
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Location", value: \.location)
-                    TableColumn("Quantity", value: \.quantity)
-                    TableColumn("Left", value: \.quantityLeft)
-                    TableColumn("Name") { item in
-                        Text(item.name.htmlUnescape()).lineLimit(nil)
-                    }
-                    TableColumn("Ref", value: \.ref)
-                    TableColumn("Comment", value: \.comment)
-                    
-                } rows: {
-                    
-                    Section("Next") {
-                        ForEach(nextItemsToPick) { item in
-                            TableRow(item)
-                        }
-                    }
-                    Section("Coming") {
-                        ForEach(orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } }) { item in
-                            TableRow(item)
-                        }
-                    }
-                }
-            }
-            
-            if !orderItemsToVerify.isEmpty {
-                
-                Text("Verify").font(.title2)
-                
                 Button {
                     nextVerify()
                 } label: {
                     Text("Verify next")
                 }
-                
-                Table(of: OrderItem.self) {
-                    
-                    TableColumn("Status") { item in
-                        
-                        let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
-                        let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
-                        
-                        if !picked {
-                            Button {
-                                appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Pick")
-                            }
-                        }
-                        
-                        if picked && !verified {
-                            
-                            Button {
-                                appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unpick")
-                            }
-                            Button {
-                                appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Verify")
-                            }
-                        }
-                        
-                        if picked && verified {
-                            
-                            Button {
-                                appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                                appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unpick")
-                            }
-                            Button {
-                                appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unverify")
-                            }
-                        }
-                    }
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Image") { item in
-                        AsyncImage(url: appController.imageUrl(for: item))
-                            .frame(minHeight: 60)
-                    }
-                    TableColumn("Color") { item in
-                        HStack {
-                            appController.color(for: item).frame(width: 18, height: 18)
-                            Text(appController.colorName(for: item))
-                        }
-                    }
-                    TableColumn("Quantity", value: \.quantity)
-                    TableColumn("Name") { item in
-                        Text(item.name.htmlUnescape()).lineLimit(nil)
-                    }
-                    TableColumn("Location", value: \.location)
-                    TableColumn("Ref", value: \.ref)
-                    TableColumn("Comment", value: \.comment)
-                    
-                } rows: {
-                    
-                    Section("Next") {
-                        ForEach(nextItemsToVerify) { item in
-                            TableRow(item)
-                        }
-                    }
-                    Section("Coming") {
-                        ForEach(orderItemsToVerify.filter { pick in !nextItemsToVerify.contains { next in next.id == pick.id } }) { item in
-                            TableRow(item)
-                        }
-                    }
-                }
-                .frame(minHeight: 400)
             }
             
-            if !orderItemsPickedAndVerified.isEmpty {
+            ScrollView {
                 
-                Text("Picked and verified").font(.title2)
-                
-                Table(orderItemsPickedAndVerified) {
+                LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
-                    TableColumn("Status") { item in
-                        
-                        let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
-                        let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
-                        
-                        if !picked {
-                            Button {
-                                appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Pick")
-                            }
-                        }
-                        
-                        if picked && !verified {
-                            
-                            Button {
-                                appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unpick")
-                            }
-                            Button {
-                                appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Verify")
-                            }
-                        }
-                        
-                        if picked && verified {
-                            
-                            Button {
-                                appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                                appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unpick")
-                            }
-                            Button {
-                                appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                            } label: {
-                                Text("Unverify")
-                            }
-                        }
-                    }
-                    TableColumn("Image") { item in
-                        AsyncImage(url: appController.imageUrl(for: item))
-                            .frame(minHeight: 60)
-                    }
-                    TableColumn("Condition", value: \.condition)
-                    TableColumn("Color") { item in
-                        HStack {
-                            appController.color(for: item).frame(width: 18, height: 18)
-                            Text(appController.colorName(for: item))
-                        }
-                    }
-                    TableColumn("Name") { item in
-                        Text(item.name.htmlUnescape()).lineLimit(nil)
-                    }
-                    TableColumn("Ref", value: \.ref)
-                    TableColumn("Comment", value: \.comment)
-                    TableColumn("Quantity", value: \.quantity)
+                    section(header: "Pick next", items: nextItemsToPick)
+                    section(header: "Pick after", items: orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } })
+               
+                    section(header: "Verify next", items: nextItemsToVerify)
+                    section(header: "Verify after", items: orderItemsToVerify.filter { pick in !nextItemsToVerify.contains { next in next.id == pick.id } })
+               
+                    section(header: "Picked and verified", items: orderItemsPickedAndVerified)
                 }
-                .frame(minHeight: 400)
             }
         }
         .padding()
@@ -321,6 +100,145 @@ struct OrderPickingView: View {
                 ])
             }
         }
+    }
+    
+    
+    @ViewBuilder
+    func section(header: String, items: [OrderItem]) -> some View {
+        
+        if items.count > 0 {
+            
+            Section {
+                
+                ForEach(items) { item in
+                    
+                    itemView(item)
+                }
+                
+                Color.clear.frame(width: 0, height: 24)
+                
+            } header: {
+                
+                headerView(header, secondaryText: "\(items.count) items")
+            }
+        }
+    }
+    
+    
+    @ViewBuilder
+    func headerView(_ primaryText: String, secondaryText: String = "") -> some View {
+        
+        HStack(spacing: 24) {
+            Text(primaryText).font(.title3)
+            Text(secondaryText).foregroundStyle(.secondary)
+            Spacer()
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color(nsColor: .windowBackgroundColor).opacity(0.90))
+    }
+    
+    
+    @ViewBuilder
+    func itemView(_ item: OrderItem) -> some View {
+        
+        HStack(spacing: 24) {
+            
+            HStack(alignment: .top, spacing: 12) {
+                
+                Grid(verticalSpacing: 0) {
+                    
+                    GridRow(alignment: .top) {
+                        
+                        AsyncImage(url: appController.imageUrl(for: item))
+                            .frame(minHeight: 70, maxHeight: 70, alignment: .top)
+                            .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+                        
+                        VStack(alignment: .leading) {
+                            Text(item.ref).font(.caption).foregroundStyle(.secondary)
+                            Text(item.name.htmlUnescape()).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
+                            if !item.comment.isEmpty {
+                                Text(item.comment)
+                            }
+                        }
+                    }
+                    
+                    GridRow {
+                    
+                        Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
+                        HStack {
+                            appController.color(for: item).frame(width: 18, height: 18)
+                            Text(appController.colorName(for: item))
+                        }.gridColumnAlignment(.leading)
+                    }
+                }
+            }
+            
+            Grid(alignment: .leading) {
+                
+                GridRow {
+                    Text("Location").font(.caption).foregroundStyle(.secondary)
+                    Text("Pick").font(.caption).foregroundStyle(.secondary)
+                    Text("Left").font(.caption).foregroundStyle(.secondary)
+                }
+                
+                GridRow(alignment: .bottom) {
+                    Text(item.location).font(.title2).frame(width: 70, alignment: .leading)
+                    Text(item.quantity).font(.title2).gridColumnAlignment(.center)
+                    Text(item.quantityLeft).gridColumnAlignment(.center)
+                }
+            }
+            
+            VStack (alignment: .leading) {
+                
+                let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+                let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
+                
+                if !picked {
+                    Button {
+                        appController.pickItem(forOrderWithId: item.orderId, item: item.id)
+                    } label: {
+                        Text("Pick")
+                    }
+                }
+                
+                if picked && !verified {
+                    
+                    Button {
+                        appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                    } label: {
+                        Text("Unpick")
+                    }
+                    Button {
+                        appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
+                    } label: {
+                        Text("Verify")
+                    }
+                }
+                
+                if picked && verified {
+                    
+                    Button {
+                        appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                        appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
+                    } label: {
+                        Text("Unpick")
+                    }
+                    Button {
+                        appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
+                    } label: {
+                        Text("Unverify")
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color(nsColor: .secondarySystemFill))
+        .cornerRadius(6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(Color(nsColor: .tertiarySystemFill))
+        )
     }
     
     
@@ -438,3 +356,4 @@ struct OrderPickingView: View {
         }
     }
 }
+ 

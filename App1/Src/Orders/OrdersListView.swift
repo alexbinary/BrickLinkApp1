@@ -104,16 +104,9 @@ struct OrdersListView: View {
             
             Section {
                 
-                if orders.isEmpty {
+                ForEach(orders) { order in
                     
-                    Text("")
-                    
-                } else {
-                    
-                    ForEach(orders) { order in
-                        
-                        itemView(order.id)
-                    }
+                    itemView(order.id)
                 }
                 
                 Color.clear.frame(width: 0, height: 24)
