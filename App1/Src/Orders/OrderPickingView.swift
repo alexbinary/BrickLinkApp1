@@ -158,7 +158,7 @@ struct OrderPickingView: View {
                             Text(item.ref).font(.caption).foregroundStyle(.secondary)
                             Text(item.name.htmlUnescape()).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
                             if !item.comment.isEmpty {
-                                Text(item.comment)
+                                Text(item.comment.htmlUnescape())
                             }
                         }
                     }
@@ -183,7 +183,7 @@ struct OrderPickingView: View {
                 }
                 
                 GridRow(alignment: .bottom) {
-                    Text(item.location).font(.title2).frame(width: 70, alignment: .leading)
+                    Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
                     Text(item.quantity).font(.title2).gridColumnAlignment(.center)
                     Text(item.quantityLeft).gridColumnAlignment(.center)
                 }
