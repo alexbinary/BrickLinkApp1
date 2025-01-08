@@ -17,7 +17,7 @@ struct UploadContentView: View {
             
             TabView {
                 
-                UploadUploadView(selectedItemId: selectedItemId)
+                UploadUploadView(selectedItemId: $selectedItemId)
                     .tabItem {
                         Text("􀈧 Upload")
                     }
@@ -117,6 +117,7 @@ struct UploadContentView: View {
                     Text("􀐫 History")
                 }
             }
+            .padding([.horizontal, .bottom])
         }
         .navigationTitle("Upload")
     }

@@ -16,7 +16,7 @@ struct UploadUploadView: View {
     
     @EnvironmentObject var appController: AppController
     
-    let selectedItemId: UploadItem.ID?
+    @Binding var selectedItemId: UploadItem.ID?
     
     @State var catalogResult: Result<CatalogItem>? = nil
     @State var inventoryResult: Result<InventoryItem>? = nil
@@ -71,12 +71,12 @@ struct UploadUploadView: View {
                     
                         HStack {
                             Button {
-                                appController.skipUploadItem(activeUploadItem)
+                                goToNextItem(deleteActiveItem: false)
                             } label: {
                                 Text("􁉂 Skip")
                             }
                             Button {
-                                appController.deleteUploadItem(item)
+                                goToNextItem(deleteActiveItem: true)
                             } label: {
                                 Text("􀈑 Delete")
                             }
@@ -226,7 +226,7 @@ struct UploadUploadView: View {
                                                     inventoryId: inventoryItem.id,
                                                     uploadDate: .now
                                                 ))
-                                                appController.deleteUploadItem(activeUploadItem)
+                                                goToNextItem(deleteActiveItem: true)
                                             }
                                         } label: {
                                             Text("Update inventory")
@@ -379,7 +379,7 @@ struct UploadUploadView: View {
                                                     uploadDate: .now
                                                 ))
                                             }
-                                            appController.deleteUploadItem(activeUploadItem)
+                                            goToNextItem(deleteActiveItem: true)
                                         }
                                     } label: {
                                         Text("Create inventory")
@@ -451,6 +451,28 @@ struct UploadUploadView: View {
         }
         
         return appController.uploadItems.first
+    }
+    
+    
+    func goToNextItem(deleteActiveItem: Bool) {
+        
+        if let activeUploadItem = activeUploadItem {
+            
+            let items = appController.uploadItems
+            let idx = items.firstIndex(of: activeUploadItem)!
+            let nextIndex = items.index(after: idx)
+            
+            if deleteActiveItem {
+            
+                appController.deleteUploadItem(activeUploadItem)
+            }
+            
+            if nextIndex < items.endIndex {
+                
+                let nextItem = items[nextIndex]
+                selectedItemId = nextItem.id
+            }
+        }
     }
     
     

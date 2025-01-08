@@ -727,19 +727,6 @@ class AppController: ObservableObject {
     }
     
     
-    public func skipUploadItem(_ uploadItem: UploadItem) {
-        
-        var uploadItems = dataStore.uploadItems
-        uploadItems.removeAll(where: { $0.id == uploadItem.id })
-        uploadItems.append(uploadItem)
-        
-        try! dataStore.setUploadItems(uploadItems)
-        try! dataStore.save()
-        
-        self.objectWillChange.send()
-    }
-    
-    
     public func importUploadList(fromXml xml: String) {
         
         let parser = XMLParser(data: Data(xml.utf8))
