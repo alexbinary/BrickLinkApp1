@@ -116,11 +116,12 @@ struct OrderDetailView: View {
                                         let picked = appController.pickedItems(forOrderWithId: orderId).count
                                         let total = appController.orderItems(forOrderWithId: orderId).count
                                         
-                                        let percent = (picked/total*100)
-                                        if percent == 100 {
+                                        
+                                        if picked == total {
                                             Text("Pick items")
                                         } else {
-                                            Text("Pick items - \(percent)% complete")
+                                            let percent = floor(Double(picked)/Double(total)*100)
+                                            Text(String(format: "Pick items - %3.0f%% complete", percent))
                                         }
                                     }
                                     GridRow {
@@ -129,11 +130,11 @@ struct OrderDetailView: View {
                                         let verified = appController.verifiedItems(forOrderWithId: orderId).count
                                         let total = appController.orderItems(forOrderWithId: orderId).count
                                         
-                                        let percent = (verified/total*100)
-                                        if percent == 100 {
+                                        if verified == total {
                                             Text("Verify items")
                                         } else {
-                                            Text("Verify items - \(percent)% complete")
+                                            let percent = floor(Double(verified)/Double(total)*100)
+                                            Text(String(format: "Verify items - %3.0f%% complete", percent))
                                         }
                                     }
                                     GridRow {
@@ -199,7 +200,7 @@ struct OrderDetailView: View {
                     }
                     .equalWidths($columnWidth)
                     
-                    TabView(selection: .constant(1)) {
+                    TabView {
                         
                         OrderGeneralView(order: order)
                         .padding()
