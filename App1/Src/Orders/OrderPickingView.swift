@@ -75,6 +75,13 @@ struct OrderPickingView: View {
                 
                 LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
+                    if orderItemsToPick.isEmpty {
+                        
+                        Text("All items picked").font(.title)
+                            .padding()
+                            .padding(.vertical, 24)
+                    }
+                    
                     section(header: "Pick next", items: nextItemsToPick)
                     section(header: "Pick after", items: orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } })
                
