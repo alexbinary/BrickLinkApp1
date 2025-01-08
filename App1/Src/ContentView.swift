@@ -37,7 +37,9 @@ struct ContentView: View {
                     Label("Orders (\(openOrders.count))", systemImage: "list.bullet")
                         .tag(SidebarItem.orders)
                     
-                    Label("Upload", systemImage: "tray.and.arrow.down")
+                    let uploadItems = appController.uploadItems
+                    
+                    Label("Upload (\(uploadItems.count))", systemImage: "tray.and.arrow.down")
                         .tag(SidebarItem.upload)
                 }
                 

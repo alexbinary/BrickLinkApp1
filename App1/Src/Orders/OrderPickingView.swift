@@ -149,35 +149,32 @@ struct OrderPickingView: View {
     @ViewBuilder
     func itemView(_ item: OrderItem) -> some View {
         
-        HStack(spacing: 24) {
-            
-            HStack(alignment: .top, spacing: 12) {
+        HStack(spacing: 48) {
                 
-                Grid(verticalSpacing: 0) {
+            Grid(verticalSpacing: 0) {
+                
+                GridRow(alignment: .top) {
                     
-                    GridRow(alignment: .top) {
-                        
-                        AsyncImage(url: appController.imageUrl(for: item))
-                            .frame(minHeight: 70, maxHeight: 70, alignment: .top)
-                            .frame(minWidth: 90, maxWidth: 90, alignment: .top)
-                        
-                        VStack(alignment: .leading) {
-                            Text(item.ref).font(.caption).foregroundStyle(.secondary)
-                            Text(item.name.htmlUnescape()).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
-                            if !item.comment.isEmpty {
-                                Text(item.comment.htmlUnescape())
-                            }
+                    AsyncImage(url: appController.imageUrl(for: item))
+                        .frame(minHeight: 70, maxHeight: 70, alignment: .top)
+                        .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+                    
+                    VStack(alignment: .leading) {
+                        Text(item.ref).font(.caption).foregroundStyle(.secondary)
+                        Text(item.name.htmlUnescape()).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
+                        if !item.comment.isEmpty {
+                            Text(item.comment.htmlUnescape())
                         }
                     }
-                    
-                    GridRow {
-                    
-                        Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
-                        HStack {
-                            appController.color(for: item).frame(width: 18, height: 18)
-                            Text(appController.colorName(for: item))
-                        }.gridColumnAlignment(.leading)
-                    }
+                }
+                
+                GridRow {
+                
+                    Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
+                    HStack {
+                        appController.color(for: item).frame(width: 18, height: 18)
+                        Text(appController.colorName(for: item))
+                    }.gridColumnAlignment(.leading)
                 }
             }
             
