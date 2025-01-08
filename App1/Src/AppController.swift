@@ -886,9 +886,17 @@ class AppController: ObservableObject {
     // MARK: - Inventory
     
     
-    public func getInventory(for item: UploadItem) async -> InventoryItem? {
+    public func getInventory(
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(item.type.rawValue)&color_id=\(item.colorId)")!)
+        forItemType type: BrickLinkItemType,
+        colorId: LegoColor.ID,
+        ref: String,
+        condition: String,
+        comment: String
+    
+    ) async -> InventoryItem? {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(type.rawValue)&color_id=\(colorId)")!)
         request.addAuthentication(using: blCredentials)
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
@@ -899,11 +907,11 @@ class AppController: ObservableObject {
             
             if let inv = inventories.first(where: { inv in
                 
-                inv.item.type == item.type
-                && inv.item.no == item.ref
-                && "\(inv.colorId)" == item.colorId
-                && inv.newOrUsed == item.condition
-                && (inv.description ?? "") == item.comment
+                inv.item.type == type
+                && inv.item.no == ref
+                && "\(inv.colorId)" == colorId
+                && inv.newOrUsed == condition
+                && (inv.description ?? "") == comment
             }) {
                 return InventoryItem(fromBl: inv)
             }
@@ -1037,9 +1045,9 @@ class AppController: ObservableObject {
     // MARK: - Catalog
     
     
-    public func getCatalogItem(for uploadItem: UploadItem) async -> CatalogItem? {
+    public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/items/\(uploadItem.type.rawValue)/\(uploadItem.ref)")!)
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/items/\(type.rawValue)/\(ref)")!)
         request.addAuthentication(using: blCredentials)
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
@@ -1579,7 +1587,7 @@ extension CatalogItem {
     
     init(fromBl bl: BrickLinkCatalogItem) {
         
-        self.name = bl.name.htmlEscape()
+        self.name = bl.name.htmlUnescape()
     }
 }
 
