@@ -112,11 +112,29 @@ struct OrderDetailView: View {
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistPicking(orderId))
-                                        Text("Pick items")
+                                        
+                                        let picked = appController.pickedItems(forOrderWithId: orderId).count
+                                        let total = appController.orderItems(forOrderWithId: orderId).count
+                                        
+                                        let percent = (picked/total*100)
+                                        if percent == 100 {
+                                            Text("Pick items")
+                                        } else {
+                                            Text("Pick items - \(percent)% complete")
+                                        }
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistVerification(orderId))
-                                        Text("Verify items")
+                                        
+                                        let verified = appController.verifiedItems(forOrderWithId: orderId).count
+                                        let total = appController.orderItems(forOrderWithId: orderId).count
+                                        
+                                        let percent = (verified/total*100)
+                                        if percent == 100 {
+                                            Text("Verify items")
+                                        } else {
+                                            Text("Verify items - \(percent)% complete")
+                                        }
                                     }
                                     GridRow {
                                         checkStatus(appController.orderChecklistPacked(orderId))

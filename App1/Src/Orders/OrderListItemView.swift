@@ -107,7 +107,12 @@ struct OrderListItemView: View {
                                 case .pickAndPack:
                                     
                                     if !appController.orderChecklistPicking(orderId) {
-                                        items.append((text: "Not picked", status: .actionRequired))
+                                        
+                                        let picked = appController.pickedItems(forOrderWithId: orderId).count
+                                        let total = appController.orderItems(forOrderWithId: orderId).count
+                                        
+                                        let percent = (picked/total*100)
+                                        items.append((text: "\(percent)% picked", status: .actionRequired))
                                         
                                     } else if !appController.orderChecklistPacked(orderId) {
                                         items.append((text: "Not packed yet", status: .actionRequired))
