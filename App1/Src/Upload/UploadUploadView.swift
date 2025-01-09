@@ -134,6 +134,7 @@ struct UploadUploadView: View {
                         if status.isLoadingInventory {
                             
                             Text("Loading inventory...")
+                                .padding(.vertical)
                             
                         } else {
                             
@@ -145,6 +146,7 @@ struct UploadUploadView: View {
                                         .foregroundColor(Color(.secondaryLabelColor))
                                     Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
                                 }
+                                .padding(.vertical)
                                 
                                 GridRow {
                                     Text("Qty")
@@ -230,7 +232,10 @@ struct UploadUploadView: View {
                                 
                             } else {
                                 
-                                HeaderTitleView(label: "Create new inventory")
+                                Text("Create new inventory")
+                                    .font(.system(size: 12).bold())
+                                    .foregroundColor(Color(.secondaryLabelColor))
+                                    .padding(.vertical)
                                 
                                 GridRow {
                                     
