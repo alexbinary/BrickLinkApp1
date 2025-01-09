@@ -73,13 +73,10 @@ struct UploadUploadView: View {
                         
                         GridRow {
                             Text("Ref")
-                            HStack {
-                                TextField("Ref", text: $editRef)
-                                if submitRef == nil {
-                                    Text("cannot be empty")
-                                        .foregroundStyle(.red)
-                                }
-                            }
+                            TextField("Ref", text: $editRef).gridCellColumns(2)
+                            Text("cannot be empty")
+                                .foregroundStyle(.red)
+                                .opacity(submitRef == nil ? 1 : 0)
                         }
                         
                         GridRow {
@@ -100,11 +97,12 @@ struct UploadUploadView: View {
                                     Text("Loading name from catalog...").foregroundStyle(.secondary)
                                 }
                             }
+                            .gridCellColumns(2)
                         }
                         
                         GridRow {
                             Text("Comment")
-                            TextField("Comment", text: $editComment)
+                            TextField("Comment", text: $editComment).gridCellColumns(2)
                         }
                         
                         GridRow {
@@ -115,6 +113,7 @@ struct UploadUploadView: View {
                                 Text("USED").tag("U")
                             }
                             .labelsHidden()
+                            .gridCellColumns(2)
                         }
                         
                         GridRow {
@@ -132,49 +131,51 @@ struct UploadUploadView: View {
                                 .pickerStyle(.menu)
                                 .labelsHidden()
                             }
+                            .gridCellColumns(2)
                         }
                         
                         GridRow {
                             Text("Qty")
-                            HStack {
-                                TextField("Qty", value: $editQty, format: .number)
-                                if let inventoryItem = status.inventoryItem {
+                            TextField("Qty", value: $editQty, format: .number)
+                                .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
+                            
+                            if let inventoryItem = status.inventoryItem {
+                                HStack {
                                     Text("Current: \(inventoryItem.quantity)")
                                     if let qty = submitQty {
                                         Text("􁉂 \(inventoryItem.quantity + qty)")
                                     }
                                 }
-                                if submitQty == nil {
-                                    Text("must be at least 1")
-                                        .foregroundStyle(.red)
-                                }
                             }
+                            
+                            Text("must be at least 1")
+                                .foregroundStyle(.red)
+                                .opacity(submitQty == nil ? 1 : 0)
                         }
                         
                         GridRow {
                             Text("Price")
-                            HStack {
-                                TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                if let inventoryItem = status.inventoryItem {
-                                    Button {
-                                        self.editUnitPrice = inventoryItem.unitPrice
-                                    } label: {
-                                        Text("Keep existing")
-                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                    }
-                                }
-                                if submitUnitPrice == nil {
-                                    Text("must not be zero")
-                                        .foregroundStyle(.red)
+                            TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
+                            
+                            if let inventoryItem = status.inventoryItem {
+                                Button {
+                                    self.editUnitPrice = inventoryItem.unitPrice
+                                } label: {
+                                    Text("Keep existing")
+                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                                 }
                             }
+                            Text("must not be zero")
+                                .foregroundStyle(.red)
+                                .opacity(submitUnitPrice == nil ? 1 : 0)
                         }
                         
-                        GridRow {
+                        GridRow(alignment: .top) {
                             Text("Remarks")
-                            HStack {
-                                TextField("Remarks", text: $editRemarks, prompt: Text("Required"))
-                            
+                            HStack(alignment: .top) {
+                                TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(maxWidth: 100)
+                                
                                 if let relatedInventories = self.relatedInventories {
                                     
                                     if relatedInventories.isEmpty {
@@ -186,13 +187,14 @@ struct UploadUploadView: View {
                                         let remarks = relatedInventories.map { $0.remarks }
                                             .unique .sorted()
                                         
-                                        HStack {
+                                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), alignment: .leading) {
                                             ForEach(remarks, id: \.self) { rem in
                                                 Button {
                                                     self.editRemarks = rem
                                                 } label: {
                                                     Text(rem)
                                                 }
+                                                .fixedSize()
                                             }
                                         }
                                     }
@@ -202,11 +204,11 @@ struct UploadUploadView: View {
                                     Text("Loading related inventories...").foregroundStyle(.secondary)
                                 }
                                 
-                                if submitRemarks == nil {
-                                    Text("cannot be empty")
-                                        .foregroundStyle(.red)
-                                }
-                            }
+                            }.gridCellColumns(2)
+                                
+                            Text("cannot be empty")
+                                .foregroundStyle(.red)
+                                .opacity(submitRemarks == nil ? 1 : 0)
                         }
                         
                         if status.isLoadingInventory {
