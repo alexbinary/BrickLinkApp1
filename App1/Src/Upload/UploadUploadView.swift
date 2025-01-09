@@ -247,61 +247,57 @@ struct UploadUploadView: View {
                                 
                                 Button {
                                     
-                                    if let inventoryItem = status.inventoryItem {
+                                    Task {
                                         
-                                        Task {
-                                            await appController.updateInventory(
-                                                id: inventoryItem.id,
-                                                addQuantity: submitQty!,
-                                                unitPrice: submitUnitPrice!,
-                                                remarks: submitRemarks!
-                                            )
-                                            appController.addUploadedItem(UploadedItem(
-                                                type: submitType,
-                                                ref: submitRef!,
-                                                colorId: submitColorId,
-                                                qty: submitQty!,
-                                                condition: sbmitCondition,
-                                                comment: submitComment,
-                                                remarks: submitRemarks!,
-                                                unitPrice: submitUnitPrice!,
-                                                inventoryId: inventoryItem.id,
-                                                uploadDate: .now
-                                            ))
-                                            goToNextItem(deleteActiveItem: true)
-                                        }
-                                        
-                                    } else {
-                                        
-                                        Task {
-                                            if let inventoryItem = await appController.createInventory(
-                                                ref: submitRef!,
-                                                type: submitType,
-                                                colorId: submitColorId,
-                                                quantity: submitQty!,
-                                                unitPrice: submitUnitPrice!,
-                                                condition: sbmitCondition,
-                                                description: submitComment,
-                                                remarks: submitRemarks!
-                                            ) {
-                                                appController.addUploadedItem(UploadedItem(
-                                                    type: submitType,
-                                                    ref: submitRef!,
-                                                    colorId: submitColorId,
-                                                    qty: submitQty!,
-                                                    condition: sbmitCondition,
-                                                    comment: submitComment,
-                                                    remarks: submitRemarks!,
+                                        let inventoryItem = await {
+                                            
+                                            if let inventoryItem = status.inventoryItem {
+                                                
+                                                await appController.updateInventory(
+                                                    
+                                                    id: inventoryItem.id,
+                                                    addQuantity: submitQty!,
                                                     unitPrice: submitUnitPrice!,
-                                                    inventoryId: inventoryItem.id,
-                                                    uploadDate: .now
-                                                ))
+                                                    remarks: submitRemarks!
+                                                )
+                                                
+                                                return inventoryItem
+                                                
+                                            } else {
+                                                
+                                                let inventoryItem = await appController.createInventory(
+                                                    
+                                                    ref: submitRef!,
+                                                    type: submitType,
+                                                    colorId: submitColorId,
+                                                    quantity: submitQty!,
+                                                    unitPrice: submitUnitPrice!,
+                                                    condition: sbmitCondition,
+                                                    description: submitComment,
+                                                    remarks: submitRemarks!
+                                                )!
+                                                
+                                                return inventoryItem
                                             }
-                                            goToNextItem(deleteActiveItem: true)
-                                        }
+                                        }()
+                                        
+                                        appController.addUploadedItem(UploadedItem(
+                                            type: submitType,
+                                            ref: submitRef!,
+                                            colorId: submitColorId,
+                                            qty: submitQty!,
+                                            condition: sbmitCondition,
+                                            comment: submitComment,
+                                            remarks: submitRemarks!,
+                                            unitPrice: submitUnitPrice!,
+                                            inventoryId: inventoryItem.id,
+                                            uploadDate: .now
+                                        ))
+                                        goToNextItem(deleteActiveItem: true)
                                     }
+                                    
                                 } label: {
-                                    Text("􀈧 Upload").padding(.horizontal)
+                                    Text("􀈧 Confirm").padding(.horizontal)
                                 }
                                 .disabled(buttonDisabled)
                                 
