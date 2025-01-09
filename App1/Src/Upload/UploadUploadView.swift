@@ -24,7 +24,7 @@ struct UploadUploadView: View {
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
-    @State var editCondition: String = "U"
+    @State var editCondition: String = ""
     @State var editComment: String = ""
     @State var editQty: Int?
     @State var editUnitPrice: Float?
