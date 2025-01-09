@@ -268,6 +268,8 @@ struct UploadUploadView: View {
                             }
                         }
                         
+                        Color.clear.frame(height: 8)
+                        
                         GridRow {
                             
                             Color.clear.frame(width: 2, height: 2)
