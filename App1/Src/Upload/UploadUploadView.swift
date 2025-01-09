@@ -39,6 +39,10 @@ struct UploadUploadView: View {
                 
                 HStack(alignment: .top, spacing: 48) {
                     
+                    AsyncImage(url: appController.imageUrl(forItemType: activeUploadItem.type, ref: editRef, colorId: editColorId))
+                        .frame(minHeight: 70, maxHeight: 70, alignment: .top)
+                        .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+                    
                     Grid(alignment: .leading) {
                         
                         let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
@@ -295,32 +299,27 @@ struct UploadUploadView: View {
                                         }
                                     }
                                 } label: {
-                                    Text("Upload").padding(.horizontal)
+                                    Text("􀈧 Upload").padding(.horizontal)
                                 }
                                 .disabled(buttonDisabled)
+                                
+                                Color.clear.frame(width: 8)
+                                
+                                Button {
+                                    goToNextItem(deleteActiveItem: false)
+                                } label: {
+                                    Text("􁉂 Skip")
+                                }
+                                Button {
+                                    appController.deleteUploadItem(activeUploadItem)
+                                } label: {
+                                    Text("􀈑 Delete")
+                                }
                             }
                         }
                     }
                     
                     Spacer()
-                    
-                    VStack(alignment: .leading) {
-                        
-                        AsyncImage(url: appController.imageUrl(forItemType: activeUploadItem.type, ref: editRef, colorId: editColorId))
-                            .frame(minHeight: 70, maxHeight: 70, alignment: .top)
-                            .frame(minWidth: 90, maxWidth: 90, alignment: .top)
-                        
-                        Button {
-                            goToNextItem(deleteActiveItem: false)
-                        } label: {
-                            Text("􁉂 Skip")
-                        }
-                        Button {
-                            appController.deleteUploadItem(activeUploadItem)
-                        } label: {
-                            Text("􀈑 Delete")
-                        }
-                    }
                 }
                 
             } else {
