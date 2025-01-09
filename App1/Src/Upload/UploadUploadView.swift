@@ -136,6 +136,9 @@ struct UploadUploadView: View {
                                 TextField("Qty", value: $editQty, format: .number)
                                 if let inventoryItem = status.inventoryItem {
                                     Text("Current: \(inventoryItem.quantity)")
+                                    if let qty = submitQty {
+                                        Text("􁉂 \(inventoryItem.quantity + qty)")
+                                    }
                                 }
                                 if submitQty == nil {
                                     Text("must be at least 1")
