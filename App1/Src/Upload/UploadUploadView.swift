@@ -46,13 +46,6 @@ struct UploadUploadView: View {
                         GridRow {
                             Text("Ref")
                             TextField("Ref", text: $editRef)
-                            if editRef != activeUploadItem.ref {
-                                Button {
-                                    self.editRef = activeUploadItem.ref
-                                } label: {
-                                    Text("Reset to \(activeUploadItem.ref)")
-                                }
-                            }
                         }
                         
                         GridRow {
@@ -78,13 +71,6 @@ struct UploadUploadView: View {
                         GridRow {
                             Text("Comment")
                             TextField("Comment", text: $editComment)
-                            if editComment != activeUploadItem.comment {
-                                Button {
-                                    self.editComment = activeUploadItem.comment
-                                } label: {
-                                    Text("Reset to \"\(activeUploadItem.comment)\"")
-                                }
-                            }
                         }
                         
                         GridRow {
@@ -95,13 +81,6 @@ struct UploadUploadView: View {
                                 Text("USED").tag("U")
                             }
                             .labelsHidden()
-                            if editCondition != activeUploadItem.condition {
-                                Button {
-                                    self.editCondition = activeUploadItem.condition
-                                } label: {
-                                    Text("Reset to \(activeUploadItem.condition == "U" ? "USED" : "NEW")")
-                                }
-                            }
                         }
                         
                         GridRow {
@@ -118,13 +97,6 @@ struct UploadUploadView: View {
                                 }
                                 .pickerStyle(.menu)
                                 .labelsHidden()
-                            }
-                            if editColorId != activeUploadItem.colorId {
-                                Button {
-                                    self.editColorId = activeUploadItem.colorId
-                                } label: {
-                                    Text("Reset to \(appController.colorName(forLegoColorId: activeUploadItem.colorId))")
-                                }
                             }
                         }
                     }
@@ -148,16 +120,6 @@ struct UploadUploadView: View {
                             appController.deleteUploadItem(activeUploadItem)
                         } label: {
                             Text("􀈑 Delete")
-                        }
-                        Button {
-                            self.editRef = activeUploadItem.ref
-                            self.editComment = activeUploadItem.comment
-                            self.editCondition = activeUploadItem.condition
-                            self.editColorId = activeUploadItem.colorId
-                            self.editQty = activeUploadItem.qty
-                            self.editUnitPrice = activeUploadItem.unitPrice
-                        } label: {
-                            Text("Reset")
                         }
                     }
                 }
@@ -208,31 +170,12 @@ struct UploadUploadView: View {
                                     GridRow {
                                         Text("Qty")
                                         TextField("Qty", value: $editQty, format: .number)
-                                        if editQty != activeUploadItem.qty {
-                                            Button {
-                                                self.editQty = activeUploadItem.qty
-                                            } label: {
-                                                Text("Reset to \(activeUploadItem.qty)")
-                                            }
-                                        }
                                         Text("Current: \(inventoryItem.quantity)")
                                     }
                                     
                                     GridRow {
                                         Text("Price")
                                         TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                        if editUnitPrice != activeUploadItem.unitPrice {
-                                            Button {
-                                                self.editUnitPrice = activeUploadItem.unitPrice
-                                            } label: {
-                                                Text("Reset to")
-                                                if let price = activeUploadItem.unitPrice {
-                                                    Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                                } else {
-                                                    Text("no price")
-                                                }
-                                            }
-                                        }
                                         if let price = submitUnitPrice, price != inventoryItem.unitPrice {
                                             Button {
                                                 self.editUnitPrice = nil
