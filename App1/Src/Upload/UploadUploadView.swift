@@ -149,12 +149,6 @@ struct UploadUploadView: View {
                                 .padding(.vertical)
                                 
                                 GridRow {
-                                    Text("Qty")
-                                    TextField("Qty", value: $editQty, format: .number)
-                                    Text("Current: \(inventoryItem.quantity)")
-                                }
-                                
-                                GridRow {
                                     
                                     Color.clear.frame(width: 2, height: 2)
                                     
@@ -218,6 +212,14 @@ struct UploadUploadView: View {
                                         }
                                     }
                                 }
+                            }
+                        }
+                        
+                        GridRow {
+                            Text("Qty")
+                            TextField("Qty", value: $editQty, format: .number)
+                            if let inventoryItem = status.inventoryItem {
+                                Text("Current: \(inventoryItem.quantity)")
                             }
                         }
                         
