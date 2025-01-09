@@ -131,26 +131,43 @@ struct UploadUploadView: View {
                             }
                         }()
                         
-                        if status.isLoadingInventory {
+                        if let inventoryItem = status.inventoryItem {
                             
-                            Text("Loading inventory...")
-                                .padding(.vertical)
+                            GridRow {
+                                
+                                Color.clear.frame(width: 2, height: 2)
+                                
+                                let errors = {
+                                    
+                                    var errs = [String]()
+                                    
+                                    if submitUnitPrice == nil {
+                                        
+                                        errs.append("cannot update inventory with invalid price")
+                                    }
+                                    
+                                    if submitRemarks == nil {
+                                        
+                                        errs.append("cannot update inventory with empty remarks")
+                                    }
+                                    
+                                    return errs
+                                }()
+                                
+                                if !errors.isEmpty {
+                                    
+                                    Text(errors.joined(separator: "; "))
+                                        .foregroundStyle(.red)
+                                }
+                            }
                             
                         } else {
                             
-                            if let inventoryItem = status.inventoryItem {
+                            GridRow {
+                                
+                                Color.clear.frame(width: 2, height: 2)
                                 
                                 HStack {
-                                    Text("Update existing inventory")
-                                        .font(.system(size: 12).bold())
-                                        .foregroundColor(Color(.secondaryLabelColor))
-                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
-                                }
-                                .padding(.vertical)
-                                
-                                GridRow {
-                                    
-                                    Color.clear.frame(width: 2, height: 2)
                                     
                                     let errors = {
                                         
@@ -158,12 +175,11 @@ struct UploadUploadView: View {
                                         
                                         if submitUnitPrice == nil {
                                             
-                                            errs.append("cannot update inventory with invalid price")
+                                            errs.append("invalid unitPrice")
                                         }
-                                        
                                         if submitRemarks == nil {
                                             
-                                            errs.append("cannot update inventory with empty remarks")
+                                            errs.append("missing remarks")
                                         }
                                         
                                         return errs
@@ -173,43 +189,6 @@ struct UploadUploadView: View {
                                         
                                         Text(errors.joined(separator: "; "))
                                             .foregroundStyle(.red)
-                                    }
-                                }
-                                
-                            } else {
-                                
-                                Text("Create new inventory")
-                                    .font(.system(size: 12).bold())
-                                    .foregroundColor(Color(.secondaryLabelColor))
-                                    .padding(.vertical)
-                                
-                                GridRow {
-                                    
-                                    Color.clear.frame(width: 2, height: 2)
-                                    
-                                    HStack {
-                                        
-                                        let errors = {
-                                            
-                                            var errs = [String]()
-                                            
-                                            if submitUnitPrice == nil {
-                                                
-                                                errs.append("invalid unitPrice")
-                                            }
-                                            if submitRemarks == nil {
-                                                
-                                                errs.append("missing remarks")
-                                            }
-                                            
-                                            return errs
-                                        }()
-                                        
-                                        if !errors.isEmpty {
-                                            
-                                            Text(errors.joined(separator: "; "))
-                                                .foregroundStyle(.red)
-                                        }
                                     }
                                 }
                             }
@@ -272,7 +251,27 @@ struct UploadUploadView: View {
                             }
                         }
                         
-                        Color.clear.frame(height: 8)
+                        if status.isLoadingInventory {
+                            
+                            Text("Checking inventory...").foregroundStyle(.secondary)
+                                .padding(.vertical)
+                            
+                        } else {
+                            
+                            if let inventoryItem = status.inventoryItem {
+                                
+                                HStack {
+                                    Text("Will update")
+                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
+                                }
+                                .padding(.vertical)
+                                
+                            } else {
+                                
+                                Text("Will create new inventory")
+                                    .padding(.vertical)
+                            }
+                        }
                         
                         GridRow {
                             
@@ -338,7 +337,7 @@ struct UploadUploadView: View {
                                         }
                                     }
                                 } label: {
-                                    Text("Upload")
+                                    Text("Upload").padding(.horizontal)
                                 }
                                 .disabled(buttonDisabled)
                             }
