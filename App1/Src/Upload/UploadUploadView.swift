@@ -168,41 +168,6 @@ struct UploadUploadView: View {
                                 }
                                 
                                 GridRow {
-                                    Text("Remarks").gridColumnAlignment(.trailing)
-                                    TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(maxWidth: 100)
-                                    HStack {
-                                        
-                                        if let relatedInventories = self.relatedInventories {
-                                            
-                                            if relatedInventories.isEmpty {
-                                                
-                                                Text("no related inventory found").foregroundStyle(.secondary)
-                                                
-                                            } else {
-                                                
-                                                let remarks = relatedInventories.map { $0.remarks }
-                                                    .unique .sorted()
-                                                
-                                                HStack {
-                                                    ForEach(remarks, id: \.self) { rem in
-                                                        Button {
-                                                            self.editRemarks = rem
-                                                        } label: {
-                                                            Text(rem)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            
-                                        } else {
-                                            
-                                            Text("Loading related inventories...").foregroundStyle(.secondary)
-                                        }
-                                    }
-                                    .gridCellColumns(3)
-                                }
-                                
-                                GridRow {
                                     
                                     Color.clear.frame(width: 2, height: 2)
                                     
@@ -265,6 +230,40 @@ struct UploadUploadView: View {
                                                 .foregroundStyle(.red)
                                         }
                                     }
+                                }
+                            }
+                        }
+                        
+                        GridRow {
+                            Text("Remarks")
+                            HStack {
+                                TextField("Remarks", text: $editRemarks, prompt: Text("Required"))
+                            
+                                if let relatedInventories = self.relatedInventories {
+                                    
+                                    if relatedInventories.isEmpty {
+                                        
+                                        Text("no related inventory found").foregroundStyle(.secondary)
+                                        
+                                    } else {
+                                        
+                                        let remarks = relatedInventories.map { $0.remarks }
+                                            .unique .sorted()
+                                        
+                                        HStack {
+                                            ForEach(remarks, id: \.self) { rem in
+                                                Button {
+                                                    self.editRemarks = rem
+                                                } label: {
+                                                    Text(rem)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                } else {
+                                    
+                                    Text("Loading related inventories...").foregroundStyle(.secondary)
                                 }
                             }
                         }
