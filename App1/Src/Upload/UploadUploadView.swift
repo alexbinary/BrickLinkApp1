@@ -155,19 +155,6 @@ struct UploadUploadView: View {
                                 }
                                 
                                 GridRow {
-                                    Text("Price")
-                                    TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                    if let price = submitUnitPrice, price != inventoryItem.unitPrice {
-                                        Button {
-                                            self.editUnitPrice = nil
-                                        } label: {
-                                            Text("Keep existing")
-                                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                        }
-                                    }
-                                }
-                                
-                                GridRow {
                                     
                                     Color.clear.frame(width: 2, height: 2)
                                     
@@ -229,6 +216,21 @@ struct UploadUploadView: View {
                                             Text(errors.joined(separator: "; "))
                                                 .foregroundStyle(.red)
                                         }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        GridRow {
+                            Text("Price")
+                            TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                            if let inventoryItem = status.inventoryItem {
+                                if let price = submitUnitPrice, price != inventoryItem.unitPrice {
+                                    Button {
+                                        self.editUnitPrice = nil
+                                    } label: {
+                                        Text("Keep existing")
+                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                                     }
                                 }
                             }
