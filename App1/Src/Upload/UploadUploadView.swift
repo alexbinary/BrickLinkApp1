@@ -452,6 +452,7 @@ struct UploadUploadView: View {
         await parallel([
             {
                 self.inventoryResult = nil
+                self.editRemarks = ""
                 
                 if let item = await appController.getInventory(
                     forItemType: activeUploadItem.type,
