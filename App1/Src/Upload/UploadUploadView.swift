@@ -152,13 +152,11 @@ struct UploadUploadView: View {
                             HStack {
                                 TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                                 if let inventoryItem = status.inventoryItem {
-                                    if let price = submitUnitPrice, price != inventoryItem.unitPrice {
-                                        Button {
-                                            self.editUnitPrice = nil
-                                        } label: {
-                                            Text("Keep existing")
-                                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                        }
+                                    Button {
+                                        self.editUnitPrice = inventoryItem.unitPrice
+                                    } label: {
+                                        Text("Keep existing")
+                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                                     }
                                 }
                                 if submitUnitPrice == nil {
