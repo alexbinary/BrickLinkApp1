@@ -41,9 +41,47 @@ struct UploadUploadView: View {
                     
                     Grid(alignment: .leading) {
                         
+                        let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
+                        
+                            if let inventoryResult = inventoryResult {
+                                
+                                switch inventoryResult {
+                                    
+                                case .found(let inventoryItem):
+                                    return (isLoadingInventory: false, inventoryItem: inventoryItem)
+                                    
+                                case .notFound:
+                                    return (isLoadingInventory: false, inventoryItem: nil)
+                                }
+                            } else {
+                                return (isLoadingInventory: true, inventoryItem: nil)
+                            }
+                        }()
+                        
+                        let submitType = activeUploadItem.type
+                        let submitRef = editRef.normalizedOptional
+                        let submitColorId = editColorId
+                        let sbmitCondition = editCondition
+                        let submitComment = editComment
+                        let submitQty = editQty
+                        let submitUnitPrice: Float? = {
+                            let price = editUnitPrice
+                            if (price ?? 0) > 0 { return price } else { return nil }
+                        }()
+                        let submitRemarks: String? = {
+                            let trimmed = self.editRemarks.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if trimmed == "" { return nil } else { return trimmed }
+                        }()
+                        
                         GridRow {
                             Text("Ref")
-                            TextField("Ref", text: $editRef)
+                            HStack {
+                                TextField("Ref", text: $editRef)
+                                if submitRef == nil {
+                                    Text("cannot be empty")
+                                        .foregroundStyle(.red)
+                                }
+                            }
                         }
                         
                         GridRow {
@@ -97,39 +135,6 @@ struct UploadUploadView: View {
                                 .labelsHidden()
                             }
                         }
-                        
-                        
-                        let submitType = activeUploadItem.type
-                        let submitRef = editRef
-                        let submitColorId = editColorId
-                        let sbmitCondition = editCondition
-                        let submitComment = editComment
-                        let submitQty = editQty
-                        let submitUnitPrice: Float? = {
-                            let price = editUnitPrice
-                            if (price ?? 0) > 0 { return price } else { return nil }
-                        }()
-                        let submitRemarks: String? = {
-                            let trimmed = self.editRemarks.trimmingCharacters(in: .whitespacesAndNewlines)
-                            if trimmed == "" { return nil } else { return trimmed }
-                        }()
-                        
-                        let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
-                        
-                            if let inventoryResult = inventoryResult {
-                                
-                                switch inventoryResult {
-                                    
-                                case .found(let inventoryItem):
-                                    return (isLoadingInventory: false, inventoryItem: inventoryItem)
-                                    
-                                case .notFound:
-                                    return (isLoadingInventory: false, inventoryItem: nil)
-                                }
-                            } else {
-                                return (isLoadingInventory: true, inventoryItem: nil)
-                            }
-                        }()
                         
                         if let inventoryItem = status.inventoryItem {
                             
@@ -279,7 +284,10 @@ struct UploadUploadView: View {
                             
                             HStack {
                                 
-                                let buttonDisabled = status.isLoadingInventory || submitUnitPrice == nil || submitRemarks == nil
+                                let buttonDisabled = status.isLoadingInventory
+                                || submitRef == nil
+                                || submitUnitPrice == nil
+                                || submitRemarks == nil
                                 
                                 Button {
                                     
@@ -294,7 +302,7 @@ struct UploadUploadView: View {
                                             )
                                             appController.addUploadedItem(UploadedItem(
                                                 type: submitType,
-                                                ref: submitRef,
+                                                ref: submitRef!,
                                                 colorId: submitColorId,
                                                 qty: submitQty,
                                                 condition: sbmitCondition,
@@ -311,7 +319,7 @@ struct UploadUploadView: View {
                                         
                                         Task {
                                             if let inventoryItem = await appController.createInventory(
-                                                ref: submitRef,
+                                                ref: submitRef!,
                                                 type: submitType,
                                                 colorId: submitColorId,
                                                 quantity: submitQty,
@@ -322,7 +330,7 @@ struct UploadUploadView: View {
                                             ) {
                                                 appController.addUploadedItem(UploadedItem(
                                                     type: submitType,
-                                                    ref: submitRef,
+                                                    ref: submitRef!,
                                                     colorId: submitColorId,
                                                     qty: submitQty,
                                                     condition: sbmitCondition,
@@ -489,5 +497,27 @@ struct UploadUploadView: View {
         } else {
             self.catalogResult = .notFound
         }
+    }
+}
+
+
+
+extension Float? {
+    
+    
+    var normalizedOptional: Float? {
+        return (self ?? 0) > 0 ? self : nil
+    }
+}
+
+
+
+extension String {
+    
+    
+    var normalizedOptional: String? {
+        
+        let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed == "" ? nil : trimmed
     }
 }
