@@ -65,10 +65,7 @@ struct UploadUploadView: View {
                         let submitComment = editComment
                         let submitQty = editQty.normalizedOptional
                         let submitUnitPrice = editUnitPrice.normalizedOptional
-                        let submitRemarks: String? = {
-                            let trimmed = self.editRemarks.trimmingCharacters(in: .whitespacesAndNewlines)
-                            if trimmed == "" { return nil } else { return trimmed }
-                        }()
+                        let submitRemarks = editRemarks.normalizedOptional
                         
                         GridRow {
                             Text("Ref")
@@ -130,60 +127,6 @@ struct UploadUploadView: View {
                                 }
                                 .pickerStyle(.menu)
                                 .labelsHidden()
-                            }
-                        }
-                        
-                        if let inventoryItem = status.inventoryItem {
-                            
-                            GridRow {
-                                
-                                Color.clear.frame(width: 2, height: 2)
-                                
-                                let errors = {
-                                    
-                                    var errs = [String]()
-                                    
-                                    if submitRemarks == nil {
-                                        
-                                        errs.append("cannot update inventory with empty remarks")
-                                    }
-                                    
-                                    return errs
-                                }()
-                                
-                                if !errors.isEmpty {
-                                    
-                                    Text(errors.joined(separator: "; "))
-                                        .foregroundStyle(.red)
-                                }
-                            }
-                            
-                        } else {
-                            
-                            GridRow {
-                                
-                                Color.clear.frame(width: 2, height: 2)
-                                
-                                HStack {
-                                    
-                                    let errors = {
-                                        
-                                        var errs = [String]()
-                                        
-                                        if submitRemarks == nil {
-                                            
-                                            errs.append("missing remarks")
-                                        }
-                                        
-                                        return errs
-                                    }()
-                                    
-                                    if !errors.isEmpty {
-                                        
-                                        Text(errors.joined(separator: "; "))
-                                            .foregroundStyle(.red)
-                                    }
-                                }
                             }
                         }
                         
@@ -252,6 +195,11 @@ struct UploadUploadView: View {
                                 } else {
                                     
                                     Text("Loading related inventories...").foregroundStyle(.secondary)
+                                }
+                                
+                                if submitRemarks == nil {
+                                    Text("cannot be empty")
+                                        .foregroundStyle(.red)
                                 }
                             }
                         }
