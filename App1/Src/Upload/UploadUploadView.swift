@@ -24,7 +24,7 @@ struct UploadUploadView: View {
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
-    @State var editQty: Int = 1
+    @State var editQty: Int?
     @State var editCondition: String = "U"
     @State var editComment: String = ""
     @State var editUnitPrice: Float?
@@ -63,7 +63,7 @@ struct UploadUploadView: View {
                         let submitColorId = editColorId
                         let sbmitCondition = editCondition
                         let submitComment = editComment
-                        let submitQty = editQty
+                        let submitQty = editQty.normalizedOptional
                         let submitUnitPrice: Float? = {
                             let price = editUnitPrice
                             if (price ?? 0) > 0 { return price } else { return nil }
@@ -201,9 +201,15 @@ struct UploadUploadView: View {
                         
                         GridRow {
                             Text("Qty")
-                            TextField("Qty", value: $editQty, format: .number)
-                            if let inventoryItem = status.inventoryItem {
-                                Text("Current: \(inventoryItem.quantity)")
+                            HStack {
+                                TextField("Qty", value: $editQty, format: .number)
+                                if let inventoryItem = status.inventoryItem {
+                                    Text("Current: \(inventoryItem.quantity)")
+                                }
+                                if submitQty == nil {
+                                    Text("must be at least 1")
+                                        .foregroundStyle(.red)
+                                }
                             }
                         }
                         
@@ -286,6 +292,7 @@ struct UploadUploadView: View {
                                 
                                 let buttonDisabled = status.isLoadingInventory
                                 || submitRef == nil
+                                || submitQty == nil
                                 || submitUnitPrice == nil
                                 || submitRemarks == nil
                                 
@@ -296,7 +303,7 @@ struct UploadUploadView: View {
                                         Task {
                                             await appController.updateInventory(
                                                 id: inventoryItem.id,
-                                                addQuantity: submitQty,
+                                                addQuantity: submitQty!,
                                                 unitPrice: submitUnitPrice!,
                                                 remarks: submitRemarks!
                                             )
@@ -304,7 +311,7 @@ struct UploadUploadView: View {
                                                 type: submitType,
                                                 ref: submitRef!,
                                                 colorId: submitColorId,
-                                                qty: submitQty,
+                                                qty: submitQty!,
                                                 condition: sbmitCondition,
                                                 comment: submitComment,
                                                 remarks: submitRemarks!,
@@ -322,7 +329,7 @@ struct UploadUploadView: View {
                                                 ref: submitRef!,
                                                 type: submitType,
                                                 colorId: submitColorId,
-                                                quantity: submitQty,
+                                                quantity: submitQty!,
                                                 unitPrice: submitUnitPrice!,
                                                 condition: sbmitCondition,
                                                 description: submitComment,
@@ -332,7 +339,7 @@ struct UploadUploadView: View {
                                                     type: submitType,
                                                     ref: submitRef!,
                                                     colorId: submitColorId,
-                                                    qty: submitQty,
+                                                    qty: submitQty!,
                                                     condition: sbmitCondition,
                                                     comment: submitComment,
                                                     remarks: submitRemarks!,
@@ -497,6 +504,16 @@ struct UploadUploadView: View {
         } else {
             self.catalogResult = .notFound
         }
+    }
+}
+
+
+
+extension Int? {
+    
+    
+    var normalizedOptional: Int? {
+        return (self ?? 0) > 0 ? self : nil
     }
 }
 
