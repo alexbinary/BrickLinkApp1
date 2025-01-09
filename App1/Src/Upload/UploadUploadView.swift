@@ -110,18 +110,38 @@ struct UploadUploadView: View {
                             if trimmed == "" { return nil } else { return trimmed }
                         }()
                         
-                        if let inventoryResult = inventoryResult {
-                            
-                            switch inventoryResult {
+                        
+                        let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
+                        
+                            if let inventoryResult = inventoryResult {
                                 
-                            case .found(let inventoryItem):
+                                switch inventoryResult {
+                                    
+                                case .found(let inventoryItem):
+                                    return (isLoadingInventory: false, inventoryItem: inventoryItem)
+                                    
+                                case .notFound:
+                                    return (isLoadingInventory: false, inventoryItem: nil)
+                                }
+                            } else {
+                                return (isLoadingInventory: true, inventoryItem: nil)
+                            }
+                        }()
+                        
+                        if status.isLoadingInventory {
+                            
+                            Text("Loading inventory...")
+                            
+                        } else {
+                            
+                            if let inventoryItem = status.inventoryItem {
                                 
                                 let submitUnitPrice: Float? = {
                                     let price = editUnitPrice ?? inventoryItem.unitPrice
                                     if price > 0 { return price } else { return nil }
                                 }()
                                 
-                                    
+                                
                                 HStack {
                                     Text("Update existing inventory")
                                         .font(.system(size: 12).bold())
@@ -217,7 +237,7 @@ struct UploadUploadView: View {
                                         
                                     }.gridCellColumns(4)
                                 }
-                                            
+                                
                                 GridRow {
                                     
                                     Color.clear.frame(width: 2, height: 2)
@@ -244,10 +264,9 @@ struct UploadUploadView: View {
                                         Text(errors.joined(separator: "; "))
                                             .foregroundStyle(.red)
                                     }
-                                    
                                 }
                                 
-                            case .notFound:
+                            } else {
                                 
                                 let submitUnitPrice = editUnitPrice
                                 
@@ -314,10 +333,6 @@ struct UploadUploadView: View {
                                     }
                                 }
                             }
-                            
-                        } else {
-                            
-                            Text("Loading inventory...")
                         }
                     }
                     
