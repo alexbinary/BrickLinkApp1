@@ -37,6 +37,21 @@ struct OrderGeneralView: View {
                     
                     HStack(spacing: 48) {
                         
+                        VStack(alignment: .leading) {
+                            
+                            Text("􀖧 Grand total")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(order.grandTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                .font(.title2)
+                            
+                            if order.dispCostCurrencyCode != order.costCurrencyCode {
+                                Text(order.dispGrandTotal, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                                    .font(.title2)
+                            }
+                        }
+                        
                         HStack {
                             
                             VStack(alignment: .leading) {
@@ -67,21 +82,6 @@ struct OrderGeneralView: View {
                                     Text(order.dispShippingCost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
                                         .font(.title3)
                                 }
-                            }
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            
-                            Text("􀖧 Grand total")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            
-                            Text(order.grandTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                .font(.title2)
-                            
-                            if order.dispCostCurrencyCode != order.costCurrencyCode {
-                                Text(order.dispGrandTotal, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
-                                    .font(.title2)
                             }
                         }
                     }
