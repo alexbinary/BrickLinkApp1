@@ -24,9 +24,9 @@ struct UploadUploadView: View {
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
-    @State var editQty: Int?
     @State var editCondition: String = "U"
     @State var editComment: String = ""
+    @State var editQty: Int?
     @State var editUnitPrice: Float?
     @State var editRemarks: String = ""
     
@@ -64,10 +64,7 @@ struct UploadUploadView: View {
                         let sbmitCondition = editCondition
                         let submitComment = editComment
                         let submitQty = editQty.normalizedOptional
-                        let submitUnitPrice: Float? = {
-                            let price = editUnitPrice
-                            if (price ?? 0) > 0 { return price } else { return nil }
-                        }()
+                        let submitUnitPrice = editUnitPrice.normalizedOptional
                         let submitRemarks: String? = {
                             let trimmed = self.editRemarks.trimmingCharacters(in: .whitespacesAndNewlines)
                             if trimmed == "" { return nil } else { return trimmed }
@@ -146,11 +143,6 @@ struct UploadUploadView: View {
                                     
                                     var errs = [String]()
                                     
-                                    if submitUnitPrice == nil {
-                                        
-                                        errs.append("cannot update inventory with invalid price")
-                                    }
-                                    
                                     if submitRemarks == nil {
                                         
                                         errs.append("cannot update inventory with empty remarks")
@@ -178,10 +170,6 @@ struct UploadUploadView: View {
                                         
                                         var errs = [String]()
                                         
-                                        if submitUnitPrice == nil {
-                                            
-                                            errs.append("invalid unitPrice")
-                                        }
                                         if submitRemarks == nil {
                                             
                                             errs.append("missing remarks")
@@ -215,15 +203,21 @@ struct UploadUploadView: View {
                         
                         GridRow {
                             Text("Price")
-                            TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                            if let inventoryItem = status.inventoryItem {
-                                if let price = submitUnitPrice, price != inventoryItem.unitPrice {
-                                    Button {
-                                        self.editUnitPrice = nil
-                                    } label: {
-                                        Text("Keep existing")
-                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                            HStack {
+                                TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                if let inventoryItem = status.inventoryItem {
+                                    if let price = submitUnitPrice, price != inventoryItem.unitPrice {
+                                        Button {
+                                            self.editUnitPrice = nil
+                                        } label: {
+                                            Text("Keep existing")
+                                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                        }
                                     }
+                                }
+                                if submitUnitPrice == nil {
+                                    Text("must not be zero")
+                                        .foregroundStyle(.red)
                                 }
                             }
                         }
