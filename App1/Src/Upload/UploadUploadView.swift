@@ -105,11 +105,14 @@ struct UploadUploadView: View {
                         let sbmitCondition = editCondition
                         let submitComment = editComment
                         let submitQty = editQty
+                        let submitUnitPrice: Float? = {
+                            let price = editUnitPrice
+                            if (price ?? 0) > 0 { return price } else { return nil }
+                        }()
                         let submitRemarks: String? = {
                             let trimmed = self.editRemarks.trimmingCharacters(in: .whitespacesAndNewlines)
                             if trimmed == "" { return nil } else { return trimmed }
                         }()
-                        
                         
                         let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
                         
@@ -135,12 +138,6 @@ struct UploadUploadView: View {
                         } else {
                             
                             if let inventoryItem = status.inventoryItem {
-                                
-                                let submitUnitPrice: Float? = {
-                                    let price = editUnitPrice ?? inventoryItem.unitPrice
-                                    if price > 0 { return price } else { return nil }
-                                }()
-                                
                                 
                                 HStack {
                                     Text("Update existing inventory")
@@ -207,41 +204,6 @@ struct UploadUploadView: View {
                                     
                                     Color.clear.frame(width: 2, height: 2)
                                     
-                                    HStack {
-                                        Button {
-                                            Task {
-                                                await appController.updateInventory(
-                                                    id: inventoryItem.id,
-                                                    addQuantity: submitQty,
-                                                    unitPrice: submitUnitPrice!,
-                                                    remarks: submitRemarks!
-                                                )
-                                                appController.addUploadedItem(UploadedItem(
-                                                    type: submitType,
-                                                    ref: submitRef,
-                                                    colorId: submitColorId,
-                                                    qty: submitQty,
-                                                    condition: sbmitCondition,
-                                                    comment: submitComment,
-                                                    remarks: submitRemarks!,
-                                                    unitPrice: submitUnitPrice!,
-                                                    inventoryId: inventoryItem.id,
-                                                    uploadDate: .now
-                                                ))
-                                                goToNextItem(deleteActiveItem: true)
-                                            }
-                                        } label: {
-                                            Text("Update inventory")
-                                        }
-                                        .disabled(submitUnitPrice == nil || submitRemarks == nil)
-                                        
-                                    }.gridCellColumns(4)
-                                }
-                                
-                                GridRow {
-                                    
-                                    Color.clear.frame(width: 2, height: 2)
-                                    
                                     let errors = {
                                         
                                         var errs = [String]()
@@ -268,8 +230,6 @@ struct UploadUploadView: View {
                                 
                             } else {
                                 
-                                let submitUnitPrice = editUnitPrice
-                                
                                 HeaderTitleView(label: "Create new inventory")
                                 
                                 GridRow {
@@ -277,37 +237,6 @@ struct UploadUploadView: View {
                                     Color.clear.frame(width: 2, height: 2)
                                     
                                     HStack {
-                                        Button {
-                                            Task {
-                                                if let inventoryItem = await appController.createInventory(
-                                                    ref: submitRef,
-                                                    type: submitType,
-                                                    colorId: submitColorId,
-                                                    quantity: submitQty,
-                                                    unitPrice: submitUnitPrice!,
-                                                    condition: sbmitCondition,
-                                                    description: submitComment,
-                                                    remarks: submitRemarks!
-                                                ) {
-                                                    appController.addUploadedItem(UploadedItem(
-                                                        type: submitType,
-                                                        ref: submitRef,
-                                                        colorId: submitColorId,
-                                                        qty: submitQty,
-                                                        condition: sbmitCondition,
-                                                        comment: submitComment,
-                                                        remarks: submitRemarks!,
-                                                        unitPrice: submitUnitPrice!,
-                                                        inventoryId: inventoryItem.id,
-                                                        uploadDate: .now
-                                                    ))
-                                                }
-                                                goToNextItem(deleteActiveItem: true)
-                                            }
-                                        } label: {
-                                            Text("Create inventory")
-                                        }
-                                        .disabled(submitUnitPrice == nil || submitRemarks == nil)
                                         
                                         let errors = {
                                             
@@ -332,6 +261,76 @@ struct UploadUploadView: View {
                                         }
                                     }
                                 }
+                            }
+                        }
+                        
+                        GridRow {
+                            
+                            Color.clear.frame(width: 2, height: 2)
+                            
+                            HStack {
+                                
+                                let buttonDisabled = status.isLoadingInventory || submitUnitPrice == nil || submitRemarks == nil
+                                
+                                Button {
+                                    
+                                    if let inventoryItem = status.inventoryItem {
+                                        
+                                        Task {
+                                            await appController.updateInventory(
+                                                id: inventoryItem.id,
+                                                addQuantity: submitQty,
+                                                unitPrice: submitUnitPrice!,
+                                                remarks: submitRemarks!
+                                            )
+                                            appController.addUploadedItem(UploadedItem(
+                                                type: submitType,
+                                                ref: submitRef,
+                                                colorId: submitColorId,
+                                                qty: submitQty,
+                                                condition: sbmitCondition,
+                                                comment: submitComment,
+                                                remarks: submitRemarks!,
+                                                unitPrice: submitUnitPrice!,
+                                                inventoryId: inventoryItem.id,
+                                                uploadDate: .now
+                                            ))
+                                            goToNextItem(deleteActiveItem: true)
+                                        }
+                                        
+                                    } else {
+                                        
+                                        Task {
+                                            if let inventoryItem = await appController.createInventory(
+                                                ref: submitRef,
+                                                type: submitType,
+                                                colorId: submitColorId,
+                                                quantity: submitQty,
+                                                unitPrice: submitUnitPrice!,
+                                                condition: sbmitCondition,
+                                                description: submitComment,
+                                                remarks: submitRemarks!
+                                            ) {
+                                                appController.addUploadedItem(UploadedItem(
+                                                    type: submitType,
+                                                    ref: submitRef,
+                                                    colorId: submitColorId,
+                                                    qty: submitQty,
+                                                    condition: sbmitCondition,
+                                                    comment: submitComment,
+                                                    remarks: submitRemarks!,
+                                                    unitPrice: submitUnitPrice!,
+                                                    inventoryId: inventoryItem.id,
+                                                    uploadDate: .now
+                                                ))
+                                            }
+                                            goToNextItem(deleteActiveItem: true)
+                                        }
+                                    }
+                                } label: {
+                                    Text("Upload")
+                                }
+                                .disabled(buttonDisabled)
                             }
                         }
                     }
