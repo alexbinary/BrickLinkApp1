@@ -392,26 +392,24 @@ struct UploadUploadView: View {
         }
         .onAppear {
             Task {
-                populateUploadOverride()
+                populateEditValues()
                 await self.pullInventory()
             }
         }
         .onChange(of: activeUploadItem) {
             Task {
-                populateUploadOverride()
+                populateEditValues()
                 await self.pullInventory()
+            }
+        }
+        .onChange(of: editRef) {
+            Task {
+                await self.pullCatalogEntry()
             }
         }
         .onChange(of: [editRef, editColorId, editCondition, editComment]) {
             Task {
-                await parallel([
-                    {
-                        await self.pullInventory()
-                    },
-                    {
-                        await self.pullCatalogEntry()
-                    }
-                ])
+                await self.pullInventory()
             }
         }
         .padding()
@@ -452,7 +450,7 @@ struct UploadUploadView: View {
     }
     
     
-    func populateUploadOverride() {
+    func populateEditValues() {
         
         if let activeUploadItem = activeUploadItem {
             
