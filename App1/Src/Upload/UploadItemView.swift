@@ -449,30 +449,34 @@ struct UploadItemView: View {
                 
                 Spacer()
             }
-            .onChange(of: uploadItem, initial: true) {
+            
+            .onAppear {
                 Task {
                     populateEditValues()
-                }
-            }
-            .onChange(of: [editRef, editColorId, editCondition, editComment]) {
-                Task {
                     await pullInventory()
                 }
             }
-            .onChange(of: editRef) {
-                Task {
-                    await pullCatalogEntry()
+            
+            .onChange(of: editModeRef, initial: true) { old, new in
+                if new == false {
+                    Task {
+                        await pullCatalogEntry()
+                    }
                 }
             }
-            .onChange(of: [editRef, editColorId, editCondition, editComment]) {
-                self.updateItem()
-            }
-            .onChange(of: [editQty]) {
-                self.updateItem()
-            }
-            .onChange(of: [editUnitPrice]) {
-                self.updateItem()
-            }
+            
+            .onChange(of: editModeRef, updateItemOnExitEditMode)
+            .onChange(of: editModeColor, updateItemOnExitEditMode)
+            .onChange(of: editModeCondition, updateItemOnExitEditMode)
+            .onChange(of: editModeComment, updateItemOnExitEditMode)
+            .onChange(of: editModeQty, updateItemOnExitEditMode)
+            .onChange(of: editModePrice, updateItemOnExitEditMode)
+            
+            .onChange(of: editModeRef, pullInventoryOnExitEditMode)
+            .onChange(of: editModeColor, pullInventoryOnExitEditMode)
+            .onChange(of: editModeCondition, pullInventoryOnExitEditMode)
+            .onChange(of: editModeComment, pullInventoryOnExitEditMode)
+            
             .padding()
         }
         .padding()
@@ -484,6 +488,24 @@ struct UploadItemView: View {
         )
         .onHover { hover in
             self.hover = hover
+        }
+    }
+    
+    
+    func pullInventoryOnExitEditMode(old: Bool, new: Bool) {
+        
+        if new == false {
+            Task {
+                await pullInventory()
+            }
+        }
+    }
+    
+    
+    func updateItemOnExitEditMode(old: Bool, new: Bool) {
+        
+        if new == false {
+            updateItem()
         }
     }
     
