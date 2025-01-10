@@ -19,6 +19,8 @@ struct UploadItemView: View {
     @State var editModeRef = false
     @State var editModeComment = false
     @State var editModeCondition = false
+    @State var editModeQty = false
+    @State var editModePrice = false
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
@@ -152,14 +154,65 @@ struct UploadItemView: View {
                 Grid(alignment: .leading, horizontalSpacing: 24) {
                     
                     GridRow {
-                        Text("Qty").font(.caption).foregroundStyle(.secondary)
-                        Text("PU").font(.caption).foregroundStyle(.secondary)
+                        
+                        HStack(alignment: .lastTextBaseline) {
+                            Text("Qty")
+                            Button {
+                                editModeQty = true
+                            } label: {
+                                Text("􀈊")
+                            }
+                            .buttonStyle(.plain)
+                            
+                        }.font(.caption).foregroundStyle(.secondary)
+                        
+                        HStack(alignment: .lastTextBaseline) {
+                            Text("PU")
+                            Button {
+                                editModePrice = true
+                            } label: {
+                                Text("􀈊")
+                            }
+                            .buttonStyle(.plain)
+                            
+                        }.font(.caption).foregroundStyle(.secondary)
                     }
                     
                     GridRow(alignment: .bottom) {
-                        Text("\(uploadItem.qty)").font(.title2).gridColumnAlignment(.center)
-                        if let price = uploadItem.unitPrice {
-                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
+                        
+                        ZStack {
+                            
+                            Text("\(uploadItem.qty)").font(.title2).gridColumnAlignment(.center)
+                                .opacity(editModeQty ? 0 : 1)
+                            
+                            TextField("Qty", value: $editQty, format: .number)
+                                .frame(maxWidth: 50)
+                                .onSubmit({
+                                    editModeQty = false
+                                    if editQty == nil {
+                                        editQty = uploadItem.qty
+                                    }
+                                })
+                                .opacity(editModeQty ? 1 : 0)
+                        }
+                        
+                        ZStack {
+                            
+                            HStack(alignment: .lastTextBaseline) {
+                                if let price = uploadItem.unitPrice {
+                                    Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
+                                } else {
+                                    Text("no price")
+                                }
+                            }
+                            .opacity(editModePrice ? 0 : 1)
+                            
+                            TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                .onSubmit({
+                                    editModePrice = false
+                                })
+                                .frame(maxWidth: 100)
+                                .opacity(editModePrice ? 1 : 0)
                         }
                     }
                 }
@@ -205,6 +258,31 @@ struct UploadItemView: View {
                         .foregroundStyle(.red)
                         .opacity(submitRef == nil ? 1 : 0)
                     
+                    Text("qty must be at least 1")
+                        .foregroundStyle(.red)
+                        .opacity(submitQty == nil ? 1 : 0)
+                    
+                    if let inventoryItem = status.inventoryItem {
+                        HStack {
+                            Text("Current qty: \(inventoryItem.quantity)")
+                            if let qty = submitQty {
+                                Text("􁉂 \(inventoryItem.quantity + qty)")
+                            }
+                        }
+                    }
+                    
+                    if let inventoryItem = status.inventoryItem {
+                        Button {
+                            self.editUnitPrice = inventoryItem.unitPrice
+                        } label: {
+                            Text("Keep existing")
+                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                        }
+                    }
+                    Text("price must not be zero")
+                        .foregroundStyle(.red)
+                        .opacity(submitUnitPrice == nil ? 1 : 0)
+                    
                     GridRow {
                         Text("Color")
                         HStack {
@@ -221,43 +299,6 @@ struct UploadItemView: View {
                             .labelsHidden()
                         }
                         .gridCellColumns(2)
-                    }
-                    
-                    GridRow {
-                        Text("Qty")
-                        TextField("Qty", value: $editQty, format: .number)
-                            .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
-                        
-                        if let inventoryItem = status.inventoryItem {
-                            HStack {
-                                Text("Current: \(inventoryItem.quantity)")
-                                if let qty = submitQty {
-                                    Text("􁉂 \(inventoryItem.quantity + qty)")
-                                }
-                            }
-                        }
-                        
-                        Text("must be at least 1")
-                            .foregroundStyle(.red)
-                            .opacity(submitQty == nil ? 1 : 0)
-                    }
-                    
-                    GridRow {
-                        Text("Price")
-                        TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                            .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
-                        
-                        if let inventoryItem = status.inventoryItem {
-                            Button {
-                                self.editUnitPrice = inventoryItem.unitPrice
-                            } label: {
-                                Text("Keep existing")
-                                Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                            }
-                        }
-                        Text("must not be zero")
-                            .foregroundStyle(.red)
-                            .opacity(submitUnitPrice == nil ? 1 : 0)
                     }
                     
                     GridRow(alignment: .top) {
