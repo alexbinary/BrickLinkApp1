@@ -18,21 +18,11 @@ struct UploadContentView: View {
      
         VStack {
             
-            TabView {
+            if addViewVisible {
                 
-                UploadUploadView()
-                    .tabItem {
-                        Text("􀈧 Upload")
-                    }
-                
-                if addViewVisible {
-                    UploadAddView()
-                        .tabItem {
-                            Text("􀋲 Edit list")
-                        }
-                }
+                UploadAddView()
+                    .padding()
             }
-            .padding()
             
             ScrollView {
                 
@@ -43,7 +33,6 @@ struct UploadContentView: View {
                     section(header: "􀐫 Latest uploads", items: appController.uploadedItems)
                 }
             }
-            .padding([.horizontal, .bottom])
         }
         .navigationTitle("Upload")
         .toolbar {
@@ -65,7 +54,8 @@ struct UploadContentView: View {
                 
                 ForEach(items) { item in
                     
-                    UploadItemView(item: item)
+                    UploadItemView(uploadItem: item)
+                        .padding([.leading, .trailing])
                 }
                 
                 Color.clear.frame(width: 0, height: 24)
