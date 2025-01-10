@@ -355,27 +355,29 @@ struct UploadItemView: View {
                 
                 Spacer()
             }
-            .onAppear {
+            .onChange(of: uploadItem, initial: true) {
                 Task {
                     populateEditValues()
-                    await self.pullInventory()
-                }
-            }
-            .onChange(of: uploadItem) {
-                Task {
-                    populateEditValues()
-                    await self.pullInventory()
-                }
-            }
-            .onChange(of: editRef) {
-                Task {
-                    await self.pullCatalogEntry()
                 }
             }
             .onChange(of: [editRef, editColorId, editCondition, editComment]) {
                 Task {
-                    await self.pullInventory()
+                    await pullInventory()
                 }
+            }
+            .onChange(of: editRef) {
+                Task {
+                    await pullCatalogEntry()
+                }
+            }
+            .onChange(of: [editRef, editColorId, editCondition, editComment]) {
+                self.updateItem()
+            }
+            .onChange(of: [editQty]) {
+                self.updateItem()
+            }
+            .onChange(of: [editUnitPrice]) {
+                self.updateItem()
             }
             .padding()
         }
@@ -400,6 +402,33 @@ struct UploadItemView: View {
         editCondition = uploadItem.condition
         editComment = uploadItem.comment
         editUnitPrice = uploadItem.unitPrice
+    }
+    
+    
+    func updateItem() {
+        
+        if editRef == uploadItem.ref,
+           editColorId == uploadItem.colorId,
+           editCondition == uploadItem.condition,
+           editComment == uploadItem.comment,
+           editQty == uploadItem.qty,
+           editUnitPrice == uploadItem.unitPrice
+        {
+            return
+        }
+        
+        let item = UploadItem(
+            
+            id: uploadItem.id,
+            type: uploadItem.type,
+            ref: editRef,
+            colorId: editColorId,
+            qty: editQty ?? uploadItem.qty,
+            condition: editCondition,
+            comment: editComment,
+            unitPrice: editUnitPrice
+        )
+        appController.updateUploadItem(item)
     }
     
     

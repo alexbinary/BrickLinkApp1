@@ -727,6 +727,21 @@ class AppController: ObservableObject {
     }
     
     
+    public func updateUploadItem(_ updatedItem: UploadItem) {
+        
+        var uploadItems = dataStore.uploadItems
+        guard let idx = uploadItems.firstIndex(where: { $0.id == updatedItem.id }) else {
+            fatalError("could not update upload item #\(updatedItem.id): item not found")
+        }
+        uploadItems[idx] = updatedItem
+    
+        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
     public func importUploadList(fromXml xml: String) {
         
         let parser = XMLParser(data: Data(xml.utf8))
@@ -880,7 +895,6 @@ class AppController: ObservableObject {
         
         self.objectWillChange.send()
     }
-    
     
     
     // MARK: - Inventory
