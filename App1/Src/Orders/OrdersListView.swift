@@ -9,6 +9,8 @@ struct OrdersListView: View {
     
     @Binding var ordersActiveNavigationPath: [OrderSummary.ID]
     
+    @State var refreshing: Bool = false
+    
     
     var body: some View {
         
@@ -87,12 +89,18 @@ struct OrdersListView: View {
             
             Button {
                 Task {
+                    refreshing = true
                     await appController.reloadOrderSummaries()
-                    await appController.refreshAllOrders()
+                    refreshing = false
                 }
             } label: {
-                Text("Refresh everything")
+                if refreshing {
+                    Text("Refreshing orders...")
+                } else {
+                    Text("Refresh orders")
+                }
             }
+            .disabled(refreshing)
         }
     }
     
