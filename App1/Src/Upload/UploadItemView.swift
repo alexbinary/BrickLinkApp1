@@ -16,6 +16,8 @@ struct UploadItemView: View {
     @State var inventoryResult: Result<InventoryItem>? = nil
     @State var relatedInventories: [InventoryItem]? = nil
     
+    @State var editModeRef = false
+    
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
     @State var editCondition: String = ""
@@ -40,7 +42,27 @@ struct UploadItemView: View {
                             .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                         
                         VStack(alignment: .leading) {
-                            Text(uploadItem.ref).font(.caption).foregroundStyle(.secondary)
+                            
+                            ZStack(alignment: .leading) {
+                                HStack {
+                                    Text(uploadItem.ref)
+                                    Button {
+                                        editModeRef = true
+                                    } label: {
+                                        Text("􀈊")
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                .font(.caption).foregroundStyle(.secondary)
+                                .opacity(editModeRef ? 0 : 1)
+                                
+                                TextField("Ref", text: $editRef)
+                                    .frame(maxWidth: 100)
+                                    .onSubmit({
+                                        editModeRef = false
+                                    })
+                                    .opacity(editModeRef ? 1 : 0)
+                            }
                             
                             Group {
                                 if let catalogResult = catalogResult {
@@ -134,13 +156,11 @@ struct UploadItemView: View {
                         let submitUnitPrice = editUnitPrice.normalizedOptional
                         let submitRemarks = editRemarks.normalizedOptional
                         
-                        GridRow {
-                            Text("Ref")
-                            TextField("Ref", text: $editRef).gridCellColumns(2)
-                            Text("cannot be empty")
-                                .foregroundStyle(.red)
-                                .opacity(submitRef == nil ? 1 : 0)
-                        }
+                        
+                        Text("ref cannot be empty")
+                            .foregroundStyle(.red)
+                            .opacity(submitRef == nil ? 1 : 0)
+                        
                         
                         GridRow {
                             Text("Comment")
