@@ -11,6 +11,8 @@ struct UploadContentView: View {
     @State var highlightedItemId: UploadItem.ID?
     @State var selectedItemId: UploadItem.ID?
     
+    @State var addViewVisible: Bool = false
+    
     
     var body: some View {
      
@@ -23,10 +25,12 @@ struct UploadContentView: View {
                         Text("􀈧 Upload")
                     }
                 
-                UploadAddView()
-                    .tabItem {
-                        Text("􀋲 Edit list")
-                    }
+                if addViewVisible {
+                    UploadAddView()
+                        .tabItem {
+                            Text("􀋲 Edit list")
+                        }
+                }
             }
             .padding()
             
@@ -42,6 +46,13 @@ struct UploadContentView: View {
             .padding([.horizontal, .bottom])
         }
         .navigationTitle("Upload")
+        .toolbar {
+            Button {
+                addViewVisible.toggle()
+            } label: {
+                Text("􀅼").padding(.horizontal)
+            }
+        }
     }
     
     
