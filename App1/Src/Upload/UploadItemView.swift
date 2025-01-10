@@ -17,6 +17,7 @@ struct UploadItemView: View {
     @State var relatedInventories: [InventoryItem]? = nil
     
     @State var editModeRef = false
+    @State var editModeComment = false
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
@@ -41,10 +42,11 @@ struct UploadItemView: View {
                             .frame(minHeight: 70, maxHeight: 70, alignment: .top)
                             .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 0) {
                             
                             ZStack(alignment: .leading) {
-                                HStack {
+                                
+                                HStack(alignment: .lastTextBaseline) {
                                     Text(uploadItem.ref)
                                     Button {
                                         editModeRef = true
@@ -82,8 +84,29 @@ struct UploadItemView: View {
                             }
                             .font(.title3).frame(width: 300, alignment: .leading)
                             
-                            if !uploadItem.comment.isEmpty {
-                                Text(uploadItem.comment.htmlUnescape())
+                            ZStack(alignment: .leading) {
+                                
+                                HStack(alignment: .lastTextBaseline) {
+                                    if !uploadItem.comment.isEmpty {
+                                        Text(uploadItem.comment.htmlUnescape())
+                                    } else {
+                                        Text("no comment").italic().foregroundStyle(.secondary)
+                                    }
+                                    Button {
+                                        editModeComment = true
+                                    } label: {
+                                        Text("􀈊")
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                .opacity(editModeComment ? 0 : 1)
+                                
+                                TextField("Comment", text: $editComment)
+                                    .frame(maxWidth: 200)
+                                    .onSubmit({
+                                        editModeComment = false
+                                    })
+                                    .opacity(editModeComment ? 1 : 0)
                             }
                         }
                     }
@@ -150,16 +173,9 @@ struct UploadItemView: View {
                     let submitUnitPrice = editUnitPrice.normalizedOptional
                     let submitRemarks = editRemarks.normalizedOptional
                     
-                    
                     Text("ref cannot be empty")
                         .foregroundStyle(.red)
                         .opacity(submitRef == nil ? 1 : 0)
-                    
-                    
-                    GridRow {
-                        Text("Comment")
-                        TextField("Comment", text: $editComment).gridCellColumns(2)
-                    }
                     
                     GridRow {
                         Text("Condition")
