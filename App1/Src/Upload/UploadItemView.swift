@@ -223,12 +223,6 @@ struct UploadItemView: View {
                         }
                     }
                 }
-                
-                Button {
-                    appController.deleteUploadItem(uploadItem)
-                } label: {
-                    Text("􀈑 Delete")
-                }
             }
             
             HStack(alignment: .top, spacing: 48) {
@@ -251,6 +245,31 @@ struct UploadItemView: View {
                             return (isLoadingInventory: true, inventoryItem: nil)
                         }
                     }()
+                    
+                    if uploadItem.condition != nil {
+                        
+                        if status.isLoadingInventory {
+                            
+                            Text("Checking inventory...").foregroundStyle(.secondary)
+                                .padding(.vertical)
+                            
+                        } else {
+                            
+                            if let inventoryItem = status.inventoryItem {
+                                
+                                HStack {
+                                    Text("Will update")
+                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
+                                }
+                                .padding(.vertical)
+                                
+                            } else {
+                                
+                                Text("Will create new inventory")
+                                    .padding(.vertical)
+                            }
+                        }
+                    }
                     
                     let submitType = uploadItem.type
                     let submitRef = editRef.normalizedOptional
@@ -334,31 +353,6 @@ struct UploadItemView: View {
                             .opacity(submitRemarks == nil ? 1 : 0)
                     }
                     
-                    if uploadItem.condition != nil {
-                        
-                        if status.isLoadingInventory {
-                            
-                            Text("Checking inventory...").foregroundStyle(.secondary)
-                                .padding(.vertical)
-                            
-                        } else {
-                            
-                            if let inventoryItem = status.inventoryItem {
-                                
-                                HStack {
-                                    Text("Will update")
-                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
-                                }
-                                .padding(.vertical)
-                                
-                            } else {
-                                
-                                Text("Will create new inventory")
-                                    .padding(.vertical)
-                            }
-                        }
-                    }
-                    
                     GridRow {
                         
                         Color.clear.frame(width: 2, height: 2)
@@ -428,6 +422,14 @@ struct UploadItemView: View {
                                 Text("􀈧 Confirm").padding(.horizontal)
                             }
                             .disabled(buttonDisabled)
+                            
+                            Color.clear.frame(width: 12)
+                            
+                            Button {
+                                appController.deleteUploadItem(uploadItem)
+                            } label: {
+                                Text("􀈑 Delete")
+                            }
                         }
                     }
                 }
