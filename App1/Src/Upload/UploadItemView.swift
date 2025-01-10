@@ -34,9 +34,9 @@ struct UploadItemView: View {
     
     var body: some View {
      
-        VStack {
+        HStack(alignment: .top) {
             
-            HStack(spacing: 48) {
+            HStack(alignment: .top, spacing: 48) {
                 
                 Grid(verticalSpacing: 0) {
                     
@@ -163,18 +163,12 @@ struct UploadItemView: View {
                     }
                 }
                 
-                Grid(alignment: .leading, horizontalSpacing: 24) {
+                VStack(alignment: .leading, spacing: 24) {
                     
-                    GridRow {
+                    VStack(alignment: .leading) {
                         
                         Text("Qty")
-                         .font(.caption).foregroundStyle(.secondary)
-                        
-                        Text("PU")
-                        .font(.caption).foregroundStyle(.secondary)
-                    }
-                    
-                    GridRow(alignment: .bottom) {
+                            .font(.caption).foregroundStyle(.secondary)
                         
                         ZStack {
                             
@@ -198,6 +192,12 @@ struct UploadItemView: View {
                                 })
                                 .opacity(editModeQty ? 1 : 0)
                         }
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text("PU")
+                        .font(.caption).foregroundStyle(.secondary)
                         
                         ZStack {
                             
@@ -224,73 +224,81 @@ struct UploadItemView: View {
                     }
                 }
             }
+
+            Divider()
+                .padding(.leading, 48)
+                .padding(.trailing, 12)
             
-            HStack(alignment: .top, spacing: 48) {
-                    
-                Grid(alignment: .leading) {
-                    
-                    let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
-                    
-                        if let inventoryResult = inventoryResult {
-                            
-                            switch inventoryResult {
-                                
-                            case .found(let inventoryItem):
-                                return (isLoadingInventory: false, inventoryItem: inventoryItem)
-                                
-                            case .notFound:
-                                return (isLoadingInventory: false, inventoryItem: nil)
-                            }
-                        } else {
-                            return (isLoadingInventory: true, inventoryItem: nil)
-                        }
-                    }()
-                    
-                    if uploadItem.condition != nil {
+            VStack(alignment: .leading) {
+                
+                let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
+                
+                    if let inventoryResult = inventoryResult {
                         
-                        if status.isLoadingInventory {
+                        switch inventoryResult {
                             
-                            Text("Checking inventory...").foregroundStyle(.secondary)
-                                .padding(.vertical)
+                        case .found(let inventoryItem):
+                            return (isLoadingInventory: false, inventoryItem: inventoryItem)
                             
-                        } else {
-                            
+                        case .notFound:
+                            return (isLoadingInventory: false, inventoryItem: nil)
+                        }
+                    } else {
+                        return (isLoadingInventory: true, inventoryItem: nil)
+                    }
+                }()
+                
+                if uploadItem.condition != nil {
+                    
+                    if status.isLoadingInventory {
+                        
+                        Text("Checking inventory...").foregroundStyle(.secondary)
+                        
+                    } else {
+                        
+                        Group {
                             if let inventoryItem = status.inventoryItem {
                                 
                                 HStack {
                                     Text("Will update")
                                     Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
                                 }
-                                .padding(.vertical)
                                 
                             } else {
                                 
                                 Text("Will create new inventory")
-                                    .padding(.vertical)
                             }
                         }
+                        .font(.title3)
                     }
+                }
+                
+                let submitType = uploadItem.type
+                let submitRef = editRef.normalizedOptional
+                let submitColorId = editColorId
+                let sbmitCondition = editCondition
+                let submitComment = editComment
+                let submitQty = editQty.normalizedOptional
+                let submitUnitPrice = editUnitPrice.normalizedOptional
+                let submitRemarks = editRemarks.normalizedOptional
+                
+                Text("invalid item ref")
+                    .foregroundStyle(.red)
+                    .opacity(submitRef == nil ? 1 : 0)
+                
+                Text("invalid condition")
+                    .foregroundStyle(.red)
+                    .opacity(sbmitCondition == nil ? 1 : 0)
+                
+                Text("qty must be at least 1")
+                    .foregroundStyle(.red)
+                    .opacity(submitQty == nil ? 1 : 0)
+                
+                Text("price cannot be zero")
+                    .foregroundStyle(.red)
+                    .opacity(submitUnitPrice == nil ? 1 : 0)
                     
-                    let submitType = uploadItem.type
-                    let submitRef = editRef.normalizedOptional
-                    let submitColorId = editColorId
-                    let sbmitCondition = editCondition
-                    let submitComment = editComment
-                    let submitQty = editQty.normalizedOptional
-                    let submitUnitPrice = editUnitPrice.normalizedOptional
-                    let submitRemarks = editRemarks.normalizedOptional
-                    
-                    Text("ref cannot be empty")
-                        .foregroundStyle(.red)
-                        .opacity(submitRef == nil ? 1 : 0)
-                    
-                    Text("condition cannot be empty")
-                        .foregroundStyle(.red)
-                        .opacity(sbmitCondition == nil ? 1 : 0)
-                    
-                    Text("qty must be at least 1")
-                        .foregroundStyle(.red)
-                        .opacity(submitQty == nil ? 1 : 0)
+                Grid(alignment: .leading) {
                     
                     if let inventoryItem = status.inventoryItem {
                         HStack {
@@ -309,9 +317,7 @@ struct UploadItemView: View {
                             Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         }
                     }
-                    Text("price must not be zero")
-                        .foregroundStyle(.red)
-                        .opacity(submitUnitPrice == nil ? 1 : 0)
+                    
                     
                     GridRow(alignment: .top) {
                         Text("Remarks")
@@ -433,8 +439,6 @@ struct UploadItemView: View {
                         }
                     }
                 }
-                
-                Spacer()
             }
             
             .onChange(of: uploadItem, initial: true) {
