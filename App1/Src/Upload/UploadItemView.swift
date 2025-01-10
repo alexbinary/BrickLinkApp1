@@ -34,7 +34,7 @@ struct UploadItemView: View {
     
     var body: some View {
      
-        HStack(alignment: .top) {
+        HStack {
             
             HStack(alignment: .top, spacing: 48) {
                 
@@ -229,113 +229,94 @@ struct UploadItemView: View {
                 .padding(.leading, 48)
                 .padding(.trailing, 12)
             
-            VStack(alignment: .leading) {
-                
-                let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
-                
-                    if let inventoryResult = inventoryResult {
-                        
-                        switch inventoryResult {
-                            
-                        case .found(let inventoryItem):
-                            return (isLoadingInventory: false, inventoryItem: inventoryItem)
-                            
-                        case .notFound:
-                            return (isLoadingInventory: false, inventoryItem: nil)
-                        }
-                    } else {
-                        return (isLoadingInventory: true, inventoryItem: nil)
-                    }
-                }()
-                
-                if uploadItem.condition != nil {
+            let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
+            
+                if let inventoryResult = inventoryResult {
                     
-                    if status.isLoadingInventory {
+                    switch inventoryResult {
                         
-                        Text("Checking inventory...").foregroundStyle(.secondary)
+                    case .found(let inventoryItem):
+                        return (isLoadingInventory: false, inventoryItem: inventoryItem)
                         
-                    } else {
+                    case .notFound:
+                        return (isLoadingInventory: false, inventoryItem: nil)
+                    }
+                } else {
+                    return (isLoadingInventory: true, inventoryItem: nil)
+                }
+            }()
+            
+            if uploadItem.ref.trimmingCharacters(in: .whitespacesAndNewlines) != "", uploadItem.condition != nil {
+                
+                if status.isLoadingInventory {
+                    
+                    Text("Checking inventory...").foregroundStyle(.secondary)
+                    
+                } else {
+                    
+                    VStack(alignment: .leading, spacing: 12) {
                         
                         Group {
                             if let inventoryItem = status.inventoryItem {
                                 
                                 HStack {
-                                    Text("Will update")
+                                    Text("Update")
                                     Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
                                 }
                                 
                             } else {
                                 
-                                Text("Will create new inventory")
+                                Text("New inventory")
                             }
                         }
                         .font(.title3)
-                    }
-                }
-                
-                let submitType = uploadItem.type
-                let submitRef = editRef.normalizedOptional
-                let submitColorId = editColorId
-                let sbmitCondition = editCondition
-                let submitComment = editComment
-                let submitQty = editQty.normalizedOptional
-                let submitUnitPrice = editUnitPrice.normalizedOptional
-                let submitRemarks = editRemarks.normalizedOptional
-                
-                Text("invalid item ref")
-                    .foregroundStyle(.red)
-                    .opacity(submitRef == nil ? 1 : 0)
-                
-                Text("invalid condition")
-                    .foregroundStyle(.red)
-                    .opacity(sbmitCondition == nil ? 1 : 0)
-                
-                Text("qty must be at least 1")
-                    .foregroundStyle(.red)
-                    .opacity(submitQty == nil ? 1 : 0)
-                
-                Text("price cannot be zero")
-                    .foregroundStyle(.red)
-                    .opacity(submitUnitPrice == nil ? 1 : 0)
-                    
-                Grid(alignment: .leading) {
-                    
-                    if let inventoryItem = status.inventoryItem {
-                        HStack {
-                            Text("Current qty: \(inventoryItem.quantity)")
-                            if let qty = submitQty {
-                                Text("􁉂 \(inventoryItem.quantity + qty)")
+                        
+                        let submitType = uploadItem.type
+                        let submitRef = editRef.normalizedOptional
+                        let submitColorId = editColorId
+                        let submitCondition = editCondition
+                        let submitComment = editComment
+                        let submitQty = editQty.normalizedOptional
+                        let submitUnitPrice = editUnitPrice.normalizedOptional
+                        let submitRemarks = editRemarks.normalizedOptional
+                            
+                        Grid(alignment: .leading) {
+                            
+                            if let inventoryItem = status.inventoryItem {
+                                HStack {
+                                    Text("Current qty: \(inventoryItem.quantity)")
+                                    if let qty = submitQty {
+                                        Text("􁉂 \(inventoryItem.quantity + qty)")
+                                    }
+                                }
+                            }
+                            
+                            if let inventoryItem = status.inventoryItem {
+                                Button {
+                                    self.editUnitPrice = inventoryItem.unitPrice
+                                } label: {
+                                    Text("Keep existing")
+                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                }
                             }
                         }
-                    }
-                    
-                    if let inventoryItem = status.inventoryItem {
-                        Button {
-                            self.editUnitPrice = inventoryItem.unitPrice
-                        } label: {
-                            Text("Keep existing")
-                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                        }
-                    }
-                    
-                    
-                    GridRow(alignment: .top) {
-                        Text("Remarks")
-                        HStack(alignment: .top) {
-                            TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(maxWidth: 100)
-                            
-                            if let relatedInventories = self.relatedInventories {
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Remarks").font(.caption).foregroundStyle(.secondary)
+                            HStack(alignment: .top) {
+                                TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(maxWidth: 100)
                                 
-                                if relatedInventories.isEmpty {
+                                if let relatedInventories = self.relatedInventories {
                                     
-                                    Text("no related inventory found").foregroundStyle(.secondary)
-                                    
-                                } else {
-                                    
-                                    let remarks = relatedInventories.map { $0.remarks }
-                                        .unique .sorted()
-                                    
-                                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), alignment: .leading) {
+                                    if relatedInventories.isEmpty {
+                                        
+                                        Text("no related inventory found").foregroundStyle(.secondary)
+                                        
+                                    } else {
+                                        
+                                        let remarks = relatedInventories.map { $0.remarks }
+                                            .unique .sorted()
+                                        
                                         ForEach(remarks, id: \.self) { rem in
                                             Button {
                                                 self.editRemarks = rem
@@ -345,29 +326,21 @@ struct UploadItemView: View {
                                             .fixedSize()
                                         }
                                     }
+                                    
+                                } else {
+                                    
+                                    Text("Loading related inventories...").foregroundStyle(.secondary)
                                 }
-                                
-                            } else {
-                                
-                                Text("Loading related inventories...").foregroundStyle(.secondary)
                             }
-                            
-                        }.gridCellColumns(2)
-                            
-                        Text("cannot be empty")
-                            .foregroundStyle(.red)
-                            .opacity(submitRemarks == nil ? 1 : 0)
-                    }
-                    
-                    GridRow {
+                        }
                         
-                        Color.clear.frame(width: 2, height: 2)
+                        Color.clear.frame(height: 12)
                         
-                        HStack {
+                        HStack(spacing: 12) {
                             
                             let buttonDisabled = status.isLoadingInventory
                             || submitRef == nil
-                            || sbmitCondition == nil
+                            || submitCondition == nil
                             || submitQty == nil
                             || submitUnitPrice == nil
                             || submitRemarks == nil
@@ -399,7 +372,7 @@ struct UploadItemView: View {
                                                 colorId: submitColorId,
                                                 quantity: submitQty!,
                                                 unitPrice: submitUnitPrice!,
-                                                condition: sbmitCondition!,
+                                                condition: submitCondition!,
                                                 description: submitComment,
                                                 remarks: submitRemarks!
                                             )!
@@ -413,7 +386,7 @@ struct UploadItemView: View {
                                         ref: submitRef!,
                                         colorId: submitColorId,
                                         qty: submitQty!,
-                                        condition: sbmitCondition!,
+                                        condition: submitCondition!,
                                         comment: submitComment,
                                         remarks: submitRemarks!,
                                         unitPrice: submitUnitPrice!,
@@ -429,42 +402,38 @@ struct UploadItemView: View {
                             }
                             .disabled(buttonDisabled)
                             
-                            Color.clear.frame(width: 12)
-                            
                             Button {
                                 appController.deleteUploadItem(uploadItem)
                             } label: {
                                 Text("􀈑 Delete")
                             }
+                            
+                            let errors = {
+                               
+                                var errors = [String]()
+                                
+                                if uploadItem.qty == nil {
+                                    errors.append("missing valid qty")
+                                }
+                                
+                                if uploadItem.unitPrice == nil {
+                                    errors.append("missing valid price")
+                                }
+                                
+                                if submitRemarks == nil {
+                                    errors.append("missing valid remarks")
+                                }
+                                
+                                return errors
+                            }()
+                            
+                            Text(errors.joined(separator: ", ")).italic()
                         }
                     }
                 }
             }
             
-            .onChange(of: uploadItem, initial: true) {
-                
-                populateEditValues()
-            }
-            
-            .onChange(of: editModeRef, updateItemOnExitEditMode)
-            .onChange(of: editModeColor, updateItemOnExitEditMode)
-            .onChange(of: editModeCondition, updateItemOnExitEditMode)
-            .onChange(of: editModeComment, updateItemOnExitEditMode)
-            .onChange(of: editModeQty, updateItemOnExitEditMode)
-            .onChange(of: editModePrice, updateItemOnExitEditMode)
-            
-            .onChange(of: uploadItem.ref, initial: true) {
-                Task {
-                    await pullCatalogEntry()
-                }
-            }
-            
-            .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
-                Task {
-                    await pullInventory()
-                }
-            }
-            .padding()
+            Spacer()
         }
         .padding()
         .background(Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill))
@@ -475,6 +444,30 @@ struct UploadItemView: View {
         )
         .onHover { hover in
             self.hover = hover
+        }
+        
+        .onChange(of: uploadItem, initial: true) {
+            
+            populateEditValues()
+        }
+        
+        .onChange(of: editModeRef, updateItemOnExitEditMode)
+        .onChange(of: editModeColor, updateItemOnExitEditMode)
+        .onChange(of: editModeCondition, updateItemOnExitEditMode)
+        .onChange(of: editModeComment, updateItemOnExitEditMode)
+        .onChange(of: editModeQty, updateItemOnExitEditMode)
+        .onChange(of: editModePrice, updateItemOnExitEditMode)
+        
+        .onChange(of: uploadItem.ref, initial: true) {
+            Task {
+                await pullCatalogEntry()
+            }
+        }
+        
+        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+            Task {
+                await pullInventory()
+            }
         }
     }
     
