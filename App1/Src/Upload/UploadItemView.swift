@@ -41,7 +41,25 @@ struct UploadItemView: View {
                         
                         VStack(alignment: .leading) {
                             Text(uploadItem.ref).font(.caption).foregroundStyle(.secondary)
-                            Text("name unavailable").lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading).foregroundStyle(.secondary)
+                            
+                            Group {
+                                if let catalogResult = catalogResult {
+                                    
+                                    switch catalogResult {
+                                        
+                                    case .found(let catalogItem):
+                                        Text(catalogItem.name).lineLimit(nil)
+                                        
+                                    case .notFound:
+                                        Text("no catalog entry").foregroundStyle(.secondary)
+                                    }
+                                    
+                                } else {
+                                    Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                }
+                            }
+                            .font(.title3).frame(width: 300, alignment: .leading)
+                            
                             if !uploadItem.comment.isEmpty {
                                 Text(uploadItem.comment.htmlUnescape())
                             }
@@ -122,27 +140,6 @@ struct UploadItemView: View {
                             Text("cannot be empty")
                                 .foregroundStyle(.red)
                                 .opacity(submitRef == nil ? 1 : 0)
-                        }
-                        
-                        GridRow {
-                            Text("Name")
-                            Group {
-                                if let catalogResult = catalogResult {
-                                    
-                                    switch catalogResult {
-                                        
-                                    case .found(let catalogItem):
-                                        Text(catalogItem.name).lineLimit(nil)
-                                        
-                                    case .notFound:
-                                        Text("no catalog entry").foregroundStyle(.secondary)
-                                    }
-                                    
-                                } else {
-                                    Text("Loading name from catalog...").foregroundStyle(.secondary)
-                                }
-                            }
-                            .gridCellColumns(2)
                         }
                         
                         GridRow {
