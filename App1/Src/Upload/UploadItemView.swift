@@ -18,6 +18,7 @@ struct UploadItemView: View {
     
     @State var editModeRef = false
     @State var editModeComment = false
+    @State var editModeCondition = false
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
@@ -113,11 +114,38 @@ struct UploadItemView: View {
                     
                     GridRow {
                         
-                        Text(uploadItem.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
+                        ZStack {
+                            
+                            HStack(alignment: .lastTextBaseline) {
+                                Text(uploadItem.condition == "U" ? "USED" : "NEW").font(.title3)
+                                Button {
+                                    editModeCondition = true
+                                } label: {
+                                    Text("􀈊")
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .opacity(editModeCondition ? 0 : 1)
+                            
+                            Picker("Condition", selection: $editCondition) {
+                                
+                                Text("NEW").tag("N")
+                                Text("USED").tag("U")
+                            }
+                            .labelsHidden()
+                            .frame(maxWidth: 90)
+                            .onChange(of: editCondition) {
+                                editModeCondition = false
+                            }
+                            .opacity(editModeCondition ? 1 : 0)
+                            
+                        }.gridColumnAlignment(.center)
+                        
                         HStack {
                             appController.color(forLegoColorId: uploadItem.colorId).frame(width: 18, height: 18)
                             Text(appController.colorName(forLegoColorId: uploadItem.colorId))
-                        }.gridColumnAlignment(.leading)
+                        }
+                        .gridColumnAlignment(.leading)
                     }
                 }
                 
@@ -176,17 +204,6 @@ struct UploadItemView: View {
                     Text("ref cannot be empty")
                         .foregroundStyle(.red)
                         .opacity(submitRef == nil ? 1 : 0)
-                    
-                    GridRow {
-                        Text("Condition")
-                        Picker("Condition", selection: $editCondition) {
-                            
-                            Text("NEW").tag("N")
-                            Text("USED").tag("U")
-                        }
-                        .labelsHidden()
-                        .gridCellColumns(2)
-                    }
                     
                     GridRow {
                         Text("Color")
