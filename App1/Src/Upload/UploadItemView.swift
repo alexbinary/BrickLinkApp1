@@ -60,6 +60,9 @@ struct UploadItemView: View {
                                 TextField("Ref", text: $editRef)
                                     .frame(maxWidth: 100)
                                     .onSubmit({
+                                        if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                            editRef = uploadItem.ref
+                                        }
                                         editModeRef = false
                                     })
                                     .opacity(editModeRef ? 1 : 0)
@@ -246,11 +249,37 @@ struct UploadItemView: View {
                 }
             }()
             
-            if uploadItem.ref.trimmingCharacters(in: .whitespacesAndNewlines) != "", uploadItem.condition != nil {
+            let errors = {
+               
+                var errors = [String]()
+                
+                if uploadItem.ref.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                    errors.append("invalid item ref")
+                }
+                
+                if uploadItem.condition == nil {
+                    errors.append("missing condition")
+                }
+                
+                return errors
+            }()
+            
+            if !errors.isEmpty {
+                
+                VStack(alignment: .leading) {
+                
+                    ForEach(errors, id: \.self) { error in
+                        Text(error)
+                    }
+                }
+                .foregroundStyle(.secondary)
+                .italic()
+                
+            } else {
                 
                 if status.isLoadingInventory {
                     
-                    Text("Checking inventory...").foregroundStyle(.secondary)
+                    Text("Loading inventory...").foregroundStyle(.secondary)
                     
                 } else {
                     
