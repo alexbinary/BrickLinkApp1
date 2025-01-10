@@ -120,254 +120,245 @@ struct UploadItemView: View {
                 }
             }
             
-            VStack(alignment: .leading) {
-                
-                HStack(alignment: .top, spacing: 48) {
+            HStack(alignment: .top, spacing: 48) {
                     
-                    AsyncImage(url: appController.imageUrl(forItemType: uploadItem.type, ref: editRef, colorId: editColorId))
-                        .frame(minHeight: 70, maxHeight: 70, alignment: .top)
-                        .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+                Grid(alignment: .leading) {
                     
-                    Grid(alignment: .leading) {
-                        
-                        let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
-                        
-                            if let inventoryResult = inventoryResult {
+                    let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
+                    
+                        if let inventoryResult = inventoryResult {
+                            
+                            switch inventoryResult {
                                 
-                                switch inventoryResult {
-                                    
-                                case .found(let inventoryItem):
-                                    return (isLoadingInventory: false, inventoryItem: inventoryItem)
-                                    
-                                case .notFound:
-                                    return (isLoadingInventory: false, inventoryItem: nil)
-                                }
-                            } else {
-                                return (isLoadingInventory: true, inventoryItem: nil)
+                            case .found(let inventoryItem):
+                                return (isLoadingInventory: false, inventoryItem: inventoryItem)
+                                
+                            case .notFound:
+                                return (isLoadingInventory: false, inventoryItem: nil)
                             }
-                        }()
-                        
-                        let submitType = uploadItem.type
-                        let submitRef = editRef.normalizedOptional
-                        let submitColorId = editColorId
-                        let sbmitCondition = editCondition
-                        let submitComment = editComment
-                        let submitQty = editQty.normalizedOptional
-                        let submitUnitPrice = editUnitPrice.normalizedOptional
-                        let submitRemarks = editRemarks.normalizedOptional
-                        
-                        
-                        Text("ref cannot be empty")
-                            .foregroundStyle(.red)
-                            .opacity(submitRef == nil ? 1 : 0)
-                        
-                        
-                        GridRow {
-                            Text("Comment")
-                            TextField("Comment", text: $editComment).gridCellColumns(2)
+                        } else {
+                            return (isLoadingInventory: true, inventoryItem: nil)
                         }
-                        
-                        GridRow {
-                            Text("Condition")
-                            Picker("Condition", selection: $editCondition) {
+                    }()
+                    
+                    let submitType = uploadItem.type
+                    let submitRef = editRef.normalizedOptional
+                    let submitColorId = editColorId
+                    let sbmitCondition = editCondition
+                    let submitComment = editComment
+                    let submitQty = editQty.normalizedOptional
+                    let submitUnitPrice = editUnitPrice.normalizedOptional
+                    let submitRemarks = editRemarks.normalizedOptional
+                    
+                    
+                    Text("ref cannot be empty")
+                        .foregroundStyle(.red)
+                        .opacity(submitRef == nil ? 1 : 0)
+                    
+                    
+                    GridRow {
+                        Text("Comment")
+                        TextField("Comment", text: $editComment).gridCellColumns(2)
+                    }
+                    
+                    GridRow {
+                        Text("Condition")
+                        Picker("Condition", selection: $editCondition) {
+                            
+                            Text("NEW").tag("N")
+                            Text("USED").tag("U")
+                        }
+                        .labelsHidden()
+                        .gridCellColumns(2)
+                    }
+                    
+                    GridRow {
+                        Text("Color")
+                        HStack {
+                            appController.color(forLegoColorId: editColorId).frame(width: 18, height: 18)
+                            Picker("Color", selection: $editColorId) {
                                 
-                                Text("NEW").tag("N")
-                                Text("USED").tag("U")
+                                ForEach(appController.allColors) { color in
+                                    
+                                    Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
+                                        .tag(color.id)
+                                }
                             }
+                            .pickerStyle(.menu)
                             .labelsHidden()
-                            .gridCellColumns(2)
                         }
+                        .gridCellColumns(2)
+                    }
+                    
+                    GridRow {
+                        Text("Qty")
+                        TextField("Qty", value: $editQty, format: .number)
+                            .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
                         
-                        GridRow {
-                            Text("Color")
+                        if let inventoryItem = status.inventoryItem {
                             HStack {
-                                appController.color(forLegoColorId: editColorId).frame(width: 18, height: 18)
-                                Picker("Color", selection: $editColorId) {
-                                    
-                                    ForEach(appController.allColors) { color in
-                                        
-                                        Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
-                                            .tag(color.id)
-                                    }
-                                }
-                                .pickerStyle(.menu)
-                                .labelsHidden()
-                            }
-                            .gridCellColumns(2)
-                        }
-                        
-                        GridRow {
-                            Text("Qty")
-                            TextField("Qty", value: $editQty, format: .number)
-                                .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
-                            
-                            if let inventoryItem = status.inventoryItem {
-                                HStack {
-                                    Text("Current: \(inventoryItem.quantity)")
-                                    if let qty = submitQty {
-                                        Text("􁉂 \(inventoryItem.quantity + qty)")
-                                    }
+                                Text("Current: \(inventoryItem.quantity)")
+                                if let qty = submitQty {
+                                    Text("􁉂 \(inventoryItem.quantity + qty)")
                                 }
                             }
-                            
-                            Text("must be at least 1")
-                                .foregroundStyle(.red)
-                                .opacity(submitQty == nil ? 1 : 0)
                         }
                         
-                        GridRow {
-                            Text("Price")
-                            TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
-                            
-                            if let inventoryItem = status.inventoryItem {
-                                Button {
-                                    self.editUnitPrice = inventoryItem.unitPrice
-                                } label: {
-                                    Text("Keep existing")
-                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                }
+                        Text("must be at least 1")
+                            .foregroundStyle(.red)
+                            .opacity(submitQty == nil ? 1 : 0)
+                    }
+                    
+                    GridRow {
+                        Text("Price")
+                        TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                            .gridCellColumns(status.inventoryItem == nil ? 2 : 1)
+                        
+                        if let inventoryItem = status.inventoryItem {
+                            Button {
+                                self.editUnitPrice = inventoryItem.unitPrice
+                            } label: {
+                                Text("Keep existing")
+                                Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                             }
-                            Text("must not be zero")
-                                .foregroundStyle(.red)
-                                .opacity(submitUnitPrice == nil ? 1 : 0)
                         }
-                        
-                        GridRow(alignment: .top) {
-                            Text("Remarks")
-                            HStack(alignment: .top) {
-                                TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(maxWidth: 100)
+                        Text("must not be zero")
+                            .foregroundStyle(.red)
+                            .opacity(submitUnitPrice == nil ? 1 : 0)
+                    }
+                    
+                    GridRow(alignment: .top) {
+                        Text("Remarks")
+                        HStack(alignment: .top) {
+                            TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(maxWidth: 100)
+                            
+                            if let relatedInventories = self.relatedInventories {
                                 
-                                if let relatedInventories = self.relatedInventories {
+                                if relatedInventories.isEmpty {
                                     
-                                    if relatedInventories.isEmpty {
-                                        
-                                        Text("no related inventory found").foregroundStyle(.secondary)
-                                        
-                                    } else {
-                                        
-                                        let remarks = relatedInventories.map { $0.remarks }
-                                            .unique .sorted()
-                                        
-                                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), alignment: .leading) {
-                                            ForEach(remarks, id: \.self) { rem in
-                                                Button {
-                                                    self.editRemarks = rem
-                                                } label: {
-                                                    Text(rem)
-                                                }
-                                                .fixedSize()
-                                            }
-                                        }
-                                    }
+                                    Text("no related inventory found").foregroundStyle(.secondary)
                                     
                                 } else {
                                     
-                                    Text("Loading related inventories...").foregroundStyle(.secondary)
+                                    let remarks = relatedInventories.map { $0.remarks }
+                                        .unique .sorted()
+                                    
+                                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), alignment: .leading) {
+                                        ForEach(remarks, id: \.self) { rem in
+                                            Button {
+                                                self.editRemarks = rem
+                                            } label: {
+                                                Text(rem)
+                                            }
+                                            .fixedSize()
+                                        }
+                                    }
                                 }
-                                
-                            }.gridCellColumns(2)
-                                
-                            Text("cannot be empty")
-                                .foregroundStyle(.red)
-                                .opacity(submitRemarks == nil ? 1 : 0)
-                        }
-                        
-                        if status.isLoadingInventory {
-                            
-                            Text("Checking inventory...").foregroundStyle(.secondary)
-                                .padding(.vertical)
-                            
-                        } else {
-                            
-                            if let inventoryItem = status.inventoryItem {
-                                
-                                HStack {
-                                    Text("Will update")
-                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
-                                }
-                                .padding(.vertical)
                                 
                             } else {
                                 
-                                Text("Will create new inventory")
-                                    .padding(.vertical)
+                                Text("Loading related inventories...").foregroundStyle(.secondary)
                             }
-                        }
-                        
-                        GridRow {
                             
-                            Color.clear.frame(width: 2, height: 2)
+                        }.gridCellColumns(2)
+                            
+                        Text("cannot be empty")
+                            .foregroundStyle(.red)
+                            .opacity(submitRemarks == nil ? 1 : 0)
+                    }
+                    
+                    if status.isLoadingInventory {
+                        
+                        Text("Checking inventory...").foregroundStyle(.secondary)
+                            .padding(.vertical)
+                        
+                    } else {
+                        
+                        if let inventoryItem = status.inventoryItem {
                             
                             HStack {
-                                
-                                let buttonDisabled = status.isLoadingInventory
-                                || submitRef == nil
-                                || submitQty == nil
-                                || submitUnitPrice == nil
-                                || submitRemarks == nil
-                                
-                                Button {
-                                    
-                                    Task {
-                                        
-                                        let inventoryItem = await {
-                                            
-                                            if let inventoryItem = status.inventoryItem {
-                                                
-                                                await appController.updateInventory(
-                                                    
-                                                    id: inventoryItem.id,
-                                                    addQuantity: submitQty!,
-                                                    unitPrice: submitUnitPrice!,
-                                                    remarks: submitRemarks!
-                                                )
-                                                
-                                                return inventoryItem
-                                                
-                                            } else {
-                                                
-                                                let inventoryItem = await appController.createInventory(
-                                                    
-                                                    ref: submitRef!,
-                                                    type: submitType,
-                                                    colorId: submitColorId,
-                                                    quantity: submitQty!,
-                                                    unitPrice: submitUnitPrice!,
-                                                    condition: sbmitCondition,
-                                                    description: submitComment,
-                                                    remarks: submitRemarks!
-                                                )!
-                                                
-                                                return inventoryItem
-                                            }
-                                        }()
-                                        
-                                        appController.addUploadedItem(UploadedItem(
-                                            type: submitType,
-                                            ref: submitRef!,
-                                            colorId: submitColorId,
-                                            qty: submitQty!,
-                                            condition: sbmitCondition,
-                                            comment: submitComment,
-                                            remarks: submitRemarks!,
-                                            unitPrice: submitUnitPrice!,
-                                            inventoryId: inventoryItem.id,
-                                            uploadDate: .now
-                                        ))
-                                        
-                                        appController.deleteUploadItem(uploadItem)
-                                    }
-                                    
-                                } label: {
-                                    Text("􀈧 Confirm").padding(.horizontal)
-                                }
-                                .disabled(buttonDisabled)
+                                Text("Will update")
+                                Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
                             }
+                            .padding(.vertical)
+                            
+                        } else {
+                            
+                            Text("Will create new inventory")
+                                .padding(.vertical)
                         }
                     }
                     
-                    Spacer()
+                    GridRow {
+                        
+                        Color.clear.frame(width: 2, height: 2)
+                        
+                        HStack {
+                            
+                            let buttonDisabled = status.isLoadingInventory
+                            || submitRef == nil
+                            || submitQty == nil
+                            || submitUnitPrice == nil
+                            || submitRemarks == nil
+                            
+                            Button {
+                                
+                                Task {
+                                    
+                                    let inventoryItem = await {
+                                        
+                                        if let inventoryItem = status.inventoryItem {
+                                            
+                                            await appController.updateInventory(
+                                                
+                                                id: inventoryItem.id,
+                                                addQuantity: submitQty!,
+                                                unitPrice: submitUnitPrice!,
+                                                remarks: submitRemarks!
+                                            )
+                                            
+                                            return inventoryItem
+                                            
+                                        } else {
+                                            
+                                            let inventoryItem = await appController.createInventory(
+                                                
+                                                ref: submitRef!,
+                                                type: submitType,
+                                                colorId: submitColorId,
+                                                quantity: submitQty!,
+                                                unitPrice: submitUnitPrice!,
+                                                condition: sbmitCondition,
+                                                description: submitComment,
+                                                remarks: submitRemarks!
+                                            )!
+                                            
+                                            return inventoryItem
+                                        }
+                                    }()
+                                    
+                                    appController.addUploadedItem(UploadedItem(
+                                        type: submitType,
+                                        ref: submitRef!,
+                                        colorId: submitColorId,
+                                        qty: submitQty!,
+                                        condition: sbmitCondition,
+                                        comment: submitComment,
+                                        remarks: submitRemarks!,
+                                        unitPrice: submitUnitPrice!,
+                                        inventoryId: inventoryItem.id,
+                                        uploadDate: .now
+                                    ))
+                                    
+                                    appController.deleteUploadItem(uploadItem)
+                                }
+                                
+                            } label: {
+                                Text("􀈧 Confirm").padding(.horizontal)
+                            }
+                            .disabled(buttonDisabled)
+                        }
+                    }
                 }
                 
                 Spacer()
