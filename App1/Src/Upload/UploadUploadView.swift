@@ -16,8 +16,6 @@ struct UploadUploadView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @Binding var selectedItemId: UploadItem.ID?
-    
     @State var catalogResult: Result<CatalogItem>? = nil
     @State var inventoryResult: Result<InventoryItem>? = nil
     @State var relatedInventories: [InventoryItem]? = nil
@@ -293,26 +291,14 @@ struct UploadUploadView: View {
                                             inventoryId: inventoryItem.id,
                                             uploadDate: .now
                                         ))
-                                        goToNextItem(deleteActiveItem: true)
+                                        
+                                        appController.deleteUploadItem(activeUploadItem)
                                     }
                                     
                                 } label: {
                                     Text("􀈧 Confirm").padding(.horizontal)
                                 }
                                 .disabled(buttonDisabled)
-                                
-                                Color.clear.frame(width: 8)
-                                
-                                Button {
-                                    goToNextItem(deleteActiveItem: false)
-                                } label: {
-                                    Text("􁉂 Skip")
-                                }
-                                Button {
-                                    appController.deleteUploadItem(activeUploadItem)
-                                } label: {
-                                    Text("􀈑 Delete")
-                                }
                             }
                         }
                     }
@@ -355,35 +341,7 @@ struct UploadUploadView: View {
     
     var activeUploadItem: UploadItem? {
         
-        if let id = selectedItemId,
-           let item = appController.uploadItems.first(where: { $0.id == id }) {
-            
-            return item
-        }
-        
-        return appController.uploadItems.first
-    }
-    
-    
-    func goToNextItem(deleteActiveItem: Bool) {
-        
-        if let activeUploadItem = activeUploadItem {
-            
-            let items = appController.uploadItems
-            let idx = items.firstIndex(of: activeUploadItem)!
-            let nextIndex = items.index(after: idx)
-            
-            if deleteActiveItem {
-            
-                appController.deleteUploadItem(activeUploadItem)
-            }
-            
-            if nextIndex < items.endIndex {
-                
-                let nextItem = items[nextIndex]
-                selectedItemId = nextItem.id
-            }
-        }
+        appController.uploadItems.first
     }
     
     

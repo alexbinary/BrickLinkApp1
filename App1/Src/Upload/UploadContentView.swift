@@ -20,7 +20,7 @@ struct UploadContentView: View {
             
             TabView {
                 
-                UploadUploadView(selectedItemId: $selectedItemId)
+                UploadUploadView()
                     .tabItem {
                         Text("􀈧 Upload")
                     }
