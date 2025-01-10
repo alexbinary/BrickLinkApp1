@@ -65,7 +65,7 @@ struct UploadContentView: View {
                 
                 ForEach(items) { item in
                     
-                    itemView(item)
+                    UploadItemView(item: item)
                 }
                 
                 Color.clear.frame(width: 0, height: 24)
@@ -111,79 +111,6 @@ struct UploadContentView: View {
         .padding()
         .frame(maxWidth: .infinity)
         .background(Color(nsColor: .windowBackgroundColor).opacity(0.90))
-    }
-    
-    
-    @ViewBuilder
-    func itemView(_ item: UploadItem) -> some View {
-        
-        HStack(spacing: 48) {
-                
-            Grid(verticalSpacing: 0) {
-                
-                GridRow(alignment: .top) {
-                    
-                    AsyncImage(url: appController.imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId))
-                        .frame(minHeight: 70, maxHeight: 70, alignment: .top)
-                        .frame(minWidth: 90, maxWidth: 90, alignment: .top)
-                    
-                    VStack(alignment: .leading) {
-                        Text(item.ref).font(.caption).foregroundStyle(.secondary)
-                        Text("name unavailable").lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading).foregroundStyle(.secondary)
-                        if !item.comment.isEmpty {
-                            Text(item.comment.htmlUnescape())
-                        }
-                    }
-                }
-                
-                GridRow {
-                
-                    Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
-                    HStack {
-                        appController.color(forLegoColorId: item.colorId).frame(width: 18, height: 18)
-                        Text(appController.colorName(forLegoColorId: item.colorId))
-                    }.gridColumnAlignment(.leading)
-                }
-            }
-            
-            Grid(alignment: .leading, horizontalSpacing: 24) {
-                
-                GridRow {
-                    Text("Qty").font(.caption).foregroundStyle(.secondary)
-                    Text("PU").font(.caption).foregroundStyle(.secondary)
-                }
-                
-                GridRow(alignment: .bottom) {
-                    Text("\(item.qty)").font(.title2).gridColumnAlignment(.center)
-                    if let price = item.unitPrice {
-                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
-                    }
-                }
-            }
-            
-            Button {
-                appController.deleteUploadItem(item)
-            } label: {
-                Text("􀈑 Delete")
-            }
-        }
-        .padding()
-        .background(Color(nsColor: (highlightedItemId == item.id || selectedItemId == item.id) ? .secondarySystemFill : .tertiarySystemFill))
-        .cornerRadius(6)
-        .overlay(
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(Color(nsColor: .tertiarySystemFill))
-        )
-        .onHover { hover in
-            if hover {
-                highlightedItemId = item.id
-            } else if highlightedItemId == item.id {
-                highlightedItemId = nil
-            }
-        }
-        .onTapGesture {
-            selectedItemId = item.id
-        }
     }
     
     
