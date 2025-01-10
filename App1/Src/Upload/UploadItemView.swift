@@ -17,8 +17,9 @@ struct UploadItemView: View {
     @State var relatedInventories: [InventoryItem]? = nil
     
     @State var editModeRef = false
-    @State var editModeComment = false
+    @State var editModeColor = false
     @State var editModeCondition = false
+    @State var editModeComment = false
     @State var editModeQty = false
     @State var editModePrice = false
     
@@ -142,10 +143,39 @@ struct UploadItemView: View {
                             .opacity(editModeCondition ? 1 : 0)
                             
                         }.gridColumnAlignment(.center)
-                        
+                          
                         HStack {
                             appController.color(forLegoColorId: uploadItem.colorId).frame(width: 18, height: 18)
-                            Text(appController.colorName(forLegoColorId: uploadItem.colorId))
+                            
+                            ZStack(alignment: .leading) {
+                             
+                                HStack(alignment: .lastTextBaseline) {
+                                    Text(appController.colorName(forLegoColorId: uploadItem.colorId))
+                                    Button {
+                                        editModeColor = true
+                                    } label: {
+                                        Text("􀈊")
+                                    }
+                                    .buttonStyle(.plain)
+                                    
+                                }.opacity(editModeColor ? 0 : 1)
+                                
+                                Picker("Color", selection: $editColorId) {
+                                    
+                                    ForEach(appController.allColors) { color in
+                                        
+                                        Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
+                                            .tag(color.id)
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                .labelsHidden()
+                                .frame(maxWidth: 150)
+                                .onChange(of: editColorId, {
+                                    editModeColor = false
+                                })
+                                .opacity(editModeColor ? 1 : 0)
+                            }
                         }
                         .gridColumnAlignment(.leading)
                     }
@@ -282,24 +312,6 @@ struct UploadItemView: View {
                     Text("price must not be zero")
                         .foregroundStyle(.red)
                         .opacity(submitUnitPrice == nil ? 1 : 0)
-                    
-                    GridRow {
-                        Text("Color")
-                        HStack {
-                            appController.color(forLegoColorId: editColorId).frame(width: 18, height: 18)
-                            Picker("Color", selection: $editColorId) {
-                                
-                                ForEach(appController.allColors) { color in
-                                    
-                                    Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
-                                        .tag(color.id)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .labelsHidden()
-                        }
-                        .gridCellColumns(2)
-                    }
                     
                     GridRow(alignment: .top) {
                         Text("Remarks")
