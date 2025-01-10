@@ -900,17 +900,9 @@ class AppController: ObservableObject {
     // MARK: - Inventory
     
     
-    public func getInventory(
+    public func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
-        forItemType type: BrickLinkItemType,
-        colorId: LegoColor.ID,
-        ref: String,
-        condition: String,
-        comment: String
-    
-    ) async -> InventoryItem? {
-        
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(type.rawValue)&color_id=\(colorId)")!)
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(uploadItem.type.rawValue)&color_id=\(uploadItem.colorId)")!)
         request.addAuthentication(using: blCredentials)
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
@@ -921,11 +913,11 @@ class AppController: ObservableObject {
             
             if let inv = inventories.first(where: { inv in
                 
-                inv.item.type == type
-                && inv.item.no == ref
-                && "\(inv.colorId)" == colorId
-                && inv.newOrUsed == condition
-                && (inv.description ?? "") == comment
+                inv.item.type == uploadItem.type
+                && inv.item.no == uploadItem.ref
+                && "\(inv.colorId)" == uploadItem.colorId
+                && inv.newOrUsed == uploadItem.condition
+                && (inv.description ?? "") == (uploadItem.comment ?? "")
             }) {
                 return InventoryItem(fromBl: inv)
             }
@@ -967,7 +959,7 @@ class AppController: ObservableObject {
         quantity: Int,
         unitPrice: Float,
         condition: String,
-        description: String,
+        description: String?,
         remarks: String
         
     ) async -> InventoryItem? {
@@ -986,7 +978,7 @@ class AppController: ObservableObject {
                 "new_or_used": "\(condition)",
                 "is_retain": false,
                 "is_stock_room": false,
-                "description": "\(description)",
+                "description": "\(description ?? "")",
                 "remarks": "\(remarks)"
             }
             """

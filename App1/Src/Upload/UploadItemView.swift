@@ -25,7 +25,7 @@ struct UploadItemView: View {
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID = ""
-    @State var editCondition: String = ""
+    @State var editCondition: String?
     @State var editComment: String = ""
     @State var editQty: Int?
     @State var editUnitPrice: Float?
@@ -86,8 +86,8 @@ struct UploadItemView: View {
                             ZStack(alignment: .leading) {
                                 
                                 Group {
-                                    if !uploadItem.comment.isEmpty {
-                                        Text(uploadItem.comment.htmlUnescape())
+                                    if !(uploadItem.comment ?? "").isEmpty {
+                                        Text((uploadItem.comment ?? "").htmlUnescape())
                                     } else {
                                         Text("no comment").italic().foregroundStyle(.secondary)
                                     }
@@ -111,7 +111,7 @@ struct UploadItemView: View {
                         
                         ZStack {
                             
-                            Text(uploadItem.condition == "U" ? "USED" : "NEW").font(.title3)
+                            Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-").font(.title3)
                                 .onTapGesture {
                                     editModeCondition = true
                                 }
@@ -178,19 +178,23 @@ struct UploadItemView: View {
                         
                         ZStack {
                             
-                            Text("\(uploadItem.qty)").font(.title2).gridColumnAlignment(.center)
-                                .onTapGesture {
-                                    editModeQty = true
+                            Group {
+                                if let qty = uploadItem.qty {
+                                    Text("\(qty)")
+                                } else {
+                                    Text("-")
                                 }
-                                .opacity(editModeQty ? 0 : 1)
+                            }
+                            .font(.title2).gridColumnAlignment(.center)
+                            .onTapGesture {
+                                editModeQty = true
+                            }
+                            .opacity(editModeQty ? 0 : 1)
                             
                             TextField("Qty", value: $editQty, format: .number)
                                 .frame(maxWidth: 50)
                                 .onSubmit({
                                     editModeQty = false
-                                    if editQty == nil {
-                                        editQty = uploadItem.qty
-                                    }
                                 })
                                 .opacity(editModeQty ? 1 : 0)
                         }
@@ -199,11 +203,12 @@ struct UploadItemView: View {
                             
                             Group {
                                 if let price = uploadItem.unitPrice {
-                                    Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
+                                    Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
                                 } else {
-                                    Text("no price")
+                                    Text("-")
                                 }
                             }
+                            .font(.title2)
                             .onTapGesture {
                                 editModePrice = true
                             }
@@ -259,6 +264,10 @@ struct UploadItemView: View {
                     Text("ref cannot be empty")
                         .foregroundStyle(.red)
                         .opacity(submitRef == nil ? 1 : 0)
+                    
+                    Text("condition cannot be empty")
+                        .foregroundStyle(.red)
+                        .opacity(sbmitCondition == nil ? 1 : 0)
                     
                     Text("qty must be at least 1")
                         .foregroundStyle(.red)
@@ -325,25 +334,28 @@ struct UploadItemView: View {
                             .opacity(submitRemarks == nil ? 1 : 0)
                     }
                     
-                    if status.isLoadingInventory {
+                    if uploadItem.condition != nil {
                         
-                        Text("Checking inventory...").foregroundStyle(.secondary)
-                            .padding(.vertical)
-                        
-                    } else {
-                        
-                        if let inventoryItem = status.inventoryItem {
+                        if status.isLoadingInventory {
                             
-                            HStack {
-                                Text("Will update")
-                                Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
-                            }
-                            .padding(.vertical)
+                            Text("Checking inventory...").foregroundStyle(.secondary)
+                                .padding(.vertical)
                             
                         } else {
                             
-                            Text("Will create new inventory")
+                            if let inventoryItem = status.inventoryItem {
+                                
+                                HStack {
+                                    Text("Will update")
+                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
+                                }
                                 .padding(.vertical)
+                                
+                            } else {
+                                
+                                Text("Will create new inventory")
+                                    .padding(.vertical)
+                            }
                         }
                     }
                     
@@ -355,6 +367,7 @@ struct UploadItemView: View {
                             
                             let buttonDisabled = status.isLoadingInventory
                             || submitRef == nil
+                            || sbmitCondition == nil
                             || submitQty == nil
                             || submitUnitPrice == nil
                             || submitRemarks == nil
@@ -386,7 +399,7 @@ struct UploadItemView: View {
                                                 colorId: submitColorId,
                                                 quantity: submitQty!,
                                                 unitPrice: submitUnitPrice!,
-                                                condition: sbmitCondition,
+                                                condition: sbmitCondition!,
                                                 description: submitComment,
                                                 remarks: submitRemarks!
                                             )!
@@ -400,7 +413,7 @@ struct UploadItemView: View {
                                         ref: submitRef!,
                                         colorId: submitColorId,
                                         qty: submitQty!,
-                                        condition: sbmitCondition,
+                                        condition: sbmitCondition!,
                                         comment: submitComment,
                                         remarks: submitRemarks!,
                                         unitPrice: submitUnitPrice!,
@@ -474,7 +487,7 @@ struct UploadItemView: View {
         editColorId = uploadItem.colorId
         editQty = uploadItem.qty
         editCondition = uploadItem.condition
-        editComment = uploadItem.comment
+        editComment = uploadItem.comment ?? ""
         editUnitPrice = uploadItem.unitPrice
     }
     
@@ -484,7 +497,7 @@ struct UploadItemView: View {
         if editRef == uploadItem.ref,
            editColorId == uploadItem.colorId,
            editCondition == uploadItem.condition,
-           editComment == uploadItem.comment,
+           editComment.trimmingCharacters(in: .whitespacesAndNewlines) == (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines),
            editQty == uploadItem.qty,
            editUnitPrice == uploadItem.unitPrice
         {
@@ -497,7 +510,7 @@ struct UploadItemView: View {
             type: uploadItem.type,
             ref: editRef,
             colorId: editColorId,
-            qty: editQty ?? uploadItem.qty,
+            qty: editQty,
             condition: editCondition,
             comment: editComment,
             unitPrice: editUnitPrice
@@ -508,18 +521,14 @@ struct UploadItemView: View {
     
     func pullInventory() async {
         
+        guard uploadItem.condition != nil else { return }
+        
         await parallel([
             {
                 self.inventoryResult = nil
                 self.editRemarks = ""
                 
-                if let item = await appController.getInventory(
-                    forItemType: uploadItem.type,
-                    colorId: editColorId,
-                    ref: editRef,
-                    condition: editCondition,
-                    comment: editComment
-                ) {
+                if let item = await appController.getInventory(for: uploadItem) {
                     
                     self.inventoryResult = .found(item)
                     self.editRemarks = item.remarks

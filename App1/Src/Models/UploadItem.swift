@@ -9,8 +9,8 @@ struct UploadItem: Identifiable, Codable, Equatable {
     let type: BrickLinkItemType
     let ref: String
     let colorId: LegoColor.ID
-    let qty: Int
-    let condition: String
-    let comment: String
+    let qty: Int?
+    let condition: String?
+    let comment: String?
     let unitPrice: Float?
 }
