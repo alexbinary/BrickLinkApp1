@@ -75,15 +75,38 @@ struct OrderPickingView: View {
                 
                 LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
-                    if orderItemsToPick.isEmpty {
+                    Group {
+                        let picked = appController.pickedItems(forOrderWithId: orderId).count
+                        let total = appController.orderItems(forOrderWithId: orderId).count
                         
-                        Text("All items picked").font(.title)
-                            .padding()
-                            .padding(.vertical, 24)
+                        if picked == total {
+                            Text("All items picked")
+                        } else {
+                            let percent = floor(Double(picked)/Double(total)*100)
+                            Text(String(format: "Picking %3.0f%% complete", percent))
+                        }
                     }
+                    .font(.title)
+                    .padding()
+                    .padding(.vertical, 24)
                     
                     section(header: "Pick next", items: nextItemsToPick)
                     section(header: "Pick after", items: orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } })
+                    
+                    Group {
+                        let verified = appController.verifiedItems(forOrderWithId: orderId).count
+                        let total = appController.orderItems(forOrderWithId: orderId).count
+                        
+                        if verified == total {
+                            Text("All items picked and verified")
+                        } else {
+                            let percent = floor(Double(verified)/Double(total)*100)
+                            Text(String(format: "Verified %3.0f%%", percent))
+                        }
+                    }
+                    .font(.title)
+                    .padding()
+                    .padding(.vertical, 24)
                
                     section(header: "Verify next", items: nextItemsToVerify)
                     section(header: "Verify after", items: orderItemsToVerify.filter { pick in !nextItemsToVerify.contains { next in next.id == pick.id } })
