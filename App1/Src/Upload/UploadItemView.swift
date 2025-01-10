@@ -50,15 +50,10 @@ struct UploadItemView: View {
                             
                             ZStack(alignment: .leading) {
                                 
-                                HStack(alignment: .lastTextBaseline) {
-                                    Text(uploadItem.ref)
-                                    Button {
+                                Text(uploadItem.ref)
+                                    .onTapGesture {
                                         editModeRef = true
-                                    } label: {
-                                        Text("􀈊")
                                     }
-                                    .buttonStyle(.plain)
-                                }
                                 .font(.caption).foregroundStyle(.secondary)
                                 .opacity(editModeRef ? 0 : 1)
                                 
@@ -90,18 +85,15 @@ struct UploadItemView: View {
                             
                             ZStack(alignment: .leading) {
                                 
-                                HStack(alignment: .lastTextBaseline) {
+                                Group {
                                     if !uploadItem.comment.isEmpty {
                                         Text(uploadItem.comment.htmlUnescape())
                                     } else {
                                         Text("no comment").italic().foregroundStyle(.secondary)
                                     }
-                                    Button {
-                                        editModeComment = true
-                                    } label: {
-                                        Text("􀈊")
-                                    }
-                                    .buttonStyle(.plain)
+                                }
+                                .onTapGesture {
+                                    editModeComment = true
                                 }
                                 .opacity(editModeComment ? 0 : 1)
                                 
@@ -119,15 +111,10 @@ struct UploadItemView: View {
                         
                         ZStack {
                             
-                            HStack(alignment: .lastTextBaseline) {
-                                Text(uploadItem.condition == "U" ? "USED" : "NEW").font(.title3)
-                                Button {
+                            Text(uploadItem.condition == "U" ? "USED" : "NEW").font(.title3)
+                                .onTapGesture {
                                     editModeCondition = true
-                                } label: {
-                                    Text("􀈊")
                                 }
-                                .buttonStyle(.plain)
-                            }
                             .opacity(editModeCondition ? 0 : 1)
                             
                             Picker("Condition", selection: $editCondition) {
@@ -149,16 +136,11 @@ struct UploadItemView: View {
                             
                             ZStack(alignment: .leading) {
                              
-                                HStack(alignment: .lastTextBaseline) {
-                                    Text(appController.colorName(forLegoColorId: uploadItem.colorId))
-                                    Button {
+                                Text(appController.colorName(forLegoColorId: uploadItem.colorId))
+                                    .onTapGesture {
                                         editModeColor = true
-                                    } label: {
-                                        Text("􀈊")
                                     }
-                                    .buttonStyle(.plain)
-                                    
-                                }.opacity(editModeColor ? 0 : 1)
+                                 .opacity(editModeColor ? 0 : 1)
                                 
                                 Picker("Color", selection: $editColorId) {
                                     
@@ -185,27 +167,11 @@ struct UploadItemView: View {
                     
                     GridRow {
                         
-                        HStack(alignment: .lastTextBaseline) {
-                            Text("Qty")
-                            Button {
-                                editModeQty = true
-                            } label: {
-                                Text("􀈊")
-                            }
-                            .buttonStyle(.plain)
-                            
-                        }.font(.caption).foregroundStyle(.secondary)
+                        Text("Qty")
+                         .font(.caption).foregroundStyle(.secondary)
                         
-                        HStack(alignment: .lastTextBaseline) {
-                            Text("PU")
-                            Button {
-                                editModePrice = true
-                            } label: {
-                                Text("􀈊")
-                            }
-                            .buttonStyle(.plain)
-                            
-                        }.font(.caption).foregroundStyle(.secondary)
+                        Text("PU")
+                        .font(.caption).foregroundStyle(.secondary)
                     }
                     
                     GridRow(alignment: .bottom) {
@@ -213,6 +179,9 @@ struct UploadItemView: View {
                         ZStack {
                             
                             Text("\(uploadItem.qty)").font(.title2).gridColumnAlignment(.center)
+                                .onTapGesture {
+                                    editModeQty = true
+                                }
                                 .opacity(editModeQty ? 0 : 1)
                             
                             TextField("Qty", value: $editQty, format: .number)
@@ -228,12 +197,15 @@ struct UploadItemView: View {
                         
                         ZStack {
                             
-                            HStack(alignment: .lastTextBaseline) {
+                            Group {
                                 if let price = uploadItem.unitPrice {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
                                 } else {
                                     Text("no price")
                                 }
+                            }
+                            .onTapGesture {
+                                editModePrice = true
                             }
                             .opacity(editModePrice ? 0 : 1)
                             
@@ -450,19 +422,9 @@ struct UploadItemView: View {
                 Spacer()
             }
             
-            .onAppear {
-                Task {
-                    populateEditValues()
-                    await pullInventory()
-                }
-            }
-            
-            .onChange(of: editModeRef, initial: true) { old, new in
-                if new == false {
-                    Task {
-                        await pullCatalogEntry()
-                    }
-                }
+            .onChange(of: uploadItem, initial: true) {
+                
+                populateEditValues()
             }
             
             .onChange(of: editModeRef, updateItemOnExitEditMode)
@@ -472,11 +434,17 @@ struct UploadItemView: View {
             .onChange(of: editModeQty, updateItemOnExitEditMode)
             .onChange(of: editModePrice, updateItemOnExitEditMode)
             
-            .onChange(of: editModeRef, pullInventoryOnExitEditMode)
-            .onChange(of: editModeColor, pullInventoryOnExitEditMode)
-            .onChange(of: editModeCondition, pullInventoryOnExitEditMode)
-            .onChange(of: editModeComment, pullInventoryOnExitEditMode)
+            .onChange(of: uploadItem.ref, initial: true) {
+                Task {
+                    await pullCatalogEntry()
+                }
+            }
             
+            .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+                Task {
+                    await pullInventory()
+                }
+            }
             .padding()
         }
         .padding()
@@ -488,16 +456,6 @@ struct UploadItemView: View {
         )
         .onHover { hover in
             self.hover = hover
-        }
-    }
-    
-    
-    func pullInventoryOnExitEditMode(old: Bool, new: Bool) {
-        
-        if new == false {
-            Task {
-                await pullInventory()
-            }
         }
     }
     
