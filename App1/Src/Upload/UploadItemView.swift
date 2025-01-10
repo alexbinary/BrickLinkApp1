@@ -11,6 +11,7 @@ struct UploadItemView: View {
     let uploadItem: UploadItem
     
     @State var hover = false
+    @State var waitingActivation = true
     
     @State var catalogResult: Result<CatalogItem>? = nil
     @State var inventoryResult: Result<InventoryItem>? = nil
@@ -69,19 +70,23 @@ struct UploadItemView: View {
                             }
                             
                             Group {
-                                if let catalogResult = catalogResult {
-                                    
-                                    switch catalogResult {
-                                        
-                                    case .found(let catalogItem):
-                                        Text(catalogItem.name).lineLimit(nil)
-                                        
-                                    case .notFound:
-                                        Text("no catalog entry").foregroundStyle(.secondary)
-                                    }
-                                    
+                                if waitingActivation {
+                                    Text("name unknown").foregroundStyle(.secondary).italic()
                                 } else {
-                                    Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                    if let catalogResult = catalogResult {
+                                        
+                                        switch catalogResult {
+                                            
+                                        case .found(let catalogItem):
+                                            Text(catalogItem.name).lineLimit(nil)
+                                            
+                                        case .notFound:
+                                            Text("no catalog entry").foregroundStyle(.secondary)
+                                        }
+                                        
+                                    } else {
+                                        Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                    }
                                 }
                             }
                             .font(.title3).frame(width: 300, alignment: .leading)
@@ -294,7 +299,11 @@ struct UploadItemView: View {
                 
             } else {
                 
-                if status.isLoadingInventory {
+                if waitingActivation {
+                    
+                    Text("Click to activate")
+                    
+                } else if status.isLoadingInventory {
                     
                     Text("Loading inventory...").foregroundStyle(.secondary)
                     
@@ -522,6 +531,15 @@ struct UploadItemView: View {
         .onHover { hover in
             self.hover = hover
         }
+        .onTapGesture {
+            waitingActivation = false
+            Task {
+                await parallel([
+                    { await pullCatalogEntry() },
+                    { await pullInventory() },
+                ])
+            }
+        }
         
         .onChange(of: uploadItem, initial: true) {
             
@@ -535,13 +553,13 @@ struct UploadItemView: View {
         .onChange(of: editModeQty, updateItemOnExitEditMode)
         .onChange(of: editModePrice, updateItemOnExitEditMode)
         
-        .onChange(of: uploadItem.ref, initial: true) {
+        .onChange(of: uploadItem.ref, initial: false) {
             Task {
                 await pullCatalogEntry()
             }
         }
         
-        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: false) {
             Task {
                 await pullInventory()
             }
