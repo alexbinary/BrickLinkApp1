@@ -12,7 +12,7 @@ struct UploadedItem: Identifiable, Codable, Equatable {
     let colorId: LegoColor.ID
     let qty: Int
     let condition: String
-    let comment: String
+    let comment: String?
     let remarks: String
     let unitPrice: Float?
     let inventoryId: InventoryItem.ID

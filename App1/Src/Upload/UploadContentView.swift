@@ -115,8 +115,8 @@ struct UploadContentView: View {
                     VStack(alignment: .leading) {
                         Text(item.ref).font(.caption).foregroundStyle(.secondary)
                         Text(item.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
-                        if !item.comment.isEmpty {
-                            Text(item.comment.htmlUnescape())
+                        if !(item.comment ?? "").isEmpty {
+                            Text((item.comment ?? "").htmlUnescape())
                         }
                     }
                 }

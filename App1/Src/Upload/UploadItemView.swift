@@ -275,11 +275,11 @@ struct UploadItemView: View {
                
                 var errors = [String]()
                 
-                if uploadItem.ref.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                if uploadItem.ref.normalizedOptional == nil {
                     errors.append("invalid item ref")
                 }
                 
-                if uploadItem.condition == nil {
+                if uploadItem.condition.normalizedOptional == nil {
                     errors.append("missing condition")
                 }
                 
@@ -325,15 +325,6 @@ struct UploadItemView: View {
                             }
                         }
                         .font(.title3).foregroundStyle(.secondary)
-                        
-                        let submitType = uploadItem.type
-                        let submitRef = editRef.normalizedOptional
-                        let submitColorId = editColorId
-                        let submitCondition = editCondition
-                        let submitComment = editComment
-                        let submitQty = editQty.normalizedOptional
-                        let submitUnitPrice = editUnitPrice.normalizedOptional
-                        let submitRemarks = editRemarks.normalizedOptional
                            
                         Grid(alignment: .leading, verticalSpacing: 8) {
                             
@@ -343,7 +334,7 @@ struct UploadItemView: View {
                                     Text("Qty :")
                                     HStack {
                                         Text("\(inventoryItem.quantity)").gridColumnAlignment(.trailing)
-                                        if let qty = submitQty {
+                                        if let qty = uploadItem.qty {
                                             Text("􁉂 \(inventoryItem.quantity + qty)")
                                         }
                                     }
@@ -419,6 +410,15 @@ struct UploadItemView: View {
                                 Color.clear.frame(width: 0)
                                 
                                 HStack(spacing: 12) {
+                                    
+                                    let submitType = uploadItem.type
+                                    let submitRef = uploadItem.ref.normalizedOptional
+                                    let submitColorId = uploadItem.colorId
+                                    let submitCondition = uploadItem.condition.normalizedOptional
+                                    let submitComment = uploadItem.comment
+                                    let submitQty = uploadItem.qty.normalizedOptional
+                                    let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
+                                    let submitRemarks = editRemarks.normalizedOptional
                                     
                                     let buttonDisabled = status.isLoadingInventory
                                     || submitRef == nil
@@ -513,11 +513,11 @@ struct UploadItemView: View {
                                         
                                         var errors = [String]()
                                         
-                                        if uploadItem.qty == nil {
+                                        if submitQty == nil {
                                             errors.append("missing valid qty")
                                         }
                                         
-                                        if uploadItem.unitPrice == nil {
+                                        if submitUnitPrice == nil {
                                             errors.append("missing valid price")
                                         }
                                         
@@ -659,7 +659,7 @@ struct UploadItemView: View {
         
         self.catalogResult = nil
         
-        if let catalog = await appController.getCatalogItem(forItemType: uploadItem.type, ref: editRef) {
+        if let catalog = await appController.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalog)
         } else {
@@ -699,8 +699,7 @@ extension Float? {
 
 
 extension String {
-    
-    
+        
     var normalizedOptional: String? {
         
         let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -708,3 +707,7 @@ extension String {
     }
 }
 
+extension String? {
+    
+    var normalizedOptional: String? { (self ?? "").normalizedOptional }
+}
