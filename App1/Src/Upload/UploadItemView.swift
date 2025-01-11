@@ -176,7 +176,8 @@ struct UploadItemView: View {
                     GridRow(alignment: .firstTextBaseline) {
                         
                         Text("Qty")
-                            .font(.caption).foregroundStyle(.secondary)
+                            
+                            .foregroundStyle(.secondary)
                         
                         HStack {
                             
@@ -222,7 +223,7 @@ struct UploadItemView: View {
                     GridRow(alignment: .firstTextBaseline) {
                         
                         Text("PU")
-                        .font(.caption).foregroundStyle(.secondary)
+                            .foregroundStyle(.secondary)
                         
                         ZStack(alignment: .leading) {
                             

@@ -130,36 +130,35 @@ struct UploadContentView: View {
                     }.gridColumnAlignment(.leading)
                 }
             }
-            
-            VStack(alignment: .leading, spacing: 12) {
-                Grid(alignment: .leading, horizontalSpacing: 24) {
-                    
-                    GridRow {
-                        Text("Qty").font(.caption).foregroundStyle(.secondary)
-                        Text("PU").font(.caption).foregroundStyle(.secondary)
-                    }
-                    
-                    GridRow(alignment: .bottom) {
-                        Text("\(item.qty)").font(.title2).gridColumnAlignment(.center)
-                        if let price = item.unitPrice {
-                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
-                        }
+                
+            Grid(alignment: .leading, verticalSpacing: 12) {
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Qty").foregroundStyle(.secondary)
+                    Text("\(item.qty)").font(.title2)
+                }
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("PU").foregroundStyle(.secondary)
+                    if let price = item.unitPrice {
+                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
                     }
                 }
-                VStack(alignment: .leading) {
-                    Text("Remarks").font(.caption).foregroundStyle(.secondary)
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Remarks").foregroundStyle(.secondary)
                     Text(item.remarks).font(.title2)
                 }
             }
             
             VStack(alignment: .leading, spacing: 12) {
                 
-                VStack(alignment: .leading) {
-                    Text("Inventory ID").font(.caption).foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Inventory ID").foregroundStyle(.secondary)
                     Link("\(item.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(item.inventoryId)#/")!).font(.title2)
                 }
                 VStack(alignment: .leading) {
-                    Text("Date").font(.caption).foregroundStyle(.secondary)
+                    Text("Date").foregroundStyle(.secondary)
                     Text(item.uploadDate, format: .dateTime).font(.title2)
                 }
             }
