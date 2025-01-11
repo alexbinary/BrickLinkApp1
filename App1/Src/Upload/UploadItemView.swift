@@ -171,9 +171,9 @@ struct UploadItemView: View {
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 24) {
+                Grid(alignment: .leading, verticalSpacing: 24) {
                     
-                    VStack(alignment: .leading) {
+                    GridRow(alignment: .firstTextBaseline) {
                         
                         Text("Qty")
                             .font(.caption).foregroundStyle(.secondary)
@@ -219,7 +219,7 @@ struct UploadItemView: View {
                         }
                     }
                     
-                    VStack(alignment: .leading) {
+                    GridRow(alignment: .firstTextBaseline) {
                         
                         Text("PU")
                         .font(.caption).foregroundStyle(.secondary)
