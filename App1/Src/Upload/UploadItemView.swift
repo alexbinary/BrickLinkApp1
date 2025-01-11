@@ -35,9 +35,9 @@ struct UploadItemView: View {
     
     var body: some View {
      
-        HStack {
+        HStack(alignment: .top) {
             
-            HStack(alignment: .top, spacing: 48) {
+            HStack(alignment: .center, spacing: 48) {
                 
                 Grid(verticalSpacing: 0) {
                     
@@ -301,11 +301,11 @@ struct UploadItemView: View {
                 
                 if waitingActivation {
                     
-                    Text("Click to activate")
+                    Text("Click to activate").frame(maxHeight: .infinity)
                     
                 } else if status.isLoadingInventory {
                     
-                    Text("Loading inventory...").foregroundStyle(.secondary)
+                    Text("Loading inventory...").frame(maxHeight: .infinity).foregroundStyle(.secondary)
                     
                 } else {
                     
