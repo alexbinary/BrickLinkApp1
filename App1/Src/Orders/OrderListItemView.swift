@@ -141,6 +141,17 @@ struct OrderListItemView: View {
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
                                     items.append((text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
                                     
+                                    if appController.orderChecklistUnchangedFor30Days(orderId) {
+                                        items.append((text: "Assume received", status: .actionRequired))
+                                    }
+                                    
+                                case .received:
+                                        
+                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+                                    items.append((text: "Received \(formattedDate)", status: .completed))
+                                    
+                                    items.append((text: "Waiting Completed or buyer feedback", status: .waitingOnExternalAction))
+                                
                                 case .giveFeedback:
                                         
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
@@ -215,7 +226,7 @@ struct OrderListItemView: View {
                                             )
                                     }
                                 }
-                                .frame(width: 220, alignment: .trailing)
+                                .frame(width: 250, alignment: .trailing)
                             }
                         }
                     }
@@ -254,6 +265,8 @@ struct OrderListItemView: View {
                 .yellow
         case .inTransit:
                 .orange
+        case .received:
+                .green
         case .giveFeedback:
                 .green
         case .closed:

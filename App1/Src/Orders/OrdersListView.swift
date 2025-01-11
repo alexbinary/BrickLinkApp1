@@ -22,7 +22,7 @@ struct OrdersListView: View {
                 
                 let sections: [(label: String, orders: [OrderSummary])] = [
                     (
-                        label: "􀐫 In transit for 30+ days",
+                        label: "􁁿 In transit for 30+ days",
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
                             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
@@ -55,6 +55,12 @@ struct OrdersListView: View {
                         label: OrderBusinessStatus.inTransit.descriptionWithPicto,
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .inTransit && !appController.orderChecklistUnchangedFor30Days($0.id) }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                    ),
+                    (
+                        label: OrderBusinessStatus.received.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .received }
                             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                     ),
                     (

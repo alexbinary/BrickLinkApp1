@@ -1426,6 +1426,20 @@ class AppController: ObservableObject {
     }
     
     
+    public func orderChecklistCompleted(_ orderId: OrderSummary.ID) -> Bool {
+        
+        let order = orderSummary(forOrderWithId: orderId)!
+        
+        return order.status == .completed
+    }
+    
+    
+    public func orderChecklistBuyerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+        
+        return orderFeedbacks(forOrderWithId: orderId).buyerFeedback() != nil
+    }
+    
+    
     public func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
         
         if orderIsValidatedWithoutFeedback(orderId: orderId) {
@@ -1483,6 +1497,13 @@ class AppController: ObservableObject {
             ),
             (condition: {
                 self.orderChecklistReceived(orderId)
+                
+            }, status: .received
+            ),
+            (condition: {
+                self.orderChecklistCompleted(orderId)
+                || self.orderChecklistBuyerFeedback(orderId)
+                || self.orderChecklistUnchangedFor30Days(orderId)
                 
             }, status: .giveFeedback
             ),

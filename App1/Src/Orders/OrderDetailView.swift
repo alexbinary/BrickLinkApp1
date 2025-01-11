@@ -171,7 +171,20 @@ struct OrderDetailView: View {
                                     
                                     GridRow {
                                         checkStatus(appController.orderChecklistReceived(orderId))
-                                        Text("Received or Completed")
+                                        Text("Received")
+                                    }
+                                    
+                                    Text(OrderBusinessStatus.received.descriptionWithPicto).checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistCompleted(orderId))
+                                        Text("Completed")
+                                    }
+                                    
+                                    GridRow {
+                                        checkStatus(appController.orderChecklistBuyerFeedback(orderId))
+                                        Text("Buyer feedback")
                                     }
                                     
                                     Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).checklistTitle()
