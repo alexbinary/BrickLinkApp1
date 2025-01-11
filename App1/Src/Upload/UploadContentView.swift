@@ -48,22 +48,19 @@ struct UploadContentView: View {
     @ViewBuilder
     func section(header: String, items: [UploadItem]) -> some View {
         
-        if items.count > 0 {
+        Section {
             
-            Section {
+            ForEach(items) { item in
                 
-                ForEach(items) { item in
-                    
-                    UploadItemView(uploadItem: item)
-                        .padding([.leading, .trailing])
-                }
-                
-                Color.clear.frame(width: 0, height: 24)
-                
-            } header: {
-                
-                headerView(header, secondaryText: "\(items.count) items")
+                UploadItemView(uploadItem: item)
+                    .padding([.leading, .trailing])
             }
+            
+            Color.clear.frame(width: 0, height: 24)
+            
+        } header: {
+            
+            headerView(header, secondaryText: "\(items.count) items")
         }
     }
     
@@ -71,22 +68,19 @@ struct UploadContentView: View {
     @ViewBuilder
     func section(header: String, items: [UploadedItem]) -> some View {
         
-        if items.count > 0 {
+        Section {
             
-            Section {
+            ForEach(items) { item in
                 
-                ForEach(items) { item in
-                    
-                    itemView(item)
-                        .padding([.leading, .trailing])
-                }
-                
-                Color.clear.frame(width: 0, height: 24)
-                
-            } header: {
-                
-                headerView(header, secondaryText: "\(items.count) items")
+                itemView(item)
+                    .padding([.leading, .trailing])
             }
+            
+            Color.clear.frame(width: 0, height: 24)
+            
+        } header: {
+            
+            headerView(header, secondaryText: "\(items.count) items")
         }
     }
     
