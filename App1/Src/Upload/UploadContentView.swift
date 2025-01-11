@@ -78,6 +78,7 @@ struct UploadContentView: View {
                 ForEach(items) { item in
                     
                     itemView(item)
+                        .padding([.leading, .trailing])
                 }
                 
                 Color.clear.frame(width: 0, height: 24)
