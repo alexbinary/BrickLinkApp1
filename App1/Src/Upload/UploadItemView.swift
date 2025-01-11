@@ -463,9 +463,26 @@ struct UploadItemView: View {
                                                 }
                                             }()
                                             
+                                            let itemName = {
+                                                
+                                                if let catalogResult = catalogResult {
+                                                    
+                                                    switch catalogResult {
+                                                        
+                                                    case .found(let catalogItem):
+                                                        return catalogItem.name
+                                                        
+                                                    default:
+                                                        break
+                                                    }
+                                                }
+                                                return ""
+                                            }()
+                                            
                                             appController.addUploadedItem(UploadedItem(
                                                 type: submitType,
                                                 ref: submitRef!,
+                                                name: itemName,
                                                 colorId: submitColorId,
                                                 qty: submitQty!,
                                                 condition: submitCondition!,
