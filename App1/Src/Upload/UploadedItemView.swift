@@ -1,0 +1,125 @@
+
+import SwiftUI
+
+
+
+struct UploadedItemView: View {
+    
+    
+    @EnvironmentObject var appController: AppController
+    
+    let uploadedItem: UploadedItem
+    
+    @State var hover = false
+
+    
+    var body: some View {
+        
+        HStack(spacing: 48) {
+                
+            Grid(verticalSpacing: 0) {
+                
+                GridRow(alignment: .top) {
+                    
+                    AsyncImage(url: appController.imageUrl(forItemType: uploadedItem.type, ref: uploadedItem.ref, colorId: uploadedItem.colorId))
+                        .frame(minHeight: 70, maxHeight: 70, alignment: .top)
+                        .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+                    
+                    VStack(alignment: .leading) {
+                        Text(uploadedItem.ref).font(.caption).foregroundStyle(.secondary)
+                        Text(uploadedItem.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
+                        if !(uploadedItem.comment ?? "").isEmpty {
+                            Text((uploadedItem.comment ?? "").htmlUnescape())
+                        }
+                    }
+                }
+                
+                GridRow {
+                
+                    Text(uploadedItem.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
+                    HStack {
+                        appController.color(forLegoColorId: uploadedItem.colorId).frame(width: 18, height: 18)
+                        Text(appController.colorName(forLegoColorId: uploadedItem.colorId))
+                    }.gridColumnAlignment(.leading)
+                }
+            }
+                
+            Grid(alignment: .leading, verticalSpacing: 12) {
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Qty").foregroundStyle(.secondary)
+                    if let qtyBefore = uploadedItem.qtyBefore {
+                        Text("+\(uploadedItem.qtyAfter - qtyBefore)").font(.title2)
+                        Text("(\(qtyBefore) 􁉂 \(uploadedItem.qtyAfter))")
+                    } else {
+                        Text("\(uploadedItem.qtyAfter)").font(.title2)
+                    }
+                }
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("PU").foregroundStyle(.secondary)
+                    
+                    let priceAfterView = Text(uploadedItem.unitPriceAfter, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
+                    
+                    if let priceBefore = uploadedItem.unitPriceBefore {
+                        if priceBefore != uploadedItem.unitPriceAfter {
+                            priceAfterView.font(.title2)
+                            HStack(spacing: 0) {
+                                Text("(prev.: ")
+                                Text(priceBefore, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
+                                Text(")")
+                            }
+                        } else {
+                            priceAfterView
+                            Text("(unchanged)")
+                        }
+                    } else {
+                        priceAfterView.font(.title2)
+                    }
+                }
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Remarks").foregroundStyle(.secondary)
+                    if let remarksBefore = uploadedItem.remarksBefore {
+                        if remarksBefore != uploadedItem.remarksAfter {
+                            Text(uploadedItem.remarksAfter).font(.title2)
+                            Text("(prev.: \(remarksBefore))")
+                        } else {
+                            Text(uploadedItem.remarksAfter)
+                            Text("(unchanged)")
+                        }
+                    } else {
+                        Text(uploadedItem.remarksAfter).font(.title2)
+                    }
+                }
+            }
+            
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 12) {
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Inventory").foregroundStyle(.secondary)
+                    HStack(spacing: 4) {
+                        Text(uploadedItem.inventoryStatus == .created ? "􀁌" : "􀚁").foregroundStyle(.secondary)
+                        Link("\(uploadedItem.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(uploadedItem.inventoryId)#/")!)
+                    }.font(.title2)
+                }
+                VStack(alignment: .leading) {
+                    Text(uploadedItem.inventoryStatus == .created ? "Created" : "Updated").foregroundStyle(.secondary)
+                    Text(uploadedItem.uploadDate, format: .dateTime).font(.title2)
+                }
+            }
+        }
+        .padding()
+        .background(Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill))
+        .cornerRadius(6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(Color(nsColor: .tertiarySystemFill))
+        )
+        .onHover { hover in
+            self.hover = hover
+        }
+    }
+}
