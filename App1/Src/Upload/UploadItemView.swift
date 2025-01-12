@@ -175,19 +175,18 @@ struct UploadItemView: View {
                     
                     GridRow(alignment: .firstTextBaseline) {
                         
-                        Text("Qty")
-                            
-                            .foregroundStyle(.secondary)
+                        Text("Qty").foregroundStyle(.secondary)
                         
                         HStack {
                             
-                            Button {
-                                updateItem(qty: (editQty ?? 0) - 1)
-                            } label: {
-                                Text("􀅽")
-                            }
-                            
                             if !editModeQty {
+                                
+                                Button {
+                                    editModeQty = false
+                                    updateItem(qty: (uploadItem.qty ?? 0) - 1)
+                                } label: {
+                                    Text("􀅽")
+                                }
                                 
                                 Group {
                                     if let qty = uploadItem.qty {
@@ -201,27 +200,27 @@ struct UploadItemView: View {
                                     editModeQty = true
                                 }
                                 
+                                Button {
+                                    editModeQty = false
+                                    updateItem(qty: (uploadItem.qty ?? 0) + 1)
+                                } label: {
+                                    Text("􀅼")
+                                }
+                                
                             } else {
                                 
-                                TextField("Qty", value: $editQty, format: .number)
+                                TextField("Qty", value: $editQty, format: .number).multilineTextAlignment(.center)
                                     .frame(maxWidth: 50)
                                     .onSubmit({
                                         editModeQty = false
                                     })
-                            }
-                            
-                            Button {
-                                updateItem(qty: (editQty ?? 0) + 1)
-                            } label: {
-                                Text("􀅼")
                             }
                         }
                     }
                     
                     GridRow(alignment: .firstTextBaseline) {
                         
-                        Text("PU")
-                            .foregroundStyle(.secondary)
+                        Text("PU").foregroundStyle(.secondary)
                         
                         ZStack(alignment: .leading) {
                             
@@ -566,9 +565,29 @@ struct UploadItemView: View {
             }
         }
         
-        .onChange(of: uploadItem, initial: true) {
-            
-            populateEditValues()
+        .onChange(of: editModeRef) { old, new in
+            guard new == true else { return }
+            editRef = uploadItem.ref
+        }
+        .onChange(of: editModeColor) { old, new in
+            guard new == true else { return }
+            editColorId = uploadItem.colorId
+        }
+        .onChange(of: editModeCondition) { old, new in
+            guard new == true else { return }
+            editCondition = uploadItem.condition
+        }
+        .onChange(of: editModeComment) { old, new in
+            guard new == true else { return }
+            editComment = uploadItem.comment ?? ""
+        }
+        .onChange(of: editModeQty) { old, new in
+            guard new == true else { return }
+            editQty = uploadItem.qty
+        }
+        .onChange(of: editModePrice) { old, new in
+            guard new == true else { return }
+            editUnitPrice = uploadItem.unitPrice
         }
         
         .onChange(of: editModeRef) { old, new in
@@ -606,17 +625,6 @@ struct UploadItemView: View {
                 await pullInventory()
             }
         }
-    }
-    
-    
-    func populateEditValues() {
-        
-        editRef = uploadItem.ref
-        editColorId = uploadItem.colorId
-        editQty = uploadItem.qty
-        editCondition = uploadItem.condition
-        editComment = uploadItem.comment ?? ""
-        editUnitPrice = uploadItem.unitPrice
     }
     
     
