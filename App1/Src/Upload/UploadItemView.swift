@@ -182,8 +182,7 @@ struct UploadItemView: View {
                         HStack {
                             
                             Button {
-                                editQty = (editQty ?? 0) - 1
-                                updateItem()
+                                updateItem(qty: (editQty ?? 0) - 1)
                             } label: {
                                 Text("􀅽")
                             }
@@ -212,8 +211,7 @@ struct UploadItemView: View {
                             }
                             
                             Button {
-                                editQty = (editQty ?? 0) + 1
-                                updateItem()
+                                updateItem(qty: (editQty ?? 0) + 1)
                             } label: {
                                 Text("􀅼")
                             }
@@ -573,31 +571,40 @@ struct UploadItemView: View {
             populateEditValues()
         }
         
-        .onChange(of: editModeRef, updateItemOnExitEditMode)
-        .onChange(of: editModeColor, updateItemOnExitEditMode)
-        .onChange(of: editModeCondition, updateItemOnExitEditMode)
-        .onChange(of: editModeComment, updateItemOnExitEditMode)
-        .onChange(of: editModeQty, updateItemOnExitEditMode)
-        .onChange(of: editModePrice, updateItemOnExitEditMode)
+        .onChange(of: editModeRef) { old, new in
+            guard new == false, editRef != uploadItem.ref else { return }
+            updateItem(ref: editRef)
+        }
+        .onChange(of: editModeColor) { old, new in
+            guard new == false, editColorId != uploadItem.colorId else { return }
+            updateItem(colorId: editColorId)
+        }
+        .onChange(of: editModeCondition) { old, new in
+            guard new == false, editCondition != uploadItem.condition else { return }
+            updateItem(condition: editCondition)
+        }
+        .onChange(of: editModeComment) { old, new in
+            guard new == false, editComment.trimmingCharacters(in: .whitespacesAndNewlines) != (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines) else { return }
+            updateItem(comment: editComment)
+        }
+        .onChange(of: editModeQty) { old, new in
+            guard new == false, editQty != uploadItem.qty else { return }
+            updateItem(qty: editQty)
+        }
+        .onChange(of: editModePrice) { old, new in
+            guard new == false, editUnitPrice != uploadItem.unitPrice else { return }
+            updateItem(unitPrice: editUnitPrice)
+        }
         
         .onChange(of: uploadItem.ref, initial: false) {
             Task {
                 await pullCatalogEntry()
             }
         }
-        
         .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: false) {
             Task {
                 await pullInventory()
             }
-        }
-    }
-    
-    
-    func updateItemOnExitEditMode(old: Bool, new: Bool) {
-        
-        if new == false {
-            updateItem()
         }
     }
     
@@ -613,30 +620,19 @@ struct UploadItemView: View {
     }
     
     
-    func updateItem() {
+    func updateItem(ref: String? = nil, colorId: String? = nil, qty: Int? = nil, condition: String? = nil, comment: String? = nil, unitPrice: Float? = nil) {
         
-        if editRef == uploadItem.ref,
-           editColorId == uploadItem.colorId,
-           editCondition == uploadItem.condition,
-           editComment.trimmingCharacters(in: .whitespacesAndNewlines) == (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines),
-           editQty == uploadItem.qty,
-           editUnitPrice == uploadItem.unitPrice
-        {
-            return
-        }
-        
-        let item = UploadItem(
+        appController.updateUploadItem(UploadItem(
             
             id: uploadItem.id,
             type: uploadItem.type,
-            ref: editRef,
-            colorId: editColorId,
-            qty: editQty,
-            condition: editCondition,
-            comment: editComment,
-            unitPrice: editUnitPrice
-        )
-        appController.updateUploadItem(item)
+            ref: ref ?? uploadItem.ref,
+            colorId: colorId ?? uploadItem.colorId,
+            qty: qty ?? uploadItem.qty,
+            condition: condition ?? uploadItem.condition,
+            comment: comment ?? uploadItem.comment,
+            unitPrice: unitPrice ?? uploadItem.unitPrice
+        ))
     }
     
     
