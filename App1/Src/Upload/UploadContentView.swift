@@ -165,6 +165,8 @@ struct UploadContentView: View {
                 }
             }
             
+            Spacer()
+            
             VStack(alignment: .leading, spacing: 12) {
                 
                 VStack(alignment: .leading, spacing: 0) {
