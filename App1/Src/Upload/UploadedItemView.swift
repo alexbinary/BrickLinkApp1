@@ -110,6 +110,21 @@ struct UploadedItemView: View {
                     Text(uploadedItem.uploadDate, format: .dateTime).font(.title2)
                 }
             }
+            
+            Button {
+                appController.addUploadItem(UploadItem(
+                    type: uploadedItem.type,
+                    ref: uploadedItem.ref,
+                    colorId: uploadedItem.colorId,
+                    qty: uploadedItem.qtyAfter - (uploadedItem.qtyBefore ?? 0),
+                    condition: uploadedItem.condition,
+                    comment: uploadedItem.comment,
+                    unitPrice: uploadedItem.unitPriceAfter
+                ))
+            } label: {
+                Text("􀋲 Add to upload items")
+            }
+            .fixedSize()
         }
         .padding()
         .background(Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill))
