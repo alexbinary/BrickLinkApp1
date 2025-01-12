@@ -433,6 +433,7 @@ struct UploadItemView: View {
                                         Task {
                                             
                                             let qtyBefore = status.inventoryItem?.quantity
+                                            let priceBefore = status.inventoryItem?.unitPrice
                                             
                                             let inventoryItem = await {
                                                 
@@ -492,7 +493,8 @@ struct UploadItemView: View {
                                                 condition: submitCondition!,
                                                 comment: submitComment,
                                                 remarks: submitRemarks!,
-                                                unitPrice: submitUnitPrice!,
+                                                unitPriceBefore: priceBefore,
+                                                unitPriceAfter: submitUnitPrice!,
                                                 inventoryId: inventoryItem.id,
                                                 uploadDate: .now
                                             ))

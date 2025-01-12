@@ -15,7 +15,8 @@ struct UploadedItem: Identifiable, Codable, Equatable {
     let condition: String
     let comment: String?
     let remarks: String
-    let unitPrice: Float?
+    let unitPriceBefore: Float?
+    let unitPriceAfter: Float
     let inventoryId: InventoryItem.ID
     let uploadDate: Date
 }

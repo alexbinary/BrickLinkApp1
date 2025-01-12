@@ -145,8 +145,17 @@ struct UploadContentView: View {
                 
                 GridRow(alignment: .firstTextBaseline) {
                     Text("PU").foregroundStyle(.secondary)
-                    if let price = item.unitPrice {
-                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
+                    Text(item.unitPriceAfter, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
+                    if let priceBefore = item.unitPriceBefore {
+                        if priceBefore != item.unitPriceAfter {
+                            HStack(spacing: 0) {
+                                Text("(prev. ")
+                                Text(priceBefore, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
+                                Text(")")
+                            }
+                        } else {
+                            Text("(unchanged)")
+                        }
                     }
                 }
                 
