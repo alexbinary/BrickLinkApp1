@@ -10,7 +10,8 @@ struct UploadedItem: Identifiable, Codable, Equatable {
     let ref: String
     let name: String
     let colorId: LegoColor.ID
-    let qty: Int
+    let qtyBefore: Int?
+    let qtyAfter: Int
     let condition: String
     let comment: String?
     let remarks: String

@@ -135,7 +135,11 @@ struct UploadContentView: View {
                 
                 GridRow(alignment: .firstTextBaseline) {
                     Text("Qty").foregroundStyle(.secondary)
-                    Text("\(item.qty)").font(.title2)
+                    if let qtyBefore = item.qtyBefore {
+                        Text("\(qtyBefore) 􁉂 \(item.qtyAfter)").font(.title2)
+                    } else {
+                        Text("\(item.qtyAfter)").font(.title2)
+                    }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {

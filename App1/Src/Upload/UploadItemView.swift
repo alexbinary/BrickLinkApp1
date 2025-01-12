@@ -432,6 +432,8 @@ struct UploadItemView: View {
                                         
                                         Task {
                                             
+                                            let qtyBefore = status.inventoryItem?.quantity
+                                            
                                             let inventoryItem = await {
                                                 
                                                 if let inventoryItem = status.inventoryItem {
@@ -485,7 +487,8 @@ struct UploadItemView: View {
                                                 ref: submitRef!,
                                                 name: itemName,
                                                 colorId: submitColorId,
-                                                qty: submitQty!,
+                                                qtyBefore: qtyBefore,
+                                                qtyAfter:  (qtyBefore ?? 0) + submitQty!,
                                                 condition: submitCondition!,
                                                 comment: submitComment,
                                                 remarks: submitRemarks!,
