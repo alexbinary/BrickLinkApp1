@@ -172,19 +172,8 @@ struct OrderListItemView: View {
                             
                             HStack(alignment: displayItems.count == 1 ? .bottom : .top, spacing: 24) {
                                 
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text("Buyer:")
-                                        if let rating = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback()?.rating {
-                                            if rating == 0 {
-                                                Text("􀉿")
-                                            } else if rating == 2 {
-                                                Text("􀊁")
-                                            } else {
-                                                Text("Neutral")
-                                            }
-                                        }
-                                    }
+                                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                                    
                                     HStack {
                                         Text("Seller:")
                                         if let rating = appController.orderFeedbacks(forOrderWithId: order.id).sellerFeedback()?.rating {
@@ -196,9 +185,21 @@ struct OrderListItemView: View {
                                                 Text("Neutral")
                                             }
                                         }
-                                    }
+                                    }.frame(width: 100, alignment: .leading)
+                                    
+                                    HStack {
+                                        Text("Buyer:")
+                                        if let rating = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback()?.rating {
+                                            if rating == 0 {
+                                                Text("􀉿")
+                                            } else if rating == 2 {
+                                                Text("􀊁")
+                                            } else {
+                                                Text("Neutral")
+                                            }
+                                        }
+                                    }.frame(width: 100, alignment: .leading)
                                 }
-                                .frame(width: 100, alignment: .leading)
                                 
                                 VStack(alignment: .trailing) {
                                     
