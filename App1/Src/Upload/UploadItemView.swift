@@ -15,7 +15,7 @@ struct UploadItemView: View {
     
     @State var catalogResult: Result<CatalogItem>? = nil
     @State var inventoryResult: Result<InventoryItem>? = nil
-    @State var relatedInventories: [InventoryItem]? = nil
+    @State var relatedInventoriesResult: Result<[InventoryItem]>? = nil
     
     @State var editModeRef = false
     @State var editModeColor = false
@@ -71,27 +71,25 @@ struct UploadItemView: View {
                             
                             Group {
                                 
-                                if waitingActivation {
-                                    if let name = uploadItem.name {
-                                        Text(name).lineLimit(nil)
-                                    } else {
-                                        Text("name unknown").foregroundStyle(.secondary).italic()
-                                    }
-                                } else {
-                                    if let catalogResult = catalogResult {
+                                if waitingActivation, let name = uploadItem.name {
+                                    Text(name).lineLimit(nil)
+                                    
+                                } else if let catalogResult = catalogResult {
                                         
-                                        switch catalogResult {
-                                            
-                                        case .found(let catalogItem):
-                                            Text(catalogItem.name).lineLimit(nil)
-                                            
-                                        case .notFound:
-                                            Text("no catalog entry").foregroundStyle(.secondary)
-                                        }
-                                        
-                                    } else {
+                                    switch catalogResult {
+                                    
+                                    case .loading:
                                         Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                        
+                                    case .found(let catalogItem):
+                                        Text(catalogItem.name).lineLimit(nil)
+                                        
+                                    case .notFound:
+                                        Text("no catalog entry").foregroundStyle(.secondary)
                                     }
+                                    
+                                } else {
+                                    Text("name unknown").foregroundStyle(.secondary).italic()
                                 }
                             }
                             .font(.title3).frame(width: 300, alignment: .leading)
@@ -263,14 +261,19 @@ struct UploadItemView: View {
                     
                     switch inventoryResult {
                         
+                    case .loading:
+                        return (isLoadingInventory: true, inventoryItem: nil)
+                        
                     case .found(let inventoryItem):
                         return (isLoadingInventory: false, inventoryItem: inventoryItem)
                         
                     case .notFound:
                         return (isLoadingInventory: false, inventoryItem: nil)
                     }
+                    
                 } else {
-                    return (isLoadingInventory: true, inventoryItem: nil)
+                    
+                    return (isLoadingInventory: false, inventoryItem: nil)
                 }
             }()
             
@@ -378,13 +381,19 @@ struct UploadItemView: View {
                                 HStack {
                                     TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(width: 80).fixedSize()
                                     
-                                    if let relatedInventories = self.relatedInventories {
+                                    if let relatedInventoriesResult = relatedInventoriesResult {
                                         
-                                        if relatedInventories.isEmpty {
+                                        switch relatedInventoriesResult {
+                                        
+                                        case .loading:
+                                            
+                                            Text("Loading related inventories...").foregroundStyle(.secondary)
+                                        
+                                        case .notFound:
                                             
                                             Text("no related inventory found").foregroundStyle(.secondary)
-                                            
-                                        } else {
+                                        
+                                        case .found(let relatedInventories):
                                             
                                             let remarks = relatedInventories.map { $0.remarks }
                                                 .unique .sorted()
@@ -398,10 +407,6 @@ struct UploadItemView: View {
                                                 .fixedSize()
                                             }
                                         }
-                                        
-                                    } else {
-                                        
-                                        Text("Loading related inventories...").foregroundStyle(.secondary)
                                     }
                                 }
                             }
@@ -661,7 +666,7 @@ struct UploadItemView: View {
         
         await parallel([
             {
-                self.inventoryResult = nil
+                self.inventoryResult = .loading
                 self.editRemarks = ""
                 
                 if let item = await appController.getInventory(for: uploadItem) {
@@ -673,8 +678,9 @@ struct UploadItemView: View {
                 }
             },
             {
-                self.relatedInventories = nil
-                self.relatedInventories = await appController.getInventoriesForAllColors(for: uploadItem)
+                self.relatedInventoriesResult = .loading
+                let relatedInventories = await appController.getInventoriesForAllColors(for: uploadItem)
+                self.relatedInventoriesResult = relatedInventories.isEmpty ? .notFound : .found(relatedInventories)
             }
         ])
     }
@@ -682,7 +688,7 @@ struct UploadItemView: View {
     
     func pullCatalogEntry() async {
         
-        self.catalogResult = nil
+        self.catalogResult = .loading
         
         appController.updateUploadItem(UploadItem(
             
@@ -711,6 +717,7 @@ struct UploadItemView: View {
 
 enum Result<T> {
     
+    case loading
     case notFound
     case found(T)
 }

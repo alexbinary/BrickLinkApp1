@@ -17,6 +17,8 @@ struct UploadAddView: View {
     @State var unitPrice: Float = 0
     @State var importText: String = ""
     
+    @State var catalogResult: Result<CatalogItem>? = nil
+    
     
     var body: some View {
             
@@ -42,6 +44,21 @@ struct UploadAddView: View {
                             
                             TextField("Ref", text: $ref)
                             
+                            if let catalogResult = catalogResult {
+                                
+                                switch catalogResult {
+                                    
+                                case .loading:
+                                    Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                    
+                                case .found(let catalogItem):
+                                    Text(catalogItem.name).lineLimit(nil)
+                                    
+                                case .notFound:
+                                    Text("no catalog entry").foregroundStyle(.secondary)
+                                }
+                            }
+                            
                             Picker("Color", selection: $colorId) {
                                 
                                 ForEach(appController.allColors) { color in
@@ -64,11 +81,28 @@ struct UploadAddView: View {
                             
                             TextField("Comment", text: $comment)
                             
+                            let name: String? = {
+                                
+                                if let catalogResult = catalogResult {
+                                    
+                                    switch catalogResult {
+                                        
+                                    case .found(let catalogItem):
+                                        return catalogItem.name
+                                        
+                                    default:
+                                        break
+                                    }
+                                }
+                                
+                                return nil
+                            }()
+                            
                             Button {
                                 appController.addUploadItem(UploadItem(
                                     type: type,
                                     ref: ref,
-                                    name: nil,
+                                    name: name,
                                     colorId: colorId,
                                     qty: qty,
                                     condition: condition,
@@ -79,7 +113,7 @@ struct UploadAddView: View {
                                 Text("Add")
                             }
                         }
-                        
+                            
                         AsyncImage(url: appController.imageUrl(forItemType: type, ref: ref, colorId: colorId))
                             .frame(maxWidth: 100, maxHeight: 100)
                     }
@@ -105,6 +139,22 @@ struct UploadAddView: View {
                 }
                 .padding()
             }
+        }
+        .onChange(of: ref) {
+            Task { await pullCatalogEntry() }
+        }
+    }
+    
+    
+    func pullCatalogEntry() async {
+        
+        self.catalogResult = .loading
+        
+        if let catalog = await appController.getCatalogItem(forItemType: type, ref: ref) {
+            
+            self.catalogResult = .found(catalog)
+        } else {
+            self.catalogResult = .notFound
         }
     }
 }
