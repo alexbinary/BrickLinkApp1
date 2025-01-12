@@ -186,11 +186,14 @@ struct UploadContentView: View {
             VStack(alignment: .leading, spacing: 12) {
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Inventory ID").foregroundStyle(.secondary)
-                    Link("\(item.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(item.inventoryId)#/")!).font(.title2)
+                    Text("Inventory").foregroundStyle(.secondary)
+                    HStack(spacing: 4) {
+                        Text(item.inventoryStatus == .created ? "􀁌" : "􀚁").foregroundStyle(.secondary)
+                        Link("\(item.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(item.inventoryId)#/")!)
+                    }.font(.title2)
                 }
                 VStack(alignment: .leading) {
-                    Text("Date").foregroundStyle(.secondary)
+                    Text(item.inventoryStatus == .created ? "Created" : "Updated").foregroundStyle(.secondary)
                     Text(item.uploadDate, format: .dateTime).font(.title2)
                 }
             }

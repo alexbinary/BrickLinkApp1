@@ -435,6 +435,7 @@ struct UploadItemView: View {
                                             let qtyBefore = status.inventoryItem?.quantity
                                             let priceBefore = status.inventoryItem?.unitPrice
                                             let remarksBefore = status.inventoryItem?.remarks
+                                            let inventoryStatus: UploadInventoryStatus = status.inventoryItem != nil ? .updated : .created
                                             
                                             let inventoryItem = await {
                                                 
@@ -498,7 +499,8 @@ struct UploadItemView: View {
                                                 unitPriceBefore: priceBefore,
                                                 unitPriceAfter: submitUnitPrice!,
                                                 inventoryId: inventoryItem.id,
-                                                uploadDate: .now
+                                                uploadDate: .now,
+                                                inventoryStatus: inventoryStatus
                                             ))
                                             
                                             appController.deleteUploadItem(uploadItem)

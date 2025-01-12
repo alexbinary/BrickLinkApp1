@@ -20,4 +20,12 @@ struct UploadedItem: Identifiable, Codable, Equatable {
     let unitPriceAfter: Float
     let inventoryId: InventoryItem.ID
     let uploadDate: Date
+    let inventoryStatus: UploadInventoryStatus
+}
+
+
+enum UploadInventoryStatus: String, Codable {
+    
+    case created
+    case updated
 }
