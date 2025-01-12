@@ -27,7 +27,15 @@ struct UploadedItemView: View {
                     
                     VStack(alignment: .leading) {
                         Text(uploadedItem.ref).font(.caption).foregroundStyle(.secondary)
-                        Text(uploadedItem.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
+                        
+                        Group {
+                            if let name = uploadedItem.name {
+                                Text(name)
+                            } else {
+                                Text("name unknown").foregroundStyle(.secondary).italic()
+                            }
+                        }.lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
+                        
                         if !(uploadedItem.comment ?? "").isEmpty {
                             Text((uploadedItem.comment ?? "").htmlUnescape())
                         }
@@ -115,6 +123,7 @@ struct UploadedItemView: View {
                 appController.addUploadItem(UploadItem(
                     type: uploadedItem.type,
                     ref: uploadedItem.ref,
+                    name: uploadedItem.name,
                     colorId: uploadedItem.colorId,
                     qty: uploadedItem.qtyAfter - (uploadedItem.qtyBefore ?? 0),
                     condition: uploadedItem.condition,

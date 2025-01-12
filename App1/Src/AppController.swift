@@ -829,6 +829,7 @@ class AppController: ObservableObject {
                 self.uploadItems.append(UploadItem(
                     type: type,
                     ref: ref,
+                    name: nil,
                     colorId: colorId,
                     qty: qty,
                     condition: condition,

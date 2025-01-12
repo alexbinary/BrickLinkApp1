@@ -68,6 +68,7 @@ struct UploadAddView: View {
                                 appController.addUploadItem(UploadItem(
                                     type: type,
                                     ref: ref,
+                                    name: nil,
                                     colorId: colorId,
                                     qty: qty,
                                     condition: condition,

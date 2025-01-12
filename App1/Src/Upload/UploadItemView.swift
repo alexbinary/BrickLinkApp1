@@ -34,7 +34,7 @@ struct UploadItemView: View {
 
     
     var body: some View {
-     
+        
         HStack(alignment: .top) {
             
             HStack(alignment: .center, spacing: 48) {
@@ -55,8 +55,8 @@ struct UploadItemView: View {
                                     .onTapGesture {
                                         editModeRef = true
                                     }
-                                .font(.caption).foregroundStyle(.secondary)
-                                .opacity(editModeRef ? 0 : 1)
+                                    .font(.caption).foregroundStyle(.secondary)
+                                    .opacity(editModeRef ? 0 : 1)
                                 
                                 TextField("Ref", text: $editRef)
                                     .frame(maxWidth: 100)
@@ -70,8 +70,13 @@ struct UploadItemView: View {
                             }
                             
                             Group {
+                                
                                 if waitingActivation {
-                                    Text("name unknown").foregroundStyle(.secondary).italic()
+                                    if let name = uploadItem.name {
+                                        Text(name).lineLimit(nil)
+                                    } else {
+                                        Text("name unknown").foregroundStyle(.secondary).italic()
+                                    }
                                 } else {
                                     if let catalogResult = catalogResult {
                                         
@@ -123,7 +128,7 @@ struct UploadItemView: View {
                                 .onTapGesture {
                                     editModeCondition = true
                                 }
-                            .opacity(editModeCondition ? 0 : 1)
+                                .opacity(editModeCondition ? 0 : 1)
                             
                             Picker("Condition", selection: $editCondition) {
                                 
@@ -138,17 +143,17 @@ struct UploadItemView: View {
                             .opacity(editModeCondition ? 1 : 0)
                             
                         }.gridColumnAlignment(.center)
-                          
+                        
                         HStack {
                             appController.color(forLegoColorId: uploadItem.colorId).frame(width: 18, height: 18)
                             
                             ZStack(alignment: .leading) {
-                             
+                                
                                 Text(appController.colorName(forLegoColorId: uploadItem.colorId))
                                     .onTapGesture {
                                         editModeColor = true
                                     }
-                                 .opacity(editModeColor ? 0 : 1)
+                                    .opacity(editModeColor ? 0 : 1)
                                 
                                 Picker("Color", selection: $editColorId) {
                                     
@@ -247,13 +252,13 @@ struct UploadItemView: View {
                     }
                 }
             }
-
+            
             Divider()
                 .padding(.leading, 48)
                 .padding(.trailing, 12)
             
             let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
-            
+                
                 if let inventoryResult = inventoryResult {
                     
                     switch inventoryResult {
@@ -270,7 +275,7 @@ struct UploadItemView: View {
             }()
             
             let errors = {
-               
+                
                 var errors = [String]()
                 
                 if uploadItem.ref.normalizedOptional == nil {
@@ -287,7 +292,7 @@ struct UploadItemView: View {
             if !errors.isEmpty {
                 
                 VStack(alignment: .leading) {
-                
+                    
                     ForEach(errors, id: \.self) { error in
                         Text(error)
                     }
@@ -323,7 +328,7 @@ struct UploadItemView: View {
                             }
                         }
                         .font(.title3).foregroundStyle(.secondary)
-                           
+                        
                         Grid(alignment: .leading, verticalSpacing: 8) {
                             
                             if let inventoryItem = status.inventoryItem {
@@ -411,6 +416,7 @@ struct UploadItemView: View {
                                     
                                     let submitType = uploadItem.type
                                     let submitRef = uploadItem.ref.normalizedOptional
+                                    let submitName = uploadItem.name
                                     let submitColorId = uploadItem.colorId
                                     let submitCondition = uploadItem.condition.normalizedOptional
                                     let submitComment = uploadItem.comment
@@ -466,26 +472,10 @@ struct UploadItemView: View {
                                                 }
                                             }()
                                             
-                                            let itemName = {
-                                                
-                                                if let catalogResult = catalogResult {
-                                                    
-                                                    switch catalogResult {
-                                                        
-                                                    case .found(let catalogItem):
-                                                        return catalogItem.name
-                                                        
-                                                    default:
-                                                        break
-                                                    }
-                                                }
-                                                return ""
-                                            }()
-                                            
                                             appController.addUploadedItem(UploadedItem(
                                                 type: submitType,
                                                 ref: submitRef!,
-                                                name: itemName,
+                                                name: submitName,
                                                 colorId: submitColorId,
                                                 qtyBefore: qtyBefore,
                                                 qtyAfter:  (qtyBefore ?? 0) + submitQty!,
@@ -616,9 +606,7 @@ struct UploadItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            Task {
-                await pullCatalogEntry()
-            }
+            Task { await pullCatalogEntry() }
         }
         .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: false) {
             Task {
@@ -628,13 +616,24 @@ struct UploadItemView: View {
     }
     
     
-    func updateItem(ref: String? = nil, colorId: String? = nil, qty: Int? = nil, condition: String? = nil, comment: String? = nil, unitPrice: Float? = nil) {
+    func updateItem(
+        
+        ref: String? = nil,
+        name: String? = nil,
+        colorId: String? = nil,
+        qty: Int? = nil,
+        condition: String? = nil,
+        comment: String? = nil,
+        unitPrice: Float? = nil
+    
+    ) {
         
         appController.updateUploadItem(UploadItem(
             
             id: uploadItem.id,
             type: uploadItem.type,
             ref: ref ?? uploadItem.ref,
+            name: name ?? uploadItem.name,
             colorId: colorId ?? uploadItem.colorId,
             qty: qty ?? uploadItem.qty,
             condition: condition ?? uploadItem.condition,
@@ -673,9 +672,23 @@ struct UploadItemView: View {
         
         self.catalogResult = nil
         
+        appController.updateUploadItem(UploadItem(
+            
+            id: uploadItem.id,
+            type: uploadItem.type,
+            ref: uploadItem.ref,
+            name: nil,
+            colorId: uploadItem.colorId,
+            qty: uploadItem.qty,
+            condition: uploadItem.condition,
+            comment: uploadItem.comment,
+            unitPrice: uploadItem.unitPrice
+        ))
+        
         if let catalog = await appController.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalog)
+            updateItem(name: catalog.name)
         } else {
             self.catalogResult = .notFound
         }
