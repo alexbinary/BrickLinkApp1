@@ -556,53 +556,65 @@ struct UploadItemView: View {
         }
         
         .onChange(of: editModeRef) { old, new in
-            guard new == true else { return }
-            editRef = uploadItem.ref
+            if new == true {
+                editRef = uploadItem.ref
+            }
         }
         .onChange(of: editModeColor) { old, new in
-            guard new == true else { return }
-            editColorId = uploadItem.colorId
+            if new == true {
+                editColorId = uploadItem.colorId
+            }
         }
         .onChange(of: editModeCondition) { old, new in
-            guard new == true else { return }
-            editCondition = uploadItem.condition
+            if new == true {
+                editCondition = uploadItem.condition
+            }
         }
         .onChange(of: editModeComment) { old, new in
-            guard new == true else { return }
-            editComment = uploadItem.comment ?? ""
+            if new == true {
+                editComment = uploadItem.comment ?? ""
+            }
         }
         .onChange(of: editModeQty) { old, new in
-            guard new == true else { return }
-            editQty = uploadItem.qty
+            if new == true {
+                editQty = uploadItem.qty
+            }
         }
         .onChange(of: editModePrice) { old, new in
-            guard new == true else { return }
-            editUnitPrice = uploadItem.unitPrice
+            if new == true {
+                editUnitPrice = uploadItem.unitPrice
+            }
         }
         
         .onChange(of: editModeRef) { old, new in
-            guard new == false, editRef != uploadItem.ref else { return }
-            updateItem(ref: editRef)
+            if new == false, editRef != uploadItem.ref {
+                updateItem(ref: editRef)
+            }
         }
         .onChange(of: editModeColor) { old, new in
-            guard new == false, editColorId != uploadItem.colorId else { return }
-            updateItem(colorId: editColorId)
+            if new == false, editColorId != uploadItem.colorId {
+                updateItem(colorId: editColorId)
+            }
         }
         .onChange(of: editModeCondition) { old, new in
-            guard new == false, editCondition != uploadItem.condition else { return }
-            updateItem(condition: editCondition)
+            if new == false, editCondition != uploadItem.condition {
+                updateItem(condition: editCondition)
+            }
         }
         .onChange(of: editModeComment) { old, new in
-            guard new == false, editComment.trimmingCharacters(in: .whitespacesAndNewlines) != (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-            updateItem(comment: editComment)
+            if new == false, editComment.trimmingCharacters(in: .whitespacesAndNewlines) != (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines) {
+                updateItem(comment: editComment)
+            }
         }
         .onChange(of: editModeQty) { old, new in
-            guard new == false, editQty != uploadItem.qty else { return }
-            updateItem(qty: editQty)
+            if new == false, editQty != uploadItem.qty {
+                updateItem(qty: editQty)
+            }
         }
         .onChange(of: editModePrice) { old, new in
-            guard new == false, editUnitPrice != uploadItem.unitPrice else { return }
-            updateItem(unitPrice: editUnitPrice)
+            if new == false, editUnitPrice != uploadItem.unitPrice {
+                updateItem(unitPrice: editUnitPrice)
+            }
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
