@@ -145,23 +145,39 @@ struct UploadContentView: View {
                 
                 GridRow(alignment: .firstTextBaseline) {
                     Text("PU").foregroundStyle(.secondary)
-                    Text(item.unitPriceAfter, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit().font(.title2)
+                    
+                    let priceAfterView = Text(item.unitPriceAfter, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
+                    
                     if let priceBefore = item.unitPriceBefore {
                         if priceBefore != item.unitPriceAfter {
+                            priceAfterView.font(.title2)
                             HStack(spacing: 0) {
-                                Text("(prev. ")
+                                Text("(prev.: ")
                                 Text(priceBefore, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
                                 Text(")")
                             }
                         } else {
+                            priceAfterView
                             Text("(unchanged)")
                         }
+                    } else {
+                        priceAfterView.font(.title2)
                     }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
                     Text("Remarks").foregroundStyle(.secondary)
-                    Text(item.remarks).font(.title2)
+                    if let remarksBefore = item.remarksBefore {
+                        if remarksBefore != item.remarksAfter {
+                            Text(item.remarksAfter).font(.title2)
+                            Text("(prev.: \(remarksBefore))")
+                        } else {
+                            Text(item.remarksAfter)
+                            Text("(unchanged)")
+                        }
+                    } else {
+                        Text(item.remarksAfter).font(.title2)
+                    }
                 }
             }
             
