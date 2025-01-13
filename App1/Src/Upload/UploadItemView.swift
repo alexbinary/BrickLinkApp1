@@ -11,11 +11,8 @@ struct UploadItemView: View {
     let uploadItem: UploadItem
     
     @State var hover = false
-    @State var waitingActivation = true
     
     @State var catalogResult: Result<CatalogItem>? = nil
-    @State var inventoryResult: Result<InventoryItem>? = nil
-    @State var relatedInventoriesResult: Result<[InventoryItem]>? = nil
     
     @State var editModeRef = false
     @State var editModeColor = false
@@ -71,13 +68,10 @@ struct UploadItemView: View {
                             
                             Group {
                                 
-                                if waitingActivation, let name = uploadItem.name {
-                                    Text(name).lineLimit(nil)
+                                if let catalogResult = catalogResult {
                                     
-                                } else if let catalogResult = catalogResult {
-                                        
                                     switch catalogResult {
-                                    
+                                        
                                     case .loading:
                                         Text("Loading name from catalog...").foregroundStyle(.secondary)
                                         
@@ -88,7 +82,12 @@ struct UploadItemView: View {
                                         Text("no catalog entry").foregroundStyle(.secondary)
                                     }
                                     
+                                } else if let name = uploadItem.name {
+                                        
+                                    Text(name).lineLimit(nil)
+                                    
                                 } else {
+                                    
                                     Text("name unknown").foregroundStyle(.secondary).italic()
                                 }
                             }
@@ -255,28 +254,6 @@ struct UploadItemView: View {
                 .padding(.leading, 48)
                 .padding(.trailing, 12)
             
-            let status: (isLoadingInventory: Bool, inventoryItem: InventoryItem?) = {
-                
-                if let inventoryResult = inventoryResult {
-                    
-                    switch inventoryResult {
-                        
-                    case .loading:
-                        return (isLoadingInventory: true, inventoryItem: nil)
-                        
-                    case .found(let inventoryItem):
-                        return (isLoadingInventory: false, inventoryItem: inventoryItem)
-                        
-                    case .notFound:
-                        return (isLoadingInventory: false, inventoryItem: nil)
-                    }
-                    
-                } else {
-                    
-                    return (isLoadingInventory: false, inventoryItem: nil)
-                }
-            }()
-            
             let errors = {
                 
                 var errors = [String]()
@@ -304,234 +281,210 @@ struct UploadItemView: View {
                 .italic()
                 
             } else {
-                
-                if waitingActivation {
+                   
+                VStack(alignment: .leading, spacing: 12) {
                     
-                    Text("Click to activate").frame(maxHeight: .infinity)
+                    Group {
+                        if let inventoryItem = inventoryItem {
+                            
+                            HStack {
+                                Text("􀚂 Update")
+                                Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
+                            }
+                            
+                        } else {
+                            
+                            Text("􀁍 New inventory")
+                        }
+                    }
+                    .font(.title3).foregroundStyle(.secondary)
                     
-                } else if status.isLoadingInventory {
-                    
-                    Text("Loading inventory...").frame(maxHeight: .infinity).foregroundStyle(.secondary)
-                    
-                } else {
-                    
-                    VStack(alignment: .leading, spacing: 12) {
+                    Grid(alignment: .leading, verticalSpacing: 8) {
                         
-                        Group {
-                            if let inventoryItem = status.inventoryItem {
-                                
+                        if let inventoryItem = inventoryItem {
+                            
+                            GridRow {
+                                Text("Qty :")
                                 HStack {
-                                    Text("􀚂 Update")
-                                    Link("#\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
+                                    Text("\(inventoryItem.quantity)").gridColumnAlignment(.trailing)
+                                    if let qty = uploadItem.qty {
+                                        Text("􁉂 \(inventoryItem.quantity + qty)")
+                                    }
                                 }
+                            }
+                            
+                            GridRow {
                                 
-                            } else {
-                                
-                                Text("􀁍 New inventory")
+                                Text("Price :")
+                                HStack {
+                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
+                                    
+                                    if let price = uploadItem.unitPrice {
+                                        if price != inventoryItem.unitPrice {
+                                            HStack {
+                                                Text("􁉂").fixedSize()
+                                                Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
+                                            }
+                                            Button {
+                                                editUnitPrice = inventoryItem.unitPrice
+                                                updateItem()
+                                            } label: {
+                                                Text("Keep existing price")
+                                            }
+                                            .fixedSize()
+                                        } else {
+                                            Text("unchanged")
+                                        }
+                                    }
+                                }
                             }
                         }
-                        .font(.title3).foregroundStyle(.secondary)
                         
-                        Grid(alignment: .leading, verticalSpacing: 8) {
-                            
-                            if let inventoryItem = status.inventoryItem {
+                        GridRow {
+                            Text("Remarks :")
+                            HStack {
+                                TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(width: 80).fixedSize()
                                 
-                                GridRow {
-                                    Text("Qty :")
-                                    HStack {
-                                        Text("\(inventoryItem.quantity)").gridColumnAlignment(.trailing)
-                                        if let qty = uploadItem.qty {
-                                            Text("􁉂 \(inventoryItem.quantity + qty)")
+                                if relatedInventories.isEmpty {
+                                    
+                                    Text("no related inventory found").foregroundStyle(.secondary)
+                                    
+                                } else {
+                                    
+                                    let remarks = relatedInventories.map { $0.remarks }
+                                        .unique .sorted()
+                                    
+                                    ForEach(remarks, id: \.self) { rem in
+                                        Button {
+                                            self.editRemarks = rem
+                                        } label: {
+                                            Text(rem)
                                         }
+                                        .fixedSize()
                                     }
                                 }
                             }
+                        }
+                        
+                        Color.clear.frame(width: 0, height: 12)
+                        
+                        GridRow {
                             
-                            if let inventoryItem = status.inventoryItem {
+                            Color.clear.frame(width: 0)
+                            
+                            HStack(spacing: 12) {
                                 
-                                GridRow {
-                                    
-                                    Text("Price :")
-                                    HStack {
-                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
-                                        
-                                        if let price = uploadItem.unitPrice {
-                                            if price != inventoryItem.unitPrice {
-                                                HStack {
-                                                    Text("􁉂").fixedSize()
-                                                    Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
-                                                }
-                                                Button {
-                                                    editUnitPrice = inventoryItem.unitPrice
-                                                    updateItem()
-                                                } label: {
-                                                    Text("Keep existing price")
-                                                }
-                                                .fixedSize()
-                                            } else {
-                                                Text("unchanged")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            GridRow {
-                                Text("Remarks :")
-                                HStack {
-                                    TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(width: 80).fixedSize()
-                                    
-                                    if let relatedInventoriesResult = relatedInventoriesResult {
-                                        
-                                        switch relatedInventoriesResult {
-                                        
-                                        case .loading:
-                                            
-                                            Text("Loading related inventories...").foregroundStyle(.secondary)
-                                        
-                                        case .notFound:
-                                            
-                                            Text("no related inventory found").foregroundStyle(.secondary)
-                                        
-                                        case .found(let relatedInventories):
-                                            
-                                            let remarks = relatedInventories.map { $0.remarks }
-                                                .unique .sorted()
-                                            
-                                            ForEach(remarks, id: \.self) { rem in
-                                                Button {
-                                                    self.editRemarks = rem
-                                                } label: {
-                                                    Text(rem)
-                                                }
-                                                .fixedSize()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            Color.clear.frame(width: 0, height: 12)
-                            
-                            GridRow {
+                                let submitType = uploadItem.type
+                                let submitRef = uploadItem.ref.normalizedOptional
+                                let submitName = uploadItem.name
+                                let submitColorId = uploadItem.colorId
+                                let submitCondition = uploadItem.condition.normalizedOptional
+                                let submitComment = uploadItem.comment
+                                let submitQty = uploadItem.qty.normalizedOptional
+                                let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
+                                let submitRemarks = editRemarks.normalizedOptional
                                 
-                                Color.clear.frame(width: 0)
+                                let buttonDisabled = submitRef == nil
+                                || submitCondition == nil
+                                || submitQty == nil
+                                || submitUnitPrice == nil
+                                || submitRemarks == nil
                                 
-                                HStack(spacing: 12) {
+                                Button {
                                     
-                                    let submitType = uploadItem.type
-                                    let submitRef = uploadItem.ref.normalizedOptional
-                                    let submitName = uploadItem.name
-                                    let submitColorId = uploadItem.colorId
-                                    let submitCondition = uploadItem.condition.normalizedOptional
-                                    let submitComment = uploadItem.comment
-                                    let submitQty = uploadItem.qty.normalizedOptional
-                                    let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
-                                    let submitRemarks = editRemarks.normalizedOptional
-                                    
-                                    let buttonDisabled = status.isLoadingInventory
-                                    || submitRef == nil
-                                    || submitCondition == nil
-                                    || submitQty == nil
-                                    || submitUnitPrice == nil
-                                    || submitRemarks == nil
-                                    
-                                    Button {
+                                    Task {
                                         
-                                        Task {
+                                        let qtyBefore = inventoryItem?.quantity
+                                        let priceBefore = inventoryItem?.unitPrice
+                                        let remarksBefore = inventoryItem?.remarks
+                                        let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
+
+                                        let updatedOrCreatedInventoryItem = await {
                                             
-                                            let qtyBefore = status.inventoryItem?.quantity
-                                            let priceBefore = status.inventoryItem?.unitPrice
-                                            let remarksBefore = status.inventoryItem?.remarks
-                                            let inventoryStatus: UploadInventoryStatus = status.inventoryItem != nil ? .updated : .created
-                                            
-                                            let inventoryItem = await {
+                                            if let inventoryItem = inventoryItem {
                                                 
-                                                if let inventoryItem = status.inventoryItem {
+                                                await appController.updateInventory(
                                                     
-                                                    await appController.updateInventory(
-                                                        
-                                                        id: inventoryItem.id,
-                                                        addQuantity: submitQty!,
-                                                        unitPrice: submitUnitPrice!,
-                                                        remarks: submitRemarks!
-                                                    )
+                                                    id: inventoryItem.id,
+                                                    addQuantity: submitQty!,
+                                                    unitPrice: submitUnitPrice!,
+                                                    remarks: submitRemarks!
+                                                )
+                                                
+                                                return inventoryItem
+                                                
+                                            } else {
+                                                
+                                                let inventoryItem = await appController.createInventory(
                                                     
-                                                    return inventoryItem
-                                                    
-                                                } else {
-                                                    
-                                                    let inventoryItem = await appController.createInventory(
-                                                        
-                                                        ref: submitRef!,
-                                                        type: submitType,
-                                                        colorId: submitColorId,
-                                                        quantity: submitQty!,
-                                                        unitPrice: submitUnitPrice!,
-                                                        condition: submitCondition!,
-                                                        description: submitComment,
-                                                        remarks: submitRemarks!
-                                                    )!
-                                                    
-                                                    return inventoryItem
-                                                }
-                                            }()
-                                            
-                                            appController.addUploadedItem(UploadedItem(
-                                                type: submitType,
-                                                ref: submitRef!,
-                                                name: submitName,
-                                                colorId: submitColorId,
-                                                qtyBefore: qtyBefore,
-                                                qtyAfter:  (qtyBefore ?? 0) + submitQty!,
-                                                condition: submitCondition!,
-                                                comment: submitComment,
-                                                remarksBefore: remarksBefore,
-                                                remarksAfter: submitRemarks!,
-                                                unitPriceBefore: priceBefore,
-                                                unitPriceAfter: submitUnitPrice!,
-                                                inventoryId: inventoryItem.id,
-                                                uploadDate: .now,
-                                                inventoryStatus: inventoryStatus
-                                            ))
-                                            
-                                            appController.deleteUploadItem(uploadItem)
-                                        }
+                                                    ref: submitRef!,
+                                                    type: submitType,
+                                                    colorId: submitColorId,
+                                                    quantity: submitQty!,
+                                                    unitPrice: submitUnitPrice!,
+                                                    condition: submitCondition!,
+                                                    description: submitComment,
+                                                    remarks: submitRemarks!
+                                                )!
+                                                
+                                                return inventoryItem
+                                            }
+                                        }()
+
+                                        appController.addUploadedItem(UploadedItem(
+                                            type: submitType,
+                                            ref: submitRef!,
+                                            name: submitName,
+                                            colorId: submitColorId,
+                                            qtyBefore: qtyBefore,
+                                            qtyAfter:  (qtyBefore ?? 0) + submitQty!,
+                                            condition: submitCondition!,
+                                            comment: submitComment,
+                                            remarksBefore: remarksBefore,
+                                            remarksAfter: submitRemarks!,
+                                            unitPriceBefore: priceBefore,
+                                            unitPriceAfter: submitUnitPrice!,
+                                            inventoryId: updatedOrCreatedInventoryItem.id,
+                                            uploadDate: .now,
+                                            inventoryStatus: inventoryStatus
+                                        ))
                                         
-                                    } label: {
-                                        Text("􀈧 Upload").padding(.horizontal)
-                                    }
-                                    .disabled(buttonDisabled)
-                                    .fixedSize()
-                                    
-                                    Button {
                                         appController.deleteUploadItem(uploadItem)
-                                    } label: {
-                                        Text("􀈑 Delete")
                                     }
-                                    .fixedSize()
                                     
-                                    let errors = {
-                                        
-                                        var errors = [String]()
-                                        
-                                        if submitQty == nil {
-                                            errors.append("missing valid qty")
-                                        }
-                                        
-                                        if submitUnitPrice == nil {
-                                            errors.append("missing valid price")
-                                        }
-                                        
-                                        if submitRemarks == nil {
-                                            errors.append("missing valid remarks")
-                                        }
-                                        
-                                        return errors
-                                    }()
-                                    
-                                    Text(errors.joined(separator: ", ")).italic().fixedSize()
+                                } label: {
+                                    Text("􀈧 Upload").padding(.horizontal)
                                 }
+                                .disabled(buttonDisabled)
+                                .fixedSize()
+                                
+                                Button {
+                                    appController.deleteUploadItem(uploadItem)
+                                } label: {
+                                    Text("􀈑 Delete")
+                                }
+                                .fixedSize()
+                                
+                                let errors = {
+                                    
+                                    var errors = [String]()
+                                    
+                                    if submitQty == nil {
+                                        errors.append("missing valid qty")
+                                    }
+                                    
+                                    if submitUnitPrice == nil {
+                                        errors.append("missing valid price")
+                                    }
+                                    
+                                    if submitRemarks == nil {
+                                        errors.append("missing valid remarks")
+                                    }
+                                    
+                                    return errors
+                                }()
+                                
+                                Text(errors.joined(separator: ", ")).italic().fixedSize()
                             }
                         }
                     }
@@ -549,15 +502,6 @@ struct UploadItemView: View {
         )
         .onHover { hover in
             self.hover = hover
-        }
-        .onTapGesture {
-            waitingActivation = false
-            Task {
-                await parallel([
-                    { await pullCatalogEntry() },
-                    { await pullInventory() },
-                ])
-            }
         }
         
         .onChange(of: editModeRef) { old, new in
@@ -625,11 +569,26 @@ struct UploadItemView: View {
         .onChange(of: uploadItem.ref, initial: false) {
             Task { await pullCatalogEntry() }
         }
-        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: false) {
-            Task {
-                await pullInventory()
-            }
+        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+            self.editRemarks = self.inventoryItem?.remarks ?? ""
         }
+    }
+    
+    
+    var inventoryItem: InventoryItem? {
+        
+        if uploadItem.condition == nil {
+            return nil
+        }
+        return appController.inventory(for: uploadItem)
+    }
+    
+    var relatedInventories: [InventoryItem] {
+        
+        if uploadItem.condition == nil {
+            return []
+        }
+        return appController.inventories(forAllColorsOf: uploadItem)
     }
     
     
@@ -657,32 +616,6 @@ struct UploadItemView: View {
             comment: comment ?? uploadItem.comment,
             unitPrice: unitPrice ?? uploadItem.unitPrice
         ))
-    }
-    
-    
-    func pullInventory() async {
-        
-        guard uploadItem.condition != nil else { return }
-        
-        await parallel([
-            {
-                self.inventoryResult = .loading
-                self.editRemarks = ""
-                
-                if let item = await appController.getInventory(for: uploadItem) {
-                    
-                    self.inventoryResult = .found(item)
-                    self.editRemarks = item.remarks
-                } else {
-                    self.inventoryResult = .notFound
-                }
-            },
-            {
-                self.relatedInventoriesResult = .loading
-                let relatedInventories = await appController.getInventoriesForAllColors(for: uploadItem)
-                self.relatedInventoriesResult = relatedInventories.isEmpty ? .notFound : .found(relatedInventories)
-            }
-        ])
     }
     
     

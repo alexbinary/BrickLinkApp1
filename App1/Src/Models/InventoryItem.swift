@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct InventoryItem: Identifiable {
+struct InventoryItem: Identifiable, Codable {
     
     let id: String
     let condition: String

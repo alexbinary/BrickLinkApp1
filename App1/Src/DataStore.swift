@@ -74,6 +74,20 @@ class DataStore {
     }
     
     
+    public var inventories: [InventoryItem] {
+        
+        data?.inventories ?? []
+    }
+    
+    
+    public func setInventories(_ inventories: [InventoryItem]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.inventories = inventories
+    }
+    
+    
     public var orderSummaries: [OrderSummary] {
         
         data?.orderSummaries ?? []
@@ -293,6 +307,7 @@ struct DataRoot: Codable {
     // MARK: - External data
     
     var colors: [LegoColor]?
+    var inventories: [InventoryItem]?
     var orderSummaries: [OrderSummary]?
     var orderDetails: [OrderDetails]?
     var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]?

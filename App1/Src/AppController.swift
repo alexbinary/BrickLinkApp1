@@ -20,6 +20,7 @@ class AppController: ObservableObject {
         Task {
             await parallel([
                 { await self.loadColors() },
+                { await self.loadInventories() },
                 { await self.loadOrderSummaries() },
             ])
         }
@@ -893,6 +894,119 @@ class AppController: ObservableObject {
     // MARK: - Inventory
     
     
+    public var inventories: [InventoryItem] {
+        
+        dataStore.inventories
+    }
+    
+    
+    public func inventory(withId id: InventoryItem.ID) -> InventoryItem? {
+        
+        dataStore.inventories.first { $0.id == id }
+    }
+    
+    
+    public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
+        
+        return inventories.first {
+            
+            $0.type == uploadItem.type
+            && $0.ref == uploadItem.ref
+            && $0.description == (uploadItem.comment ?? "")
+            && $0.colorId == uploadItem.colorId
+            && $0.condition == uploadItem.condition
+        }
+    }
+    
+    
+    public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
+        
+        return inventories.filter {
+            
+            $0.type == uploadItem.type
+            && $0.ref == uploadItem.ref
+            && $0.description == (uploadItem.comment ?? "")
+            && $0.condition == uploadItem.condition
+        }
+    }
+    
+    
+    private func loadInventories() async {
+        
+        print("Loading inventories")
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<[BrickLinkInventoryItem]> = data.decode()
+        if let blInventories = decoded.data {
+            
+            let inventories = blInventories.map {
+                InventoryItem(fromBl: $0)
+            }
+            
+            try! dataStore.setInventories(inventories)
+            try! dataStore.save()
+            
+            DispatchQueue.main.sync {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
+    
+    public func loadInventory(withId id: InventoryItem.ID) async {
+        
+        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!)
+        request.addAuthentication(using: blCredentials)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoded: BrickLinkAPIResponse<BrickLinkInventoryItem> = data.decode()
+        if let blInventory = decoded.data {
+            
+            let inventory = InventoryItem(fromBl: blInventory)
+            
+            var inventories = dataStore.inventories
+            
+            if let index = inventories.firstIndex(where: { $0.id == inventory.id }) {
+                inventories[index] = inventory
+            } else {
+                inventories.append(inventory)
+            }
+            
+            try! dataStore.setInventories(inventories)
+            try! dataStore.save()
+            
+            DispatchQueue.main.sync {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
+    
+    public func reloadInventories() async {
+        
+        if !dataStore.inventories.isEmpty {
+        
+            await loadInventories()
+        }
+    }
+    
+    
+    public func reloadInventory(withId id: InventoryItem.ID) async {
+        
+        if dataStore.inventories.contains(where: { $0.id == id }) {
+            
+            await loadInventory(withId: id)
+        }
+    }
+    
+    
     public func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
         var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(uploadItem.type.rawValue)&color_id=\(uploadItem.colorId)")!)
@@ -917,30 +1031,6 @@ class AppController: ObservableObject {
         }
         
         return nil
-    }
-    
-    
-    public func getInventoriesForAllColors(for item: UploadItem) async -> [InventoryItem] {
-        
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories?item_type=\(item.type.rawValue)")!)
-        request.addAuthentication(using: blCredentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[BrickLinkInventoryItem]> = data.decode()
-        if let inventories = decoded.data {
-            
-            return inventories.filter { inv in
-                
-                inv.item.type == item.type
-                && inv.item.no == item.ref
-                && inv.newOrUsed == item.condition
-                
-            } .map { InventoryItem(fromBl: $0) }
-        }
-        
-        return []
     }
     
     
@@ -987,10 +1077,12 @@ class AppController: ObservableObject {
         
         let decoded: BrickLinkAPIResponse<BrickLinkInventoryItem> = data.decode()
         if let inventory = decoded.data {
-            
+        
+            await self.reloadInventories()
             return InventoryItem(fromBl: inventory)
         }
         
+        await self.reloadInventories()
         return nil
     }
     
@@ -1037,6 +1129,8 @@ class AppController: ObservableObject {
         
         let (data, _) = try! await URLSession(configuration: .default).data(for: request)
         print(String(data: data, encoding: .utf8)!)
+        
+        await self.reloadInventory(withId: id)
     }
     
     

@@ -42,6 +42,11 @@ struct UploadContentView: View {
                 Text("􀅼").padding(.horizontal)
             }
         }
+        .onAppear {
+            Task {
+                await appController.reloadInventories()
+            }
+        }
     }
     
     
