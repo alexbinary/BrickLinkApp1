@@ -304,7 +304,7 @@ struct UploadItemView: View {
                         if let inventoryItem = inventoryItem {
                             
                             GridRow {
-                                Text("Qty :")
+                                Text("Quantity :").gridColumnAlignment(.trailing)
                                 HStack {
                                     Text("\(inventoryItem.quantity)").gridColumnAlignment(.trailing)
                                     if let qty = uploadItem.qty {
@@ -315,7 +315,7 @@ struct UploadItemView: View {
                             
                             GridRow {
                                 
-                                Text("Price :")
+                                Text("Unit price :")
                                 HStack {
                                     Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
                                     

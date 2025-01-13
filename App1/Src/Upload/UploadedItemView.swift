@@ -55,7 +55,7 @@ struct UploadedItemView: View {
             Grid(alignment: .leading, verticalSpacing: 12) {
                 
                 GridRow(alignment: .firstTextBaseline) {
-                    Text("Qty").foregroundStyle(.secondary)
+                    Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                     if let qtyBefore = uploadedItem.qtyBefore {
                         Text("+\(uploadedItem.qtyAfter - qtyBefore)").font(.title2)
                         Text("(\(qtyBefore) 􁉂 \(uploadedItem.qtyAfter))")
@@ -65,7 +65,7 @@ struct UploadedItemView: View {
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
-                    Text("PU").foregroundStyle(.secondary)
+                    Text("Unit price").foregroundStyle(.secondary)
                     
                     let priceAfterView = Text(uploadedItem.unitPriceAfter, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
                     
@@ -104,18 +104,21 @@ struct UploadedItemView: View {
             
             Spacer()
             
-            VStack(alignment: .leading, spacing: 12) {
+            Grid(alignment: .leading, verticalSpacing: 12) {
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Inventory").foregroundStyle(.secondary)
-                    HStack(spacing: 4) {
-                        Text(uploadedItem.inventoryStatus == .created ? "􀁌" : "􀚁").foregroundStyle(.secondary)
-                        Link("\(uploadedItem.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(uploadedItem.inventoryId)#/")!)
-                    }.font(.title2)
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Inventory").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                    Text(uploadedItem.inventoryStatus == .created ? "Created 􀫸" : "Updated 􀅈")
                 }
-                VStack(alignment: .leading) {
-                    Text(uploadedItem.inventoryStatus == .created ? "Created" : "Updated").foregroundStyle(.secondary)
-                    Text(uploadedItem.uploadDate, format: .dateTime).font(.title2)
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Inventory ID").foregroundStyle(.secondary)
+                    Link("\(uploadedItem.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(uploadedItem.inventoryId)#/")!)
+                }
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Uploaded on").foregroundStyle(.secondary)
+                    Text(uploadedItem.uploadDate, format: .dateTime)
                 }
             }
             
