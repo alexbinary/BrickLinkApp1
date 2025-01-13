@@ -93,17 +93,25 @@ struct OrdersListView: View {
         }
         .toolbar {
             
-            Button {
+            Menu("􀅈") {
+                
+                Button {
+                    Task {
+                        refreshing = true
+                        await appController.reloadOrderSummaries()
+                        await appController.refreshAllOrders()
+                        refreshing = false
+                    }
+                } label: {
+                    Text("Full refresh")
+                }
+                
+            } primaryAction: {
+                
                 Task {
                     refreshing = true
                     await appController.reloadOrderSummaries()
                     refreshing = false
-                }
-            } label: {
-                if refreshing {
-                    Text("Refreshing orders...")
-                } else {
-                    Text("Refresh orders")
                 }
             }
             .disabled(refreshing)
