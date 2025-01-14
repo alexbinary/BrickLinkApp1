@@ -55,12 +55,12 @@ struct UploadedItemView: View {
             Grid(alignment: .leading, verticalSpacing: 12) {
                 
                 GridRow(alignment: .firstTextBaseline) {
-                    Text("Inventory ID").foregroundStyle(.secondary)
+                    Text("Inventory").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                     Link("\(uploadedItem.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(uploadedItem.inventoryId)#/")!)
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
-                    Text("Inventory").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                    Text("Action").foregroundStyle(.secondary)
                     Text(uploadedItem.inventoryStatus == .created ? "Created 􀫸" : "Updated 􀅈")
                 }
                 
