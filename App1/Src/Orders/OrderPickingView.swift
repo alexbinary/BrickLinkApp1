@@ -212,7 +212,10 @@ struct OrderPickingView: View {
                 GridRow(alignment: .bottom) {
                     Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
                     Text(item.quantity).font(.title2).gridColumnAlignment(.center)
-                    Text(item.quantityLeft).gridColumnAlignment(.center)
+                    
+                    let left = appController.inStockQuantity(for: item)
+                    Text(left, format: .number).font(.title2).gridColumnAlignment(.center)
+                        .foregroundStyle(left == 0 ? .red.opacity(0.7) : .secondary)
                 }
             }
             

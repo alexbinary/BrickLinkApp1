@@ -18,7 +18,6 @@ struct OrderItem: Identifiable, Codable {
     let location: String
     let comment: String
     let quantity: String
-    let quantityLeft: String
     let unitPrice: Float
     let unitPriceFinal: Float
 }

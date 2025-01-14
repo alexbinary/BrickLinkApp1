@@ -425,7 +425,6 @@ class AppController: ObservableObject {
                         location: item.remarks ?? "",
                         comment: item.description ?? "",
                         quantity: "\(item.quantity)",
-                        quantityLeft: "",
                         unitPrice: item.unitPrice.floatValue,
                         unitPriceFinal: item.unitPriceFinal.floatValue
                     )
@@ -906,6 +905,27 @@ class AppController: ObservableObject {
     }
     
     
+    public func inventory(
+        
+        forType type: BrickLinkItemType,
+        ref: String,
+        comment: String?,
+        colorId: String,
+        condition: String
+    
+    ) -> InventoryItem? {
+        
+        return inventories.first {
+            
+            $0.type == type
+            && $0.ref == ref
+            && $0.description == (comment ?? "")
+            && $0.colorId == colorId
+            && $0.condition == condition
+        }
+    }
+    
+    
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
         return inventories.first {
@@ -1131,6 +1151,50 @@ class AppController: ObservableObject {
         print(String(data: data, encoding: .utf8)!)
         
         await self.reloadInventory(withId: id)
+    }
+    
+    
+    
+    // MARK: - Quantity
+    
+    
+    public func inStockQuantity(
+        
+        forType type: BrickLinkItemType,
+        ref: String,
+        comment: String?,
+        colorId: String,
+        condition: String
+    
+    ) -> Int {
+        
+        let inventory = inventory(
+            
+            forType: type,
+            ref: ref,
+            comment: comment,
+            colorId: colorId,
+            condition: condition
+        )
+        
+        let inventoryQty = inventory?.quantity ?? 0
+        
+//        let orderItems = orderItems(forOrderWithId: <#T##OrderSummary.ID#>)
+        
+        return inventoryQty
+    }
+    
+    
+    public func inStockQuantity(for orderItem: OrderItem) -> Int {
+        
+        return inStockQuantity(
+            
+            forType: orderItem.type,
+            ref: orderItem.ref,
+            comment: orderItem.comment,
+            colorId: orderItem.colorId,
+            condition: orderItem.condition
+        )
     }
     
     
