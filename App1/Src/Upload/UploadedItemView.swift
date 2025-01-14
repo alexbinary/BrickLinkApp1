@@ -55,6 +55,25 @@ struct UploadedItemView: View {
             Grid(alignment: .leading, verticalSpacing: 12) {
                 
                 GridRow(alignment: .firstTextBaseline) {
+                    Text("Inventory ID").foregroundStyle(.secondary)
+                    Link("\(uploadedItem.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(uploadedItem.inventoryId)#/")!)
+                }
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Inventory").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                    Text(uploadedItem.inventoryStatus == .created ? "Created 􀫸" : "Updated 􀅈")
+                }
+                
+                GridRow(alignment: .firstTextBaseline) {
+                    Text("Uploaded on").foregroundStyle(.secondary)
+                    Text(uploadedItem.uploadDate, format: .dateTime)
+                }
+            }
+            .frame(width: 200)
+            
+            Grid(alignment: .leading, verticalSpacing: 12) {
+                
+                GridRow(alignment: .firstTextBaseline) {
                     Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                     if let qtyBefore = uploadedItem.qtyBefore {
                         Text("+\(uploadedItem.qtyAfter - qtyBefore)").font(.title2)
@@ -103,24 +122,6 @@ struct UploadedItemView: View {
             }
             
             Spacer()
-            
-            Grid(alignment: .leading, verticalSpacing: 12) {
-                
-                GridRow(alignment: .firstTextBaseline) {
-                    Text("Inventory").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                    Text(uploadedItem.inventoryStatus == .created ? "Created 􀫸" : "Updated 􀅈")
-                }
-                
-                GridRow(alignment: .firstTextBaseline) {
-                    Text("Inventory ID").foregroundStyle(.secondary)
-                    Link("\(uploadedItem.inventoryId)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(uploadedItem.inventoryId)#/")!)
-                }
-                
-                GridRow(alignment: .firstTextBaseline) {
-                    Text("Uploaded on").foregroundStyle(.secondary)
-                    Text(uploadedItem.uploadDate, format: .dateTime)
-                }
-            }
             
             Button {
                 appController.addUploadItem(UploadItem(
