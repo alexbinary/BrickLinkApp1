@@ -354,14 +354,19 @@ struct UploadItemView: View {
                                     let remarks = relatedInventories.map { $0.remarks }
                                         .unique .sorted()
                                     
-                                    ForEach(remarks, id: \.self) { rem in
-                                        Button {
-                                            self.editRemarks = rem
-                                        } label: {
-                                            Text(rem)
+                                    ScrollView(.horizontal) {
+                                        HStack {
+                                            ForEach(remarks, id: \.self) { rem in
+                                                Button {
+                                                    self.editRemarks = rem
+                                                } label: {
+                                                    Text(rem)
+                                                }
+                                                .fixedSize()
+                                            }
                                         }
-                                        .fixedSize()
                                     }
+                                    .scrollIndicators(.hidden)
                                 }
                             }
                         }
@@ -490,8 +495,6 @@ struct UploadItemView: View {
                     }
                 }
             }
-            
-            Spacer()
         }
         .padding()
         .background(Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill))
