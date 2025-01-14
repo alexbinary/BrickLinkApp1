@@ -73,7 +73,7 @@ struct UploadedItemView: View {
                         if priceBefore != uploadedItem.unitPriceAfter {
                             priceAfterView.font(.title2)
                             HStack(spacing: 0) {
-                                Text("(prev.: ")
+                                Text("(")
                                 Text(priceBefore, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
                                 Text(")")
                             }
@@ -91,7 +91,7 @@ struct UploadedItemView: View {
                     if let remarksBefore = uploadedItem.remarksBefore {
                         if remarksBefore != uploadedItem.remarksAfter {
                             Text(uploadedItem.remarksAfter).font(.title2)
-                            Text("(prev.: \(remarksBefore))")
+                            Text("(\(remarksBefore))")
                         } else {
                             Text(uploadedItem.remarksAfter)
                             Text("(unchanged)")
