@@ -575,7 +575,23 @@ struct UploadItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            Task { await pullCatalogEntry() }
+            appController.updateUploadItem(UploadItem(
+                
+                id: uploadItem.id,
+                type: uploadItem.type,
+                ref: uploadItem.ref,
+                name: nil,
+                colorId: uploadItem.colorId,
+                qty: uploadItem.qty,
+                condition: uploadItem.condition,
+                comment: uploadItem.comment,
+                unitPrice: uploadItem.unitPrice
+            ))
+        }
+        .onChange(of: uploadItem.name, initial: true) { old, new in
+            if new == nil {
+                Task { await pullCatalogEntry() }
+            }
         }
         .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
             self.editRemarks = self.inventoryItem?.remarks ?? ""
@@ -630,19 +646,6 @@ struct UploadItemView: View {
     func pullCatalogEntry() async {
         
         self.catalogResult = .loading
-        
-        appController.updateUploadItem(UploadItem(
-            
-            id: uploadItem.id,
-            type: uploadItem.type,
-            ref: uploadItem.ref,
-            name: nil,
-            colorId: uploadItem.colorId,
-            qty: uploadItem.qty,
-            condition: uploadItem.condition,
-            comment: uploadItem.comment,
-            unitPrice: uploadItem.unitPrice
-        ))
         
         if let catalog = await appController.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
