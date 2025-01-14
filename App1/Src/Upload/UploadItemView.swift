@@ -300,22 +300,25 @@ struct UploadItemView: View {
                     .font(.title3).foregroundStyle(.secondary)
                     
                     Grid(alignment: .leading, verticalSpacing: 8) {
-                        
-                        if let inventoryItem = inventoryItem {
                             
-                            GridRow {
-                                Text("Quantity :").gridColumnAlignment(.trailing)
+                        GridRow {
+                            Text("Quantity :").gridColumnAlignment(.trailing)
+                            if let inventoryItem = inventoryItem {
                                 HStack {
                                     Text("\(inventoryItem.quantity)").gridColumnAlignment(.trailing)
                                     if let qty = uploadItem.qty {
                                         Text("􁉂 \(inventoryItem.quantity + qty)")
                                     }
                                 }
+                            } else if let qty = uploadItem.qty {
+                                Text("\(qty)")
                             }
+                        }
+                        
+                        GridRow {
                             
-                            GridRow {
-                                
-                                Text("Unit price :")
+                            Text("Unit price :")
+                            if let inventoryItem = inventoryItem {
                                 HStack {
                                     Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
                                     
@@ -337,6 +340,8 @@ struct UploadItemView: View {
                                         }
                                     }
                                 }
+                            } else if let price = uploadItem.unitPrice {
+                                Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
                             }
                         }
                         
