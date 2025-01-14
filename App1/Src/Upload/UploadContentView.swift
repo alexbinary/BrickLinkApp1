@@ -30,7 +30,7 @@ struct UploadContentView: View {
                     
                     section(header: "􀋲 Items to upload", items: appController.uploadItems)
                     
-                    section(header: "􀐫 Latest uploads", items: appController.uploadedItems)
+                    section(header: "􀐫 Latest uploads", items: appController.uploadedItems.sorted { $0.uploadDate > $1.uploadDate })
                 }
             }
         }
