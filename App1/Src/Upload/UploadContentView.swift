@@ -28,9 +28,35 @@ struct UploadContentView: View {
                 
                 LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
-                    section(header: "􀋲 Items to upload", items: appController.uploadItems)
+                    let uploadItems = appController.uploadItems
+                        
+                        .sorted { item1, item2 in
+                            
+                            let inv1 = appController.inventory(for: item1)
+                            let inv2 = appController.inventory(for: item2)
+                            
+                            switch (inv1, inv2) {
+                                
+                            case (nil, nil):
+                                return true
+                                
+                            case (.some, nil):
+                                return true
+                            
+                            case (nil, .some):
+                                return false
+                                
+                            case (.some(let inv1), .some(let inv2)):
+                                return inv1.remarks < inv2.remarks
+                            }
+                        }
                     
-                    section(header: "􀐫 Latest uploads", items: appController.uploadedItems.sorted { $0.uploadDate > $1.uploadDate })
+                    section(header: "􀋲 Items to upload", items: uploadItems)
+                    
+                    let uploadedItems = appController.uploadedItems
+                        .sorted { $0.uploadDate > $1.uploadDate }
+                    
+                    section(header: "􀐫 Latest uploads", items: uploadedItems)
                 }
             }
         }
