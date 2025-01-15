@@ -22,12 +22,20 @@ struct UploadItemView: View {
     @State var editModePrice = false
     
     @State var editRef: String = ""
-    @State var editColorId: LegoColor.ID = ""
+    @State var editColorId: LegoColor.ID
     @State var editCondition: String?
     @State var editComment: String = ""
     @State var editQty: Int?
     @State var editUnitPrice: Float?
     @State var editRemarks: String = ""
+    
+    
+    init(uploadItem: UploadItem) {
+        
+        self.uploadItem = uploadItem
+        
+        self._editColorId = State(initialValue: uploadItem.colorId)
+    }
 
     
     var body: some View {
@@ -129,6 +137,7 @@ struct UploadItemView: View {
                             
                             Picker("Condition", selection: $editCondition) {
                                 
+                                Text("").tag(nil as String?)
                                 Text("NEW").tag("N")
                                 Text("USED").tag("U")
                             }
