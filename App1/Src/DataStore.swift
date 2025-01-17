@@ -84,7 +84,7 @@ class DataStore {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
-        data!.inventories = inventories
+        data!.inventories = inventories.sorted { $0.id < $1.id }
     }
     
     
