@@ -205,17 +205,23 @@ struct OrderPickingView: View {
                 
                 GridRow {
                     Text("Location").font(.caption).foregroundStyle(.secondary)
-                    Text("Pick").font(.caption).foregroundStyle(.secondary)
-                    Text("Left").font(.caption).foregroundStyle(.secondary)
+                    Text("Quantity").font(.caption).foregroundStyle(.secondary)
+                        .gridColumnAlignment(.center)
                 }
                 
-                GridRow(alignment: .bottom) {
+                GridRow(alignment: .lastTextBaseline) {
                     Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
-                    Text(item.quantity).font(.title2).gridColumnAlignment(.center)
-                    
-                    let left = appController.inStockQuantity(for: item)
-                    Text(left, format: .number).font(.title2).gridColumnAlignment(.center)
-                        .foregroundStyle(left == 0 ? .red.opacity(0.7) : .secondary)
+                    Text(item.quantity).font(.title2)
+                    HStack(spacing: 0) {
+                        let stock = appController.inStockQuantity(for: item)
+                        let left = stock - Int(item.quantity)!
+                        Text("(\(stock) 􁉂 ")
+                        Text(left, format: .number)
+                            .foregroundStyle(left == 0 ? .red.opacity(0.7) : .secondary)
+                        Text(")")
+                    }
+                    .foregroundStyle(.secondary)
+                
                 }
             }
             

@@ -1179,9 +1179,29 @@ class AppController: ObservableObject {
         
         let inventoryQty = inventory?.quantity ?? 0
         
-//        let orderItems = orderItems(forOrderWithId: <#T##OrderSummary.ID#>)
+        let itemsNotPickedYet = orderSummaries.filter {
+            
+            orderBusinessStatus($0.id).isOneOf(.validatePayment, .pickAndPack)
+            
+        }.flatMap { order in
+            
+            orderItems(forOrderWithId: order.id).filter { item in
+                
+                !pickedItems(forOrderWithId: order.id).contains(item.id)
+            }
+        }
         
-        return inventoryQty
+        let pendingQty = itemsNotPickedYet.filter {
+            
+            $0.type == type
+            && $0.ref == ref
+            && $0.comment == (comment ?? "")
+            && $0.colorId == colorId
+            && $0.condition == condition
+            
+        }.reduce(0, { $0 + Int($1.quantity)! })
+        
+        return inventoryQty + pendingQty
     }
     
     
