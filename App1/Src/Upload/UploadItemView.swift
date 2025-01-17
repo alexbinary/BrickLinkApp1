@@ -29,6 +29,8 @@ struct UploadItemView: View {
     @State var editUnitPrice: Float?
     @State var editRemarks: String = ""
     
+    @State var submitting = false
+    
     
     init(uploadItem: UploadItem) {
         
@@ -392,7 +394,8 @@ struct UploadItemView: View {
                             let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
                             let submitRemarks = editRemarks.normalizedOptional
                             
-                            let buttonDisabled = submitRef == nil
+                            let buttonDisabled = submitting
+                            || submitRef == nil
                             || submitCondition == nil
                             || submitQty == nil
                             || submitUnitPrice == nil
@@ -401,6 +404,8 @@ struct UploadItemView: View {
                             Button {
                                 
                                 Task {
+                                    
+                                    submitting = true
                                     
                                     let qtyBefore = inventoryItem?.quantity
                                     let priceBefore = inventoryItem?.unitPrice
@@ -458,10 +463,16 @@ struct UploadItemView: View {
                                     ))
                                     
                                     appController.deleteUploadItem(uploadItem)
+                                    
+                                    submitting = false
                                 }
                                 
                             } label: {
-                                Text("􀈧 Upload").padding(.horizontal)
+                                if submitting {
+                                    Text("􀈧 Uploading...").padding(.horizontal)
+                                } else {
+                                    Text("􀈧 Upload").padding(.horizontal)
+                                }
                             }
                             .disabled(buttonDisabled)
                             .fixedSize()
