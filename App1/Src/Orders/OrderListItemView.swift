@@ -142,7 +142,7 @@ struct OrderListItemView: View {
                                     items.append((text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
                                     
                                     if appController.orderChecklistUnchangedFor30Days(orderId) {
-                                        items.append((text: "Assume received", status: .actionRequired))
+                                        items.append((text: "Mark Completed and give feedback", status: .actionRequired))
                                     }
                                     
                                 case .received:
