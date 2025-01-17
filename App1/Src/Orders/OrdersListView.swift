@@ -116,6 +116,13 @@ struct OrdersListView: View {
             }
             .disabled(refreshing)
         }
+        .onAppear {
+            Task {
+                refreshing = true
+                await appController.reloadOrderSummaries()
+                refreshing = false
+            }
+        }
     }
     
     
