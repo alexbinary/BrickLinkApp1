@@ -32,10 +32,10 @@ struct UploadContentView: View {
                         
                         .sorted { item1, item2 in
                             
-                            let inv1 = appController.inventory(for: item1)
-                            let inv2 = appController.inventory(for: item2)
+                            let rem1 = (appController.inventory(for: item1) ?? appController.inventories(forAllColorsOf: item1).first)?.remarks
+                            let rem2 = (appController.inventory(for: item2) ?? appController.inventories(forAllColorsOf: item2).first)?.remarks
                             
-                            switch (inv1, inv2) {
+                            switch (rem1, rem2) {
                                 
                             case (nil, nil):
                                 return true
@@ -46,8 +46,8 @@ struct UploadContentView: View {
                             case (nil, .some):
                                 return false
                                 
-                            case (.some(let inv1), .some(let inv2)):
-                                return inv1.remarks < inv2.remarks
+                            case (.some(let rem1), .some(let rem2)):
+                                return rem1 < rem2
                             }
                         }
                     
