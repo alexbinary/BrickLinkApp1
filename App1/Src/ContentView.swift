@@ -34,12 +34,14 @@ struct ContentView: View {
                     
                     let openOrders = appController.orderSummaries.filter { appController.orderBusinessStatus($0.id) != .closed }
                     
-                    Label("Orders (\(openOrders.count))", systemImage: "list.bullet")
+                    Label("Orders", systemImage: "list.bullet")
+                        .badge(openOrders.count)
                         .tag(SidebarItem.orders)
                     
                     let uploadItems = appController.uploadItems
                     
-                    Label("Upload (\(uploadItems.count))", systemImage: "tray.and.arrow.down")
+                    Label("Upload", systemImage: "tray.and.arrow.down")
+                        .badge(uploadItems.count)
                         .tag(SidebarItem.upload)
                 }
                 
