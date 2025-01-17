@@ -225,6 +225,8 @@ struct OrderPickingView: View {
                 }
             }
             
+            Spacer()
+            
             VStack (alignment: .leading) {
                 
                 let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
