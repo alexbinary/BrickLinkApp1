@@ -267,6 +267,15 @@ struct OrderShippingView: View {
                                     Text("Send")
                                 }
                             }
+                            
+                            Button {
+                                Task {
+                                    await appController.updateOrderStatus(orderId: order.id, status: .shipped)
+                                    await appController.sendDriveThru(orderId: order.id)
+                                }
+                            } label: {
+                                Text("Ship and send Drive thru")
+                            }
                         }
                     }
                 }
