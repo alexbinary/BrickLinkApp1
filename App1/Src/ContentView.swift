@@ -32,10 +32,15 @@ struct ContentView: View {
                 
                 Section("Operations") {
                     
-                    let openOrders = appController.orderSummaries.filter { appController.orderBusinessStatus($0.id) != .closed }
+                    let actionOrders = appController.orderSummaries.filter {
+                        
+                        appController.orderBusinessStatus($0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
+                        ||
+                        (appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id))
+                    }
                     
                     Label("Orders", systemImage: "list.bullet")
-                        .badge(openOrders.count)
+                        .badge(actionOrders.count)
                         .tag(SidebarItem.orders)
                     
                     let uploadItems = appController.uploadItems
