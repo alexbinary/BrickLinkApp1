@@ -12,117 +12,67 @@ struct OrderPickingView: View {
     
     
     var body: some View {
-        
-        VStack(alignment: .leading, spacing: 12) {
             
-            HStack {
-                
-                Button {
-                    for item in orderItems {
-                        appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-                    }
-                } label: {
-                    Text("Pick all")
-                }
-                
-                Button {
-                    for item in orderItems {
-                        appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                    }
-                } label: {
-                    Text("Unpick all")
-                }
-                
-                Button {
-                    for item in orderItems {
-                        appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-                    }
-                } label: {
-                    Text("Verify all")
-                }
-                
-                Button {
-                    for item in orderItems {
-                        appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                    }
-                } label: {
-                    Text("Unverify all")
-                }
-            }
+        ScrollView {
             
-            HStack {
-                
-                Button {
-                    next()
-                } label: {
-                    Text("Pick or verify next")
-                }
-                
-                Button {
-                    nextPick()
-                } label: {
-                    Text("Pick next")
-                }
-                
-                Button {
-                    nextVerify()
-                } label: {
-                    Text("Verify next")
-                }
-            }
+            let total = appController.orderItems(forOrderWithId: orderId).count
+            let picked = appController.pickedItems(forOrderWithId: orderId).count
+            let verified = appController.verifiedItems(forOrderWithId: orderId).count
             
-            ScrollView {
+            let allPicked = picked == total
+            let allVerified = verified == total
+            
+            LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                 
-                LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
-                    
-                    Group {
-                        let picked = appController.pickedItems(forOrderWithId: orderId).count
-                        let total = appController.orderItems(forOrderWithId: orderId).count
+                Group {
+                    if !allPicked {
                         
-                        if picked == total {
-                            Text("All items picked")
-                        } else {
-                            let percent = floor(Double(picked)/Double(total)*100)
-                            Text(String(format: "Picking %3.0f%% complete", percent))
-                        }
-                    }
-                    .font(.title)
-                    .padding()
-                    .padding(.vertical, 24)
-                    
-                    section(header: "Pick next", items: nextItemsToPick)
-                    section(header: "Pick after", items: orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } })
-                    
-                    Group {
-                        let verified = appController.verifiedItems(forOrderWithId: orderId).count
-                        let total = appController.orderItems(forOrderWithId: orderId).count
+                        let percent = floor(Double(picked)/Double(total)*100)
+                        Text(String(format: "Picking %3.0f%% complete", percent))
                         
-                        if verified == total {
-                            Text("All items picked and verified")
-                        } else {
-                            let percent = floor(Double(verified)/Double(total)*100)
-                            Text(String(format: "Verified %3.0f%%", percent))
-                        }
+                    } else if !allVerified {
+                        
+                        let percent = floor(Double(verified)/Double(total)*100)
+                        Text(String(format: "All items picked, verified %3.0f%%", percent))
+                        
+                    } else {
+                        
+                        Text("All items picked and verified 􀁣")
                     }
-                    .font(.title)
-                    .padding()
-                    .padding(.vertical, 24)
-               
-                    section(header: "Verify next", items: nextItemsToVerify)
-                    section(header: "Verify after", items: orderItemsToVerify.filter { pick in !nextItemsToVerify.contains { next in next.id == pick.id } })
-               
-                    section(header: "Picked and verified", items: orderItemsPickedAndVerified)
                 }
+                .font(.title)
+                .padding()
+                .padding(.vertical, 12)
+                
+                if !allPicked {
+                    
+                    section(header: "Pick next", items: nextItemsToPick, hideIfEmpty: true)
+                    section(header: "Pick", items: orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } }, hideIfEmpty: true)
+                    
+                    Text("All items picked 􀁢")
+                        .foregroundStyle(.secondary)
+                        .font(.title)
+                        .padding()
+                        .padding(.vertical, 12)
+                }
+                
+                if !allVerified {
+                    
+                    section(header: "Verify next", items: nextItemsToVerify, hideIfEmpty: true)
+                    section(header: "Verify", items: orderItemsToVerify.filter { pick in !nextItemsToVerify.contains { next in next.id == pick.id } }, hideIfEmpty: allPicked)
+                    
+                    Text("All items verified 􀁢")
+                        .foregroundStyle(.secondary)
+                        .font(.title)
+                        .padding()
+                        .padding(.vertical, 12)
+                }
+                
+                section(header: "Picked and verified", items: orderItemsPickedAndVerified, hideIfEmpty: true)
             }
         }
         .padding()
-        .task {
-            await parallel([
-                { await loadOrder() },
-                { await loadOrderItems() },
-            ])
-        }
-        .onChange(of: orderId) { oldValue, newValue in
+        .onChange(of: orderId, initial: true) {
             Task {
                 await parallel([
                     { await loadOrder() },
@@ -134,9 +84,9 @@ struct OrderPickingView: View {
     
     
     @ViewBuilder
-    func section(header: String, items: [OrderItem]) -> some View {
+    func section(header: String?, items: [OrderItem], hideIfEmpty: Bool) -> some View {
         
-        if items.count > 0 {
+        if !items.isEmpty || !hideIfEmpty {
             
             Section {
                 
@@ -156,10 +106,12 @@ struct OrderPickingView: View {
     
     
     @ViewBuilder
-    func headerView(_ primaryText: String, secondaryText: String = "") -> some View {
+    func headerView(_ primaryText: String?, secondaryText: String = "") -> some View {
         
         HStack(spacing: 24) {
-            Text(primaryText).font(.title3)
+            if let text = primaryText {
+                Text(text).font(.title3)
+            }
             Text(secondaryText).foregroundStyle(.secondary)
             Spacer()
         }
