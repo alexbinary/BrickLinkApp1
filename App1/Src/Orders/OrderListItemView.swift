@@ -114,6 +114,14 @@ struct OrderListItemView: View {
                                         let percent = floor(Double(picked)/Double(total)*100)
                                         items.append((text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
                                         
+                                    } else if !appController.orderChecklistVerification(orderId) {
+                                        
+                                        let verified = appController.verifiedItems(forOrderWithId: orderId).count
+                                        let total = appController.orderItems(forOrderWithId: orderId).count
+                                        
+                                        let percent = floor(Double(verified)/Double(total)*100)
+                                        items.append((text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
+                                        
                                     } else if !appController.orderChecklistPacked(orderId) {
                                         items.append((text: "Not packed yet", status: .actionRequired))
                                     }
