@@ -86,7 +86,7 @@ struct OrderPickingView: View {
                 
             } header: {
                 
-                headerFooterView(header, secondaryText: "\(items.count) items")
+                headerFooterView(header, secondaryText: "\(items.count) lots - \(items.reduce(0, { $0 + Int($1.quantity)! })) items")
                 
             } footer: {
                 
