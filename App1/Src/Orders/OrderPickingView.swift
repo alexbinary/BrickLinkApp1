@@ -144,6 +144,9 @@ struct OrderPickingView: View {
                 }
             }
             
+            let itemIsPicked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+            let itemIsVerified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
+            
             Grid(alignment: .leading) {
                 
                 GridRow {
@@ -157,10 +160,17 @@ struct OrderPickingView: View {
                     Text(item.quantity).font(.title2)
                     HStack(spacing: 0) {
                         let stock = appController.inStockQuantity(for: item)
-                        let left = stock - Int(item.quantity)!
-                        Text("(\(stock) 􁉂 ")
-                        Text(left, format: .number)
-                            .foregroundStyle(left == 0 ? .red.opacity(0.7) : .secondary)
+                        let qty = Int(item.quantity)!
+                        let (before, after) = {
+                            if !itemIsPicked {
+                                return (stock, stock - qty)
+                            } else {
+                                return (stock + qty, stock)
+                            }
+                        }()
+                        Text("(\(before) 􁉂 ")
+                        Text(after, format: .number)
+                            .foregroundStyle(after == 0 ? .red.opacity(0.7) : .secondary)
                         Text(")")
                     }
                     .foregroundStyle(.secondary)
@@ -172,10 +182,7 @@ struct OrderPickingView: View {
             
             VStack (alignment: .leading) {
                 
-                let picked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
-                let verified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
-                
-                if !picked {
+                if !itemIsPicked {
                     Button {
                         appController.pickItem(forOrderWithId: item.orderId, item: item.id)
                     } label: {
@@ -183,7 +190,7 @@ struct OrderPickingView: View {
                     }
                 }
                 
-                if picked && !verified {
+                if itemIsPicked && !itemIsVerified {
                     
                     Button {
                         appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
@@ -197,7 +204,7 @@ struct OrderPickingView: View {
                     }
                 }
                 
-                if picked && verified {
+                if itemIsPicked && itemIsVerified {
                     
                     Button {
                         appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
