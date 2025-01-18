@@ -129,11 +129,16 @@ struct OrderListItemView: View {
                                     if !appController.orderChecklistTrackingNo(orderId) {
                                         items.append((text: "Missing tracking no", status: .actionRequired))
                                     }
-                                    if !appController.orderChecklistShipped(orderId) {
-                                        items.append((text: "Not marked Shipped", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistDriveThru(orderId) {
-                                        items.append((text: "Drive thru not sent", status: .actionRequired))
+                                    
+                                    if !appController.orderChecklistShipped(orderId) && !appController.orderChecklistDriveThru(orderId){
+                                        items.append((text: "Ship and send Drive thru", status: .actionRequired))
+                                    } else {
+                                        if !appController.orderChecklistShipped(orderId) {
+                                            items.append((text: "Mark Shipped", status: .actionRequired))
+                                        }
+                                        if !appController.orderChecklistDriveThru(orderId) {
+                                            items.append((text: "Send Drive thru", status: .actionRequired))
+                                        }
                                     }
                                     
                                 case .inTransit:
