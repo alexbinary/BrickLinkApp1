@@ -13,7 +13,7 @@ struct OrderPickingView: View {
     
     var body: some View {
             
-        ScrollView {
+        VStack(alignment: .leading) {
             
             let total = appController.orderItems(forOrderWithId: orderId).count
             let picked = appController.pickedItems(forOrderWithId: orderId).count
@@ -22,53 +22,42 @@ struct OrderPickingView: View {
             let allPicked = picked == total
             let allVerified = verified == total
             
-            LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
-                
-                Group {
-                    if !allPicked {
-                        
-                        let percent = floor(Double(picked)/Double(total)*100)
-                        Text(String(format: "Picking %3.0f%% complete", percent))
-                        
-                    } else if !allVerified {
-                        
-                        let percent = floor(Double(verified)/Double(total)*100)
-                        Text(String(format: "All items picked, verified %3.0f%%", percent))
-                        
-                    } else {
-                        
-                        Text("All items picked and verified 􀁣")
-                    }
-                }
-                .font(.title)
-                .padding()
-                .padding(.vertical, 12)
-                
+            Group {
                 if !allPicked {
                     
-                    section(header: "Pick next", items: nextItemsToPick, hideIfEmpty: true)
-                    section(header: "Pick", items: orderItemsToPick.filter { pick in !nextItemsToPick.contains { next in next.id == pick.id } }, hideIfEmpty: true)
+                    let percent = floor(Double(picked)/Double(total)*100)
+                    Text(String(format: "Picking %3.0f%% complete", percent))
                     
-                    Text("All items picked 􀁢")
-                        .foregroundStyle(.secondary)
-                        .font(.title)
-                        .padding()
-                        .padding(.vertical, 12)
+                } else if !allVerified {
+                    
+                    let percent = floor(Double(verified)/Double(total)*100)
+                    Text(String(format: "All items picked, verified %3.0f%%", percent))
+                    
+                } else {
+                    
+                    Text("All items picked and verified 􀁣")
                 }
+            }
+            .font(.title)
+            .padding()
+            .padding(.vertical, 12)
+            
+            ScrollView {
                 
-                if !allVerified {
+                LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
-                    section(header: "Verify next", items: nextItemsToVerify, hideIfEmpty: true)
-                    section(header: "Verify", items: orderItemsToVerify.filter { pick in !nextItemsToVerify.contains { next in next.id == pick.id } }, hideIfEmpty: allPicked)
+                    if !allPicked {
+                        
+                        section(header: "Pick", footer: "All items picked 􀁢", items: orderItemsToPick, hideIfEmpty: true)
+                    }
                     
-                    Text("All items verified 􀁢")
-                        .foregroundStyle(.secondary)
-                        .font(.title)
-                        .padding()
-                        .padding(.vertical, 12)
+                    if !allVerified {
+                        
+                        section(header: "Verify", footer: "All items verified 􀁢", items: orderItemsToVerify, hideIfEmpty: allPicked)
+                    }
+                    
+                    section(header: "Picked and verified", items: orderItemsPickedAndVerified, hideIfEmpty: true)
                 }
-                
-                section(header: "Picked and verified", items: orderItemsPickedAndVerified, hideIfEmpty: true)
             }
         }
         .padding()
@@ -84,7 +73,7 @@ struct OrderPickingView: View {
     
     
     @ViewBuilder
-    func section(header: String?, items: [OrderItem], hideIfEmpty: Bool) -> some View {
+    func section(header: String?, footer: String? = nil, items: [OrderItem], hideIfEmpty: Bool) -> some View {
         
         if !items.isEmpty || !hideIfEmpty {
             
@@ -95,18 +84,20 @@ struct OrderPickingView: View {
                     itemView(item)
                 }
                 
-                Color.clear.frame(width: 0, height: 24)
-                
             } header: {
                 
-                headerView(header, secondaryText: "\(items.count) items")
+                headerFooterView(header, secondaryText: "\(items.count) items")
+                
+            } footer: {
+                
+                headerFooterView(footer).foregroundStyle(.secondary)
             }
         }
     }
     
     
     @ViewBuilder
-    func headerView(_ primaryText: String?, secondaryText: String = "") -> some View {
+    func headerFooterView(_ primaryText: String?, secondaryText: String = "") -> some View {
         
         HStack(spacing: 24) {
             if let text = primaryText {
@@ -268,82 +259,6 @@ struct OrderPickingView: View {
     var orderItemsPickedAndVerified: [OrderItem] { orderItems
         .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
         .sorted { $0.location < $1.location }
-    }
-    
-    
-    var nextItemsToPick: [OrderItem] {
-        
-        var nextItems: [OrderItem] = []
-        
-        var orderItemsToPick = orderItemsToPick
-        
-        if !orderItemsToPick.isEmpty {
-            nextItems.append(orderItemsToPick.removeFirst())
-            while !orderItemsToPick.isEmpty && orderItemsToPick.first!.location == nextItems.last!.location {
-                nextItems.append(orderItemsToPick.removeFirst())
-            }
-        }
-        
-        return nextItems
-    }
-    
-    
-    var nextItemsToVerify: [OrderItem] {
-        
-        var orderItemsToVerify = orderItemsToVerify
-        
-        var nextItems: [OrderItem] = []
-        
-        if !orderItemsToVerify.isEmpty {
-            nextItems.append(orderItemsToVerify.removeFirst())
-        }
-        
-        return nextItems
-    }
-    
-    
-    var nextItems: [OrderItem] {
-        
-        if !nextItemsToPick.isEmpty {
-            return nextItemsToPick
-        }
-        
-        if !nextItemsToVerify.isEmpty {
-            return nextItemsToVerify
-        }
-        
-        return []
-    }
-    
-    
-    func nextPick() {
-        
-        if let item = nextItemsToPick.first {
-            
-            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-        }
-    }
-    
-    
-    func nextVerify() {
-        
-        if let item = nextItemsToVerify.first {
-            
-            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-        }
-    }
-    
-    
-    func next() {
-        
-        if !nextItemsToPick.isEmpty {
-        
-            nextPick()
-            
-        } else if !nextItemsToVerify.isEmpty {
-            
-            nextVerify()
-        }
     }
 }
  
