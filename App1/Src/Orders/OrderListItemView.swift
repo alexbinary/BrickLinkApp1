@@ -101,7 +101,7 @@ struct OrderListItemView: View {
                                         items.append((text: "Payment pending", status: .waitingOnExternalAction))
                                         
                                     } else if !appController.orderChecklistIncomeTransaction(orderId) {
-                                        items.append((text: "No payment transaction", status: .actionRequired))
+                                        items.append((text: "Register payment transaction", status: .actionRequired))
                                     }
                                     
                                 case .pickAndPack:
