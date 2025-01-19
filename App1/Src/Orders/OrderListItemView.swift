@@ -86,22 +86,22 @@ struct OrderListItemView: View {
                             
                             Text("")
                             
-                            let items: [(text: String, status: TodoStatus)] = {
+                            let items: [StatusItem] = {
                                 
                                 let formatter = RelativeDateTimeFormatter()
                                 formatter.unitsStyle = .full
                                 
-                                var items: [(text: String, status: TodoStatus)] = []
+                                var items: [StatusItem] = []
                                 
                                 switch appController.orderBusinessStatus(orderId) {
                                 
                                 case .validatePayment:
                                     
                                     if !appController.orderChecklistPayment(orderId) {
-                                        items.append((text: "Payment pending", status: .waitingOnExternalAction))
+                                        items.append(StatusItem(text: "Payment pending", status: .waitingOnExternalAction))
                                         
                                     } else if !appController.orderChecklistIncomeTransaction(orderId) {
-                                        items.append((text: "Register payment transaction", status: .actionRequired))
+                                        items.append(StatusItem(text: "Register payment transaction", status: .actionRequired))
                                     }
                                     
                                 case .pickAndPack:
@@ -112,7 +112,7 @@ struct OrderListItemView: View {
                                         let total = appController.orderItems(forOrderWithId: orderId).count
                                         
                                         let percent = floor(Double(picked)/Double(total)*100)
-                                        items.append((text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
+                                        items.append(StatusItem(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
                                         
                                     } else if !appController.orderChecklistVerification(orderId) {
                                         
@@ -120,62 +120,67 @@ struct OrderListItemView: View {
                                         let total = appController.orderItems(forOrderWithId: orderId).count
                                         
                                         let percent = floor(Double(verified)/Double(total)*100)
-                                        items.append((text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
+                                        items.append(StatusItem(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
                                         
                                     } else if !appController.orderChecklistPacked(orderId) {
-                                        items.append((text: "Not packed yet", status: .actionRequired))
+                                        items.append(StatusItem(text: "Not packed yet", status: .actionRequired))
                                     }
                                     
                                 case .ship:
                                     
                                     if !appController.orderChecklistStamping(orderId) {
-                                        items.append((text: "Stamping not validated", status: .actionRequired))
+                                        items.append(StatusItem(text: "Stamping not validated", status: .actionRequired))
                                     }
                                     if !appController.orderChecklistShippingTransaction(orderId) {
-                                        items.append((text: "No shipping transaction", status: .actionRequired))
+                                        items.append(StatusItem(text: "No shipping transaction", status: .actionRequired))
                                     }
                                     if !appController.orderChecklistTrackingNo(orderId) {
-                                        items.append((text: "Missing tracking no", status: .actionRequired))
+                                        items.append(StatusItem(text: "Missing tracking no", status: .actionRequired))
                                     }
                                     
                                     if !appController.orderChecklistShipped(orderId) && !appController.orderChecklistDriveThru(orderId){
-                                        items.append((text: "Ship and send Drive thru", status: .actionRequired))
+                                        items.append(StatusItem(text: "Ship and send Drive thru", status: .actionRequired, action: {
+                                            Task {
+                                                await appController.updateOrderStatus(orderId: orderId, status: .shipped)
+                                                await appController.sendDriveThru(orderId: orderId)
+                                            }
+                                        }))
                                     } else {
                                         if !appController.orderChecklistShipped(orderId) {
-                                            items.append((text: "Mark Shipped", status: .actionRequired))
+                                            items.append(StatusItem(text: "Mark Shipped", status: .actionRequired))
                                         }
                                         if !appController.orderChecklistDriveThru(orderId) {
-                                            items.append((text: "Send Drive thru", status: .actionRequired))
+                                            items.append(StatusItem(text: "Send Drive thru", status: .actionRequired))
                                         }
                                     }
                                     
                                 case .inTransit:
                                     
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append((text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
+                                    items.append(StatusItem(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
                                     
                                     if appController.orderChecklistUnchangedFor30Days(orderId) {
-                                        items.append((text: "Mark Completed and give feedback", status: .actionRequired))
+                                        items.append(StatusItem(text: "Mark Completed and give feedback", status: .actionRequired))
                                     }
                                     
                                 case .received:
                                         
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append((text: "Received \(formattedDate)", status: .completed))
+                                    items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
                                     
-                                    items.append((text: "Waiting Completed or buyer feedback", status: .waitingOnExternalAction))
+                                    items.append(StatusItem(text: "Waiting Completed or buyer feedback", status: .waitingOnExternalAction))
                                 
                                 case .giveFeedback:
                                         
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append((text: "Received \(formattedDate)", status: .completed))
+                                    items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
                                     
-                                    items.append((text: "No seller feedback", status: .actionRequired))
+                                    items.append(StatusItem(text: "No seller feedback", status: .actionRequired))
                                     
                                 case .closed:
                                     
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append((text: "Closed \(formattedDate)", status: .completed))
+                                    items.append(StatusItem(text: "Closed \(formattedDate)", status: .completed))
                                 }
                                 
                                 return items
@@ -221,26 +226,37 @@ struct OrderListItemView: View {
                                     
                                     ForEach(displayItems, id: \.text) { item in
                                         
-                                        let color: Color = {
-                                            switch item.status {
-                                            case .actionRequired:
-                                                    .red
-                                            case .waitingOnExternalAction:
-                                                    .yellow
-                                            case .completed:
-                                                    .green
+                                        HStack(spacing: 2) {
+                                            
+                                            let color: Color = {
+                                                switch item.status {
+                                                case .actionRequired:
+                                                        .red
+                                                case .waitingOnExternalAction:
+                                                        .yellow
+                                                case .completed:
+                                                        .green
+                                                }
+                                            }()
+                                            
+                                            Text(item.text)
+                                                .padding(.horizontal, 8)
+                                                .padding(.vertical, 2)
+                                                .background(color.opacity(0.1))
+                                                .cornerRadius(3)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 3)
+                                                        .stroke(color.opacity(0.7), lineWidth: 0.5)
+                                                )
+                                            
+                                            if let action = item.action {
+                                                Button {
+                                                    action()
+                                                } label: {
+                                                    Text("􀈟")
+                                                }
                                             }
-                                        }()
-                                        
-                                        Text(item.text)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 2)
-                                            .background(color.opacity(0.1))
-                                            .cornerRadius(3)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 3)
-                                                    .stroke(color.opacity(0.7), lineWidth: 0.5)
-                                            )
+                                        }
                                     }
                                 }
                                 .frame(width: 250, alignment: .trailing)
@@ -319,4 +335,18 @@ enum TodoStatus {
     case actionRequired
     case waitingOnExternalAction
     case completed
+}
+
+
+struct StatusItem {
+    
+    let text: String
+    let status: TodoStatus
+    let action: (() -> Void)?
+    
+    init(text: String, status: TodoStatus, action: (() -> Void)? = nil) {
+        self.text = text
+        self.status = status
+        self.action = action
+    }
 }
