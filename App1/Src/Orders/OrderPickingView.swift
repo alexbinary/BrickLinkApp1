@@ -69,6 +69,11 @@ struct OrderPickingView: View {
                 ])
             }
         }
+        .onAppear {
+            Task {
+                await appController.reloadInventories()
+            }
+        }
     }
     
     
