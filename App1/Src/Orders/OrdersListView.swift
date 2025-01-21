@@ -14,11 +14,11 @@ struct OrdersListView: View {
     
     var body: some View {
         
+        let  allOrders = appController.orderSummaries
+        
         ScrollView {
             
             LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
-                
-                let allOrders = appController.orderSummaries
                 
                 let sections: [(label: String, orders: [OrderSummary])] = [
                     (
@@ -92,6 +92,28 @@ struct OrdersListView: View {
             OrderDetailView(orderId: orderId)
         }
         .toolbar {
+            
+            Button {
+                Task {
+                    let orders = allOrders
+                        .filter {
+                            appController.orderBusinessStatus($0.id) == .ship
+                            && appController.orderChecklistStamping($0.id)
+                            && appController.orderChecklistShippingTransaction($0.id)
+                            && appController.orderChecklistTrackingNo($0.id)
+                        }
+                        .sorted { $0.date > $1.date }
+                    
+                    for order in orders {
+                        Task {
+                            await appController.updateOrderStatus(orderId: order.id, status: .shipped)
+                            await appController.sendDriveThru(orderId: order.id)
+                        }
+                    }
+                }
+            } label: {
+                Text("􀈟").padding(.horizontal)
+            }
             
             Menu("􀅈") {
                 
