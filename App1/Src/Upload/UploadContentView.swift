@@ -32,8 +32,8 @@ struct UploadContentView: View {
                         
                         .sorted { item1, item2 in
                             
-                            let rem1 = (appController.inventory(for: item1) ?? appController.inventories(forAllColorsOf: item1).first)?.remarks
-                            let rem2 = (appController.inventory(for: item2) ?? appController.inventories(forAllColorsOf: item2).first)?.remarks
+                            let rem1 = appController.inventory(for: item1)?.remarks ?? appController.inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
+                            let rem2 = appController.inventory(for: item2)?.remarks ?? appController.inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
                             
                             switch (rem1, rem2) {
                                 
