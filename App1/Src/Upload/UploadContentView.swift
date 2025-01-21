@@ -16,48 +16,63 @@ struct UploadContentView: View {
     
     var body: some View {
      
-        VStack {
+        TabView {
             
-            if addViewVisible {
+            VStack {
                 
-                UploadAddView()
-                    .padding()
+                if addViewVisible {
+                    
+                    UploadAddView()
+                        .padding()
+                }
+                
+                ScrollView {
+                    
+                    LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
+                        
+                        let uploadItems = appController.uploadItems
+                        
+                            .sorted { item1, item2 in
+                                
+                                let rem1 = appController.inventory(for: item1)?.remarks ?? appController.inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
+                                let rem2 = appController.inventory(for: item2)?.remarks ?? appController.inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
+                                
+                                switch (rem1, rem2) {
+                                    
+                                case (nil, nil):
+                                    return true
+                                    
+                                case (.some, nil):
+                                    return true
+                                    
+                                case (nil, .some):
+                                    return false
+                                    
+                                case (.some(let rem1), .some(let rem2)):
+                                    return rem1 < rem2
+                                }
+                            }
+                        
+                        section(header: "􀋲 Items to upload", items: uploadItems)
+                    }
+                }
+            }
+            .tabItem {
+                Text("􀋲 Upload")
             }
             
             ScrollView {
                 
                 LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
-                    let uploadItems = appController.uploadItems
-                        
-                        .sorted { item1, item2 in
-                            
-                            let rem1 = appController.inventory(for: item1)?.remarks ?? appController.inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
-                            let rem2 = appController.inventory(for: item2)?.remarks ?? appController.inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
-                            
-                            switch (rem1, rem2) {
-                                
-                            case (nil, nil):
-                                return true
-                                
-                            case (.some, nil):
-                                return true
-                            
-                            case (nil, .some):
-                                return false
-                                
-                            case (.some(let rem1), .some(let rem2)):
-                                return rem1 < rem2
-                            }
-                        }
-                    
-                    section(header: "􀋲 Items to upload", items: uploadItems)
-                    
                     let uploadedItems = appController.uploadedItems
                         .sorted { $0.uploadDate > $1.uploadDate }
                     
                     section(header: "􀐫 Latest uploads", items: uploadedItems)
                 }
+            }
+            .tabItem {
+                Text("􀐫 History")
             }
         }
         .navigationTitle("Upload")
