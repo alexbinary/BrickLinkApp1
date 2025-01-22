@@ -160,7 +160,12 @@ struct OrderListItemView: View {
                                     items.append(StatusItem(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
                                     
                                     if appController.orderChecklistUnchangedFor30Days(orderId) {
-                                        items.append(StatusItem(text: "Mark Completed and give feedback", status: .actionRequired))
+                                        items.append(StatusItem(text: "Mark Completed and give feedback", status: .actionRequired, action: {
+                                            Task {
+                                                await appController.updateOrderStatus(orderId: orderId, status: .completed)
+                                                await appController.postPraiseOrderFeedback(orderId: order.id)
+                                            }
+                                        }))
                                     }
                                     
                                 case .received:
@@ -259,7 +264,7 @@ struct OrderListItemView: View {
                                         }
                                     }
                                 }
-                                .frame(width: 250, alignment: .trailing)
+                                .frame(width: 280, alignment: .trailing)
                             }
                         }
                     }

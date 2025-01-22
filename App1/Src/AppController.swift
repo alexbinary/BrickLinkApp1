@@ -655,6 +655,17 @@ class AppController: ObservableObject {
     }
     
     
+    public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
+        
+        guard let order = orderDetails(forOrderWithId: orderId) else { return }
+        
+        await postOrderFeedback(
+            orderId: orderId, rating: 0,
+            comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
+        )
+    }
+    
+    
     public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
         
         dataStore.dateValidatedWithoutFeedbackByOrderId

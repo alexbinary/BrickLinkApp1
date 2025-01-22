@@ -42,10 +42,7 @@ struct OrderFeedbackView: View {
                 HStack {
                     Button {
                         Task {
-                            await appController.postOrderFeedback(
-                                orderId: order.id, rating: 0,
-                                comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
-                            )
+                            await appController.postPraiseOrderFeedback(orderId: order.id)
                         }
                     } label: {
                         Text("Post Praise feedback")
