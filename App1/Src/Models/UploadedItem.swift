@@ -24,6 +24,12 @@ struct UploadedItem: Identifiable, Codable, Equatable {
 }
 
 
+extension UploadedItem: Datable {
+    
+    var date: Date { uploadDate }
+}
+
+
 enum UploadInventoryStatus: String, Codable {
     
     case created

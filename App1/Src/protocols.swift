@@ -15,6 +15,28 @@ protocol Datable {
 extension Array where Element: Datable {
     
     
+    var grouppedByDay: [(day: String, elements: [Self.Element])] {
+        
+        let withDay: [(day: String, element: Self.Element)] = self.map {
+            
+            let cal = Calendar.current
+            
+            let comps = cal.dateComponents([.day, .month, .year], from: $0.date)
+            let day = "\(comps.day!) \(cal.monthSymbols[comps.month!-1]) \(comps.year!)"
+            
+            return (day: day, element: $0)
+        }
+        
+        return withDay.map { $0.day } .stableUniqueByFirstOccurence .map { day in
+            
+            return (
+                day: day,
+                elements: withDay.filter { $0.day == day } .map { $0.element }
+            )
+        }
+    }
+    
+    
     var grouppedByMonth: [(month: String, elements: [Self.Element])] {
         
         let withMonth: [(month: String, element: Self.Element)] = self.map {

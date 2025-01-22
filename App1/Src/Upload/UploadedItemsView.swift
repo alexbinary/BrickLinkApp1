@@ -19,7 +19,10 @@ struct UploadedItemsView: View {
         
         LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
             
-            section(header: "􀐫 Latest uploads", items: uploadedItems)
+            ForEach(uploadedItems.grouppedByDay, id: \.day) { item in
+                
+                section(header: "􀐫 \(item.day)", items: item.elements)
+            }
         }
         .searchable(text: $searchText, prompt: "Search items")
     }
