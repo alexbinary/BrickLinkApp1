@@ -59,14 +59,7 @@ struct UploadContentView: View {
             }
             
             ScrollView {
-                
-                LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
-                    
-                    let uploadedItems = appController.uploadedItems
-                        .sorted { $0.uploadDate > $1.uploadDate }
-                    
-                    section(header: "􀐫 Latest uploads", items: uploadedItems)
-                }
+                UploadedItemsView()
             }
             .tabItem {
                 Text("􀐫 History")
