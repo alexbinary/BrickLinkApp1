@@ -13,7 +13,7 @@ struct UploadContentView: View {
     
     var body: some View {
      
-        TabView {
+        TabView(selection: .constant("history")) {
             
             VStack {
                 
@@ -57,6 +57,7 @@ struct UploadContentView: View {
             .tabItem {
                 Text("􀋲 Upload")
             }
+            .tag("upload")
             
             ScrollView {
                 UploadedItemsView()
@@ -64,6 +65,7 @@ struct UploadContentView: View {
             .tabItem {
                 Text("􀐫 History")
             }
+            .tag("history")
         }
         .navigationTitle("Upload")
         .toolbar {

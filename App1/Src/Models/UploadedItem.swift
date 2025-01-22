@@ -29,3 +29,136 @@ enum UploadInventoryStatus: String, Codable {
     case created
     case updated
 }
+
+
+
+extension UploadedItem {
+    
+    
+    func matches(_ rawSearchText: String, _ appController: AppController) -> Bool {
+        
+        let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        
+        if searchText.isEmpty {
+            return true
+        }
+        
+        let searchableText = searchableText(appController)
+        
+        return searchableText.contains(searchText)
+    }
+    
+    
+    func searchableText(_ appController: AppController) -> String {
+        
+        [
+            rawSearchableText_type,
+            rawSearchableText_ref,
+            rawSearchableText_name,
+            appController.colorName(forLegoColorId: colorId),
+            rawSearchableText_qtyBefore,
+            rawSearchableText_qtyAfter,
+            rawSearchableText_condition,
+            rawSearchableText_comment,
+            rawSearchableText_remarksBefore,
+            rawSearchableText_remarksAfter,
+            rawSearchableText_unitPriceBefore,
+            rawSearchableText_unitPriceAfter,
+            rawSearchableText_inventoryId,
+            rawSearchableText_inventoryStatus,
+            rawSearchableText_uploadDate,
+            
+        ].map { $0.lowercased() } .joined(separator: " ")
+    }
+    
+    
+    var rawSearchableText_type: String {
+        
+        type.rawValue
+    }
+    
+    var rawSearchableText_ref: String {
+    
+        ref
+    }
+    
+    var rawSearchableText_name: String {
+    
+        name ?? ""
+    }
+    
+    var rawSearchableText_qtyBefore: String {
+    
+        if let qty = qtyBefore {
+            "\(qty)"
+        } else {
+            ""
+        }
+    }
+    
+    var rawSearchableText_qtyAfter: String {
+    
+        "\(qtyAfter)"
+    }
+    
+    var rawSearchableText_condition: String {
+    
+        condition
+    }
+    
+    var rawSearchableText_comment: String {
+    
+        comment ?? ""
+    }
+    
+    var rawSearchableText_remarksBefore: String {
+    
+        remarksBefore ?? ""
+    }
+    
+    var rawSearchableText_remarksAfter: String {
+        
+        remarksAfter
+    }
+    
+    var rawSearchableText_unitPriceBefore: String {
+        
+        if let price = unitPriceBefore {
+            priceFormatter.string(from: NSNumber(value: price)) ?? ""
+        } else {
+            ""
+        }
+    }
+    
+    var rawSearchableText_unitPriceAfter: String {
+        
+        priceFormatter.string(from: NSNumber(value: unitPriceAfter)) ?? ""
+    }
+    
+    var rawSearchableText_inventoryId: String {
+        
+        inventoryId
+    }
+    
+    var rawSearchableText_uploadDate: String {
+        
+        DateFormatter.localizedString(
+            from: uploadDate,
+            dateStyle: .full, timeStyle: .none
+        )
+    }
+    
+    var rawSearchableText_inventoryStatus: String {
+        
+        inventoryStatus.rawValue
+    }
+    
+    
+    var priceFormatter: NumberFormatter {
+        
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 4
+        f.maximumFractionDigits = 4
+        return f
+    }
+}
