@@ -8,6 +8,9 @@ struct UploadContentView: View {
     
     @EnvironmentObject var appController: AppController
 
+    @State var highlightedItemId: UploadItem.ID?
+    @State var selectedItemId: UploadItem.ID?
+    
     @State var addViewVisible: Bool = false
     
     
