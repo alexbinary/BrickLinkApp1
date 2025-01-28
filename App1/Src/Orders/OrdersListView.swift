@@ -105,10 +105,8 @@ struct OrdersListView: View {
                         .sorted { $0.date > $1.date }
                     
                     for order in orders {
-                        Task {
-                            await appController.updateOrderStatus(orderId: order.id, status: .shipped)
-                            await appController.sendDriveThru(orderId: order.id)
-                        }
+                        await appController.updateOrderStatus(orderId: order.id, status: .shipped)
+                        await appController.sendDriveThru(orderId: order.id)
                     }
                 }
             } label: {
@@ -141,7 +139,16 @@ struct OrdersListView: View {
         .onAppear {
             Task {
                 refreshing = true
+                
                 await appController.reloadOrderSummaries()
+                
+                let orders = allOrders
+                    .filter { appController.orderBusinessStatus($0.id).isOneOf(.received, .giveFeedback) }
+                
+                for order in orders {
+                    await appController.reloadOrderFeedbacks(forOrderWithId: order.id)
+                }
+                
                 refreshing = false
             }
         }
