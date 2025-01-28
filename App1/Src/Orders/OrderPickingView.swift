@@ -22,41 +22,87 @@ struct OrderPickingView: View {
             let allPicked = picked == total
             let allVerified = verified == total
             
-            Group {
-                if !allPicked {
-                    
+            Grid(alignment: .leading) {
+                GridRow {
+                    Text("Picking")
                     let percent = floor(Double(picked)/Double(total)*100)
-                    Text(String(format: "Picking %3.0f%% complete", percent))
+                    Text(String(format: "%3.0f%% complete", percent))
                     
-                } else if !allVerified {
-                    
+                    Text("\(orderItemsToPick.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToPick.count) lots left")
+                        .foregroundStyle(.secondary)
+                        .font(.body)
+                }
+                GridRow {
+                    Text("Verify")
                     let percent = floor(Double(verified)/Double(total)*100)
-                    Text(String(format: "All items picked, verified %3.0f%%", percent))
+                    Text(String(format: "%3.0f%% verified", percent))
                     
-                } else {
-                    
-                    Text("All items picked and verified 􀁣")
+                    Text("\(orderItemsToVerify.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToVerify.count) lots left")
+                        .foregroundStyle(.secondary)
+                        .font(.body)
                 }
             }
-            .font(.title)
+            .font(.title3)
+            .monospacedDigit()
             .padding()
-            .padding(.vertical, 12)
+            .padding(.bottom, 12)
             
-            ScrollView {
+            TabView {
                 
-                LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
+                if !allPicked {
                     
-                    if !allPicked {
-                        
-                        section(header: "Pick", footer: "All items picked 􀁢", items: orderItemsToPick, hideIfEmpty: true)
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 12) {
+                            ForEach(orderItemsToPick) { itemView($0, buttons: [.pick]) }
+                        }
                     }
-                    
-                    if !allVerified {
-                        
-                        section(header: "Verify", footer: "All items verified 􀁢", items: orderItemsToVerify, hideIfEmpty: allPicked)
+                    .padding()
+                    .tabItem {
+                        Text("􀈥 Pick")
                     }
+                }
+                
+                if !pickedItems.isEmpty {
                     
-                    section(header: "Picked and verified", items: orderItemsPickedAndVerified, hideIfEmpty: true)
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 12) {
+                            ForEach(pickedItems.reversed(), id: \.self) { item in
+                                itemView(orderItems.first { $0.id == item }!, buttons: [.unpick])
+                            }
+                        }
+                    }
+                    .padding()
+                    .tabItem {
+                        Text("􀐫 Picked")
+                    }
+                }
+            
+                if !allVerified {
+                    
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 12) {
+                            ForEach(orderItemsToVerify) { itemView($0, buttons: [.verify]) }
+                        }
+                    }
+                    .padding()
+                    .tabItem {
+                        Text("􀁢 Verify")
+                    }
+                }
+                
+                if !verifiedItems.isEmpty {
+                    
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 12) {
+                            ForEach(verifiedItems.reversed(), id: \.self) { item in
+                                itemView(orderItems.first { $0.id == item }!, buttons: [.unverify])
+                            }
+                        }
+                    }
+                    .padding()
+                    .tabItem {
+                        Text("􀐫 Verified")
+                    }
                 }
             }
         }
@@ -78,31 +124,7 @@ struct OrderPickingView: View {
     
     
     @ViewBuilder
-    func section(header: String?, footer: String? = nil, items: [OrderItem], hideIfEmpty: Bool) -> some View {
-        
-        if !items.isEmpty || !hideIfEmpty {
-            
-            Section {
-                
-                ForEach(items) { item in
-                    
-                    itemView(item)
-                }
-                
-            } header: {
-                
-                headerFooterView(header, secondaryText: "\(items.count) lots - \(items.reduce(0, { $0 + Int($1.quantity)! })) items")
-                
-            } footer: {
-                
-                headerFooterView(footer).foregroundStyle(.secondary)
-            }
-        }
-    }
-    
-    
-    @ViewBuilder
-    func headerFooterView(_ primaryText: String?, secondaryText: String = "") -> some View {
+    func headerView(_ primaryText: String?, secondaryText: String = "") -> some View {
         
         HStack(spacing: 24) {
             if let text = primaryText {
@@ -118,7 +140,7 @@ struct OrderPickingView: View {
     
     
     @ViewBuilder
-    func itemView(_ item: OrderItem) -> some View {
+    func itemView(_ item: OrderItem, buttons: [ButtonEnum]) -> some View {
         
         HStack(spacing: 48) {
                 
@@ -150,7 +172,6 @@ struct OrderPickingView: View {
             }
             
             let itemIsPicked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
-            let itemIsVerified = appController.verifiedItems(forOrderWithId: item.orderId).contains(item.id)
             
             Grid(alignment: .leading) {
                 
@@ -187,40 +208,32 @@ struct OrderPickingView: View {
             
             VStack (alignment: .leading) {
                 
-                if !itemIsPicked {
-                    Button {
-                        appController.pickItem(forOrderWithId: item.orderId, item: item.id)
-                    } label: {
-                        Text("Pick")
-                    }
-                }
-                
-                if itemIsPicked && !itemIsVerified {
-                    
-                    Button {
-                        appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                    } label: {
-                        Text("Unpick")
-                    }
-                    Button {
-                        appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
-                    } label: {
-                        Text("Verify")
-                    }
-                }
-                
-                if itemIsPicked && itemIsVerified {
-                    
-                    Button {
-                        appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
-                        appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                    } label: {
-                        Text("Unpick")
-                    }
-                    Button {
-                        appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
-                    } label: {
-                        Text("Unverify")
+                ForEach(buttons, id: \.self) { button in
+                    switch button {
+                    case .pick:
+                        Button {
+                            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
+                        } label: {
+                            Text("Pick")
+                        }
+                    case .unpick:
+                        Button {
+                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                        } label: {
+                            Text("Unpick")
+                        }
+                    case .verify:
+                        Button {
+                            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
+                        } label: {
+                            Text("Verify")
+                        }
+                    case .unverify:
+                        Button {
+                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
+                        } label: {
+                            Text("Unverify")
+                        }
                     }
                 }
             }
@@ -268,9 +281,13 @@ struct OrderPickingView: View {
         .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
         .sorted { a, b in a.condition == "N" }
     }
-    var orderItemsPickedAndVerified: [OrderItem] { orderItems
-        .filter { pickedItems.contains($0.id) && verifiedItems.contains($0.id) }
-        .sorted { $0.location < $1.location }
-    }
 }
  
+
+enum ButtonEnum {
+    
+    case pick
+    case unpick
+    case verify
+    case unverify
+}
