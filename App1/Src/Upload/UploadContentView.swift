@@ -13,7 +13,7 @@ struct UploadContentView: View {
     
     var body: some View {
      
-        TabView(selection: .constant("history")) {
+        TabView {
             
             VStack {
                 
@@ -54,6 +54,13 @@ struct UploadContentView: View {
                     }
                 }
             }
+            .toolbar {
+                Button {
+                    addViewVisible.toggle()
+                } label: {
+                    Text("􀅼").padding(.horizontal)
+                }
+            }
             .tabItem {
                 Text("􀋲 Upload")
             }
@@ -68,13 +75,6 @@ struct UploadContentView: View {
             .tag("history")
         }
         .navigationTitle("Upload")
-        .toolbar {
-            Button {
-                addViewVisible.toggle()
-            } label: {
-                Text("􀅼").padding(.horizontal)
-            }
-        }
         .onAppear {
             Task {
                 await appController.reloadInventories()
