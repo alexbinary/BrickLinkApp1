@@ -21,49 +21,173 @@ struct OrderShippingView: View {
                     
                     VStack(alignment: .leading, spacing: 12) {
                 
-                        HeaderTitleView(label: "􀅴 Address")
+                        HeaderTitleView(label: "􂙡 Address")
                         
                         VStack(alignment: .leading) {
                             Text(order.shippingAddressName)
                             Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
                             Text(order.shippingAddressCountryCode)
-                        }.font(.title3)
+                        }
+                        .font(.title3)
                     }
+                    .padding(8)
                     
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        HeaderTitleView(label: "􀭭 Weight")
-                        
-                        Grid(alignment: .leading) {
+                    let width1: CGFloat = 90
+                    let width2: CGFloat = 180
+                    let height1: CGFloat = 20
+                    let height2: CGFloat = 10
+                    
+                    Grid {
+                        GridRow {
+                     
+                            VStack(alignment: .leading, spacing: 0) {
+                                
+                                HeaderTitleView(label: "􀭭 Weight")
+                                
+                                VStack(alignment: .center, spacing: 12) {
+                                
+                                    Text("\(String(format: "%.0f", order.totalWeight))g").font(.title3)
+                                        .bold()
+                                        .frame(width: width1, height: height1)
+                                    Text("Charged \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: width1, height: height2)
+                                }
+                                .monospacedDigit()
+                                .padding()
+                            }
+                            .padding(8)
+                            .cornerRadius(6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color(nsColor: .tertiarySystemFill))
+                            )
                             
-                            GridRow {
-                                Text("Actual :")
-                                Text("\(String(format: "%.0f", order.totalWeight))g")
+                            VStack(alignment: .leading, spacing: 0) {
+                                
+                                HeaderTitleView(label: "􀖧 Shipping")
+                                
+                                VStack(alignment: .center, spacing: 12) {
+                                
+                                    Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                        .bold()
+                                        .frame(width: width2, height: height1)
+                                    Text(order.shippingMethodName ?? "")
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: width2, height: height2)
+                                }
+                                .padding()
                             }
-                            GridRow {
-                                Text("Charged :")
-                                Text("\(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
+                            .padding(8)
+                            .cornerRadius(6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color(nsColor: .tertiarySystemFill))
+                            )
+                            
+                        }
+                        
+                        GridRow {
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                
+                                HeaderTitleView(label: "􀐚 Packing")
+                                
+                                VStack(alignment: .center, spacing: 12) {
+                                
+                                    if selectedShippingCost?.chooseLetter ?? false {
+                                        
+                                        Text("􀍖").font(.title2)
+                                            .foregroundStyle(.secondary)
+                                            .frame(width: width1, height: height1)
+                                        Text("Letter")
+                                            .foregroundStyle(.secondary)
+                                            .frame(width: width1, height: height2)
+                                        
+                                    } else {
+                                        
+                                        Text("􀐛").font(.title2)
+                                            .foregroundStyle(.secondary)
+                                            .frame(width: width1, height: height1)
+                                        Text("Parcel")
+                                            .foregroundStyle(.secondary)
+                                            .frame(width: width1, height: height2)
+                                    }
+                                }
+                                .padding()
                             }
+                            .padding(8)
+                            .cornerRadius(6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color(nsColor: .tertiarySystemFill))
+                            )
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                
+                                HeaderTitleView(label: "􀖧 Cost")
+                                
+                                VStack(alignment: .center, spacing: 12) {
+                                
+                                    if let selectedShippingCost = selectedShippingCost,
+                                       let shippingCostPredictedValue = selectedShippingCost.value {
+                                     
+                                        Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
+                                            .bold()
+                                            .frame(width: width2, height: height1)
+                                    }
+                                    
+                                    let recommendedStampingMethod = {
+                                        
+                                        var s = ""
+                                        
+                                        if let selectedAffranchissement = selectedAffranchissement {
+                                            
+                                            if selectedAffranchissement.usePostOffice {
+                                                return "Bureau de poste"
+                                            } else {
+                                                s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                                
+                                                if order.shippingMethodId != shippingMethodId_France {
+                                                    s += " international"
+                                                }
+                                                
+                                                return s
+                                            }
+                                        }
+                                        
+                                        return s
+                                    }()
+                                    
+                                    Text(recommendedStampingMethod)
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: width2, height: height2)
+                                }
+                                .padding()
+                            }
+                            .padding(8)
+                            .cornerRadius(6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color(nsColor: .tertiarySystemFill))
+                            )
+                            
                         }
                     }
                     
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        HeaderTitleView(label: "􀖧 Shipping")
-                        
-                        Grid(alignment: .leading) {
-                            
-                            GridRow {
-                                Text("Method :")
-                                Text(order.shippingMethodName ?? "")
-                            }
-                            
-                            GridRow {
-                                Text("Price :")
-                                Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                            }
-                        }
-                    }
+                    Spacer()
+                    
+                    ShippingCostInfo(
+                        shippingMethodId: order.shippingMethodId,
+                        selectedShippingCost: selectedShippingCost
+                    )
+                    .padding()
+                    .background(Color(nsColor: .secondarySystemFill).opacity(0.7))
+                    .cornerRadius(6)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color(nsColor: .tertiarySystemFill))
+                    )
                 }
                 
                 Divider()
@@ -95,35 +219,6 @@ struct OrderShippingView: View {
                             
                             return s
                         }()
-                        
-                        Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 4) {
-                            GridRow {
-                                Text("Recommended method").font(.caption).foregroundStyle(.secondary)
-                                Text("Cost").font(.caption).foregroundStyle(.secondary)
-                                Text("Stamping").font(.caption).foregroundStyle(.secondary)
-                            }
-                            GridRow {
-                                HStack {
-                                    Toggle("letter", isOn: .constant(selectedShippingCost?.chooseLetter ?? false))
-                                    Toggle("parcel", isOn: .constant(selectedShippingCost?.chooseParcel ?? false))
-                                }
-                                if let selectedShippingCost = selectedShippingCost,
-                                   let shippingCostPredictedValue = selectedShippingCost.value {
-                                    
-                                    Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
-                                } else {
-                                    Text("")
-                                }
-                                Text(recommendedStampingMethod)
-                            }
-                        }
-                        .padding()
-                        .background(Color(nsColor: .windowBackgroundColor))
-                        .cornerRadius(6)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color(nsColor: .secondarySystemFill))
-                        )
                         
                         Grid(alignment: .leading, verticalSpacing: 8) {
                             
@@ -279,22 +374,6 @@ struct OrderShippingView: View {
                         }
                     }
                 }
-                
-                Divider()
-                
-                Color.clear.frame(width: 0, height: 48)
-                
-                ShippingCostInfo(
-                    shippingMethodId: order.shippingMethodId,
-                    selectedShippingCost: selectedShippingCost
-                )
-                .padding()
-                .background(Color(nsColor: .secondarySystemFill).opacity(0.7))
-                .cornerRadius(6)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color(nsColor: .tertiarySystemFill))
-                )
             }
         }
         .padding()
