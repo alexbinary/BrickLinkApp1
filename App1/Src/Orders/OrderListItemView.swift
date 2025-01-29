@@ -180,7 +180,11 @@ struct OrderListItemView: View {
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
                                     items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
                                     
-                                    items.append(StatusItem(text: "No seller feedback", status: .actionRequired))
+                                    items.append(StatusItem(text: "Give feedback", status: .actionRequired, action: {
+                                        Task {
+                                            await appController.postPraiseOrderFeedback(orderId: order.id)
+                                        }
+                                    }))
                                     
                                 case .closed:
                                     
