@@ -28,18 +28,22 @@ struct OrderPickingView: View {
                     let percent = floor(Double(picked)/Double(total)*100)
                     Text(String(format: "%3.0f%% complete", percent))
                     
-                    Text("\(orderItemsToPick.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToPick.count) lots left")
-                        .foregroundStyle(.secondary)
-                        .font(.body)
+                    if !allPicked {
+                        Text("\(orderItemsToPick.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToPick.count) lots left to pick")
+                            .foregroundStyle(.secondary)
+                            .font(.body)
+                    }
                 }
                 GridRow {
                     Text("Verify")
                     let percent = floor(Double(verified)/Double(total)*100)
                     Text(String(format: "%3.0f%% verified", percent))
                     
-                    Text("\(orderItemsToVerify.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToVerify.count) lots left")
-                        .foregroundStyle(.secondary)
-                        .font(.body)
+                    if !allVerified {
+                        Text("\(orderItemsToVerify.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToVerify.count) lots left to verify")
+                            .foregroundStyle(.secondary)
+                            .font(.body)
+                    }
                 }
             }
             .font(.title3)
@@ -49,7 +53,7 @@ struct OrderPickingView: View {
             
             TabView {
                 
-                if !allPicked {
+                if !orderItemsToPick.isEmpty {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
@@ -77,7 +81,7 @@ struct OrderPickingView: View {
                     }
                 }
             
-                if !allVerified {
+                if !orderItemsToVerify.isEmpty {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
