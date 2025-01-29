@@ -14,7 +14,7 @@ struct OrdersListView: View {
     
     var body: some View {
         
-        let  allOrders = appController.orderSummaries
+        let allOrders = appController.orderSummaries
         
         ScrollView {
             
@@ -93,65 +93,73 @@ struct OrdersListView: View {
         }
         .toolbar {
             
-            Button {
-                Task {
-                    let orders = allOrders
-                        .filter {
-                            appController.orderBusinessStatus($0.id) == .ship
-                            && appController.orderChecklistStamping($0.id)
-                            && appController.orderChecklistShippingTransaction($0.id)
-                            && appController.orderChecklistTrackingNo($0.id)
-                        }
-                        .sorted { $0.date > $1.date }
-                    
-                    for order in orders {
-                        await appController.updateOrderStatus(orderId: order.id, status: .shipped)
-                        await appController.sendDriveThru(orderId: order.id)
-                    }
-                }
-            } label: {
-                Text("􀈟").padding(.horizontal)
-            }
+            let ordersThatNeedGiveFeedback = allOrders
+                .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
+                .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             
-            Menu("􀅈") {
-                
+            if !ordersThatNeedGiveFeedback.isEmpty {
                 Button {
                     Task {
-                        refreshing = true
-                        await appController.reloadOrderSummaries()
-                        await appController.refreshAllOrders()
-                        refreshing = false
+                        for order in ordersThatNeedGiveFeedback {
+                            await appController.postPraiseOrderFeedback(orderId: order.id)
+                        }
                     }
                 } label: {
-                    Text("Full refresh")
+                    Text("Give feedback (\(ordersThatNeedGiveFeedback.count))").padding(.horizontal)
                 }
-                
-            } primaryAction: {
-                
-                Task {
-                    refreshing = true
-                    await appController.reloadOrderSummaries()
-                    refreshing = false
+            }
+            
+            let ordersToShipAndSendDriveThru = allOrders
+                .filter {
+                    appController.orderBusinessStatus($0.id) == .ship
+                    && appController.orderChecklistStamping($0.id)
+                    && appController.orderChecklistShippingTransaction($0.id)
+                    && appController.orderChecklistTrackingNo($0.id)
                 }
+                .sorted { $0.date > $1.date }
+            
+            if !ordersToShipAndSendDriveThru.isEmpty {
+                Button {
+                    Task {
+                        for order in ordersToShipAndSendDriveThru {
+                            await appController.updateOrderStatus(orderId: order.id, status: .shipped)
+                            await appController.sendDriveThru(orderId: order.id)
+                        }
+                    }
+                } label: {
+                    Text("Ship and send DT (\(ordersToShipAndSendDriveThru.count))").padding(.horizontal)
+                }
+            }
+            
+            Button {
+                Task { await refresh() }
+            } label: {
+                Text("􀅈").padding(.horizontal)
             }
             .disabled(refreshing)
         }
         .onAppear {
-            Task {
-                refreshing = true
-                
-                await appController.reloadOrderSummaries()
-                
-                let orders = allOrders
-                    .filter { appController.orderBusinessStatus($0.id).isOneOf(.received, .giveFeedback) }
-                
-                for order in orders {
-                    await appController.reloadOrderFeedbacks(forOrderWithId: order.id)
-                }
-                
-                refreshing = false
-            }
+            Task { await refresh() }
         }
+    }
+    
+    
+    func refresh() async {
+        
+        refreshing = true
+        
+        await appController.reloadOrderSummaries()
+        
+        let allOrders = appController.orderSummaries
+        
+        let ordersThatNeedRefreshFeedback = allOrders
+            .filter { appController.orderBusinessStatus($0.id).isOneOf(.received, .giveFeedback) }
+        
+        for order in ordersThatNeedRefreshFeedback {
+            await appController.reloadOrderFeedbacks(forOrderWithId: order.id)
+        }
+        
+        refreshing = false
     }
     
     
