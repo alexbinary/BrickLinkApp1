@@ -283,104 +283,18 @@ struct OrderShippingView: View {
                 Divider()
                 
                 Color.clear.frame(width: 0, height: 48)
-                    
-                let title = "􀅴 Tarifs La Poste 2025 - " + {
-                    
-                    if order.shippingMethodId == shippingMethodId_France {
-                        return "France"
-                    } else if order.shippingMethodId == shippingMethodId_Europe {
-                        return "Europe"
-                    } else if order.shippingMethodId == shippingMethodId_World {
-                        return "Monde"
-                    }
-                    return ""
-                }()
-                HeaderTitleView(label: title)
                 
-                Grid(alignment: .leading) {
-                    GridRow {
-                        Text("Timbre").font(.caption).foregroundStyle(.secondary)
-                        Text("Suivi").font(.caption).foregroundStyle(.secondary)
-                    }
-                    GridRow {
-                        Text(
-                            order.shippingMethodId == shippingMethodId_France ? priceTimbreFrance : priceTimbreWorld,
-                            format: .currency(code: "EUR").presentation(.isoCode)
-                        )
-                        Text(
-                            order.shippingMethodId == shippingMethodId_France ? priceTrackingFrance : priceTrackingWorld,
-                            format: .currency(code: "EUR").presentation(.isoCode)
-                        )
-                    }
-                }
-                
-                Table(of: ShippingCostTableRow.self, selection: .constant(selectedShippingCost?.maxWeight)) {
-                    
-                    TableColumn("Weight band") { item in
-                        Text("\(item.minWeight)-\(item.maxWeight)g")
-                    }
-                    TableColumn("Price letter with tracking") { item in
-                        if let price = item.priceLetter {
-                            Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                .fontWeight(selectedShippingCost?.maxWeight == item.maxWeight && selectedShippingCost?.chooseLetter ?? false ? .bold : .regular)
-                        }
-                    }
-                    
-                    if order.shippingMethodId == shippingMethodId_World {
-                        
-                        TableColumn("Price parcel ZB*") { item in
-                            if let price = item.priceParcelZB {
-                                Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .fontWeight(selectedShippingCost?.maxWeight == item.maxWeight && selectedShippingCost?.chooseParcelZB ?? false ? .bold : .regular)
-                            }
-                        }
-                        TableColumn("Price parcel ZC*") { item in
-                            if let price = item.priceParcelZC {
-                                Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .fontWeight(selectedShippingCost?.maxWeight == item.maxWeight && selectedShippingCost?.chooseParcelZC ?? false ? .bold : .regular)
-                            }
-                        }
-                        
-                    } else {
-                        
-                        TableColumn("Price parcel") { item in
-                            if let price = item.priceParcel {
-                                Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .fontWeight(selectedShippingCost?.maxWeight == item.maxWeight && selectedShippingCost?.chooseParcel ?? false ? .bold : .regular)
-                            }
-                        }
-                    }
-                    
-                } rows: {
-                    
-                    if order.shippingMethodId == shippingMethodId_France {
-                        
-                        ForEach(shippingCostFrance) { item in
-                            TableRow(item)
-                        }
-                        
-                    } else if order.shippingMethodId == shippingMethodId_Europe {
-                        
-                        ForEach(shippingCostEurope) { item in
-                            TableRow(item)
-                        }
-                        
-                    } else if order.shippingMethodId == shippingMethodId_World {
-                        
-                        ForEach(shippingCostWorld) { item in
-                            TableRow(item)
-                        }
-                    }
-                }
-                .frame(minHeight: 250)
-                
-                if order.shippingMethodId == shippingMethodId_World {
-                    
-                    Text("""
-                                        *Zone B : Europe de l'Est (hors UE et Russie), Norvège, Maghreb
-                                        *Zone C : Autres destinations
-                                    """).font(.footnote)
-                }
+                ShippingCostInfo(
+                    shippingMethodId: order.shippingMethodId,
+                    selectedShippingCost: selectedShippingCost
+                )
+                .padding()
+                .background(Color(nsColor: .secondarySystemFill).opacity(0.7))
+                .cornerRadius(6)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color(nsColor: .tertiarySystemFill))
+                )
             }
         }
         .padding()
@@ -844,3 +758,26 @@ let affranchissementValuesWorld = [
         tarifRef: 32.30, timbresParMultiples: nil
     ),
 ]
+
+
+#Preview {
+    
+    let dataFileUrl = URL(fileURLWithPath: FileManager.default.currentDirectoryPath.appending("/data/data.json5"))
+    let dataStore = DataStore(dataFileUrl: dataFileUrl)
+    
+    let blCredentials = BrickLinkAPICredentials(
+        
+        consumerKey: Secrets.BrickLink.consumerKey,
+        consumerSecret: Secrets.BrickLink.consumerSecret,
+        
+        tokenValue: Secrets.BrickLink.tokenValue,
+        tokenSecret: Secrets.BrickLink.tokenSecret
+    )
+    
+    let appController = AppController(
+        dataStore: dataStore, blCredentials: blCredentials
+    )
+    
+    OrderShippingView(orderId: "27236825")
+        .environmentObject(appController)
+}
