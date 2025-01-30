@@ -15,6 +15,42 @@ struct ShippingCostBand: Identifiable {
 }
 
 
+
+struct StampingBand: Identifiable {
+    
+    var id: Int { maxWeight }
+    
+    let minWeight: Int
+    let maxWeight: Int
+    
+    let priceTimbre: Float
+    let priceTracking: Float
+    
+    let tarifRef: Float
+    
+    let timbresParMultiples: Int?
+    var timbresParMultiplesTotalPrice: Float? {
+        guard let n = self.timbresParMultiples else { return nil }
+        return Float(n) * priceTimbre + priceTracking
+    }
+    
+    var nbTimbresRequired: Float {
+        (self.tarifRef - priceTracking)/priceTimbre
+    }
+    var nbTimbresRequiredTotalPrice: Float {
+        ceilf(nbTimbresRequired) * priceTimbre + priceTracking
+    }
+    
+    var preferTimbresParMultiples: Bool {
+        timbresParMultiplesTotalPrice != nil && timbresParMultiplesTotalPrice! <= tarifRef
+    }
+    var preferTimbres: Bool {
+        nbTimbresRequiredTotalPrice <= tarifRef
+    }
+}
+
+
+
 struct SelectedShippingCost {
     
     let maxWeight: Int
@@ -27,9 +63,29 @@ struct SelectedShippingCost {
 
 
 
+struct SelectedStamping {
+    
+    let maxWeight: Int
+    
+    let useTimbresParMultiples: Bool
+    let useTimbres: Bool
+    let usePostOffice: Bool
+    
+    let nbTimbres: Int
+}
+
+
+
 let shippingMethodId_France = 289751
 let shippingMethodId_Europe = 290360
 let shippingMethodId_World = 185519
+
+
+let priceTimbreFrance: Float = 1.39
+let priceTrackingFrance: Float = 0.50
+
+let priceTimbreWorld: Float = 2.10
+let priceTrackingWorld: Float = 2.80
 
 
 let shippingCostBandsFrance = [
@@ -68,6 +124,7 @@ let shippingCostBandsFrance = [
     ),
 ]
 
+
 let shippingCostBandsEurope = [
     
     ShippingCostBand(
@@ -104,6 +161,7 @@ let shippingCostBandsEurope = [
     ),
 ]
 
+
 let shippingCostBandsWorld = [
     
     ShippingCostBand(
@@ -139,59 +197,6 @@ let shippingCostBandsWorld = [
         priceLetter: nil, priceParcelZB: 38.00, priceParcelZC: 75.00
     ),
 ]
-
-
-struct StampingBand: Identifiable {
-    
-    var id: Int { maxWeight }
-    
-    let minWeight: Int
-    let maxWeight: Int
-    
-    let priceTimbre: Float
-    let priceTracking: Float
-    
-    let tarifRef: Float
-    
-    let timbresParMultiples: Int?
-    var timbresParMultiplesTotalPrice: Float? {
-        guard let n = self.timbresParMultiples else { return nil }
-        return Float(n) * priceTimbre + priceTracking
-    }
-    
-    var nbTimbresRequired: Float {
-        (self.tarifRef - priceTracking)/priceTimbre
-    }
-    var nbTimbresRequiredTotalPrice: Float {
-        ceilf(nbTimbresRequired) * priceTimbre + priceTracking
-    }
-    
-    var preferTimbresParMultiples: Bool {
-        timbresParMultiplesTotalPrice != nil && timbresParMultiplesTotalPrice! <= tarifRef
-    }
-    var preferTimbres: Bool {
-        nbTimbresRequiredTotalPrice <= tarifRef
-    }
-}
-
-
-struct SelectedStamping {
-    
-    let maxWeight: Int
-    
-    let useTimbresParMultiples: Bool
-    let useTimbres: Bool
-    let usePostOffice: Bool
-    
-    let nbTimbres: Int
-}
-
-
-let priceTimbreFrance: Float = 1.39
-let priceTrackingFrance: Float = 0.50
-
-let priceTimbreWorld: Float = 2.10
-let priceTrackingWorld: Float = 2.80
 
 
 let stampingBandsFrance = [
@@ -239,6 +244,7 @@ let stampingBandsFrance = [
         tarifRef: 10.75, timbresParMultiples: nil
     ),
 ]
+
 
 let stampingBandsWorld = [
 
