@@ -158,10 +158,10 @@
 		29A425942D4BD596002E5135 /* Shipping */ = {
 			isa = PBXGroup;
 			children = (
-				29A425952D4BDAA1002E5135 /* shippingData.swift */,
 				292619FE2D26F4A800F1BE16 /* OrderShippingView.swift */,
 				29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */,
 				29A425902D4B58FD002E5135 /* InfoCardView.swift */,
+				29A425952D4BDAA1002E5135 /* shippingData.swift */,
 			);
 			path = Shipping;
 			sourceTree = "<group>";

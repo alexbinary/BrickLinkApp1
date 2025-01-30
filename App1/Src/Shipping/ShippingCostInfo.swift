@@ -14,7 +14,7 @@ struct ShippingCostInfo: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
-            let title = "􀅴 Tarifs La Poste 2025 - " + {
+            let scope = {
                 
                 if shippingMethodId == shippingMethodId_France {
                     return "France"
@@ -25,7 +25,8 @@ struct ShippingCostInfo: View {
                 }
                 return ""
             }()
-            HeaderTitleView(label: title)
+            
+            HeaderTitleView(label: "􀅴 Tarifs La Poste 2025")
             
             let bands = {
                 
@@ -62,7 +63,7 @@ struct ShippingCostInfo: View {
             
             Grid(alignment: .leading) {
                 GridRow {
-                    Text("")
+                    Text("\(scope)")
                     ForEach(bands) { band in
                         Text("\(band.minWeight)-\(band.maxWeight)g")
                     }
@@ -83,7 +84,7 @@ struct ShippingCostInfo: View {
                             if let price = band.letter?.refPrice {
                                 Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                             } else {
-                                Text("")
+                                Text("-")
                             }
                         }
                         .fontWeight(activeBand && preferred ? .bold : .regular)
@@ -105,7 +106,7 @@ struct ShippingCostInfo: View {
                                 if let price = band.priceParcelZB {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                                 } else {
-                                    Text("")
+                                    Text("-")
                                 }
                             }
                             .fontWeight(activeBand && preferred ? .bold : .regular)
@@ -125,7 +126,7 @@ struct ShippingCostInfo: View {
                                 if let price = band.priceParcelZC {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                                 } else {
-                                    Text("")
+                                    Text("-")
                                 }
                             }
                             .fontWeight(activeBand && preferred ? .bold : .regular)
@@ -147,7 +148,7 @@ struct ShippingCostInfo: View {
                                 if let price = band.priceParcel {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                                 } else {
-                                    Text("")
+                                    Text("-")
                                 }
                             }
                             .fontWeight(activeBand && preferred ? .bold : .regular)
@@ -165,6 +166,7 @@ struct ShippingCostInfo: View {
                     ForEach(bands) { band in
                         
                         let activeBand = selectedShippingCost?.maxWeight == band.maxWeight
+                        let preferred = selectedShippingCost?.preferLetter ?? false
                         
                         if let priceLetter = band.letter {
                             
@@ -188,7 +190,7 @@ struct ShippingCostInfo: View {
                                 let price = priceLetter.bestPrice
                                 Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                             }
-                            .fontWeight(activeBand ? .bold : .regular)
+                            .fontWeight(activeBand && preferred ? .bold : .regular)
                             .foregroundStyle(activeBand ? .primary : .secondary)
                             
                         } else {
