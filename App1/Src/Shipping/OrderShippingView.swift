@@ -127,12 +127,12 @@ struct OrderShippingView: View {
                                     
                                     var s = ""
                                     
-                                    if let selectedStamping = selectedShippingCost?.stamping {
+                                    if let selectedLetterStamping = selectedShippingCost?.letterStamping {
                                         
-                                        if selectedStamping.usePostOffice {
+                                        if selectedLetterStamping.usePostOffice {
                                             return "Bureau de poste"
                                         } else {
-                                            s = "\(selectedStamping.nbTimbres) timbres"
+                                            s = "\(selectedLetterStamping.nbTimbres) timbres"
                                             
                                             if order.shippingMethodId != shippingMethodId_France {
                                                 s += " international"
@@ -180,12 +180,12 @@ struct OrderShippingView: View {
                             
                             var s = ""
                             
-                            if let selectedStamping = selectedShippingCost?.stamping {
+                            if let selectedLetterStamping = selectedShippingCost?.letterStamping {
                                 
-                                if selectedStamping.usePostOffice {
+                                if selectedLetterStamping.usePostOffice {
                                     return "Bureau de poste"
                                 } else {
-                                    s = "\(selectedStamping.nbTimbres) timbres"
+                                    s = "\(selectedLetterStamping.nbTimbres) timbres"
                                     
                                     if order.shippingMethodId != shippingMethodId_France {
                                         s += " international"
@@ -405,23 +405,23 @@ struct OrderShippingView: View {
                 
                 if weight < 250 {
                     chooseLetter = true
-                    value = band.priceLetter
+                    value = band.letter?.tarifRef
                 } else {
                     chooseParcel = true
                     value = band.priceParcel
                 }
                 
-                var selectedStamping: SelectedStamping? = nil
+                var letterStamping: LetterStamping? = nil
                     
-                if let stamping = band.stamping {
+                if let priceLetter = band.letter {
                     
-                    selectedStamping = SelectedStamping(
+                    letterStamping = LetterStamping(
                     
-                        useTimbresParMultiples: stamping.preferTimbresParMultiples,
-                        useTimbres: stamping.preferTimbres,
-                        usePostOffice: !stamping.preferTimbresParMultiples && !stamping.preferTimbres,
+                        useTimbresParMultiples: priceLetter.preferTimbresParMultiples,
+                        useTimbres: priceLetter.preferTimbres,
+                        usePostOffice: !priceLetter.preferTimbresParMultiples && !priceLetter.preferTimbres,
                         
-                        nbTimbres: stamping.preferTimbres ? Int(ceil(stamping.nbTimbresRequired)) : stamping.preferTimbresParMultiples ? stamping.timbresParMultiples ?? 0 : 0
+                        nbTimbres: priceLetter.preferTimbres ? Int(ceil(priceLetter.nbTimbresRequired)) : priceLetter.preferTimbresParMultiples ? priceLetter.timbresParMultiples ?? 0 : 0
                     )
                 }
                 
@@ -429,8 +429,8 @@ struct OrderShippingView: View {
                     maxWeight: band.maxWeight,
                     chooseLetter: chooseLetter, chooseParcel: chooseParcel,
                     chooseParcelZB: chooseParcelZB, chooseParcelZC: chooseParcelZC,
-                    value: value,
-                    stamping: selectedStamping
+                    letterStamping: letterStamping,
+                    value: value
                 )
             }
             
@@ -450,23 +450,23 @@ struct OrderShippingView: View {
                 
                 if weight < 250 {
                     chooseLetter = true
-                    value = band.priceLetter
+                    value = band.letter?.tarifRef
                 } else {
                     chooseParcel = true
                     value = band.priceParcel
                 }
                 
-                var selectedStamping: SelectedStamping? = nil
+                var letterStamping: LetterStamping? = nil
                     
-                if let stamping = band.stamping {
+                if let priceLetter = band.letter {
                     
-                    selectedStamping = SelectedStamping(
+                    letterStamping = LetterStamping(
                         
-                        useTimbresParMultiples: stamping.preferTimbresParMultiples,
-                        useTimbres: stamping.preferTimbres,
-                        usePostOffice: !stamping.preferTimbresParMultiples && !stamping.preferTimbres,
+                        useTimbresParMultiples: priceLetter.preferTimbresParMultiples,
+                        useTimbres: priceLetter.preferTimbres,
+                        usePostOffice: !priceLetter.preferTimbresParMultiples && !priceLetter.preferTimbres,
                         
-                        nbTimbres: stamping.preferTimbres ? Int(ceil(stamping.nbTimbresRequired)) : stamping.preferTimbresParMultiples ? stamping.timbresParMultiples ?? 0 : 0
+                        nbTimbres: priceLetter.preferTimbres ? Int(ceil(priceLetter.nbTimbresRequired)) : priceLetter.preferTimbresParMultiples ? priceLetter.timbresParMultiples ?? 0 : 0
                     )
                 }
                 
@@ -474,8 +474,8 @@ struct OrderShippingView: View {
                     maxWeight: band.maxWeight,
                     chooseLetter: chooseLetter, chooseParcel: chooseParcel,
                     chooseParcelZB: chooseParcelZB, chooseParcelZC: chooseParcelZC,
-                    value: value,
-                    stamping: selectedStamping
+                    letterStamping: letterStamping,
+                    value: value
                 )
             }
             
@@ -495,7 +495,7 @@ struct OrderShippingView: View {
                 
                 if weight < 250 {
                     chooseLetter = true
-                    value = band.priceLetter
+                    value = band.letter?.tarifRef
                 } else {
                     if ["US"].contains(order.shippingAddressCountryCode) {
                         chooseParcelZC = true
@@ -506,17 +506,17 @@ struct OrderShippingView: View {
                     }
                 }
                 
-                var selectedStamping: SelectedStamping? = nil
+                var letterStamping: LetterStamping? = nil
                     
-                if let stamping = band.stamping {
+                if let priceLetter = band.letter {
                     
-                    selectedStamping = SelectedStamping(
+                    letterStamping = LetterStamping(
                         
-                        useTimbresParMultiples: stamping.preferTimbresParMultiples,
-                        useTimbres: stamping.preferTimbres,
-                        usePostOffice: !stamping.preferTimbresParMultiples && !stamping.preferTimbres,
+                        useTimbresParMultiples: priceLetter.preferTimbresParMultiples,
+                        useTimbres: priceLetter.preferTimbres,
+                        usePostOffice: !priceLetter.preferTimbresParMultiples && !priceLetter.preferTimbres,
                         
-                        nbTimbres: stamping.preferTimbres ? Int(ceil(stamping.nbTimbresRequired)) : stamping.preferTimbresParMultiples ? stamping.timbresParMultiples ?? 0 : 0
+                        nbTimbres: priceLetter.preferTimbres ? Int(ceil(priceLetter.nbTimbresRequired)) : priceLetter.preferTimbresParMultiples ? priceLetter.timbresParMultiples ?? 0 : 0
                     )
                 }
                 
@@ -524,8 +524,8 @@ struct OrderShippingView: View {
                     maxWeight: band.maxWeight,
                     chooseLetter: chooseLetter, chooseParcel: chooseParcel,
                     chooseParcelZB: chooseParcelZB, chooseParcelZC: chooseParcelZC,
-                    value: value,
-                    stamping: selectedStamping
+                    letterStamping: letterStamping,
+                    value: value
                 )
             }
             

@@ -83,7 +83,7 @@ struct ShippingCostInfo: View {
                     ForEach(bands) { band in
                         
                         Group{
-                            if let price = band.priceLetter {
+                            if let price = band.letter?.tarifRef {
                                 Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                                     .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight && selectedShippingCost?.chooseLetter ?? false ? .bold : .regular)
                             } else {
@@ -164,15 +164,15 @@ struct ShippingCostInfo: View {
                     
                     ForEach(bands) { band in
                         
-                        if let stamping = band.stamping {
+                        if let priceLetter = band.letter {
                             
                             VStack(alignment: .leading) {
                                 
                                 let mul = {
-                                    if let m = stamping.timbresParMultiples {
+                                    if let m = priceLetter.timbresParMultiples {
                                         return Float(m)
                                     }
-                                    let m = stamping.nbTimbresRequired
+                                    let m = priceLetter.nbTimbresRequired
                                     if m != 1 {
                                         return ceilf(m)
                                     } else {
@@ -181,7 +181,7 @@ struct ShippingCostInfo: View {
                                 }()
                                 Text(String(format: "%d stamps", mul))
                                 
-                                let price = stamping.timbresParMultiplesTotalPrice ?? stamping.nbTimbresRequiredTotalPrice
+                                let price = priceLetter.timbresParMultiplesTotalPrice ?? priceLetter.nbTimbresRequiredTotalPrice
                                 Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                             }
                             .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight ? .bold : .regular)
@@ -227,13 +227,13 @@ struct ShippingCostInfo: View {
         shippingMethodId: shippingMethodId_France,
         selectedShippingCost: SelectedShippingCost(
             maxWeight: 20,
-            value: 2.35,
-            stamping: SelectedStamping(
+            letterStamping: LetterStamping(
                 useTimbresParMultiples: false,
                 useTimbres: false,
                 usePostOffice: false,
                 nbTimbres: 0
-            )
+            ),
+            value: 2.35
         )
     )
 }
