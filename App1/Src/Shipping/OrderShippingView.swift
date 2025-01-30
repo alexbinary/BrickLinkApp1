@@ -128,12 +128,12 @@ struct OrderShippingView: View {
                                     
                                     var s = ""
                                     
-                                    if let selectedAffranchissement = selectedAffranchissement {
+                                    if let selectedStamping = selectedStamping {
                                         
-                                        if selectedAffranchissement.usePostOffice {
+                                        if selectedStamping.usePostOffice {
                                             return "Bureau de poste"
                                         } else {
-                                            s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                            s = "\(selectedStamping.nbTimbres) timbres"
                                             
                                             if order.shippingMethodId != shippingMethodId_France {
                                                 s += " international"
@@ -158,7 +158,7 @@ struct OrderShippingView: View {
                     ShippingCostInfo(
                         shippingMethodId: order.shippingMethodId,
                         selectedShippingCost: selectedShippingCost,
-                        selectedAffranchissement: selectedAffranchissement
+                        selectedStamping: selectedStamping
                     )
                     .padding()
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -182,12 +182,12 @@ struct OrderShippingView: View {
                             
                             var s = ""
                             
-                            if let selectedAffranchissement = selectedAffranchissement {
+                            if let selectedStamping = selectedStamping {
                                 
-                                if selectedAffranchissement.usePostOffice {
+                                if selectedStamping.usePostOffice {
                                     return "Bureau de poste"
                                 } else {
-                                    s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                    s = "\(selectedStamping.nbTimbres) timbres"
                                     
                                     if order.shippingMethodId != shippingMethodId_France {
                                         s += " international"
@@ -248,7 +248,7 @@ struct OrderShippingView: View {
                             GridRow {
                                 Text("Stamping :")
                                 
-                                if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                                if let confirmedMethod = appController.stamping(forOrderWithId: order.id) {
                                     Text(confirmedMethod)
                                 } else {
                                     Text("")
@@ -256,14 +256,14 @@ struct OrderShippingView: View {
                                 
                                 HStack {
                                     Button {
-                                        appController.updateAffranchissement(forOrderWithId: order.id, method: recommendedStampingMethod)
+                                        appController.updateStamping(forOrderWithId: order.id, method: recommendedStampingMethod)
                                     } label: {
                                         Text("Recommended: \(recommendedStampingMethod)")
                                     }
                                     
                                     if recommendedStampingMethod != "Bureau de poste" {
                                         Button {
-                                            appController.updateAffranchissement(forOrderWithId: order.id, method: "Bureau de poste")
+                                            appController.updateStamping(forOrderWithId: order.id, method: "Bureau de poste")
                                         } label: {
                                             Text("Bureau de poste")
                                         }
@@ -396,7 +396,7 @@ struct OrderShippingView: View {
         
         if order.shippingMethodId == shippingMethodId_France {
             
-            if let cost = shippingCostFrance
+            if let cost = shippingCostBandsFrance
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
                 
                 var chooseLetter: Bool = false
@@ -424,7 +424,7 @@ struct OrderShippingView: View {
             
         } else if order.shippingMethodId == shippingMethodId_Europe {
             
-            if let cost = shippingCostEurope
+            if let cost = shippingCostBandsEurope
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
                 
                 var chooseLetter: Bool = false
@@ -452,7 +452,7 @@ struct OrderShippingView: View {
             
         } else if order.shippingMethodId == shippingMethodId_World {
             
-            if let cost = shippingCostWorld
+            if let cost = shippingCostBandsWorld
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
                 
                 var chooseLetter: Bool = false
@@ -488,7 +488,7 @@ struct OrderShippingView: View {
     }
     
     
-    var selectedAffranchissement: SelectedAffranchissement? {
+    var selectedStamping: SelectedStamping? {
         
         guard let order = appController.orderDetails(forOrderWithId: orderId) else {
             return nil
@@ -498,10 +498,10 @@ struct OrderShippingView: View {
         
         if order.shippingMethodId == shippingMethodId_France {
             
-            if let aff = affranchissementValuesFrance
+            if let aff = stampingBandsFrance
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
                 
-                return SelectedAffranchissement(
+                return SelectedStamping(
                     maxWeight: aff.maxWeight,
                     
                     useTimbresParMultiples: aff.preferTimbresParMultiples,
@@ -514,10 +514,10 @@ struct OrderShippingView: View {
             
         } else {
             
-            if let aff = affranchissementValuesWorld
+            if let aff = stampingBandsWorld
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
                 
-                return SelectedAffranchissement(
+                return SelectedStamping(
                     maxWeight: aff.maxWeight,
                     
                     useTimbresParMultiples: aff.preferTimbresParMultiples,

@@ -75,7 +75,7 @@ struct OrderComptaView: View {
                
             HStack {
                 Text("Confirmed affranchissment:")
-                if let confirmedMethod = appController.affranchissement(forOrderWithId: order.id) {
+                if let confirmedMethod = appController.stamping(forOrderWithId: order.id) {
                     Text(confirmedMethod)
                 }
             }

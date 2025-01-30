@@ -335,21 +335,21 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Affranchissement
+    // MARK: - Stamping
     
     
-    public func affranchissement(forOrderWithId orderId: OrderSummary.ID) -> String? {
+    public func stamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        return dataStore.affranchissementMethodByOrderId[orderId]
+        return dataStore.stampingMethodByOrderId[orderId]
     }
     
     
-    public func updateAffranchissement(forOrderWithId orderId: OrderSummary.ID, method: String) {
+    public func updateStamping(forOrderWithId orderId: OrderSummary.ID, method: String) {
         
-        var affranchissementMethodByOrderId = dataStore.affranchissementMethodByOrderId
-        affranchissementMethodByOrderId[orderId] = method
+        var stampingMethodByOrderId = dataStore.stampingMethodByOrderId
+        stampingMethodByOrderId[orderId] = method
         
-        try! dataStore.setAffranchissementMethodByOrderId(affranchissementMethodByOrderId)
+        try! dataStore.setStampingMethodByOrderId(stampingMethodByOrderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -1520,12 +1520,12 @@ class AppController: ObservableObject {
             return true
         }
         
-        let affranchissement = affranchissement(forOrderWithId: orderId)
-        if (affranchissement ?? "").isEmpty {
+        let stamping = stamping(forOrderWithId: orderId)
+        if (stamping ?? "").isEmpty {
             
             return false
             
-        } else if affranchissement == "Bureau de poste" {
+        } else if stamping == "Bureau de poste" {
             
             return shippingTransaction(forOrderWithId: orderId) != nil
             
@@ -1594,9 +1594,9 @@ class AppController: ObservableObject {
             return true
         }
         
-        let affranchissement = affranchissement(forOrderWithId: orderId)
+        let stamping = stamping(forOrderWithId: orderId)
         
-        return !(affranchissement ?? "").isEmpty
+        return !(stamping ?? "").isEmpty
     }
     
     

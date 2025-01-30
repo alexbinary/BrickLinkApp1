@@ -158,17 +158,17 @@ class DataStore {
     }
     
     
-    public var affranchissementMethodByOrderId: [OrderSummary.ID: String] {
+    public var stampingMethodByOrderId: [OrderSummary.ID: String] {
         
-        data?.affranchissementMethodByOrderId ?? [:]
+        data?.stampingMethodByOrderId ?? [:]
     }
     
     
-    public func setAffranchissementMethodByOrderId(_ affranchissementMethodByOrderId: [OrderSummary.ID: String]) throws {
+    public func setStampingMethodByOrderId(_ stampingMethodByOrderId: [OrderSummary.ID: String]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
-        data!.affranchissementMethodByOrderId = affranchissementMethodByOrderId
+        data!.stampingMethodByOrderId = stampingMethodByOrderId
     }
     
     
@@ -316,7 +316,7 @@ struct DataRoot: Codable {
     // MARK: - Local data
     
     var shippingCostsByOrderId: [OrderSummary.ID: Float]?
-    var affranchissementMethodByOrderId: [OrderSummary.ID: String]?
+    var stampingMethodByOrderId: [OrderSummary.ID: String]?
     var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
     var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
     var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]?
