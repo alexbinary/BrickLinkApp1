@@ -157,7 +157,8 @@ struct OrderShippingView: View {
                     
                     ShippingCostInfo(
                         shippingMethodId: order.shippingMethodId,
-                        selectedShippingCost: selectedShippingCost
+                        selectedShippingCost: selectedShippingCost,
+                        selectedAffranchissement: selectedAffranchissement
                     )
                     .padding()
                     .frame(maxHeight: .infinity, alignment: .top)
