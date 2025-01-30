@@ -112,8 +112,7 @@ struct OrderShippingView: View {
                             
                             InfoCardView(title: "􀖧 Cost") {
                                 
-                                if let selectedShippingCost = selectedShippingCost,
-                                   let shippingCostPredictedValue = selectedShippingCost.value {
+                                if let shippingCostPredictedValue = selectedShippingCost?.value {
                                  
                                     Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
                                         .bold()
@@ -128,7 +127,7 @@ struct OrderShippingView: View {
                                     
                                     var s = ""
                                     
-                                    if let selectedStamping = selectedStamping {
+                                    if let selectedStamping = selectedShippingCost?.stamping {
                                         
                                         if selectedStamping.usePostOffice {
                                             return "Bureau de poste"
@@ -157,8 +156,7 @@ struct OrderShippingView: View {
                     
                     ShippingCostInfo(
                         shippingMethodId: order.shippingMethodId,
-                        selectedShippingCost: selectedShippingCost,
-                        selectedStamping: selectedStamping
+                        selectedShippingCost: selectedShippingCost
                     )
                     .padding()
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -182,7 +180,7 @@ struct OrderShippingView: View {
                             
                             var s = ""
                             
-                            if let selectedStamping = selectedStamping {
+                            if let selectedStamping = selectedShippingCost?.stamping {
                                 
                                 if selectedStamping.usePostOffice {
                                     return "Bureau de poste"
@@ -230,8 +228,7 @@ struct OrderShippingView: View {
                                         Text("Save")
                                     }
                                     
-                                    if let selectedShippingCost = selectedShippingCost,
-                                       let shippingCostPredictedValue = selectedShippingCost.value {
+                                    if let shippingCostPredictedValue = selectedShippingCost?.value {
                                         
                                         Button {
                                             appController.updateShippingCost(forOrderWithId: order.id, cost: shippingCostPredictedValue)
@@ -396,7 +393,7 @@ struct OrderShippingView: View {
         
         if order.shippingMethodId == shippingMethodId_France {
             
-            if let cost = shippingCostBandsFrance
+            if let band = shippingCostBandsFrance
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
                 
                 var chooseLetter: Bool = false
@@ -408,25 +405,42 @@ struct OrderShippingView: View {
                 
                 if weight < 250 {
                     chooseLetter = true
-                    value = cost.priceLetter
+                    value = band.priceLetter
                 } else {
                     chooseParcel = true
-                    value = cost.priceParcel
+                    value = band.priceParcel
+                }
+                
+                var selectedStamping: SelectedStamping? = nil
+                    
+                if let stamping = band.stamping {
+                    
+                    selectedStamping = SelectedStamping(
+                    
+                        useTimbresParMultiples: stamping.preferTimbresParMultiples,
+                        useTimbres: stamping.preferTimbres,
+                        usePostOffice: !stamping.preferTimbresParMultiples && !stamping.preferTimbres,
+                        
+                        nbTimbres: stamping.preferTimbres ? Int(ceil(stamping.nbTimbresRequired)) : stamping.preferTimbresParMultiples ? stamping.timbresParMultiples ?? 0 : 0
+                    )
                 }
                 
                 return SelectedShippingCost(
-                    maxWeight: cost.maxWeight,
+                    maxWeight: band.maxWeight,
                     chooseLetter: chooseLetter, chooseParcel: chooseParcel,
                     chooseParcelZB: chooseParcelZB, chooseParcelZC: chooseParcelZC,
-                    value: value
+                    value: value,
+                    stamping: selectedStamping
                 )
             }
+            
+            return nil
             
         } else if order.shippingMethodId == shippingMethodId_Europe {
             
-            if let cost = shippingCostBandsEurope
+            if let band = shippingCostBandsEurope
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                
+                  
                 var chooseLetter: Bool = false
                 var chooseParcel: Bool = false
                 let chooseParcelZB: Bool = false
@@ -436,25 +450,42 @@ struct OrderShippingView: View {
                 
                 if weight < 250 {
                     chooseLetter = true
-                    value = cost.priceLetter
+                    value = band.priceLetter
                 } else {
                     chooseParcel = true
-                    value = cost.priceParcel
+                    value = band.priceParcel
+                }
+                
+                var selectedStamping: SelectedStamping? = nil
+                    
+                if let stamping = band.stamping {
+                    
+                    selectedStamping = SelectedStamping(
+                        
+                        useTimbresParMultiples: stamping.preferTimbresParMultiples,
+                        useTimbres: stamping.preferTimbres,
+                        usePostOffice: !stamping.preferTimbresParMultiples && !stamping.preferTimbres,
+                        
+                        nbTimbres: stamping.preferTimbres ? Int(ceil(stamping.nbTimbresRequired)) : stamping.preferTimbresParMultiples ? stamping.timbresParMultiples ?? 0 : 0
+                    )
                 }
                 
                 return SelectedShippingCost(
-                    maxWeight: cost.maxWeight,
+                    maxWeight: band.maxWeight,
                     chooseLetter: chooseLetter, chooseParcel: chooseParcel,
                     chooseParcelZB: chooseParcelZB, chooseParcelZC: chooseParcelZC,
-                    value: value
+                    value: value,
+                    stamping: selectedStamping
                 )
             }
             
+            return nil
+            
         } else if order.shippingMethodId == shippingMethodId_World {
             
-            if let cost = shippingCostBandsWorld
+            if let band = shippingCostBandsWorld
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                
+                    
                 var chooseLetter: Bool = false
                 let chooseParcel: Bool = false
                 var chooseParcelZB: Bool = false
@@ -464,69 +495,41 @@ struct OrderShippingView: View {
                 
                 if weight < 250 {
                     chooseLetter = true
-                    value = cost.priceLetter
+                    value = band.priceLetter
                 } else {
                     if ["US"].contains(order.shippingAddressCountryCode) {
                         chooseParcelZC = true
-                        value = cost.priceParcelZC
+                        value = band.priceParcelZC
                     } else {
                         chooseParcelZB = true
-                        value = cost.priceParcelZB
+                        value = band.priceParcelZB
                     }
                 }
                 
+                var selectedStamping: SelectedStamping? = nil
+                    
+                if let stamping = band.stamping {
+                    
+                    selectedStamping = SelectedStamping(
+                        
+                        useTimbresParMultiples: stamping.preferTimbresParMultiples,
+                        useTimbres: stamping.preferTimbres,
+                        usePostOffice: !stamping.preferTimbresParMultiples && !stamping.preferTimbres,
+                        
+                        nbTimbres: stamping.preferTimbres ? Int(ceil(stamping.nbTimbresRequired)) : stamping.preferTimbresParMultiples ? stamping.timbresParMultiples ?? 0 : 0
+                    )
+                }
+                
                 return SelectedShippingCost(
-                    maxWeight: cost.maxWeight,
+                    maxWeight: band.maxWeight,
                     chooseLetter: chooseLetter, chooseParcel: chooseParcel,
                     chooseParcelZB: chooseParcelZB, chooseParcelZC: chooseParcelZC,
-                    value: value
+                    value: value,
+                    stamping: selectedStamping
                 )
             }
-        }
-        
-        return nil
-    }
-    
-    
-    var selectedStamping: SelectedStamping? {
-        
-        guard let order = appController.orderDetails(forOrderWithId: orderId) else {
+            
             return nil
-        }
-        
-        let weight = order.totalWeight * orderWeightMarginRatio
-        
-        if order.shippingMethodId == shippingMethodId_France {
-            
-            if let aff = stampingBandsFrance
-                .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                
-                return SelectedStamping(
-                    maxWeight: aff.maxWeight,
-                    
-                    useTimbresParMultiples: aff.preferTimbresParMultiples,
-                    useTimbres: aff.preferTimbres,
-                    usePostOffice: !aff.preferTimbresParMultiples && !aff.preferTimbres,
-                    
-                    nbTimbres: aff.preferTimbres ? Int(ceil(aff.nbTimbresRequired)) : aff.preferTimbresParMultiples ? aff.timbresParMultiples ?? 0 : 0
-                )
-            }
-            
-        } else {
-            
-            if let aff = stampingBandsWorld
-                .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                
-                return SelectedStamping(
-                    maxWeight: aff.maxWeight,
-                    
-                    useTimbresParMultiples: aff.preferTimbresParMultiples,
-                    useTimbres: aff.preferTimbres,
-                    usePostOffice: !aff.preferTimbresParMultiples && !aff.preferTimbres,
-                    
-                    nbTimbres: aff.preferTimbres ? Int(ceil(aff.nbTimbresRequired)) : aff.preferTimbresParMultiples ? aff.timbresParMultiples ?? 0 : 0
-                )
-            }
         }
         
         return nil

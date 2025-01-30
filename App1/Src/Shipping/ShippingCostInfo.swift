@@ -8,7 +8,6 @@ struct ShippingCostInfo: View {
     
     let shippingMethodId: Int
     let selectedShippingCost: SelectedShippingCost?
-    let selectedStamping: SelectedStamping?
     
     
     var body: some View {
@@ -28,7 +27,7 @@ struct ShippingCostInfo: View {
             }()
             HeaderTitleView(label: title)
             
-            let shippingCostBands = {
+            let bands = {
                 
                 let allBands = {
                     switch shippingMethodId {
@@ -61,40 +60,10 @@ struct ShippingCostInfo: View {
                 return bands
             }()
             
-            let stampingBands = {
-                
-                let allBands = {
-                    switch shippingMethodId {
-                        
-                    case shippingMethodId_France:
-                        return stampingBandsFrance
-                        
-                    case shippingMethodId_Europe, shippingMethodId_World:
-                        return stampingBandsWorld
-                        
-                    default:
-                        return []
-                    }
-                }()
-                
-                var bands: [StampingBand] = []
-                
-                if let idx = allBands.firstIndex(where: { selectedShippingCost?.maxWeight == $0.maxWeight }) {
-                    bands.append(allBands[idx])
-                    
-                    let nextIdx = idx + 1
-                    if nextIdx < allBands.count {
-                        bands.append(allBands[nextIdx])
-                    }
-                }
-                
-                return bands
-            }()
-            
             Grid(alignment: .leading) {
                 GridRow {
                     Text("")
-                    ForEach(shippingCostBands) { band in
+                    ForEach(bands) { band in
                         Text("\(band.minWeight)-\(band.maxWeight)g")
                     }
                 }
@@ -111,7 +80,7 @@ struct ShippingCostInfo: View {
                 GridRow {
                     Text("􀍕").foregroundStyle(.secondary)
                     
-                    ForEach(shippingCostBands) { band in
+                    ForEach(bands) { band in
                         
                         Group{
                             if let price = band.priceLetter {
@@ -130,7 +99,7 @@ struct ShippingCostInfo: View {
                     GridRow {
                         Text("􀐚ZB").foregroundStyle(.secondary)
                         
-                        ForEach(shippingCostBands) { band in
+                        ForEach(bands) { band in
                             
                             Group {
                                 if let price = band.priceParcelZB {
@@ -147,7 +116,7 @@ struct ShippingCostInfo: View {
                     GridRow {
                         Text("􀐚ZC").foregroundStyle(.secondary)
                         
-                        ForEach(shippingCostBands) { band in
+                        ForEach(bands) { band in
                             
                             Group {
                                 if let price = band.priceParcelZC {
@@ -166,7 +135,7 @@ struct ShippingCostInfo: View {
                     GridRow {
                         Text("􀐚").foregroundStyle(.secondary)
                         
-                        ForEach(shippingCostBands) { band in
+                        ForEach(bands) { band in
                             
                             Group {
                                 if let price = band.priceParcel {
@@ -193,28 +162,35 @@ struct ShippingCostInfo: View {
                     
                     Text("􂙡").foregroundStyle(.secondary)
                     
-                    ForEach(stampingBands) { band in
+                    ForEach(bands) { band in
                         
-                        VStack(alignment: .leading) {
+                        if let stamping = band.stamping {
                             
-                            let mul = {
-                                if let m = band.timbresParMultiples {
-                                    return Float(m)
-                                }
-                                let m = band.nbTimbresRequired
-                                if m != 1 {
-                                    return ceilf(m)
-                                } else {
-                                    return m
-                                }
-                            }()
-                            Text(String(format: "%d stamps", mul))
+                            VStack(alignment: .leading) {
+                                
+                                let mul = {
+                                    if let m = stamping.timbresParMultiples {
+                                        return Float(m)
+                                    }
+                                    let m = stamping.nbTimbresRequired
+                                    if m != 1 {
+                                        return ceilf(m)
+                                    } else {
+                                        return m
+                                    }
+                                }()
+                                Text(String(format: "%d stamps", mul))
+                                
+                                let price = stamping.timbresParMultiplesTotalPrice ?? stamping.nbTimbresRequiredTotalPrice
+                                Text(price, format: .currency(code: "EUR").presentation(.isoCode))
+                            }
+                            .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight ? .bold : .regular)
+                            .foregroundStyle(selectedShippingCost?.maxWeight == band.maxWeight ? .primary : .secondary)
                             
-                            let price = band.timbresParMultiplesTotalPrice ?? band.nbTimbresRequiredTotalPrice
-                            Text(price, format: .currency(code: "EUR").presentation(.isoCode))
+                        } else {
+                            
+                           Text("")
                         }
-                        .fontWeight(selectedStamping?.maxWeight == band.maxWeight ? .bold : .regular)
-                        .foregroundStyle(selectedStamping?.maxWeight == band.maxWeight ? .primary : .secondary)
                     }
                 }
             }
@@ -249,13 +225,15 @@ struct ShippingCostInfo: View {
 #Preview {
     ShippingCostInfo(
         shippingMethodId: shippingMethodId_France,
-        selectedShippingCost: SelectedShippingCost(maxWeight: 20, value: 2.35),
-        selectedStamping: SelectedStamping(
+        selectedShippingCost: SelectedShippingCost(
             maxWeight: 20,
-            useTimbresParMultiples: false,
-            useTimbres: false,
-            usePostOffice: false,
-            nbTimbres: 0
+            value: 2.35,
+            stamping: SelectedStamping(
+                useTimbresParMultiples: false,
+                useTimbres: false,
+                usePostOffice: false,
+                nbTimbres: 0
+            )
         )
     )
 }
