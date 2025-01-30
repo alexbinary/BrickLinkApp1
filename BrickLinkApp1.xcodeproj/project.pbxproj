@@ -153,6 +153,16 @@
 			path = Result;
 			sourceTree = "<group>";
 		};
+		29A425942D4BD596002E5135 /* Shipping */ = {
+			isa = PBXGroup;
+			children = (
+				292619FE2D26F4A800F1BE16 /* OrderShippingView.swift */,
+				29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */,
+				29A425902D4B58FD002E5135 /* InfoCardView.swift */,
+			);
+			path = Shipping;
+			sourceTree = "<group>";
+		};
 		29ACCDEE2CAD8C620065C6E3 /* Types */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,9 +222,6 @@
 				29B949232C7F0AD500CC7F26 /* OrderDetailView.swift */,
 				29B949352C86F0BB00CC7F26 /* OrderGeneralView.swift */,
 				29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */,
-				292619FE2D26F4A800F1BE16 /* OrderShippingView.swift */,
-				29A425902D4B58FD002E5135 /* InfoCardView.swift */,
-				29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */,
 				2955607F2D2971F8000DC139 /* OrderFeedbackView.swift */,
 				29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */,
 			);
@@ -302,6 +309,7 @@
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 				29B9493E2C87028300CC7F26 /* Modifiers */,
 				29B949202C7F0A3D00CC7F26 /* Orders */,
+				29A425942D4BD596002E5135 /* Shipping */,
 				29B0913F2C9488630072F7BE /* Upload */,
 				291386372C93354D00E79E63 /* Result */,
 				29B949392C86F34C00CC7F26 /* CashFlow */,
