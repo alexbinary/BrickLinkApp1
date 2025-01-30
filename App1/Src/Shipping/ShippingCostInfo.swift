@@ -69,28 +69,25 @@ struct ShippingCostInfo: View {
                 }
                 .foregroundStyle(.secondary)
                 
-                Color.clear.frame(width: 0, height: 3)
-                GridRow {
-                    Text("")
-                    Text("Reference price").gridCellColumns(2)
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                Color.clear.frame(width: 0, height: 0)
                 
                 GridRow {
                     Text("􀍕").foregroundStyle(.secondary)
                     
                     ForEach(bands) { band in
                         
+                        let activeBand = selectedShippingCost?.maxWeight == band.maxWeight
+                        let preferred = selectedShippingCost?.preferLetter ?? false
+                        
                         Group{
-                            if let price = band.letter?.tarifRef {
+                            if let price = band.letter?.refPrice {
                                 Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                    .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight && selectedShippingCost?.chooseLetter ?? false ? .bold : .regular)
                             } else {
                                 Text("")
                             }
                         }
-                        .foregroundStyle(selectedShippingCost?.maxWeight == band.maxWeight ? .primary : .secondary)
+                        .fontWeight(activeBand && preferred ? .bold : .regular)
+                        .foregroundStyle(activeBand ? .primary : .secondary)
                     }
                 }
                 
@@ -101,15 +98,18 @@ struct ShippingCostInfo: View {
                         
                         ForEach(bands) { band in
                             
+                            let activeBand = selectedShippingCost?.maxWeight == band.maxWeight
+                            let preferred = selectedShippingCost?.preferParcelZB ?? false
+                            
                             Group {
                                 if let price = band.priceParcelZB {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight && selectedShippingCost?.chooseParcelZB ?? false ? .bold : .regular)
                                 } else {
                                     Text("")
                                 }
                             }
-                            .foregroundStyle(selectedShippingCost?.maxWeight == band.maxWeight ? .primary : .secondary)
+                            .fontWeight(activeBand && preferred ? .bold : .regular)
+                            .foregroundStyle(activeBand ? .primary : .secondary)
                         }
                     }
                     
@@ -118,15 +118,18 @@ struct ShippingCostInfo: View {
                         
                         ForEach(bands) { band in
                             
+                            let activeBand = selectedShippingCost?.maxWeight == band.maxWeight
+                            let preferred = selectedShippingCost?.preferParcelZC ?? false
+                            
                             Group {
                                 if let price = band.priceParcelZC {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight && selectedShippingCost?.chooseParcelZC ?? false ? .bold : .regular)
                                 } else {
                                     Text("")
                                 }
                             }
-                            .foregroundStyle(selectedShippingCost?.maxWeight == band.maxWeight ? .primary : .secondary)
+                            .fontWeight(activeBand && preferred ? .bold : .regular)
+                            .foregroundStyle(activeBand ? .primary : .secondary)
                         }
                     }
                     
@@ -137,26 +140,23 @@ struct ShippingCostInfo: View {
                         
                         ForEach(bands) { band in
                             
+                            let activeBand = selectedShippingCost?.maxWeight == band.maxWeight
+                            let preferred = selectedShippingCost?.preferParcel ?? false
+                            
                             Group {
                                 if let price = band.priceParcel {
                                     Text(price, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight && selectedShippingCost?.chooseParcel ?? false ? .bold : .regular)
                                 } else {
                                     Text("")
                                 }
                             }
-                            .foregroundStyle(selectedShippingCost?.maxWeight == band.maxWeight ? .primary : .secondary)
+                            .fontWeight(activeBand && preferred ? .bold : .regular)
+                            .foregroundStyle(activeBand ? .primary : .secondary)
                         }
                     }
                 }
                 
-                Color.clear.frame(width: 0, height: 3)
-                GridRow {
-                    Text("")
-                    Text("Stamping").gridCellColumns(2)
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                Color.clear.frame(width: 0, height: 0)
                 
                 GridRow {
                     
@@ -164,32 +164,36 @@ struct ShippingCostInfo: View {
                     
                     ForEach(bands) { band in
                         
+                        let activeBand = selectedShippingCost?.maxWeight == band.maxWeight
+                        
                         if let priceLetter = band.letter {
                             
                             VStack(alignment: .leading) {
                                 
-                                let mul = {
-                                    if let m = priceLetter.timbresParMultiples {
-                                        return Float(m)
-                                    }
-                                    let m = priceLetter.nbTimbresRequired
-                                    if m != 1 {
-                                        return ceilf(m)
-                                    } else {
-                                        return m
-                                    }
-                                }()
-                                Text(String(format: "%d stamps", mul))
+                                if let n = priceLetter.nbTimbres {
+                                    
+                                    let text = {
+                                        
+                                        var text = String(format: "%d stamps", n)
+                                        if priceLetter.preferTimbresParMultiples {
+                                            text += "*"
+                                        }
+                                        return text
+                                    }()
+                                    Text(text)
+                                } else {
+                                    Text("post office")
+                                }
                                 
-                                let price = priceLetter.timbresParMultiplesTotalPrice ?? priceLetter.nbTimbresRequiredTotalPrice
+                                let price = priceLetter.bestPrice
                                 Text(price, format: .currency(code: "EUR").presentation(.isoCode))
                             }
-                            .fontWeight(selectedShippingCost?.maxWeight == band.maxWeight ? .bold : .regular)
-                            .foregroundStyle(selectedShippingCost?.maxWeight == band.maxWeight ? .primary : .secondary)
+                            .fontWeight(activeBand ? .bold : .regular)
+                            .foregroundStyle(activeBand ? .primary : .secondary)
                             
                         } else {
                             
-                           Text("")
+                           Text("-")
                         }
                     }
                 }

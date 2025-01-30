@@ -12,37 +12,71 @@ struct ShippingCostBand: Identifiable {
     
     let letter: LetterCost?
     
-    var priceParcel: Float? = nil
-    var priceParcelZB: Float? = nil
-    var priceParcelZC: Float? = nil
+    var priceParcel: Decimal? = nil
+    var priceParcelZB: Decimal? = nil
+    var priceParcelZC: Decimal? = nil
 }
 
 
 struct LetterCost {
     
-    let priceTimbre: Float
-    let priceTracking: Float
+    let refPrice: Decimal
     
-    let tarifRef: Float
+    let priceTimbre: Decimal
+    let priceTracking: Decimal
+    
+    
+    var minNbTimbresToCoverRefPrice: Int {
+        let raw = (self.refPrice - priceTracking)/priceTimbre
+        return Int(ceilf(NSDecimalNumber(decimal: raw).floatValue))
+    }
+    var priceTimbresToCoverRefPrice: Decimal {
+        Decimal(minNbTimbresToCoverRefPrice) * priceTimbre + priceTracking
+    }
+    
     
     let timbresParMultiples: Int?
-    var timbresParMultiplesTotalPrice: Float? {
-        guard let n = self.timbresParMultiples else { return nil }
-        return Float(n) * priceTimbre + priceTracking
+    
+    var priceTimbresParMultiples: Decimal? {
+        if let n = self.timbresParMultiples {
+            return Decimal(n) * priceTimbre + priceTracking
+        } else {
+            return nil
+        }
     }
     
-    var nbTimbresRequired: Float {
-        (self.tarifRef - priceTracking)/priceTimbre
-    }
-    var nbTimbresRequiredTotalPrice: Float {
-        ceilf(nbTimbresRequired) * priceTimbre + priceTracking
-    }
     
     var preferTimbresParMultiples: Bool {
-        timbresParMultiplesTotalPrice != nil && timbresParMultiplesTotalPrice! <= tarifRef
+        if let n = priceTimbresParMultiples {
+            return n < refPrice
+        } else {
+            return false
+        }
     }
-    var preferTimbres: Bool {
-        nbTimbresRequiredTotalPrice <= tarifRef
+    var preferCoverRefPriceWithTimbres: Bool {
+        priceTimbresToCoverRefPrice <= refPrice
+    }
+    var preferPostOffice: Bool {
+        !preferTimbresParMultiples && !preferCoverRefPriceWithTimbres
+    }
+
+    var bestPrice: Decimal {
+        if preferTimbresParMultiples, let p = priceTimbresParMultiples {
+            return p
+        }
+        if preferCoverRefPriceWithTimbres {
+            return priceTimbresToCoverRefPrice
+        }
+        return refPrice
+    }
+    var nbTimbres: Int? {
+        if preferTimbresParMultiples, let n = timbresParMultiples {
+            return n
+        }
+        if preferCoverRefPriceWithTimbres {
+            return minNbTimbresToCoverRefPrice
+        }
+        return nil
     }
 }
 
@@ -52,14 +86,14 @@ struct SelectedShippingCost {
     
     let maxWeight: Int
     
-    var chooseLetter: Bool = false
-    var chooseParcel: Bool = false
-    var chooseParcelZB: Bool = false
-    var chooseParcelZC: Bool = false
+    var preferLetter: Bool = false
+    var preferParcel: Bool = false
+    var preferParcelZB: Bool = false
+    var preferParcelZC: Bool = false
     
     let letterStamping: LetterStamping?
     
-    let value: Float?
+    let value: Decimal?
 }
 
 
@@ -69,7 +103,7 @@ struct LetterStamping {
     let useTimbres: Bool
     let usePostOffice: Bool
     
-    let nbTimbres: Int
+    let nbTimbres: Int?
 }
 
 
@@ -79,11 +113,11 @@ let shippingMethodId_Europe = 290360
 let shippingMethodId_World = 185519
 
 
-let priceTimbreFrance: Float = 1.39
-let priceTrackingFrance: Float = 0.50
+let priceTimbreFrance: Decimal = 1.39
+let priceTrackingFrance: Decimal = 0.50
 
-let priceTimbreWorld: Float = 2.10
-let priceTrackingWorld: Float = 2.80
+let priceTimbreWorld: Decimal = 2.10
+let priceTrackingWorld: Decimal = 2.80
 
 
 let shippingCostBandsFrance = [
@@ -92,9 +126,10 @@ let shippingCostBandsFrance = [
         minWeight: 0,
         maxWeight: 20,
         letter: LetterCost(
+            refPrice: 1.89,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 1.89, timbresParMultiples: 1
+            timbresParMultiples: 1
         ),
         priceParcel: 5.25
     ),
@@ -102,9 +137,10 @@ let shippingCostBandsFrance = [
         minWeight: 20,
         maxWeight: 100,
         letter: LetterCost(
+            refPrice: 3.28,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 3.28, timbresParMultiples: 2
+            timbresParMultiples: 2
         ),
         priceParcel: 5.25
     ),
@@ -112,9 +148,10 @@ let shippingCostBandsFrance = [
         minWeight: 100,
         maxWeight: 250,
         letter: LetterCost(
+            refPrice: 5.22,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 5.22, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 5.25
     ),
@@ -122,9 +159,10 @@ let shippingCostBandsFrance = [
         minWeight: 250,
         maxWeight: 500,
         letter: LetterCost(
+            refPrice: 7.20,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 7.20, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 7.35
     ),
@@ -132,9 +170,10 @@ let shippingCostBandsFrance = [
         minWeight: 500,
         maxWeight: 750,
         letter: LetterCost(
+            refPrice: 8.90,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 8.90, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 8.65
     ),
@@ -142,9 +181,10 @@ let shippingCostBandsFrance = [
         minWeight: 750,
         maxWeight: 1000,
         letter: LetterCost(
+            refPrice: 8.90,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 8.90, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 9.40
     ),
@@ -152,9 +192,10 @@ let shippingCostBandsFrance = [
         minWeight: 1000,
         maxWeight: 2000,
         letter: LetterCost(
+            refPrice: 10.75,
             priceTimbre: priceTimbreFrance,
             priceTracking: priceTrackingFrance,
-            tarifRef: 10.75, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 10.70
     ),
@@ -173,9 +214,10 @@ let shippingCostBandsEurope = [
         minWeight: 0,
         maxWeight: 20,
         letter: LetterCost(
+            refPrice: 4.90,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 4.90, timbresParMultiples: 1
+            timbresParMultiples: 1
         ),
         priceParcel: 14.85
     ),
@@ -183,9 +225,10 @@ let shippingCostBandsEurope = [
         minWeight: 20,
         maxWeight: 100,
         letter: LetterCost(
+            refPrice: 7.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 7.30, timbresParMultiples: 2
+            timbresParMultiples: 2
         ),
         priceParcel: 14.85
     ),
@@ -193,9 +236,10 @@ let shippingCostBandsEurope = [
         minWeight: 100,
         maxWeight: 250,
         letter: LetterCost(
+            refPrice: 13.60,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 13.60, timbresParMultiples: 5
+            timbresParMultiples: 5
         ),
         priceParcel: 14.85
     ),
@@ -203,9 +247,10 @@ let shippingCostBandsEurope = [
         minWeight: 250,
         maxWeight: 500,
         letter: LetterCost(
+            refPrice: 18.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 18.30, timbresParMultiples: 8
+            timbresParMultiples: 8
         ),
         priceParcel: 14.85
     ),
@@ -213,9 +258,10 @@ let shippingCostBandsEurope = [
         minWeight: 500,
         maxWeight: 750,
         letter: LetterCost(
+            refPrice: 32.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 32.30, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 18.45
     ),
@@ -223,9 +269,10 @@ let shippingCostBandsEurope = [
         minWeight: 750,
         maxWeight: 1000,
         letter: LetterCost(
+            refPrice: 32.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 32.30, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 18.45
     ),
@@ -233,9 +280,10 @@ let shippingCostBandsEurope = [
         minWeight: 1000,
         maxWeight: 2000,
         letter: LetterCost(
+            refPrice: 32.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 32.30, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcel: 20.90
     ),
@@ -254,9 +302,10 @@ let shippingCostBandsWorld = [
         minWeight: 0,
         maxWeight: 20,
         letter: LetterCost(
+            refPrice: 4.90,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 4.90, timbresParMultiples: 1
+            timbresParMultiples: 1
         ),
         priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
@@ -264,9 +313,10 @@ let shippingCostBandsWorld = [
         minWeight: 20,
         maxWeight: 100,
         letter: LetterCost(
+            refPrice: 7.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 7.30, timbresParMultiples: 2
+            timbresParMultiples: 2
         ),
         priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
@@ -274,9 +324,10 @@ let shippingCostBandsWorld = [
         minWeight: 100,
         maxWeight: 250,
         letter: LetterCost(
+            refPrice: 13.60,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 13.60, timbresParMultiples: 5
+            timbresParMultiples: 5
         ),
         priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
@@ -284,9 +335,10 @@ let shippingCostBandsWorld = [
         minWeight: 250,
         maxWeight: 500,
         letter: LetterCost(
+            refPrice: 18.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 18.30, timbresParMultiples: 8
+            timbresParMultiples: 8
         ),
         priceParcelZB: 22.70, priceParcelZC: 33.50
     ),
@@ -294,9 +346,10 @@ let shippingCostBandsWorld = [
         minWeight: 500,
         maxWeight: 750,
         letter: LetterCost(
+            refPrice: 32.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 32.30, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcelZB: 27.10, priceParcelZC: 37.30
     ),
@@ -304,9 +357,10 @@ let shippingCostBandsWorld = [
         minWeight: 750,
         maxWeight: 1000,
         letter: LetterCost(
+            refPrice: 32.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 32.30, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcelZB: 29.65, priceParcelZC: 51.40
     ),
@@ -314,9 +368,10 @@ let shippingCostBandsWorld = [
         minWeight: 1000,
         maxWeight: 2000,
         letter: LetterCost(
+            refPrice: 32.30,
             priceTimbre: priceTimbreWorld,
             priceTracking: priceTrackingWorld,
-            tarifRef: 32.30, timbresParMultiples: nil
+            timbresParMultiples: nil
         ),
         priceParcelZB: 29.65, priceParcelZC: 51.40
     ),
