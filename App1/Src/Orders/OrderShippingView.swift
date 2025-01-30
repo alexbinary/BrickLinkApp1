@@ -33,145 +33,114 @@ struct OrderShippingView: View {
                     .padding(8)
                     
                     let width1: CGFloat = 90
-                    let width2: CGFloat = 180
+                    let width2: CGFloat = 170
                     let height1: CGFloat = 20
                     let height2: CGFloat = 10
                     
                     Grid {
                         GridRow {
-                     
-                            VStack(alignment: .leading, spacing: 0) {
-                                
-                                HeaderTitleView(label: "􀭭 Weight")
-                                
-                                VStack(alignment: .center, spacing: 12) {
-                                
-                                    Text("\(String(format: "%.0f", order.totalWeight))g").font(.title3)
-                                        .bold()
-                                        .frame(width: width1, height: height1)
-                                    Text("Charged \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
-                                        .foregroundStyle(.secondary)
-                                        .frame(width: width1, height: height2)
-                                }
-                                .monospacedDigit()
-                                .padding()
-                            }
-                            .padding(8)
-                            .cornerRadius(6)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(Color(nsColor: .tertiarySystemFill))
-                            )
                             
-                            VStack(alignment: .leading, spacing: 0) {
+                            InfoCardView(title: "􀭭 Weight") {
                                 
-                                HeaderTitleView(label: "􀖧 Shipping")
+                                Text("\(String(format: "%.0f", order.totalWeight))g")
+                                    .bold()
+                                    .frame(width: width1, height: height1)
                                 
-                                VStack(alignment: .center, spacing: 12) {
+                            } detail: {
                                 
-                                    Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                        .bold()
-                                        .frame(width: width2, height: height1)
-                                    Text(order.shippingMethodName ?? "")
-                                        .foregroundStyle(.secondary)
-                                        .frame(width: width2, height: height2)
-                                }
-                                .padding()
+                                Text("Charged \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: width1, height: height2)
                             }
-                            .padding(8)
-                            .cornerRadius(6)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(Color(nsColor: .tertiarySystemFill))
-                            )
                             
+                            InfoCardView(title: "􀖧 Shipping") {
+                                
+                                Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                    .bold()
+                                    .frame(width: width2, height: height1)
+                                
+                            } detail: {
+                                
+                                Text(order.shippingMethodName ?? "")
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: width2, height: height2)
+                            }
                         }
                         
                         GridRow {
                             
-                            VStack(alignment: .leading, spacing: 0) {
+                            InfoCardView(title: "􀐚 Packing") {
                                 
-                                HeaderTitleView(label: "􀐚 Packing")
-                                
-                                VStack(alignment: .center, spacing: 12) {
-                                
-                                    if selectedShippingCost?.chooseLetter ?? false {
-                                        
-                                        Text("􀍖").font(.title2)
-                                            .foregroundStyle(.secondary)
-                                            .frame(width: width1, height: height1)
-                                        Text("Letter")
-                                            .foregroundStyle(.secondary)
-                                            .frame(width: width1, height: height2)
-                                        
-                                    } else {
-                                        
-                                        Text("􀐛").font(.title2)
-                                            .foregroundStyle(.secondary)
-                                            .frame(width: width1, height: height1)
-                                        Text("Parcel")
-                                            .foregroundStyle(.secondary)
-                                            .frame(width: width1, height: height2)
-                                    }
-                                }
-                                .padding()
-                            }
-                            .padding(8)
-                            .cornerRadius(6)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(Color(nsColor: .tertiarySystemFill))
-                            )
-                            
-                            VStack(alignment: .leading, spacing: 0) {
-                                
-                                HeaderTitleView(label: "􀖧 Cost")
-                                
-                                VStack(alignment: .center, spacing: 12) {
-                                
-                                    if let selectedShippingCost = selectedShippingCost,
-                                       let shippingCostPredictedValue = selectedShippingCost.value {
-                                     
-                                        Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
-                                            .bold()
-                                            .frame(width: width2, height: height1)
-                                    }
+                                if selectedShippingCost?.chooseLetter ?? false {
                                     
-                                    let recommendedStampingMethod = {
-                                        
-                                        var s = ""
-                                        
-                                        if let selectedAffranchissement = selectedAffranchissement {
-                                            
-                                            if selectedAffranchissement.usePostOffice {
-                                                return "Bureau de poste"
-                                            } else {
-                                                s = "\(selectedAffranchissement.nbTimbres) timbres"
-                                                
-                                                if order.shippingMethodId != shippingMethodId_France {
-                                                    s += " international"
-                                                }
-                                                
-                                                return s
-                                            }
-                                        }
-                                        
-                                        return s
-                                    }()
-                                    
-                                    Text(recommendedStampingMethod)
+                                    Text("􀍖").font(.title2)
                                         .foregroundStyle(.secondary)
-                                        .frame(width: width2, height: height2)
+                                        .frame(width: width1, height: height1)
+                                    
+                                } else {
+                                    
+                                    Text("􀐛").font(.title2)
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: width1, height: height1)
                                 }
-                                .padding()
+                                
+                            } detail: {
+                                
+                                if selectedShippingCost?.chooseLetter ?? false {
+                                    
+                                    Text("Letter")
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: width1, height: height2)
+                                    
+                                } else {
+                                    
+                                    Text("Parcel")
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: width1, height: height2)
+                                }
                             }
-                            .padding(8)
-                            .cornerRadius(6)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(Color(nsColor: .tertiarySystemFill))
-                            )
+
                             
+                            InfoCardView(title: "􀖧 Cost") {
+                                
+                                if let selectedShippingCost = selectedShippingCost,
+                                   let shippingCostPredictedValue = selectedShippingCost.value {
+                                 
+                                    Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
+                                        .bold()
+                                        .frame(width: width2, height: height1)
+                                } else {
+                                    Text("")
+                                }
+                                
+                            } detail: {
+                                
+                                let recommendedStampingMethod = {
+                                    
+                                    var s = ""
+                                    
+                                    if let selectedAffranchissement = selectedAffranchissement {
+                                        
+                                        if selectedAffranchissement.usePostOffice {
+                                            return "Bureau de poste"
+                                        } else {
+                                            s = "\(selectedAffranchissement.nbTimbres) timbres"
+                                            
+                                            if order.shippingMethodId != shippingMethodId_France {
+                                                s += " international"
+                                            }
+                                            
+                                            return s
+                                        }
+                                    }
+                                    
+                                    return s
+                                }()
+                                
+                                Text(recommendedStampingMethod)
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: width2, height: height2)
+                            }
                         }
                     }
                     
