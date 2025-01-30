@@ -17,7 +17,7 @@ struct OrderShippingView: View {
                 
             if let order = appController.orderDetails(forOrderWithId: orderId) {
                 
-                HStack(alignment: .top, spacing: 48) {
+                HStack(alignment: .top, spacing: 12) {
                     
                     VStack(alignment: .leading, spacing: 12) {
                 
@@ -29,8 +29,17 @@ struct OrderShippingView: View {
                             Text(order.shippingAddressCountryCode)
                         }
                         .font(.title3)
+                        .padding(.horizontal)
                     }
                     .padding(8)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .cornerRadius(6)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color(nsColor: .tertiarySystemFill))
+                    )
+                    
+                    Spacer()
                     
                     let width1: CGFloat = 90
                     let width2: CGFloat = 170
@@ -151,6 +160,7 @@ struct OrderShippingView: View {
                         selectedShippingCost: selectedShippingCost
                     )
                     .padding()
+                    .frame(maxHeight: .infinity, alignment: .top)
                     .background(Color(nsColor: .secondarySystemFill).opacity(0.7))
                     .cornerRadius(6)
                     .overlay(
