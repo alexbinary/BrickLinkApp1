@@ -30,8 +30,9 @@ struct ResultDashboardView: View {
             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
             
             let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
+            let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
             
-            let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+            let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
             
             let profitMargin = appController.profitMargin(
                 
@@ -40,7 +41,9 @@ struct ResultDashboardView: View {
                 
                 itemsCost: totalItemCost,
                 shippingCost: totalShippingCost,
-                fees: totalFees
+                
+                fees: totalFees,
+                refund: totalRefund
                 
             ) ?? 0
             
@@ -169,6 +172,17 @@ struct ResultDashboardView: View {
                                 }
                             }
                             
+                            TableColumn("Refund") { order in
+                                
+                                if let refund = appController.refund(for: order) {
+                                    
+                                    Text(
+                                        abs(refund),
+                                        format: .currency(code: "EUR").presentation(.isoCode)
+                                    ).signedAmountColor(.expense)
+                                }
+                            }
+                            
                         } rows: {
                             
                             ForEach(orders.limit(5)) { order in
@@ -236,6 +250,17 @@ struct ResultDashboardView: View {
                                     
                                     Text(
                                         abs(fees),
+                                        format: .currency(code: "EUR").presentation(.isoCode)
+                                    ).signedAmountColor(.expense)
+                                }
+                            }
+                            
+                            TableColumn("Refund") { order in
+                                
+                                if let refund = appController.refund(for: order) {
+                                    
+                                    Text(
+                                        abs(refund),
                                         format: .currency(code: "EUR").presentation(.isoCode)
                                     ).signedAmountColor(.expense)
                                 }

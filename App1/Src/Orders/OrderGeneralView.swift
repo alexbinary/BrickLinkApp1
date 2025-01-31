@@ -89,6 +89,8 @@ struct OrderGeneralView: View {
                     
                     Group {
                         
+                        let transactions = appController.incomeTransactions(forOrderWithId: order.id)
+                        
                         if let date = appController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                             
                             HStack {
@@ -97,7 +99,7 @@ struct OrderGeneralView: View {
                                 Text(date, format: .dateTime)
                             }
                             
-                        } else if let transaction = appController.incomeTransaction(forOrderWithId: order.id) {
+                        } else if !transactions.isEmpty {
                             
                             HStack(spacing: 12) {
                                 
@@ -107,8 +109,10 @@ struct OrderGeneralView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                     
-                                    Text(transaction.amount, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                        .font(.title3)
+                                    ForEach(transactions) { transaction in
+                                        Text(transaction.amount, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                            .font(.title3)
+                                    }
                                 }
                                 
                                 VStack(alignment: .leading) {
@@ -117,8 +121,10 @@ struct OrderGeneralView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                     
-                                    Text(transaction.paymentMethod.rawValue)
-                                        .font(.title3)
+                                    ForEach(transactions) { transaction in
+                                        Text(transaction.paymentMethod.rawValue)
+                                            .font(.title3)
+                                    }
                                 }
                                 
                                 VStack(alignment: .leading) {
@@ -127,8 +133,10 @@ struct OrderGeneralView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                     
-                                    Text(transaction.date, format: .dateTime)
-                                        .font(.title3)
+                                    ForEach(transactions) { transaction in
+                                        Text(transaction.date, format: .dateTime)
+                                            .font(.title3)
+                                    }
                                 }
                                 
                                 VStack(alignment: .leading) {
@@ -137,8 +145,10 @@ struct OrderGeneralView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                     
-                                    Text(transaction.createdAt, format: .dateTime)
-                                        .font(.title3)
+                                    ForEach(transactions) { transaction in
+                                        Text(transaction.createdAt, format: .dateTime)
+                                            .font(.title3)
+                                    }
                                 }
                             }
                             

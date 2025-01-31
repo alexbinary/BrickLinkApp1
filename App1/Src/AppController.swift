@@ -1273,15 +1273,15 @@ class AppController: ObservableObject {
     }
     
     
-    public func incomeTransaction(forOrderWithId orderId: OrderDetails.ID) -> Transaction? {
+    public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        return transactions.first(where: { $0.type == .orderIncome && $0.orderRefIn == orderId })
+        return transactions.filter { $0.type == .orderIncome && $0.orderRefIn == orderId }
     }
     
     
-    public func shippingTransaction(forOrderWithId orderId: OrderDetails.ID) -> Transaction? {
+    public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        return transactions.first(where: { $0.type == .orderShipping && $0.orderRefIn == orderId })
+        return transactions.filter { $0.type == .orderShipping && $0.orderRefIn == orderId }
     }
     
     
@@ -1449,7 +1449,9 @@ class AppController: ObservableObject {
         
             itemsCost: 0,
             shippingCost: shippingCost(forOrderWithId: order.id),
-            fees: fees(for: order)
+            
+            fees: fees(for: order),
+            refund: refund(for: order)
         )
     }
     
@@ -1461,7 +1463,9 @@ class AppController: ObservableObject {
     
         itemsCost: Float?,
         shippingCost: Float?,
-        fees: Float?
+        
+        fees: Float?,
+        refund: Float?
         
     ) -> Float? {
         
@@ -1471,10 +1475,11 @@ class AppController: ObservableObject {
             
             let itemsCost = itemsCost,
             let shippingCost = shippingCost,
+            
             let fees = fees
         {
             let totalIncome = totalItems + totalShipping
-            let totalExpense = itemsCost + shippingCost + fees
+            let totalExpense = itemsCost + shippingCost + fees + (refund ?? 0)
             
             return (totalIncome - totalExpense) / totalIncome
         }
@@ -1485,10 +1490,27 @@ class AppController: ObservableObject {
     
     public func fees(for order: OrderDetails) -> Float? {
         
-        if let transactionAmount = incomeTransaction(forOrderWithId: order.id)?.amount {
-            return order.grandTotal - transactionAmount
+        let transactions = incomeTransactions(forOrderWithId: order.id)
+            .filter { $0.amount > 0 }
+        
+        if transactions.isEmpty {
+            return nil
         }
-        return nil
+        
+        return order.grandTotal - transactions.reduce(0, { $0 + $1.amount })
+    }
+    
+    
+    public func refund(for order: OrderDetails) -> Float? {
+        
+        let transactions = incomeTransactions(forOrderWithId: order.id)
+            .filter { $0.amount < 0 }
+        
+        if transactions.isEmpty {
+            return nil
+        }
+            
+        return abs(transactions.reduce(0, { $0 + $1.amount }))
     }
     
     
@@ -1509,7 +1531,7 @@ class AppController: ObservableObject {
         if orderIsValidatedWithoutIncomeTransaction(orderId: orderId) {
             return true
         }
-        return incomeTransaction(forOrderWithId: orderId) != nil
+        return !incomeTransactions(forOrderWithId: orderId).isEmpty
     }
     
     
@@ -1527,7 +1549,7 @@ class AppController: ObservableObject {
             
         } else if stamping == "Bureau de poste" {
             
-            return shippingTransaction(forOrderWithId: orderId) != nil
+            return !shippingTransactions(forOrderWithId: orderId).isEmpty
             
         } else {
             

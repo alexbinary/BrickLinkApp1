@@ -76,6 +76,17 @@ struct ResultContentView: View {
                 }
             }
             
+            TableColumn("Refund") { order in
+                
+                if let refund = appController.refund(for: order) {
+                    
+                    Text(
+                        abs(refund),
+                        format: .currency(code: "EUR").presentation(.isoCode)
+                    ).signedAmountColor(.expense)
+                }
+            }
+            
         } rows: {
             
             let ordersByMonth = appController.orderDetails

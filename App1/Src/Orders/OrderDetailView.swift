@@ -213,7 +213,7 @@ struct OrderDetailView: View {
                     }
                     .equalWidths($columnWidth)
                     
-                    TabView(selection: .constant(2)) {
+                    TabView {
                         
                         OrderGeneralView(order: order)
                         .padding()
