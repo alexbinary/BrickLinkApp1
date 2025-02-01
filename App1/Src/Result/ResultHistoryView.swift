@@ -290,11 +290,8 @@ struct ResultHistoryView: View {
                                     )
                                     
                                     ResultCircleView(
-                                        totalItems: totalItems,
-                                        totalShipping: totalShipping,
-                                        totalItemCost: totalItemCost,
-                                        totalShippingCost: totalShippingCost,
-                                        totalFees: totalFees,
+                                        income: totalItems + totalShipping,
+                                        expense: totalItemCost + totalShippingCost + totalFees + totalRefund,
                                         profitMargin: profitMargin,
                                         innerCircleSize: innerCircleSize,
                                         outerCircleSize: outerCircleSize
@@ -382,11 +379,8 @@ struct ResultHistoryView: View {
                             }
                             
                             ResultCircleView(
-                                totalItems: totalItems,
-                                totalShipping: totalShipping,
-                                totalItemCost: totalItemCost,
-                                totalShippingCost: totalShippingCost,
-                                totalFees: totalFees,
+                                income: totalItems + totalShipping,
+                                expense: totalItemCost + totalShippingCost + totalFees + totalRefund,
                                 profitMargin: profitMargin,
                                 innerCircleSize: innerCircleSize,
                                 outerCircleSize: outerCircleSize

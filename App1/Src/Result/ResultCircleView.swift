@@ -7,11 +7,8 @@ import Charts
 struct ResultCircleView: View {
     
     
-    let totalItems: Float
-    let totalShipping: Float
-    let totalItemCost: Float
-    let totalShippingCost: Float
-    let totalFees: Float
+    let income: Float
+    let expense: Float
     let profitMargin: Float
     
     let innerCircleSize: CGFloat
@@ -24,8 +21,8 @@ struct ResultCircleView: View {
         
         let ratios: (income: CGFloat, expense: CGFloat) = {
             
-            let income = CGFloat(abs(totalItems + totalShipping))
-            let expense = CGFloat(abs(totalItemCost + totalShippingCost + totalFees))
+            let income = CGFloat(income)
+            let expense = CGFloat(expense)
             
             if income == 0 || expense == 0 {
                 return (income: 0, expense: 0)

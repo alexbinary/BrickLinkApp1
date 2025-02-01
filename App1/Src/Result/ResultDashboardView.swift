@@ -74,11 +74,8 @@ struct ResultDashboardView: View {
                     let outerCircleSize: CGFloat = 140
                     
                     ResultCircleView(
-                        totalItems: totalItems,
-                        totalShipping: totalShipping,
-                        totalItemCost: totalItemCost,
-                        totalShippingCost: totalShippingCost,
-                        totalFees: totalFees,
+                        income: totalItems + totalShipping,
+                        expense: totalItemCost + totalShippingCost + totalFees + totalRefund,
                         profitMargin: profitMargin,
                         innerCircleSize: innerCircleSize,
                         outerCircleSize: outerCircleSize
