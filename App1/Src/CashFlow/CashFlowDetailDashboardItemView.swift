@@ -57,13 +57,13 @@ struct CashFlowDetailDashboardItemView: View {
                 )
             }
             
-            let totalResult = totalIncome + totalExpense
+            let totalResult = totalIncome - totalExpense
             
             Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 24) {
                 
                 GridRow {
                     Text("Total income")
-                    Text(totalIncome, format: .currency(code: "EUR").presentation(.isoCode))
+                    Text(abs(totalIncome), format: .currency(code: "EUR").presentation(.isoCode))
                         .amountColor(.good)
                     
                     Text("")
@@ -76,7 +76,7 @@ struct CashFlowDetailDashboardItemView: View {
                         
                         Group {
                             
-                            if abs(totalIncome) > 0 {
+                            if totalIncome != 0 {
                                 
                                 Chart {
                                     ForEach(totalIncomeByType, id: \.type) { item in
@@ -108,7 +108,7 @@ struct CashFlowDetailDashboardItemView: View {
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
-                                    Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
+                                    Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
                                         .amountColor(.good)
                                 }
                             }
@@ -118,7 +118,7 @@ struct CashFlowDetailDashboardItemView: View {
                     HStack {
                         
                         Group {
-                            if abs(totalIncome) > 0 {
+                            if totalIncome != 0 {
                                 
                                 Chart {
                                     ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
@@ -150,7 +150,7 @@ struct CashFlowDetailDashboardItemView: View {
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
-                                    Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
+                                    Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
                                         .amountColor(.good)
                                 }
                             }
@@ -175,7 +175,7 @@ struct CashFlowDetailDashboardItemView: View {
                         
                         Group {
                             
-                            if abs(totalExpense) > 0 {
+                            if totalExpense != 0 {
                                 
                                 Chart {
                                     ForEach(totalExpenseByType, id: \.type) { item in
@@ -218,7 +218,7 @@ struct CashFlowDetailDashboardItemView: View {
                         
                         Group {
                             
-                            if abs(totalExpense) > 0 {
+                            if totalExpense != 0 {
                                 
                                 Chart {
                                     ForEach(totalExpenseByPaymentMethod, id: \.method) { item in

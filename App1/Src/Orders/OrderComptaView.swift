@@ -221,7 +221,7 @@ struct OrderComptaView: View {
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
-            amount: -shippingAmount,
+            amount: shippingAmount,
             paymentMethod: shippingPaymentMethod,
             comment: shippingComment,
             orderRefIn: order.id
@@ -235,7 +235,7 @@ struct OrderComptaView: View {
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,
-            amount: -refundAmount,
+            amount: refundAmount,
             paymentMethod: refundPaymentMethod,
             comment: refundComment,
             orderRefIn: order.id

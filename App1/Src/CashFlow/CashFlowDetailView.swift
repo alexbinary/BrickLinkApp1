@@ -73,7 +73,7 @@ struct CashFlowDetailView: View {
                             
                             BarMark(
                                 x: .value("Month", month),
-                                y: .value(type.rawValue, valueForType.totalAmount),
+                                y: .value(type.rawValue, abs(valueForType.totalAmount)),
                                 width: 20
                             )
                             .foregroundStyle(by: .value("", type.rawValue))
@@ -95,7 +95,7 @@ struct CashFlowDetailView: View {
                             
                             BarMark(
                                 x: .value("Month", month),
-                                y: .value(method.rawValue, valueForMethod.totalAmount),
+                                y: .value(method.rawValue, abs(valueForMethod.totalAmount)),
                                 width: 20
                             )
                             .foregroundStyle(by: .value("", method.rawValue))
@@ -119,7 +119,7 @@ struct CashFlowDetailView: View {
                             
                             BarMark(
                                 x: .value("Month", month),
-                                y: .value(type.rawValue, valueForType.totalAmount),
+                                y: .value(type.rawValue, -abs(valueForType.totalAmount)),
                                 width: 20
                             )
                             .foregroundStyle(by: .value("", type.rawValue))
@@ -141,7 +141,7 @@ struct CashFlowDetailView: View {
                             
                             BarMark(
                                 x: .value("Month", month),
-                                y: .value(method.rawValue, valueForMethod.totalAmount),
+                                y: .value(method.rawValue, -abs(valueForMethod.totalAmount)),
                                 width: 20
                             )
                             .foregroundStyle(by: .value("", method.rawValue))
@@ -250,9 +250,12 @@ struct CashFlowDetailView: View {
                                 totalExpense = 0
                             }
                             
-                            totalIncome += max(transaction.amount, 0)
-                            totalExpense += min(transaction.amount, 0)
-                            totalResult += transaction.amount
+                            let income = transaction.type.isIncome ? abs(transaction.amount) : 0
+                            let expense = transaction.type.isExpense ? abs(transaction.amount) : 0
+                            
+                            totalIncome += income
+                            totalExpense += expense
+                            totalResult += income - expense
                             
                             values.append((
                                 transaction: transaction,
@@ -270,10 +273,10 @@ struct CashFlowDetailView: View {
                     
                     ForEach(accumulatedTotals, id: \.date) { item in
                         
-                        AreaMark(x: .value("Date", item.date), y: .value("Income", item.totalIncome))
+                        AreaMark(x: .value("Date", item.date), y: .value("Income", abs(item.totalIncome)))
                             .foregroundStyle(by: .value("Type", "Income"))
                         
-                        AreaMark(x: .value("Date", item.date), y: .value("Expense", item.totalExpense))
+                        AreaMark(x: .value("Date", item.date), y: .value("Expense", -abs(item.totalExpense)))
                             .foregroundStyle(by: .value("Type", "Expense"))
                         
                         LineMark(x: .value("Date", item.date), y: .value("Result", item.totalResult))

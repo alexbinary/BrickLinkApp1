@@ -29,6 +29,10 @@ extension View {
         case .goodIfPositive(let amount, let meaningOfZero):
             
             self.amountColor(amount == 0 ? meaningOfZero : (amount > 0 ? .good : .bad))
+            
+        case .goodIf(let condition):
+            
+            self.amountColor(condition ? .good : .bad)
         }
     }
 }
@@ -37,6 +41,7 @@ extension View {
 enum ColorationMode {
     
     case goodIfPositive(Float, zero: ColorMeaning)
+    case goodIf(Bool)
 }
 
 
