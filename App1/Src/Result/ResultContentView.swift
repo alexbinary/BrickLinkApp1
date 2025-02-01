@@ -30,7 +30,7 @@ struct ResultContentView: View {
                     Text(
                         abs(profitMargin),
                         format: .percent.precision(.fractionLength(0))
-                    ).signedAmountColor(profitMargin)
+                    ).amountColor(profitMargin)
                 }
             }
             
@@ -38,21 +38,21 @@ struct ResultContentView: View {
                 Text(
                     abs(order.subTotal),
                     format: .currency(code: "EUR").presentation(.isoCode)
-                ).signedAmountColor(.income)
+                ).amountColor(.income)
             }
             
             TableColumn("Items cost") { order in
                 Text(
                     0,
                     format: .currency(code: "EUR").presentation(.isoCode)
-                ).signedAmountColor(.expense)
+                ).amountColor(.expense)
             }
             
             TableColumn("Shipping") { order in
                 Text(
                     abs(order.shippingCost),
                     format: .currency(code: "EUR").presentation(.isoCode)
-                ).signedAmountColor(.income)
+                ).amountColor(.income)
             }
             
             TableColumn("Shipping cost") { order in
@@ -62,7 +62,7 @@ struct ResultContentView: View {
                     Text(
                         abs(cost),
                         format: .currency(code: "EUR").presentation(.isoCode)
-                    ).signedAmountColor(.expense)}
+                    ).amountColor(.expense)}
             }
             
             TableColumn("Fees") { order in
@@ -72,7 +72,7 @@ struct ResultContentView: View {
                     Text(
                         abs(fees),
                         format: .currency(code: "EUR").presentation(.isoCode)
-                    ).signedAmountColor(.expense)
+                    ).amountColor(.expense)
                 }
             }
             
@@ -83,7 +83,7 @@ struct ResultContentView: View {
                     Text(
                         abs(refund),
                         format: .currency(code: "EUR").presentation(.isoCode)
-                    ).signedAmountColor(.expense)
+                    ).amountColor(.expense)
                 }
             }
             

@@ -144,7 +144,7 @@ struct ResultHistoryView: View {
                         .annotation(position: .top) {
                             if totalIncome != 0 {
                                 Text(String(format:"%.2f €", abs(totalIncome)))
-                                    .signedAmountColor(.income)
+                                    .amountColor(.income)
                             }
                         }
                         
@@ -166,7 +166,7 @@ struct ResultHistoryView: View {
                         .annotation(position: .bottom) {
                             if totalExpense != 0 {
                                 Text(String(format:"%.2f €", abs(totalExpense)))
-                                    .signedAmountColor(.expense)
+                                    .amountColor(.expense)
                             }
                         }
                     }
@@ -439,7 +439,7 @@ struct ResultHistoryView: View {
                                     Text(
                                         abs(profitMargin),
                                         format: .percent.precision(.fractionLength(0))
-                                    ).signedAmountColor(profitMargin)
+                                    ).amountColor(profitMargin)
                                 }
                             }
                             
@@ -447,28 +447,28 @@ struct ResultHistoryView: View {
                                 Text(
                                     abs(order.subTotal),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.income)
+                                ).amountColor(.income)
                             }
                             
                             TableColumn("Items cost") { order in
                                 Text(
                                     0,
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.expense)
+                                ).amountColor(.expense)
                             }
                             
                             TableColumn("Shipping") { order in
                                 Text(
                                     abs(order.shippingCost),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.income)
+                                ).amountColor(.income)
                             }
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
                                     abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.expense)
+                                ).amountColor(.expense)
                             }
                             
                             TableColumn("Fees") { order in
@@ -478,7 +478,7 @@ struct ResultHistoryView: View {
                                     Text(
                                         abs(fees),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).signedAmountColor(.expense)
+                                    ).amountColor(.expense)
                                 }
                             }
                             
@@ -521,7 +521,7 @@ struct ResultHistoryView: View {
                                     Text(
                                         abs(profitMargin),
                                         format: .percent.precision(.fractionLength(0))
-                                    ).signedAmountColor(profitMargin)
+                                    ).amountColor(profitMargin)
                                 }
                             }
                             
@@ -529,28 +529,28 @@ struct ResultHistoryView: View {
                                 Text(
                                     abs(order.subTotal),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.income)
+                                ).amountColor(.income)
                             }
                             
                             TableColumn("Items cost") { order in
                                 Text(
                                     0,
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.expense)
+                                ).amountColor(.expense)
                             }
                             
                             TableColumn("Shipping") { order in
                                 Text(
                                     abs(order.shippingCost),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.income)
+                                ).amountColor(.income)
                             }
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
                                     abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).signedAmountColor(.expense)
+                                ).amountColor(.expense)
                             }
                             
                             TableColumn("Fees") { order in
@@ -560,7 +560,7 @@ struct ResultHistoryView: View {
                                     Text(
                                         abs(fees),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).signedAmountColor(.expense)
+                                    ).amountColor(.expense)
                                 }
                             }
                             
