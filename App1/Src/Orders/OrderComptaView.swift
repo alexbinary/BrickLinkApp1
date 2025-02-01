@@ -20,6 +20,11 @@ struct OrderComptaView: View {
     @State var shippingPaymentMethod: PaymentMethod = .cb_iban
     @State var shippingComment: String = ""
     
+    @State var refundDate: Date = Date()
+    @State var refundAmount: Float = 0
+    @State var refundPaymentMethod: PaymentMethod = .paypal
+    @State var refundComment: String = ""
+    
     
     var body: some View {
         
@@ -121,6 +126,43 @@ struct OrderComptaView: View {
                 selectedTransactions: .constant([])
             )
             .frame(minHeight: 100)
+            
+            Divider()
+            
+            HeaderTitleView(label: "􂈚 Refund")
+               
+            Form {
+                TextField("Amount", value: $refundAmount,
+                          format: .currency(code: "EUR").presentation(.isoCode)
+                )
+                .onSubmit {
+                    self.submitRefundTransaction()
+                }
+                Picker("Payment method", selection: $refundPaymentMethod) {
+                    ForEach(PaymentMethod.allCases, id: \.self) { method in
+                        Text(method.rawValue).tag(method)
+                    }
+                }
+                DatePicker("Date", selection: $refundDate)
+                TextField("Comment", text: $refundComment, axis: .vertical)
+                    .lineLimit(3...5)
+                
+                HStack {
+                    Button {
+                        self.submitRefundTransaction()
+                    } label: {
+                        Text("Register transaction")
+                    }
+                }
+            }
+            
+            TransactionListView(
+                transactions: appController.transactions
+                    .filter { $0.type == .orderRefund && $0.orderRefIn == order.id },
+                grouppedByMonth: false,
+                selectedTransactions: .constant([])
+            )
+            .frame(minHeight: 100)
         }
         .onAppear {
             
@@ -144,6 +186,10 @@ struct OrderComptaView: View {
         self.shippingAmount = appController.shippingCost(forOrderWithId: order.id) ?? 0
         self.shippingPaymentMethod = .cb_iban
         self.shippingComment = ""
+        
+        self.refundDate = Date()
+        self.refundPaymentMethod = .paypal
+        self.refundComment = ""
     }
     
     
@@ -170,6 +216,20 @@ struct OrderComptaView: View {
             amount: -shippingAmount,
             paymentMethod: shippingPaymentMethod,
             comment: shippingComment,
+            orderRefIn: order.id
+        ))
+    }
+    
+    
+    func submitRefundTransaction() {
+     
+        appController.registerTransaction(Transaction(
+            date: refundDate,
+            createdAt: Date(),
+            type: .orderRefund,
+            amount: -refundAmount,
+            paymentMethod: refundPaymentMethod,
+            comment: refundComment,
             orderRefIn: order.id
         ))
     }

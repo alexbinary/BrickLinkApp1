@@ -20,10 +20,11 @@ struct Transaction: Identifiable, Codable, Hashable, Datable {
 enum TransactionType: String, Codable, CaseIterable {
     
     case orderIncome
+    case orderRefund
     case orderShipping
     
     static var incomeTypes: [TransactionType] { [.orderIncome] }
-    static var expenseTypes: [TransactionType] { [.orderShipping] }
+    static var expenseTypes: [TransactionType] { [.orderShipping, .orderRefund] }
     
     var isIncome: Bool { Self.incomeTypes.contains(self) }
     var isExpense: Bool { Self.expenseTypes.contains(self) }
@@ -32,6 +33,7 @@ enum TransactionType: String, Codable, CaseIterable {
         switch type {
             case .orderIncome: .green
             case .orderShipping: .red
+            case .orderRefund: .yellow
         }
     }
 }

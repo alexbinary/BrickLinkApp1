@@ -1285,6 +1285,12 @@ class AppController: ObservableObject {
     }
     
     
+    public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+        
+        return transactions.filter { $0.type == .orderRefund && $0.orderRefIn == orderId }
+    }
+    
+    
     public var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
         
         dataStore.dateValidatedWithoutIncomeTransactionByOrderId
@@ -1491,8 +1497,6 @@ class AppController: ObservableObject {
     public func fees(for order: OrderDetails) -> Float? {
         
         let transactions = incomeTransactions(forOrderWithId: order.id)
-            .filter { $0.amount > 0 }
-        
         if transactions.isEmpty {
             return nil
         }
@@ -1501,11 +1505,13 @@ class AppController: ObservableObject {
     }
     
     
+    
+    // MARK: - Refunds
+    
+    
     public func refund(for order: OrderDetails) -> Float? {
         
-        let transactions = incomeTransactions(forOrderWithId: order.id)
-            .filter { $0.amount < 0 }
-        
+        let transactions = refundTransactions(forOrderWithId: order.id)
         if transactions.isEmpty {
             return nil
         }
