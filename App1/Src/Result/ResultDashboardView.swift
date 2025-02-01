@@ -66,6 +66,7 @@ struct ResultDashboardView: View {
                         totalItemCost: totalItemCost,
                         totalShippingCost: totalShippingCost,
                         totalFees: totalFees,
+                        totalRefund: totalRefund,
                         totalResult: totalResult
                     )
                     

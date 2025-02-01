@@ -12,6 +12,7 @@ struct ResultGridView: View {
     let totalItemCost: Float
     let totalShippingCost: Float
     let totalFees: Float
+    let totalRefund: Float
     let totalResult: Float
     
     
@@ -65,12 +66,25 @@ struct ResultGridView: View {
                 .signedAmountColor(.expense)
             }
             
+            Color.clear.frame(width: 0, height: 8)
+            
             GridRow {
                 
                 Text("Total fees")
                 
                 Text(
                     abs(totalFees),
+                    format: .currency(code: "EUR").presentation(.isoCode)
+                )
+                .signedAmountColor(.expense)
+            }
+            
+            GridRow {
+                
+                Text("Total refunds")
+                
+                Text(
+                    abs(totalRefund),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
                 .signedAmountColor(.expense)

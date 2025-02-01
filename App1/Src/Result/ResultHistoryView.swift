@@ -153,8 +153,9 @@ struct ResultHistoryView: View {
                         let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                         
                         let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
+                        let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
                         
-                        let totalExpense = totalItemCost + totalShippingCost + totalFees
+                        let totalExpense = totalItemCost + totalShippingCost + totalFees + totalRefund
                         
                         BarMark(
                             x: .value("Month", month.name),
@@ -263,11 +264,12 @@ struct ResultHistoryView: View {
                             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
+                            let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
                             
-                            let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+                            let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
                             
                             let totalIncome = totalItems + totalShipping
-                            let totalExpense = totalItemCost + totalShippingCost + totalFees
+                            let totalExpense = totalItemCost + totalShippingCost + totalFees + totalRefund
                             
                             let profitMargin = (totalIncome - totalExpense) / totalIncome
                             
@@ -283,6 +285,7 @@ struct ResultHistoryView: View {
                                         totalItemCost: totalItemCost,
                                         totalShippingCost: totalShippingCost,
                                         totalFees: totalFees,
+                                        totalRefund: totalRefund,
                                         totalResult: totalResult
                                     )
                                     
@@ -316,11 +319,12 @@ struct ResultHistoryView: View {
                             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
+                            let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
                             
-                            let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees
+                            let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
                             
                             let totalIncome = totalItems + totalShipping
-                            let totalExpense = totalItemCost + totalShippingCost + totalFees
+                            let totalExpense = totalItemCost + totalShippingCost + totalFees + totalRefund
                             
                             let profitMargin = (totalIncome - totalExpense) / totalIncome
                             
@@ -341,6 +345,7 @@ struct ResultHistoryView: View {
                                 let averageTotalItemCost = totalItemCost / Float(monthsSpan)
                                 let averageTotalShippingCost = totalShippingCost / Float(monthsSpan)
                                 let averageTotalFees = totalFees / Float(monthsSpan)
+                                let averageTotalRefund = totalRefund / Float(monthsSpan)
                                 let averageTotalResult = totalResult / Float(monthsSpan)
                                 
                                 VStack(spacing: 24) {
@@ -353,6 +358,7 @@ struct ResultHistoryView: View {
                                         totalItemCost: averageTotalItemCost,
                                         totalShippingCost: averageTotalShippingCost,
                                         totalFees: averageTotalFees,
+                                        totalRefund: averageTotalRefund,
                                         totalResult: averageTotalResult
                                     )
                                     .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
@@ -369,6 +375,7 @@ struct ResultHistoryView: View {
                                     totalItemCost: totalItemCost,
                                     totalShippingCost: totalShippingCost,
                                     totalFees: totalFees,
+                                    totalRefund: totalRefund,
                                     totalResult: totalResult
                                 )
                                 .alignmentGuide(.circlesAndGrid) { $0[VerticalAlignment.center] }
