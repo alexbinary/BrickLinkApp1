@@ -27,6 +27,10 @@ struct ResultCircleView: View {
             let income = CGFloat(abs(totalItems + totalShipping))
             let expense = CGFloat(abs(totalItemCost + totalShippingCost + totalFees))
             
+            if income == 0 || expense == 0 {
+                return (income: 0, expense: 0)
+            }
+            
             if income > expense {
                 return (income: 1.0, expense: expense/income)
             } else {
@@ -60,10 +64,12 @@ struct ResultCircleView: View {
                 .stroke(green, style: .init(lineWidth: 6, lineCap: .round))
                 .frame(width: outerCircleSize, height: outerCircleSize)
             
-            VStack {
-                Text("Profit margin")
-                Text(profitMargin, format: .percent.precision(.fractionLength(0))).font(.title)
-                    .signedAmountColor(profitMargin)
+            if !profitMargin.isNaN {
+                VStack {
+                    Text("Profit margin")    
+                    Text(profitMargin, format: .percent.precision(.fractionLength(0))).font(.title)
+                        .signedAmountColor(profitMargin)
+                }
             }
         }
         .animation(.easeOut(duration: 0.2), value: animateCircles ? [ratios.income, ratios.expense] : nil)
