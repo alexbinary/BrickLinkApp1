@@ -127,7 +127,7 @@ struct ResultDashboardView: View {
                                     Text(
                                         abs(profitMargin),
                                         format: .percent.precision(.fractionLength(0))
-                                    ).amountColor(profitMargin)
+                                    ).amountColor(.goodIfPositive(profitMargin, zero: .neutral))
                                 }
                             }
                             
@@ -210,7 +210,7 @@ struct ResultDashboardView: View {
                                     Text(
                                         abs(profitMargin),
                                         format: .percent.precision(.fractionLength(0))
-                                    ).amountColor(profitMargin)
+                                    ).amountColor(.goodIfPositive(profitMargin, zero: .neutral))
                                 }
                             }
                             

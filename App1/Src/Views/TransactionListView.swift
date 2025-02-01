@@ -24,7 +24,7 @@ struct TransactionListView: View {
             }
             TableColumn("Amount") { transaction in
                 Text(abs(transaction.amount), format: .currency(code: "EUR").presentation(.isoCode))
-                    .amountColor(transaction.amount)
+                    .amountColor(.goodIfPositive(transaction.amount, zero: .neutral))
             }
             TableColumn("Payment") { transaction in
                 Text(transaction.paymentMethod.rawValue)

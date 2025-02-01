@@ -6,12 +6,6 @@ import SwiftUI
 extension View {
     
     
-    @ViewBuilder func amountColor(_ amount: Float) -> some View {
-        
-        self.amountColor(amount > 0 ? .good : .bad)
-    }
-    
-    
     @ViewBuilder func amountColor(_ meaning: ColorMeaning) -> some View {
     
         switch meaning {
@@ -26,6 +20,23 @@ extension View {
             self
         }
     }
+    
+    
+    @ViewBuilder func amountColor(_ mode: ColorationMode) -> some View {
+    
+        switch mode {
+            
+        case .goodIfPositive(let amount, let meaningOfZero):
+            
+            self.amountColor(amount == 0 ? meaningOfZero : (amount > 0 ? .good : .bad))
+        }
+    }
+}
+
+
+enum ColorationMode {
+    
+    case goodIfPositive(Float, zero: ColorMeaning)
 }
 
 

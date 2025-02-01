@@ -65,7 +65,7 @@ struct ResultCircleView: View {
                 VStack {
                     Text("Profit margin")    
                     Text(profitMargin, format: .percent.precision(.fractionLength(0))).font(.title)
-                        .amountColor(profitMargin)
+                        .amountColor(.goodIfPositive(profitMargin, zero: .neutral))
                 }
             }
         }

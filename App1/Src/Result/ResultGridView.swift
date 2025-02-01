@@ -100,7 +100,7 @@ struct ResultGridView: View {
                     abs(totalResult),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(totalResult)
+                .amountColor(.goodIfPositive(totalResult, zero: .neutral) )
             }
             .font(.title)
         }

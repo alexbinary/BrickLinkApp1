@@ -264,7 +264,7 @@ struct CashFlowDetailDashboardItemView: View {
                 GridRow {
                     Text("Total result")
                     Text(abs(totalResult), format: .currency(code: "EUR").presentation(.isoCode))
-                        .amountColor(totalResult)
+                        .amountColor(.goodIfPositive(totalResult, zero: .neutral) )
                 }
                 .font(.title)
             }
