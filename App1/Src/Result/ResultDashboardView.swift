@@ -17,10 +17,10 @@ struct ResultDashboardView: View {
         
         VSplitView {
             
-            let month: BusinessMonth = .current
+            let periodNLastDays = 30
             
             let orders = appController.orderDetails
-                .grouppedByMonth[month.name]
+                .filter { $0.date.days(to: .now) < periodNLastDays }
                 .filter { appController.profitMargin(for: $0) != nil }
             
             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
@@ -54,8 +54,8 @@ struct ResultDashboardView: View {
                 Spacer()
                 
                 VStack {
-                    Text("Today").font(.title3)
-                    Text(month.name).font(.title)
+                    Text(Date.now, style: .date).font(.title3)
+                    Text("Last \(periodNLastDays) days").font(.title)
                 }
                 
                 HStack(spacing: 48) {
