@@ -11,6 +11,8 @@ struct Transaction: Identifiable, Codable, Hashable, Datable {
     let createdAt: Date
     let type: TransactionType
     var amount: Float
+    let fees: Float?
+    var netAmount: Float { amount - (fees ?? 0) }
     var paymentMethod: PaymentMethod
     var comment: String
     let orderRefIn: OrderSummary.ID

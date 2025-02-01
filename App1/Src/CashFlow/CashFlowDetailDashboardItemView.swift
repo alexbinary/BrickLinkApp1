@@ -18,14 +18,14 @@ struct CashFlowDetailDashboardItemView: View {
             Text(title).font(.title)
             
             let incomeTransactions = transactions.filter { $0.type.isIncome }
-            let totalIncome = incomeTransactions.reduce(0, { $0 + $1.amount })
+            let totalIncome = incomeTransactions.reduce(0, { $0 + $1.netAmount })
             
             let totalIncomeByType: [(type: TransactionType, totalAmount: Float)] = TransactionType.incomeTypes.map { type in
                 (
                     type: type,
                     totalAmount: incomeTransactions
                         .filter { $0.type == type }
-                        .reduce(0, { $0 + $1.amount })
+                        .reduce(0, { $0 + $1.netAmount })
                 )
             }
             let totalIncomeByPaymentMethod: [(method: PaymentMethod, totalAmount: Float)] = PaymentMethod.allCases.map { method in
@@ -33,19 +33,19 @@ struct CashFlowDetailDashboardItemView: View {
                     method: method,
                     totalAmount: incomeTransactions
                         .filter { $0.paymentMethod == method }
-                        .reduce(0, { $0 + $1.amount })
+                        .reduce(0, { $0 + $1.netAmount })
                 )
             }
             
             let expenseTransactions = transactions.filter { $0.type.isExpense }
-            let totalExpense = expenseTransactions.reduce(0, { $0 + $1.amount })
+            let totalExpense = expenseTransactions.reduce(0, { $0 + $1.netAmount })
             
             let totalExpenseByType: [(type: TransactionType, totalAmount: Float)] = TransactionType.expenseTypes.map { type in
                 (
                     type: type,
                     totalAmount: expenseTransactions
                         .filter { $0.type == type }
-                        .reduce(0, { $0 + $1.amount })
+                        .reduce(0, { $0 + $1.netAmount })
                 )
             }
             let totalExpenseByPaymentMethod: [(method: PaymentMethod, totalAmount: Float)] = PaymentMethod.allCases.map { method in
@@ -53,7 +53,7 @@ struct CashFlowDetailDashboardItemView: View {
                     method: method,
                     totalAmount: expenseTransactions
                         .filter { $0.paymentMethod == method }
-                        .reduce(0, { $0 + $1.amount })
+                        .reduce(0, { $0 + $1.netAmount })
                 )
             }
             

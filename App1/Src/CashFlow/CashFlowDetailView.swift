@@ -63,7 +63,7 @@ struct CashFlowDetailView: View {
                                 type: type,
                                 totalAmount: incomeTransactionsForMonth
                                     .filter { $0.type == type }
-                                    .reduce(0, { $0 + $1.amount })
+                                    .reduce(0, { $0 + $1.netAmount })
                             )
                         }
                         
@@ -85,7 +85,7 @@ struct CashFlowDetailView: View {
                                 method: method,
                                 totalAmount: incomeTransactionsForMonth
                                     .filter { $0.paymentMethod == method }
-                                    .reduce(0, { $0 + $1.amount })
+                                    .reduce(0, { $0 + $1.netAmount })
                             )
                         }
                         
@@ -109,7 +109,7 @@ struct CashFlowDetailView: View {
                                 type: type,
                                 totalAmount: expenseTransactionsForMonth
                                     .filter { $0.type == type }
-                                    .reduce(0, { $0 + $1.amount })
+                                    .reduce(0, { $0 + $1.netAmount })
                             )
                         }
                         
@@ -131,7 +131,7 @@ struct CashFlowDetailView: View {
                                 method: method,
                                 totalAmount: expenseTransactionsForMonth
                                     .filter { $0.paymentMethod == method }
-                                    .reduce(0, { $0 + $1.amount })
+                                    .reduce(0, { $0 + $1.netAmount })
                             )
                         }
                         
@@ -250,8 +250,8 @@ struct CashFlowDetailView: View {
                                 totalExpense = 0
                             }
                             
-                            let income = transaction.type.isIncome ? abs(transaction.amount) : 0
-                            let expense = transaction.type.isExpense ? abs(transaction.amount) : 0
+                            let income = transaction.type.isIncome ? abs(transaction.netAmount) : 0
+                            let expense = transaction.type.isExpense ? abs(transaction.netAmount) : 0
                             
                             totalIncome += income
                             totalExpense += expense

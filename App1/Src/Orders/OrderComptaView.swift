@@ -12,6 +12,7 @@ struct OrderComptaView: View {
     
     @State var incomeDate: Date = Date()
     @State var incomeAmount: Float = 0
+    @State var incomeFees: Float = 0
     @State var incomePaymentMethod: PaymentMethod = .paypal
     @State var incomeComment: String = ""
     
@@ -22,6 +23,7 @@ struct OrderComptaView: View {
     
     @State var refundDate: Date = Date()
     @State var refundAmount: Float = 0
+    @State var refundFees: Float = 0
     @State var refundPaymentMethod: PaymentMethod = .paypal
     @State var refundComment: String = ""
     
@@ -34,6 +36,12 @@ struct OrderComptaView: View {
             
             Form {
                 TextField("Amount", value: $incomeAmount,
+                          format: .currency(code: "EUR").presentation(.isoCode)
+                )
+                .onSubmit {
+                    self.submitIncomeTransaction()
+                }
+                TextField("Fees", value: $incomeFees,
                           format: .currency(code: "EUR").presentation(.isoCode)
                 )
                 .onSubmit {
@@ -145,6 +153,12 @@ struct OrderComptaView: View {
                 .onSubmit {
                     self.submitRefundTransaction()
                 }
+                TextField("Fees", value: $refundFees,
+                          format: .currency(code: "EUR").presentation(.isoCode)
+                )
+                .onSubmit {
+                    self.submitRefundTransaction()
+                }
                 Picker("Payment method", selection: $refundPaymentMethod) {
                     ForEach(PaymentMethod.allCases, id: \.self) { method in
                         Text(method.rawValue).tag(method)
@@ -208,6 +222,7 @@ struct OrderComptaView: View {
             createdAt: Date(),
             type: .orderIncome,
             amount: incomeAmount,
+            fees: incomeFees,
             paymentMethod: incomePaymentMethod,
             comment: incomeComment,
             orderRefIn: order.id
@@ -222,6 +237,7 @@ struct OrderComptaView: View {
             createdAt: Date(),
             type: .orderShipping,
             amount: shippingAmount,
+            fees: nil,
             paymentMethod: shippingPaymentMethod,
             comment: shippingComment,
             orderRefIn: order.id
@@ -236,6 +252,7 @@ struct OrderComptaView: View {
             createdAt: Date(),
             type: .orderRefund,
             amount: refundAmount,
+            fees: refundFees,
             paymentMethod: refundPaymentMethod,
             comment: refundComment,
             orderRefIn: order.id

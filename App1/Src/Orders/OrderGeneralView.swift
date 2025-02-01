@@ -13,6 +13,7 @@ struct OrderGeneralView: View {
     
     @State var incomeTransactionDate: Date = Date()
     @State var incomeTransactionAmount: Float = 0
+    @State var incomeTransactionFees: Float = 0
     @State var incomeTransactionPaymentMethod: PaymentMethod = .paypal
     
     
@@ -101,7 +102,7 @@ struct OrderGeneralView: View {
                             
                         } else if !transactions.isEmpty {
                             
-                            HStack(spacing: 12) {
+                            HStack(alignment: .top, spacing: 12) {
                                 
                                 VStack(alignment: .leading) {
                                     
@@ -112,6 +113,23 @@ struct OrderGeneralView: View {
                                     ForEach(transactions) { transaction in
                                         Text(transaction.amount, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                                             .font(.title3)
+                                    }
+                                }
+                                
+                                VStack(alignment: .leading) {
+                                    
+                                    Text("Fees")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    ForEach(transactions) { transaction in
+                                        if let fees = transaction.fees, fees != 0 {
+                                            Text(fees, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                                .font(.title3)
+                                        } else {
+                                            Text("-")
+                                                .font(.title3)
+                                        }
                                     }
                                 }
                                 
@@ -162,6 +180,10 @@ struct OrderGeneralView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                     
+                                    Text("Fees")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
                                     Text("Method")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
@@ -174,6 +196,14 @@ struct OrderGeneralView: View {
                                 GridRow {
                                     
                                     TextField("Amount", value: $incomeTransactionAmount,
+                                              format: .currency(code: "EUR").presentation(.isoCode)
+                                    )
+                                    .onSubmit {
+                                        self.submitIncomeTransaction()
+                                    }
+                                    .frame(maxWidth: 70)
+                                    
+                                    TextField("Fees", value: $incomeTransactionFees,
                                               format: .currency(code: "EUR").presentation(.isoCode)
                                     )
                                     .onSubmit {
@@ -303,6 +333,7 @@ struct OrderGeneralView: View {
             createdAt: Date(),
             type: .orderIncome,
             amount: incomeTransactionAmount,
+            fees: incomeTransactionFees,
             paymentMethod: incomeTransactionPaymentMethod,
             comment: "",
             orderRefIn: order.id

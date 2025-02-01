@@ -26,6 +26,16 @@ struct TransactionListView: View {
                 Text(abs(transaction.amount), format: .currency(code: "EUR").presentation(.isoCode))
                     .amountColor(.goodIf(transaction.type.isIncome))
             }
+            TableColumn("Fees") { transaction in
+                if let fees = transaction.fees, fees != 0 {
+                    Text(abs(fees), format: .currency(code: "EUR").presentation(.isoCode))
+                        .amountColor(.badIf(transaction.type.isIncome))
+                }
+            }
+            TableColumn("Net amount") { transaction in
+                Text(abs(transaction.netAmount), format: .currency(code: "EUR").presentation(.isoCode))
+                    .amountColor(.goodIf(transaction.type.isIncome))
+            }
             TableColumn("Payment") { transaction in
                 Text(transaction.paymentMethod.rawValue)
             }

@@ -1496,12 +1496,10 @@ class AppController: ObservableObject {
     
     public func fees(for order: OrderDetails) -> Float? {
         
-        let transactions = incomeTransactions(forOrderWithId: order.id)
-        if transactions.isEmpty {
-            return nil
-        }
+        let incomeTransactionsFees = incomeTransactions(forOrderWithId: order.id).compactMap { $0.fees }.reduce(0, +)
+        let refundTransactionsFees = refundTransactions(forOrderWithId: order.id).compactMap { $0.fees }.reduce(0, +)
         
-        return order.grandTotal - transactions.reduce(0, { $0 + $1.amount })
+        return incomeTransactionsFees - refundTransactionsFees
     }
     
     
