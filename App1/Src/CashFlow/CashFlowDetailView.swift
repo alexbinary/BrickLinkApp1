@@ -152,10 +152,10 @@ struct CashFlowDetailView: View {
                 .chartForegroundStyleScale { rawValue in
                     
                     if let type = TransactionType(rawValue: rawValue) {
-                        return TransactionType.colorFor(type)
+                        return TransactionType.graphColorFor(type)
                         
                     } else if let method = PaymentMethod(rawValue: rawValue) {
-                        return PaymentMethod.colorFor(method)
+                        return PaymentMethod.graphColorFor(method)
                     }
                     return Color.primary
                 }

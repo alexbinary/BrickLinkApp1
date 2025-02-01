@@ -88,7 +88,7 @@ struct CashFlowDetailDashboardItemView: View {
                                 }
                                 .chartForegroundStyleScale { rawValue in
                                     
-                                    TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
+                                    TransactionType.graphColorFor(TransactionType(rawValue: rawValue)!)
                                 }
                                 .chartLegend(.hidden)
                                 
@@ -104,7 +104,7 @@ struct CashFlowDetailDashboardItemView: View {
                         Grid(alignment: .leading) {
                             ForEach(totalIncomeByType, id: \.type) { item in
                                 GridRow {
-                                    TransactionType.colorFor(item.type)
+                                    TransactionType.graphColorFor(item.type)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
@@ -130,7 +130,7 @@ struct CashFlowDetailDashboardItemView: View {
                                 }
                                 .chartForegroundStyleScale { rawValue in
                                     
-                                    PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
+                                    PaymentMethod.graphColorFor(PaymentMethod(rawValue: rawValue)!)
                                 }
                                 .chartLegend(.hidden)
                                 
@@ -146,7 +146,7 @@ struct CashFlowDetailDashboardItemView: View {
                         Grid(alignment: .leading) {
                             ForEach(totalIncomeByPaymentMethod, id: \.method) { item in
                                 GridRow {
-                                    PaymentMethod.colorFor(item.method)
+                                    PaymentMethod.graphColorFor(item.method)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
@@ -187,7 +187,7 @@ struct CashFlowDetailDashboardItemView: View {
                                 }
                                 .chartForegroundStyleScale { rawValue in
                                     
-                                    TransactionType.colorFor(TransactionType(rawValue: rawValue)!)
+                                    TransactionType.graphColorFor(TransactionType(rawValue: rawValue)!)
                                 }
                                 .chartLegend(.hidden)
                                 
@@ -203,7 +203,7 @@ struct CashFlowDetailDashboardItemView: View {
                         Grid(alignment: .leading) {
                             ForEach(totalExpenseByType, id: \.type) { item in
                                 GridRow {
-                                    TransactionType.colorFor(item.type)
+                                    TransactionType.graphColorFor(item.type)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
@@ -230,7 +230,7 @@ struct CashFlowDetailDashboardItemView: View {
                                 }
                                 .chartForegroundStyleScale { rawValue in
                                     
-                                    PaymentMethod.colorFor(PaymentMethod(rawValue: rawValue)!)
+                                    PaymentMethod.graphColorFor(PaymentMethod(rawValue: rawValue)!)
                                 }
                                 .chartLegend(.hidden)
                                 
@@ -246,7 +246,7 @@ struct CashFlowDetailDashboardItemView: View {
                         Grid(alignment: .leading) {
                             ForEach(totalExpenseByPaymentMethod, id: \.method) { item in
                                 GridRow {
-                                    PaymentMethod.colorFor(item.method)
+                                    PaymentMethod.graphColorFor(item.method)
                                         .frame(width: 8, height: 8)
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
