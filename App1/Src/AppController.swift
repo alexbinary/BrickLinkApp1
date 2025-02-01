@@ -1457,7 +1457,7 @@ class AppController: ObservableObject {
             shippingCost: shippingCost(forOrderWithId: order.id),
             
             fees: fees(for: order),
-            refund: refund(for: order)
+            refund: refunds(for: order).reduce(0, { $0 + $1.amount })
         )
     }
     
@@ -1509,14 +1509,27 @@ class AppController: ObservableObject {
     // MARK: - Refunds
     
     
-    public func refund(for order: OrderDetails) -> Float? {
+    public var orderRefunds: [OrderRefund] {
         
-        let transactions = refundTransactions(forOrderWithId: order.id)
-        if transactions.isEmpty {
-            return nil
-        }
-            
-        return abs(transactions.reduce(0, { $0 + $1.amount }))
+        dataStore.orderRefunds
+    }
+    
+    
+    public func refunds(for order: OrderDetails) -> [OrderRefund] {
+        
+        orderRefunds.filter { $0.orderId == order.id }
+    }
+    
+    
+    public func createRefund(_ refund: OrderRefund) {
+        
+        var orderRefunds = dataStore.orderRefunds
+        orderRefunds.append(refund)
+        
+        try! dataStore.setOrderRefunds(orderRefunds)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
     }
     
     

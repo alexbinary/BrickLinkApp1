@@ -153,7 +153,7 @@ struct ResultHistoryView: View {
                         let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                         
                         let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-                        let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
+                        let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                         
                         let totalExpense = totalItemCost + totalShippingCost + totalFees + totalRefund
                         
@@ -264,7 +264,7 @@ struct ResultHistoryView: View {
                             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-                            let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
+                            let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                             
                             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
                             
@@ -316,7 +316,7 @@ struct ResultHistoryView: View {
                             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-                            let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
+                            let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                             
                             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
                             

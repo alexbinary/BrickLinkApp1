@@ -1,0 +1,86 @@
+
+import SwiftUI
+
+
+
+struct OrderRefundView: View {
+    
+    
+    @EnvironmentObject var appController: AppController
+    
+    let order: OrderDetails
+    
+    @State var refundDate: Date = Date()
+    @State var refundAmount: Float = 0
+    @State var refundComment: String = ""
+    
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 12) {
+            
+            HeaderTitleView(label: "􂈚 Refund")
+               
+            Form {
+                TextField("Amount", value: $refundAmount,
+                          format: .currency(code: "EUR").presentation(.isoCode)
+                )
+                .onSubmit {
+                    self.submitRefund()
+                }
+                DatePicker("Date", selection: $refundDate)
+                TextField("Comment", text: $refundComment, axis: .vertical)
+                    .lineLimit(3...5)
+                
+                HStack {
+                    Button {
+                        self.submitRefund()
+                    } label: {
+                        Text("Create refund")
+                    }
+                }
+            }
+            
+            Table(appController.refunds(for: order)) {
+                
+                TableColumn("Date") { refund in
+                    Text(refund.date, format: .dateTime)
+                }
+                TableColumn("Amount") { refund in
+                    Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
+                        .amountColor(.bad)
+                }
+                TableColumn("Comment") { refund in
+                    Text(refund.comment)
+                }
+            }
+            .frame(minHeight: 100)
+        }
+        .onAppear {
+            
+            self.setupFormStateFromOrder()
+        }
+        .onChange(of: order) {
+            
+            self.setupFormStateFromOrder()
+        }
+    }
+    
+    
+    func setupFormStateFromOrder() {
+        
+        self.refundDate = Date()
+        self.refundComment = ""
+    }
+    
+    
+    func submitRefund() {
+        
+        appController.createRefund(OrderRefund(
+            date: refundDate,
+            amount: refundAmount,
+            comment: refundComment,
+            orderId: order.id
+        ))
+    }
+}

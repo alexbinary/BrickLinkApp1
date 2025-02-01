@@ -78,10 +78,11 @@ struct ResultContentView: View {
             
             TableColumn("Refund") { order in
                 
-                if let refund = appController.refund(for: order) {
+                let totalRefund = appController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                if totalRefund > 0 {
                     
                     Text(
-                        abs(refund),
+                        abs(totalRefund),
                         format: .currency(code: "EUR").presentation(.isoCode)
                     ).amountColor(.bad)
                 }

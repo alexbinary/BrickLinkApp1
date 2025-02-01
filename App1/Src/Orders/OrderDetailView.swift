@@ -213,7 +213,7 @@ struct OrderDetailView: View {
                     }
                     .equalWidths($columnWidth)
                     
-                    TabView {
+                    TabView(selection: .constant(4)) {
                         
                         OrderGeneralView(order: order)
                         .padding()
@@ -245,13 +245,22 @@ struct OrderDetailView: View {
                         .tag(3)
                         
                         ScrollView {
+                            OrderRefundView(order: order)
+                        }
+                        .padding()
+                        .tabItem {
+                            Text("􂈚 Refunds")
+                        }
+                        .tag(4)
+                        
+                        ScrollView {
                             OrderComptaView(order: order)
                         }
                         .padding()
                         .tabItem {
                             Text("􀖧 Compta")
                         }
-                        .tag(4)
+                        .tag(5)
                     }
                 }
                 

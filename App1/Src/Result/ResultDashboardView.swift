@@ -30,7 +30,7 @@ struct ResultDashboardView: View {
             let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
             
             let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-            let totalRefund = orders.reduce(0) { $0 + (appController.refund(for: $1) ?? 0) }
+            let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
             
             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
             
@@ -172,10 +172,11 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Refund") { order in
                                 
-                                if let refund = appController.refund(for: order) {
+                                let totalRefund = appController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                                if totalRefund > 0 {
                                     
                                     Text(
-                                        abs(refund),
+                                        abs(totalRefund),
                                         format: .currency(code: "EUR").presentation(.isoCode)
                                     ).amountColor(.bad)
                                 }
@@ -255,10 +256,11 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Refund") { order in
                                 
-                                if let refund = appController.refund(for: order) {
+                                let totalRefund = appController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                                if totalRefund > 0 {
                                     
                                     Text(
-                                        abs(refund),
+                                        abs(totalRefund),
                                         format: .currency(code: "EUR").presentation(.isoCode)
                                     ).amountColor(.bad)
                                 }

@@ -296,6 +296,20 @@ class DataStore {
         
         data!.transactions = transactions
     }
+    
+    
+    public var orderRefunds: [OrderRefund] {
+        
+        data?.orderRefunds ?? []
+    }
+    
+    
+    public func setOrderRefunds(_ orderRefunds: [OrderRefund]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.orderRefunds = orderRefunds
+    }
 }
 
 
@@ -326,4 +340,5 @@ struct DataRoot: Codable {
     var uploadItems: [UploadItem]?
     var uploadedItems: [UploadedItem]?
     var transactions: [Transaction]?
+    var orderRefunds: [OrderRefund]?
 }

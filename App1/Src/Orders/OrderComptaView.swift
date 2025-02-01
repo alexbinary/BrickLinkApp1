@@ -130,6 +130,13 @@ struct OrderComptaView: View {
             Divider()
             
             HeaderTitleView(label: "􂈚 Refund")
+            
+            HStack {
+                Text("Latest refund:")
+                if let refund = appController.refunds(for: order).last {
+                    Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
+                }
+            }
                
             Form {
                 TextField("Amount", value: $refundAmount,
@@ -188,6 +195,7 @@ struct OrderComptaView: View {
         self.shippingComment = ""
         
         self.refundDate = Date()
+        self.refundAmount = appController.refunds(for: order).last?.amount ?? 0
         self.refundPaymentMethod = .paypal
         self.refundComment = ""
     }
