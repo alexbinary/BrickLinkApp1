@@ -38,21 +38,21 @@ struct ResultContentView: View {
                 Text(
                     abs(order.subTotal),
                     format: .currency(code: "EUR").presentation(.isoCode)
-                ).amountColor(.income)
+                ).amountColor(.good)
             }
             
             TableColumn("Items cost") { order in
                 Text(
                     0,
                     format: .currency(code: "EUR").presentation(.isoCode)
-                ).amountColor(.expense)
+                ).amountColor(.bad)
             }
             
             TableColumn("Shipping") { order in
                 Text(
                     abs(order.shippingCost),
                     format: .currency(code: "EUR").presentation(.isoCode)
-                ).amountColor(.income)
+                ).amountColor(.good)
             }
             
             TableColumn("Shipping cost") { order in
@@ -62,7 +62,7 @@ struct ResultContentView: View {
                     Text(
                         abs(cost),
                         format: .currency(code: "EUR").presentation(.isoCode)
-                    ).amountColor(.expense)}
+                    ).amountColor(.bad)}
             }
             
             TableColumn("Fees") { order in
@@ -72,7 +72,7 @@ struct ResultContentView: View {
                     Text(
                         abs(fees),
                         format: .currency(code: "EUR").presentation(.isoCode)
-                    ).amountColor(.expense)
+                    ).amountColor(.bad)
                 }
             }
             
@@ -83,7 +83,7 @@ struct ResultContentView: View {
                     Text(
                         abs(refund),
                         format: .currency(code: "EUR").presentation(.isoCode)
-                    ).amountColor(.expense)
+                    ).amountColor(.bad)
                 }
             }
             

@@ -28,7 +28,7 @@ struct ResultGridView: View {
                     abs(totalItems),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(.income)
+                .amountColor(.good)
             }
             
             GridRow {
@@ -39,7 +39,7 @@ struct ResultGridView: View {
                     abs(totalShipping),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(.income)
+                .amountColor(.good)
             }
             
             Color.clear.frame(width: 0, height: 8)
@@ -52,7 +52,7 @@ struct ResultGridView: View {
                     abs(totalItemCost),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(.expense)
+                .amountColor(.bad)
             }
             
             GridRow {
@@ -63,7 +63,7 @@ struct ResultGridView: View {
                     abs(totalShippingCost),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(.expense)
+                .amountColor(.bad)
             }
             
             Color.clear.frame(width: 0, height: 8)
@@ -76,7 +76,7 @@ struct ResultGridView: View {
                     abs(totalFees),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(.expense)
+                .amountColor(.bad)
             }
             
             GridRow {
@@ -87,7 +87,7 @@ struct ResultGridView: View {
                     abs(totalRefund),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .amountColor(.expense)
+                .amountColor(.bad)
             }
             
             Color.clear.frame(width: 0, height: 8)

@@ -8,18 +8,30 @@ extension View {
     
     @ViewBuilder func amountColor(_ amount: Float) -> some View {
         
-        self.amountColor(amount > 0 ? .income : .expense)
+        self.amountColor(amount > 0 ? .good : .bad)
     }
     
-    @ViewBuilder func amountColor(_ type: AmountType) -> some View {
     
-        self.foregroundColor(type == .income ? green : red)
+    @ViewBuilder func amountColor(_ meaning: ColorMeaning) -> some View {
+    
+        switch meaning {
+            
+        case .good:
+            self.foregroundColor(green)
+            
+        case .bad:
+            self.foregroundColor(red)
+            
+        case .neutral:
+            self
+        }
     }
 }
 
 
-enum AmountType {
+enum ColorMeaning {
     
-    case income
-    case expense
+    case good
+    case bad
+    case neutral
 }

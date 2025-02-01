@@ -135,28 +135,28 @@ struct ResultDashboardView: View {
                                 Text(
                                     abs(order.subTotal),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Items cost") { order in
                                 Text(
                                     0,
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Shipping") { order in
                                 Text(
                                     abs(order.shippingCost),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
                                     abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
@@ -166,7 +166,7 @@ struct ResultDashboardView: View {
                                     Text(
                                         abs(fees),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).amountColor(.expense)
+                                    ).amountColor(.bad)
                                 }
                             }
                             
@@ -177,7 +177,7 @@ struct ResultDashboardView: View {
                                     Text(
                                         abs(refund),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).amountColor(.expense)
+                                    ).amountColor(.bad)
                                 }
                             }
                             
@@ -218,28 +218,28 @@ struct ResultDashboardView: View {
                                 Text(
                                     abs(order.subTotal),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Items cost") { order in
                                 Text(
                                     0,
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Shipping") { order in
                                 Text(
                                     abs(order.shippingCost),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
                                     abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
@@ -249,7 +249,7 @@ struct ResultDashboardView: View {
                                     Text(
                                         abs(fees),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).amountColor(.expense)
+                                    ).amountColor(.bad)
                                 }
                             }
                             
@@ -260,7 +260,7 @@ struct ResultDashboardView: View {
                                     Text(
                                         abs(refund),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).amountColor(.expense)
+                                    ).amountColor(.bad)
                                 }
                             }
                             

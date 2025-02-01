@@ -144,7 +144,7 @@ struct ResultHistoryView: View {
                         .annotation(position: .top) {
                             if totalIncome != 0 {
                                 Text(String(format:"%.2f €", abs(totalIncome)))
-                                    .amountColor(.income)
+                                    .amountColor(.good)
                             }
                         }
                         
@@ -166,7 +166,7 @@ struct ResultHistoryView: View {
                         .annotation(position: .bottom) {
                             if totalExpense != 0 {
                                 Text(String(format:"%.2f €", abs(totalExpense)))
-                                    .amountColor(.expense)
+                                    .amountColor(.bad)
                             }
                         }
                     }
@@ -447,28 +447,28 @@ struct ResultHistoryView: View {
                                 Text(
                                     abs(order.subTotal),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Items cost") { order in
                                 Text(
                                     0,
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Shipping") { order in
                                 Text(
                                     abs(order.shippingCost),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
                                     abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
@@ -478,7 +478,7 @@ struct ResultHistoryView: View {
                                     Text(
                                         abs(fees),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).amountColor(.expense)
+                                    ).amountColor(.bad)
                                 }
                             }
                             
@@ -529,28 +529,28 @@ struct ResultHistoryView: View {
                                 Text(
                                     abs(order.subTotal),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Items cost") { order in
                                 Text(
                                     0,
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Shipping") { order in
                                 Text(
                                     abs(order.shippingCost),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.income)
+                                ).amountColor(.good)
                             }
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
                                     abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
-                                ).amountColor(.expense)
+                                ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
@@ -560,7 +560,7 @@ struct ResultHistoryView: View {
                                     Text(
                                         abs(fees),
                                         format: .currency(code: "EUR").presentation(.isoCode)
-                                    ).amountColor(.expense)
+                                    ).amountColor(.bad)
                                 }
                             }
                             

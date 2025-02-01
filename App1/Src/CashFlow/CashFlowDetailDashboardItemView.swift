@@ -64,7 +64,7 @@ struct CashFlowDetailDashboardItemView: View {
                 GridRow {
                     Text("Total income")
                     Text(totalIncome, format: .currency(code: "EUR").presentation(.isoCode))
-                        .amountColor(.income)
+                        .amountColor(.good)
                     
                     Text("")
                 }
@@ -109,7 +109,7 @@ struct CashFlowDetailDashboardItemView: View {
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
                                     Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .amountColor(.income)
+                                        .amountColor(.good)
                                 }
                             }
                         }
@@ -151,7 +151,7 @@ struct CashFlowDetailDashboardItemView: View {
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
                                     Text(item.totalAmount, format: .currency(code: "EUR").presentation(.isoCode))
-                                        .amountColor(.income)
+                                        .amountColor(.good)
                                 }
                             }
                         }
@@ -165,7 +165,7 @@ struct CashFlowDetailDashboardItemView: View {
                 GridRow {
                     Text("Total expense")
                     Text(abs(totalExpense), format: .currency(code: "EUR").presentation(.isoCode))
-                        .amountColor(.expense)
+                        .amountColor(.bad)
                 }
                 .font(.title2)
                 
@@ -208,7 +208,7 @@ struct CashFlowDetailDashboardItemView: View {
                                         .clipShape(.circle)
                                     Text(item.type.rawValue)
                                     Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
-                                        .amountColor(.expense)
+                                        .amountColor(.bad)
                                 }
                             }
                         }
@@ -251,7 +251,7 @@ struct CashFlowDetailDashboardItemView: View {
                                         .clipShape(.circle)
                                     Text(item.method.rawValue)
                                     Text(abs(item.totalAmount), format: .currency(code: "EUR").presentation(.isoCode))
-                                        .amountColor(.expense)
+                                        .amountColor(.bad)
                                 }
                             }
                         }
