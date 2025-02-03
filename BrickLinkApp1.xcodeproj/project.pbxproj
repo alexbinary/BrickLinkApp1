@@ -67,6 +67,8 @@
 		29D674552C77C74F00BAA00A /* BrickLinkAPIAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */; };
 		29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 29D674572C77C7E300BAA00A /* CryptoSwift */; };
 		29D6745A2C77C84C00BAA00A /* BrickLinkAPIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */; };
+		29DB35362D50EF9B004F69D5 /* LaPosteTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DB35352D50EF9B004F69D5 /* LaPosteTrackingView.swift */; };
+		29DB35382D50F2F2004F69D5 /* LaPoste.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DB35372D50F2EE004F69D5 /* LaPoste.swift */; };
 		29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */ = {isa = PBXBuildFile; productRef = 29EDBB502CA069E900F77959 /* HTMLEntities */; };
 /* End PBXBuildFile section */
 
@@ -132,6 +134,8 @@
 		29D6744E2C77C14F00BAA00A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		29D674542C77C74F00BAA00A /* BrickLinkAPIAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIAuth.swift; sourceTree = "<group>"; };
 		29D674592C77C84C00BAA00A /* BrickLinkAPIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickLinkAPIModels.swift; sourceTree = "<group>"; };
+		29DB35352D50EF9B004F69D5 /* LaPosteTrackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaPosteTrackingView.swift; sourceTree = "<group>"; };
+		29DB35372D50F2EE004F69D5 /* LaPoste.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaPoste.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +237,7 @@
 				2955607F2D2971F8000DC139 /* OrderFeedbackView.swift */,
 				295B86932D4E245A008AB136 /* OrderRefundView.swift */,
 				29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */,
+				29DB35352D50EF9B004F69D5 /* LaPosteTrackingView.swift */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -312,6 +317,7 @@
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
 				29BB30912C77B0CA000525CB /* ContentView.swift */,
+				29DB35372D50F2EE004F69D5 /* LaPoste.swift */,
 				29B9492A2C80532F00CC7F26 /* BrickLink */,
 				29ACCDEE2CAD8C620065C6E3 /* Types */,
 				29B9491D2C7DB3AC00CC7F26 /* Models */,
@@ -437,9 +443,11 @@
 				29D6744F2C77C14F00BAA00A /* DataStore.swift in Sources */,
 				2955607E2D2949BD000DC139 /* OrderBusinessStatus.swift in Sources */,
 				29B949402C87029E00CC7F26 /* amountColor.swift in Sources */,
+				29DB35382D50F2F2004F69D5 /* LaPoste.swift in Sources */,
 				29B949382C86F2AA00CC7F26 /* OrderComptaView.swift in Sources */,
 				29B0913E2C9486330072F7BE /* UploadContentView.swift in Sources */,
 				291E64632D2DB42700361989 /* CatalogItem.swift in Sources */,
+				29DB35362D50EF9B004F69D5 /* LaPosteTrackingView.swift in Sources */,
 				29A425962D4BDAA5002E5135 /* shippingData.swift in Sources */,
 				295B86922D4E241F008AB136 /* OrderRefund.swift in Sources */,
 				291E64652D2DB91F00361989 /* UploadedItem.swift in Sources */,

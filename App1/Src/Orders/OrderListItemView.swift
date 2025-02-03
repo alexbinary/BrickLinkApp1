@@ -275,6 +275,13 @@ struct OrderListItemView: View {
                                             }
                                         }
                                     }
+                                    
+                                    if appController.orderBusinessStatus(orderId) == .inTransit,
+                                       let orderDetails = appController.orderDetails(forOrderWithId: orderId),
+                                       let trackingNo = orderDetails.trackingNo {
+                                        
+                                        LaPosteTrackingView(trackingNo: trackingNo)
+                                    }
                                 }
                                 .frame(width: 280, alignment: .trailing)
                             }

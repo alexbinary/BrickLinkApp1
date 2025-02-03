@@ -1398,10 +1398,11 @@ class AppController: ObservableObject {
         
         let orderSummary = orderSummary(forOrderWithId: orderId)!
         
-        return
+        return (
             orderSummary.status.isOneOf(.completed, .cancelled, .purged)
             &&
             orderSummary.dateStatusChanged.days(to: Date()) > 30
+        )
     }
     
     
@@ -1679,6 +1680,7 @@ class AppController: ObservableObject {
     }
     
     
+    
     // MARK: - Order business status
     
     
@@ -1742,10 +1744,39 @@ class AppController: ObservableObject {
                 return validatedStatus
             }
         }
-                
+        
         return validatedStatus
     }
+    
+    
+    
+    // MARK: - Order business status
+    
+    
+    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) async -> TrackingStatus? {
+        
+        let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
+        
+        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
+        print(String(data: data, encoding: .utf8)!)
+        
+        let decoder = JSONDecoder()
+        
+        if let successResponse = try? decoder.decode([LaPosteTrackingData].self, from: data),
+           let isFinal = successResponse.first?.shipment.isFinal {
+
+            return isFinal ? .delivered : .inTransit
+            
+        } else {
+            
+            return .noData
+        }
+    }
 }
+
+
+
+// MARK: - Decoding
 
 
 
