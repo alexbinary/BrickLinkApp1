@@ -61,7 +61,7 @@ struct OrdersListView: View {
                         label: OrderBusinessStatus.received.descriptionWithPicto,
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .received }
-                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+                            .sorted { $0.dateStatusChanged < $1.dateStatusChanged }
                     ),
                     (
                         label: "􀐫 Recently closed",
