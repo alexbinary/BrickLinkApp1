@@ -24,3 +24,31 @@ struct OrderSummary: Identifiable, Equatable, Codable, Datable {
     
     let paymentStatus: PaymentStatus
 }
+
+
+
+extension OrderSummary {
+    
+    
+    func matches(_ rawSearchText: String) -> Bool {
+        
+        let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        
+        if searchText.isEmpty {
+            return true
+        }
+        
+        let searchableText = searchableText()
+        
+        return searchableText.contains(searchText)
+    }
+    
+    
+    func searchableText() -> String {
+        
+        [
+            id
+            
+        ].map { $0.lowercased() } .joined(separator: " ")
+    }
+}

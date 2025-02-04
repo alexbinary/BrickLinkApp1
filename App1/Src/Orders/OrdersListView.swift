@@ -11,10 +11,13 @@ struct OrdersListView: View {
     
     @State var refreshing: Bool = false
     
+    @State var searchText = ""
+    
     
     var body: some View {
         
         let allOrders = appController.orderSummaries
+            .filter { $0.matches(searchText) }
         
         ScrollView {
             
@@ -86,6 +89,7 @@ struct OrdersListView: View {
                     section(header: "􀤟 \(item.month)", orders: item.elements)
                 }
             }
+            .searchable(text: $searchText, prompt: "Search orders")
         }
         .navigationTitle("Orders")
         .navigationDestination(for: OrderSummary.ID.self) { orderId in
