@@ -178,7 +178,11 @@ struct OrderListItemView: View {
                                 case .giveFeedback:
                                         
                                     let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
+                                    if order.status == .completed {
+                                        items.append(StatusItem(text: "Completed \(formattedDate)", status: .completed))
+                                    } else {
+                                        items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
+                                    }
                                     
                                     items.append(StatusItem(text: "Give feedback", status: .actionRequired, action: {
                                         Task {
