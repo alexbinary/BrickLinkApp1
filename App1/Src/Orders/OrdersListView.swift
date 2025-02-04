@@ -52,16 +52,16 @@ struct OrdersListView: View {
                             .sorted { $0.date > $1.date }
                     ),
                     (
-                        label: OrderBusinessStatus.inTransit.descriptionWithPicto,
-                        orders: allOrders
-                            .filter { appController.orderBusinessStatus($0.id) == .inTransit && !appController.orderChecklistUnchangedFor30Days($0.id) }
-                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                    ),
-                    (
                         label: OrderBusinessStatus.received.descriptionWithPicto,
                         orders: allOrders
                             .filter { appController.orderBusinessStatus($0.id) == .received }
                             .sorted { $0.dateStatusChanged < $1.dateStatusChanged }
+                    ),
+                    (
+                        label: OrderBusinessStatus.inTransit.descriptionWithPicto,
+                        orders: allOrders
+                            .filter { appController.orderBusinessStatus($0.id) == .inTransit && !appController.orderChecklistUnchangedFor30Days($0.id) }
+                            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                     ),
                     (
                         label: "􀐫 Recently closed",
