@@ -26,6 +26,33 @@ struct Experimental1: App {
 @Observable
 class Controller {
     
+    var store = Store()
+    
+    var data1: String { store.data1 }
+    var data2: String { store.data2 }
+    
+    func read1() -> String {
+        data1
+    }
+    
+    func read2() -> String {
+        data2
+    }
+    
+    func mutate1() {
+        store.mutate1()
+    }
+    
+    func mutate2() {
+        store.mutate2()
+    }
+}
+
+
+
+@Observable
+class Store {
+    
     var data1: String = "d1"
     var data2: String = "d2"
     
