@@ -28,25 +28,49 @@ class Controller {
     
     var store = Store()
     
-    var data: [String] { store.data }
+    var data1: String { store.data1 }
+    var data2: String { store.data2 }
     
-    func read(_ idx: Int) -> String {
-        data[idx]
+    func read1() -> String {
+        data1
     }
     
-    func mutate(_ idx: Int) {
-        store.mutate(idx)
+    func read2() -> String {
+        data2
+    }
+    
+    func mutate1() {
+        store.mutate1()
+    }
+    
+    func mutate2() {
+        store.mutate2()
+    }
+}
+
+
+
+class Store {
+    
+    var data = Data()
+    
+    var data1: String { data.data1 }
+    var data2: String { data.data2 }
+    
+    func mutate1() {
+        data.data1 = "\(Date())"
+    }
+    
+    func mutate2() {
+        data.data2 = "\(Date())"
     }
 }
 
 
 
 @Observable
-class Store {
+class Data {
     
-    var data = [String](repeating: "d", count: 5)
-    
-    func mutate(_ idx: Int) {
-        data[idx] = "\(Date())"
-    }
+    var data1: String = "d1"
+    var data2: String = "d2"
 }

@@ -15,9 +15,9 @@ struct ContentView1: View {
         
         VStack {
             
-            Text(controller.read(0))
+            Text(controller.read1())
             Button("Mutate1") {
-                controller.mutate(0)
+                controller.mutate1()
             }
         }
         .padding()
@@ -38,9 +38,9 @@ struct ContentView2: View {
 
         VStack {
 
-            Text(controller.read(1))
+            Text(controller.read2())
             Button("Mutate2") {
-                controller.mutate(1)
+                controller.mutate2()
             }
         }
         .padding()
