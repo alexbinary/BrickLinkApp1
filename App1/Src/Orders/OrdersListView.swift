@@ -142,7 +142,7 @@ struct OrdersListView: View {
             }
             .disabled(refreshing)
         }
-        .onAppear {
+        .onChange(of: appController.orderSummaries, initial: true) {
             Task { await refresh() }
         }
     }
