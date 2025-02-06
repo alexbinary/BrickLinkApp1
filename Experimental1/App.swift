@@ -28,23 +28,14 @@ class Controller {
     
     var store = Store()
     
-    var data1: String { store.data1 }
-    var data2: String { store.data2 }
+    var data: [String] { store.data }
     
-    func read1() -> String {
-        data1
+    func read(_ idx: Int) -> String {
+        data[idx]
     }
     
-    func read2() -> String {
-        data2
-    }
-    
-    func mutate1() {
-        store.mutate1()
-    }
-    
-    func mutate2() {
-        store.mutate2()
+    func mutate(_ idx: Int) {
+        store.mutate(idx)
     }
 }
 
@@ -53,14 +44,9 @@ class Controller {
 @Observable
 class Store {
     
-    var data1: String = "d1"
-    var data2: String = "d2"
+    var data = [String](repeating: "d", count: 5)
     
-    func mutate1() {
-        data1 = "\(Date())"
-    }
-    
-    func mutate2() {
-        data2 = "\(Date())"
+    func mutate(_ idx: Int) {
+        data[idx] = "\(Date())"
     }
 }
