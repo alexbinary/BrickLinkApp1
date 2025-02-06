@@ -7,26 +7,27 @@ import SwiftUI
 struct Experimental1: App {
     
     
-    @StateObject var controller = Controller()
+    @State var controller = Controller()
     
 
     var body: some Scene {
 
         WindowGroup {
             ContentView1()
-                .environmentObject(controller)
+                .environment(controller)
             ContentView2()
-                .environmentObject(controller)
+                .environment(controller)
         }
     }
 }
 
 
 
-class Controller: ObservableObject {
+@Observable
+class Controller {
     
-    @Published var data1: String = "d1"
-    @Published var data2: String = "d2"
+    var data1: String = "d1"
+    var data2: String = "d2"
     
     func mutate1() {
         data1 = "\(Date())"

@@ -6,7 +6,7 @@ import SwiftUI
 struct ContentView1: View {
     
     
-    @EnvironmentObject var controller: Controller
+    @Environment(Controller.self) var controller
     
 
     var body: some View {
@@ -29,7 +29,7 @@ struct ContentView1: View {
 struct ContentView2: View {
     
     
-    @EnvironmentObject var controller: Controller
+    @Environment(Controller.self) var controller
     
 
     var body: some View {
