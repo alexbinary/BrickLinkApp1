@@ -28,8 +28,8 @@ class Controller {
     
     var store = Store()
     
-    var data1: String { store.data1 }
-    var data2: String { store.data2 }
+    var data1: String { store.dataCollection["d1"]!.data }
+    var data2: String { store.dataCollection["d2"]!.data }
     
     func read1() -> String {
         data1
@@ -50,19 +50,18 @@ class Controller {
 
 
 
+@Observable
 class Store {
     
-    var data = Data()
-    
-    var data1: String { data.data1 }
-    var data2: String { data.data2 }
+    var dataCollection = ["d1": Data(), "d2": Data()]
     
     func mutate1() {
-        data.data1 = "\(Date())"
+        dataCollection["d1"] = Data()
+        dataCollection["d1"]!.data = "\(Date())"
     }
     
     func mutate2() {
-        data.data2 = "\(Date())"
+        dataCollection["d2"]!.data = "\(Date())"
     }
 }
 
@@ -71,6 +70,5 @@ class Store {
 @Observable
 class Data {
     
-    var data1: String = "d1"
-    var data2: String = "d2"
+    var data: String = "d"
 }
