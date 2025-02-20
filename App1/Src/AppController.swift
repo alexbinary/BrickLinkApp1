@@ -180,18 +180,9 @@ class AppController: ObservableObject {
         print("Loading order details \(orderId)")
         
         let blOrder = await BrickLinkAPIClient.fetchDetails(forOrderWithId: orderId, using: blCredentials)
-         
         let order = OrderDetails(fromBl: blOrder)
         
-        var orderDetails = dataStore.orderDetails
-        
-        if let index = orderDetails.firstIndex(where: { $0.id == order.id }) {
-            orderDetails[index] = order
-        } else {
-            orderDetails.append(order)
-        }
-        
-        try! dataStore.setOrderDetails(orderDetails)
+        try! dataStore.setOrderDetail(order)
         try! dataStore.save()
         
         DispatchQueue.main.sync {
@@ -273,11 +264,7 @@ class AppController: ObservableObject {
     
     public func updateShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
         
-        var shippingCostsByOrderId = dataStore.shippingCostsByOrderId
-        
-        shippingCostsByOrderId[orderId] = cost
-        
-        try! dataStore.setShippingCostsByOrderId(shippingCostsByOrderId)
+        try! dataStore.setShippingCost(cost, forOrderId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -296,10 +283,7 @@ class AppController: ObservableObject {
     
     public func updateStamping(forOrderWithId orderId: OrderSummary.ID, method: String) {
         
-        var stampingMethodByOrderId = dataStore.stampingMethodByOrderId
-        stampingMethodByOrderId[orderId] = method
-        
-        try! dataStore.setStampingMethodByOrderId(stampingMethodByOrderId)
+        try! dataStore.setStampingMethod(method, forOrderId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -314,10 +298,7 @@ class AppController: ObservableObject {
     
     public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
         
-        var dateValidatedWithoutStampingByOrderId = dataStore.dateValidatedWithoutStampingByOrderId
-        dateValidatedWithoutStampingByOrderId[orderId] = Date()
-        
-        try! dataStore.setDateValidatedWithoutStampingByOrderId(dateValidatedWithoutStampingByOrderId)
+        try! dataStore.setDateValidatedWithoutStamping(Date(), forOrderId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -374,11 +355,7 @@ class AppController: ObservableObject {
             }
         }
         
-        var orderItemsByOrderId = dataStore.orderItemsByOrderId
-        
-        orderItemsByOrderId[orderId] = batches
-        
-        try! dataStore.setOrderItemsByOrderId(orderItemsByOrderId)
+        try! dataStore.setOrderItems(batches, forOrderId: orderId)
         try! dataStore.save()
         
         DispatchQueue.main.sync {
@@ -442,15 +419,7 @@ class AppController: ObservableObject {
     
     public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
-        var pickedItemsByOrderId = dataStore.pickedItemsByOrderId
-        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
-        
-        guard !pickedItemsForOrder.contains(itemId) else { return }
-            
-        pickedItemsForOrder.append(itemId)
-        pickedItemsByOrderId[orderId] = pickedItemsForOrder
-        
-        try! dataStore.setPickedItemsByOrderId(pickedItemsByOrderId)
+        try! dataStore.addPickedItem(itemId, toOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -459,17 +428,7 @@ class AppController: ObservableObject {
     
     public func unpickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
-        var pickedItemsByOrderId = dataStore.pickedItemsByOrderId
-        var pickedItemsForOrder = dataStore.pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
-        
-        pickedItemsForOrder.removeAll { $0 == itemId }
-        pickedItemsByOrderId[orderId] = pickedItemsForOrder
-        
-        if pickedItemsByOrderId[orderId]!.isEmpty {
-            pickedItemsByOrderId.removeValue(forKey: orderId)
-        }
-        
-        try! dataStore.setPickedItemsByOrderId(pickedItemsByOrderId)
+        try! dataStore.removePickedItem(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -484,15 +443,7 @@ class AppController: ObservableObject {
     
     public func verifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
-        var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
-        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
-        
-        guard !verifiedItemsForOrder.contains(itemId) else { return }
-            
-        verifiedItemsForOrder.append(itemId)
-        verifiedItemsByOrderId[orderId] = verifiedItemsForOrder
-        
-        try! dataStore.setVerifiedItemsByOrderId(verifiedItemsByOrderId)
+        try! dataStore.addVerifiedItem(itemId, toOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -501,17 +452,7 @@ class AppController: ObservableObject {
     
     public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
-        var verifiedItemsByOrderId = dataStore.verifiedItemsByOrderId
-        var verifiedItemsForOrder = dataStore.verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
-        
-        verifiedItemsForOrder.removeAll { $0 == itemId }
-        verifiedItemsByOrderId[orderId] = verifiedItemsForOrder
-        
-        if verifiedItemsByOrderId[orderId]!.isEmpty {
-            verifiedItemsByOrderId.removeValue(forKey: orderId)
-        }
-        
-        try! dataStore.setVerifiedItemsByOrderId(verifiedItemsByOrderId)
+        try! dataStore.removeVerifiedItem(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -533,13 +474,9 @@ class AppController: ObservableObject {
         print("Loading order feedbacks \(orderId)")
         
         let blFeedbacks = await BrickLinkAPIClient.fetchFeedbacks(forOrderWithId: orderId, using: blCredentials)
-        
         let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
         
-        var orderFeedbacksByOrderId = dataStore.orderFeedbacksByOrderId
-        orderFeedbacksByOrderId[orderId] = feedbacks
-        
-        try! dataStore.setOrderFeedbacksByOrderId(orderFeedbacksByOrderId)
+        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
         try! dataStore.save()
         
         DispatchQueue.main.sync {
@@ -593,10 +530,7 @@ class AppController: ObservableObject {
     
     public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
         
-        var dateValidatedWithoutFeedbackByOrderId = dataStore.dateValidatedWithoutFeedbackByOrderId
-        dateValidatedWithoutFeedbackByOrderId[orderId] = Date()
-        
-        try! dataStore.setDateValidatedWithoutFeedbackByOrderId(dateValidatedWithoutFeedbackByOrderId)
+        try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -627,10 +561,7 @@ class AppController: ObservableObject {
     
     public func addUploadItem(_ uploadItem: UploadItem) {
         
-        var uploadItems = dataStore.uploadItems
-        uploadItems.append(uploadItem)
-        
-        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.addUploadItem(uploadItem)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -639,10 +570,7 @@ class AppController: ObservableObject {
     
     public func deleteUploadItem(_ uploadItem: UploadItem) {
         
-        var uploadItems = dataStore.uploadItems
-        uploadItems.removeAll(where: { $0.id == uploadItem.id })
-        
-        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.deleteUploadItem(uploadItem)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -651,13 +579,7 @@ class AppController: ObservableObject {
     
     public func updateUploadItem(_ updatedItem: UploadItem) {
         
-        var uploadItems = dataStore.uploadItems
-        guard let idx = uploadItems.firstIndex(where: { $0.id == updatedItem.id }) else {
-            fatalError("could not update upload item #\(updatedItem.id): item not found")
-        }
-        uploadItems[idx] = updatedItem
-    
-        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.updateUploadItem(updatedItem)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -676,10 +598,7 @@ class AppController: ObservableObject {
             return
         }
         
-        var uploadItems = dataStore.uploadItems
-        uploadItems.append(contentsOf: delegate.uploadItems)
-        
-        try! dataStore.setUploadItems(uploadItems)
+        try! dataStore.addUploadItems(uploadItems)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -810,10 +729,7 @@ class AppController: ObservableObject {
     
     public func addUploadedItem(_ uploadedItem: UploadedItem) {
         
-        var uploadedItems = dataStore.uploadedItems
-        uploadedItems.append(uploadedItem)
-        
-        try! dataStore.setUploadedItems(uploadedItems)
+        try! dataStore.addUploadedItem(uploadedItem)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -903,18 +819,9 @@ class AppController: ObservableObject {
     public func loadInventory(withId id: InventoryItem.ID) async {
         
         let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id, using: blCredentials)
-            
         let inventory = InventoryItem(fromBl: blInventory)
         
-        var inventories = dataStore.inventories
-        
-        if let index = inventories.firstIndex(where: { $0.id == inventory.id }) {
-            inventories[index] = inventory
-        } else {
-            inventories.append(inventory)
-        }
-        
-        try! dataStore.setInventories(inventories)
+        try! dataStore.setInventory(inventory)
         try! dataStore.save()
         
         DispatchQueue.main.sync {
@@ -1111,10 +1018,7 @@ class AppController: ObservableObject {
     
     public func registerTransaction(_ transaction: Transaction) {
         
-        var transactions = dataStore.transactions
-        transactions.append(transaction)
-        
-        try! dataStore.setTransactions(transactions)
+        try! dataStore.addTransaction(transaction)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -1147,10 +1051,7 @@ class AppController: ObservableObject {
     
     public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
         
-        var dateValidatedWithoutIncomeTransactionByOrderId = dataStore.dateValidatedWithoutIncomeTransactionByOrderId
-        dateValidatedWithoutIncomeTransactionByOrderId[orderId] = Date()
-        
-        try! dataStore.setDateValidatedWithoutIncomeTransactionByOrderId(dateValidatedWithoutIncomeTransactionByOrderId)
+        try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -1177,10 +1078,7 @@ class AppController: ObservableObject {
     
     public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
         
-        var dateValidatedWithoutShippingTransactionByOrderId = dataStore.dateValidatedWithoutShippingTransactionByOrderId
-        dateValidatedWithoutShippingTransactionByOrderId[orderId] = Date()
-        
-        try! dataStore.setDateValidatedWithoutShippingTransactionByOrderId(dateValidatedWithoutShippingTransactionByOrderId)
+        try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -1370,10 +1268,7 @@ class AppController: ObservableObject {
     
     public func createRefund(_ refund: OrderRefund) {
         
-        var orderRefunds = dataStore.orderRefunds
-        orderRefunds.append(refund)
-        
-        try! dataStore.setOrderRefunds(orderRefunds)
+        try! dataStore.addOrderRefund(refund)
         try! dataStore.save()
         
         self.objectWillChange.send()
