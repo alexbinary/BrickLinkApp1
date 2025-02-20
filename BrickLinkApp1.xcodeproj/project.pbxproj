@@ -221,6 +221,28 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		295A33812D67871000D935E6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				29B0913D2C9486320072F7BE /* UploadContentView.swift */,
+				2926FA2E2D40D02B00BBB04B /* UploadedItemsView.swift */,
+				2995A70F2D315058000FB2C9 /* UploadItemView.swift */,
+				2995A7112D345AAE000FB2C9 /* UploadedItemView.swift */,
+				295B52FD2CA2B6820090CE1C /* UploadAddView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		295A33822D67871800D935E6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				29B091402C94902B0072F7BE /* UploadItem.swift */,
+				291E64642D2DB91F00361989 /* UploadedItem.swift */,
+				29B949522C8F2AC400CC7F26 /* InventoryItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		29A425942D4BD596002E5135 /* Shipping */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,11 +266,8 @@
 		29B0913F2C9488630072F7BE /* Upload */ = {
 			isa = PBXGroup;
 			children = (
-				29B0913D2C9486320072F7BE /* UploadContentView.swift */,
-				2926FA2E2D40D02B00BBB04B /* UploadedItemsView.swift */,
-				2995A70F2D315058000FB2C9 /* UploadItemView.swift */,
-				2995A7112D345AAE000FB2C9 /* UploadedItemView.swift */,
-				295B52FD2CA2B6820090CE1C /* UploadAddView.swift */,
+				295A33822D67871800D935E6 /* Models */,
+				295A33812D67871000D935E6 /* Views */,
 			);
 			path = Upload;
 			sourceTree = "<group>";
@@ -268,9 +287,6 @@
 			children = (
 				29B949312C86EA8E00CC7F26 /* Transaction.swift */,
 				29B9494C2C89CED200CC7F26 /* LegoColor.swift */,
-				29B949522C8F2AC400CC7F26 /* InventoryItem.swift */,
-				29B091402C94902B0072F7BE /* UploadItem.swift */,
-				291E64642D2DB91F00361989 /* UploadedItem.swift */,
 				291E64622D2DB42700361989 /* CatalogItem.swift */,
 			);
 			path = Models;
