@@ -190,6 +190,37 @@
 			path = "La Poste";
 			sourceTree = "<group>";
 		};
+		295A337F2D6786D200D935E6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				29B949212C7F0A5E00CC7F26 /* OrdersListView.swift */,
+				295560712D282591000DC139 /* OrderListItemView.swift */,
+				29B949232C7F0AD500CC7F26 /* OrderDetailView.swift */,
+				29B949352C86F0BB00CC7F26 /* OrderGeneralView.swift */,
+				29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */,
+				2955607F2D2971F8000DC139 /* OrderFeedbackView.swift */,
+				295B86932D4E245A008AB136 /* OrderRefundView.swift */,
+				29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */,
+				29DB35352D50EF9B004F69D5 /* LaPosteTrackingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		295A33802D6786DE00D935E6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				290CC49D2CAFF1C5006C2C20 /* OrderStatus.swift */,
+				295560732D283D83000DC139 /* PaymentStatus.swift */,
+				29B9494E2C8B25DA00CC7F26 /* OrderSummary.swift */,
+				29B949502C8B25E400CC7F26 /* OrderDetails.swift */,
+				29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */,
+				2955607D2D2949BD000DC139 /* OrderBusinessStatus.swift */,
+				29B9492B2C80603900CC7F26 /* Feedback.swift */,
+				295B86912D4E241F008AB136 /* OrderRefund.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		29A425942D4BD596002E5135 /* Shipping */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,15 +266,7 @@
 		29B9491D2C7DB3AC00CC7F26 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				290CC49D2CAFF1C5006C2C20 /* OrderStatus.swift */,
-				295560732D283D83000DC139 /* PaymentStatus.swift */,
-				29B9494E2C8B25DA00CC7F26 /* OrderSummary.swift */,
-				29B949502C8B25E400CC7F26 /* OrderDetails.swift */,
-				29B9491E2C7DB3D600CC7F26 /* OrderItem.swift */,
-				2955607D2D2949BD000DC139 /* OrderBusinessStatus.swift */,
-				29B9492B2C80603900CC7F26 /* Feedback.swift */,
 				29B949312C86EA8E00CC7F26 /* Transaction.swift */,
-				295B86912D4E241F008AB136 /* OrderRefund.swift */,
 				29B9494C2C89CED200CC7F26 /* LegoColor.swift */,
 				29B949522C8F2AC400CC7F26 /* InventoryItem.swift */,
 				29B091402C94902B0072F7BE /* UploadItem.swift */,
@@ -256,15 +279,8 @@
 		29B949202C7F0A3D00CC7F26 /* Orders */ = {
 			isa = PBXGroup;
 			children = (
-				29B949212C7F0A5E00CC7F26 /* OrdersListView.swift */,
-				295560712D282591000DC139 /* OrderListItemView.swift */,
-				29B949232C7F0AD500CC7F26 /* OrderDetailView.swift */,
-				29B949352C86F0BB00CC7F26 /* OrderGeneralView.swift */,
-				29B949282C7F0CC400CC7F26 /* OrderPickingView.swift */,
-				2955607F2D2971F8000DC139 /* OrderFeedbackView.swift */,
-				295B86932D4E245A008AB136 /* OrderRefundView.swift */,
-				29B949372C86F2AA00CC7F26 /* OrderComptaView.swift */,
-				29DB35352D50EF9B004F69D5 /* LaPosteTrackingView.swift */,
+				295A33802D6786DE00D935E6 /* Models */,
+				295A337F2D6786D200D935E6 /* Views */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
