@@ -182,6 +182,14 @@
 			path = Result;
 			sourceTree = "<group>";
 		};
+		295A337E2D6786AC00D935E6 /* La Poste */ = {
+			isa = PBXGroup;
+			children = (
+				29DB35372D50F2EE004F69D5 /* LaPoste.swift */,
+			);
+			path = "La Poste";
+			sourceTree = "<group>";
+		};
 		29A425942D4BD596002E5135 /* Shipping */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,8 +347,8 @@
 				29D6744C2C77BE8100BAA00A /* AppController.swift */,
 				29D6744E2C77C14F00BAA00A /* DataStore.swift */,
 				29BB30912C77B0CA000525CB /* ContentView.swift */,
-				29DB35372D50F2EE004F69D5 /* LaPoste.swift */,
 				29B9492A2C80532F00CC7F26 /* BrickLink */,
+				295A337E2D6786AC00D935E6 /* La Poste */,
 				29ACCDEE2CAD8C620065C6E3 /* Types */,
 				29B9491D2C7DB3AC00CC7F26 /* Models */,
 				29B9491A2C7DB14D00CC7F26 /* Views */,
