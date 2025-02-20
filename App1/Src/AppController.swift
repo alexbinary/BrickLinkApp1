@@ -1598,27 +1598,12 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Order business status
+    // MARK: - Tracking status status
     
     
-    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) async -> TrackingStatus? {
+    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus? {
         
-        let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoder = JSONDecoder()
-        
-        if let successResponse = try? decoder.decode([LaPosteTrackingData].self, from: data),
-           let isFinal = successResponse.first?.shipment.isFinal {
-
-            return isFinal ? .delivered : .inTransit
-            
-        } else {
-            
-            return .noData
-        }
+        await LaPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
     }
 }
 

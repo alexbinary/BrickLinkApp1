@@ -9,7 +9,7 @@ struct LaPosteTrackingView: View {
     
     let trackingNo: String
     
-    @State var status: TrackingStatus? = nil
+    @State var status: LaPosteTrackingStatus? = nil
     
     
     var body: some View {
