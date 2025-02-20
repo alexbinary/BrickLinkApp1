@@ -97,6 +97,23 @@ struct OrdersListView: View {
         }
         .toolbar {
             
+            let ordersThatNeedCompletedAndGiveFeedback = allOrders
+                .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
+                .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+            
+            if !ordersThatNeedCompletedAndGiveFeedback.isEmpty {
+                Button {
+                    Task {
+                        for order in ordersThatNeedCompletedAndGiveFeedback {
+                            await appController.updateOrderStatus(orderId: order.id, status: .completed)
+                            await appController.postPraiseOrderFeedback(orderId: order.id)
+                        }
+                    }
+                } label: {
+                    Text("Complete & Give feedback (\(ordersThatNeedCompletedAndGiveFeedback.count))").padding(.horizontal)
+                }
+            }
+            
             let ordersThatNeedGiveFeedback = allOrders
                 .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
