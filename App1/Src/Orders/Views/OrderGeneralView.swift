@@ -237,12 +237,7 @@ struct OrderGeneralView: View {
                         }
                     }
                     .padding()
-                    .background(Color(nsColor: .windowBackgroundColor))
-                    .cornerRadius(6)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(nsColor: .secondarySystemFill))
-                    )
+                    .roundedContainer(style: .secondary)
                 }
             }
             

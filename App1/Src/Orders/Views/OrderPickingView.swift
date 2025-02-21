@@ -243,11 +243,9 @@ struct OrderPickingView: View {
             }
         }
         .padding()
-        .background(Color(nsColor: .secondarySystemFill))
-        .cornerRadius(6)
-        .overlay(
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(Color(nsColor: .tertiarySystemFill))
+        .roundedContainer(
+            backgroundColor: Color(nsColor: .secondarySystemFill),
+            borderColor: Color(nsColor: .tertiarySystemFill)
         )
     }
     

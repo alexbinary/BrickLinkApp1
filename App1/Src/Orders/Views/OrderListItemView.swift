@@ -132,12 +132,7 @@ struct OrderListItemView: View {
                                             Text(item.text)
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 2)
-                                                .background(color.opacity(0.1))
-                                                .cornerRadius(3)
-                                                .overlay(
-                                                    RoundedRectangle(cornerRadius: 3)
-                                                        .stroke(color.opacity(0.7), lineWidth: 0.5)
-                                                )
+                                                .roundedContainer(style: .tag(baseColor: color))
                                             
                                             if let action = item.action {
                                                 Button {
@@ -170,11 +165,9 @@ struct OrderListItemView: View {
                     .foregroundStyle(.tertiary)
             }
             .padding()
-            .background(Color(nsColor: hover ? .tertiarySystemFill : .windowBackgroundColor))
-            .cornerRadius(6)
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(statusColor.opacity(0.25), lineWidth: 1)
+            .roundedContainer(
+                backgroundColor: Color(nsColor: hover ? .tertiarySystemFill : .windowBackgroundColor),
+                borderColor: statusColor.opacity(0.25)
             )
             .onHover { hover in
                 self.hover = hover

@@ -33,11 +33,7 @@ struct OrderShippingView: View {
                     }
                     .padding(8)
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .cornerRadius(6)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(nsColor: .tertiarySystemFill))
-                    )
+                    .roundedContainer(style: .outline)
                     
                     Spacer()
                     
@@ -85,12 +81,7 @@ struct OrderShippingView: View {
                     )
                     .padding()
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .background(Color(nsColor: .secondarySystemFill).opacity(0.7))
-                    .cornerRadius(6)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(nsColor: .tertiarySystemFill))
-                    )
+                    .roundedContainer(style: .info)
                 }
                 
                 Divider()

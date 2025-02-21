@@ -35,11 +35,7 @@ struct InfoCardView<Content, Detail>: View where Content: View, Detail: View {
             .padding(.bottom, 4)
         }
         .padding(8)
-        .cornerRadius(6)
-        .overlay(
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(Color(nsColor: .tertiarySystemFill))
-        )
+        .roundedContainer(style: .outline)
     }
 }
 

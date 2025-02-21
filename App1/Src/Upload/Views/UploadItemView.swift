@@ -512,11 +512,9 @@ struct UploadItemView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill))
-        .cornerRadius(6)
-        .overlay(
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(Color(nsColor: .tertiarySystemFill))
+        .roundedContainer(
+            backgroundColor: Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill),
+            borderColor: Color(nsColor: .tertiarySystemFill)
         )
         .onHover { hover in
             self.hover = hover

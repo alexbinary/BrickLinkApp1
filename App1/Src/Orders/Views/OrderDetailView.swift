@@ -79,9 +79,7 @@ struct OrderDetailView: View {
                         .padding()
                         .equalWidths()
                         .frame(width: columnWidth, alignment: .leading)
-                        .background(Color(nsColor: .quaternarySystemFill))
-                        .border(Color(nsColor: .tertiarySystemFill))
-                        .cornerRadius(6)
+                        .roundedContainer(style: .primary)
                         .padding(.top, 10)
                         
                         VStack(alignment: .leading, spacing: 12) {
@@ -206,9 +204,7 @@ struct OrderDetailView: View {
                         .padding()
                         .equalWidths()
                         .frame(width: columnWidth, alignment: .leading)
-                        .background(Color(nsColor: .quaternarySystemFill))
-                        .border(Color(nsColor: .tertiarySystemFill))
-                        .cornerRadius(6)
+                        .roundedContainer(style: .primary)
                         
                     }
                     .equalWidths($columnWidth)
