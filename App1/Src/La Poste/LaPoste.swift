@@ -3,7 +3,7 @@ import Foundation
 
 
 
-enum LaPosteTrackingStatus: String {
+enum LaPosteTrackingStatus: String, Codable {
     
     case noData
     case inTransit
@@ -15,7 +15,7 @@ enum LaPosteTrackingStatus: String {
 struct LaPosteTrackingClient {
     
     
-    static func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus? {
+    static func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         

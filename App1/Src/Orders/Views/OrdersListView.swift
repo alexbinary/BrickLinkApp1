@@ -173,6 +173,13 @@ struct OrdersListView: View {
         
         let allOrders = appController.orderSummaries
         
+        let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
+            .filter { appController.orderBusinessStatus($0.id) == .inTransit }
+        
+        for order in ordersThatNeedRefreshLaPosteTrackingStatus {
+            await appController.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
+        }
+        
         let ordersThatNeedRefreshFeedback = allOrders
             .filter { appController.orderBusinessStatus($0.id).isOneOf(.received, .giveFeedback) }
         

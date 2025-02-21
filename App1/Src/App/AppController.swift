@@ -1493,12 +1493,49 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Tracking status status
+    // MARK: - Tracking status
     
     
-    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus? {
+    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
-        await LaPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
+        dataStore.laPosteTrackingStatusByTrackingNo[trackingNo]
+    }
+    
+    
+    public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
+        
+        let order = orderDetails(forOrderWithId: orderId)!
+        let trackingNo = order.trackingNo!
+        
+        return laPosteTrackingStatus(forTrackingNo: trackingNo)
+    }
+    
+    
+    private func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+        
+        let status = await LaPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
+    
+        try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
+        try! dataStore.save()
+        
+        DispatchQueue.main.sync {
+            self.objectWillChange.send()
+        }
+    }
+    
+    
+    private func loadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+        
+        let order = orderDetails(forOrderWithId: orderId)!
+        let trackingNo = order.trackingNo!
+            
+        await loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+    }
+    
+    
+    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+        
+        await loadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
 }
 

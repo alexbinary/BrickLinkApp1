@@ -551,6 +551,30 @@ class DataStore {
         
         try setOrderRefunds(orderRefunds)
     }
+    
+    
+    public var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus] {
+        
+        data?.laPosteTrackingStatusByTrackingNo ?? [:]
+    }
+    
+    
+    public func setLaPosteTrackingStatusByTrackingNo(_ laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]) throws {
+        
+        guard data != nil else { throw "Attempted to mutate data before it is loaded" }
+        
+        data!.laPosteTrackingStatusByTrackingNo = laPosteTrackingStatusByTrackingNo
+    }
+    
+    
+    public func setLaPosteTrackingStatus(_ status: LaPosteTrackingStatus, forTrackingNo trackingNo: String) throws {
+        
+        var laPosteTrackingStatusByTrackingNo = self.laPosteTrackingStatusByTrackingNo
+        
+        laPosteTrackingStatusByTrackingNo[trackingNo] = status
+        
+        try setLaPosteTrackingStatusByTrackingNo(laPosteTrackingStatusByTrackingNo)
+    }
 }
 
 
@@ -582,4 +606,5 @@ struct DataRoot: Codable {
     var uploadedItems: [UploadedItem]?
     var transactions: [Transaction]?
     var orderRefunds: [OrderRefund]?
+    var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]?
 }
