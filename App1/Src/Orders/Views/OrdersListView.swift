@@ -12,6 +12,7 @@ struct OrdersListView: View {
     @State var refreshing: Bool = false
     
     @State var searchText = ""
+    @State var popoverPresented: Bool = false
     
     
     var body: some View {
@@ -88,59 +89,13 @@ struct OrdersListView: View {
         }
         .toolbar {
             
-            let ordersThatNeedCompletedAndGiveFeedback = allOrders
-                .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
-                .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            
-            if !ordersThatNeedCompletedAndGiveFeedback.isEmpty {
-                Button {
-                    Task {
-                        for order in ordersThatNeedCompletedAndGiveFeedback {
-                            await appController.updateOrderStatus(orderId: order.id, status: .completed)
-                            await appController.postPraiseOrderFeedback(orderId: order.id)
-                        }
-                    }
-                } label: {
-                    Text("Complete & Give feedback (\(ordersThatNeedCompletedAndGiveFeedback.count))").padding(.horizontal)
-                }
+            Button {
+                popoverPresented.toggle()
+            } label: {
+                Text("􀈟").padding(.horizontal)
             }
-            
-            let ordersThatNeedGiveFeedback = allOrders
-                .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
-                .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            
-            if !ordersThatNeedGiveFeedback.isEmpty {
-                Button {
-                    Task {
-                        for order in ordersThatNeedGiveFeedback {
-                            await appController.postPraiseOrderFeedback(orderId: order.id)
-                        }
-                    }
-                } label: {
-                    Text("Give feedback (\(ordersThatNeedGiveFeedback.count))").padding(.horizontal)
-                }
-            }
-            
-            let ordersToShipAndSendDriveThru = allOrders
-                .filter {
-                    appController.orderBusinessStatus($0.id) == .ship
-                    && appController.orderChecklistStamping($0.id)
-                    && appController.orderChecklistShippingTransaction($0.id)
-                    && appController.orderChecklistTrackingNo($0.id)
-                }
-                .sorted { $0.date > $1.date }
-            
-            if !ordersToShipAndSendDriveThru.isEmpty {
-                Button {
-                    Task {
-                        for order in ordersToShipAndSendDriveThru {
-                            await appController.updateOrderStatus(orderId: order.id, status: .shipped)
-                            await appController.sendDriveThru(orderId: order.id)
-                        }
-                    }
-                } label: {
-                    Text("Ship and send DT (\(ordersToShipAndSendDriveThru.count))").padding(.horizontal)
-                }
+            .popover(isPresented: $popoverPresented, arrowEdge: .bottom) {
+                OrdersActionsView(allOrders: allOrders)
             }
             
             Button {

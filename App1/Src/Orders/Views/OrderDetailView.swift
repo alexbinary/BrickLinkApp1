@@ -97,19 +97,19 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
-                                        checkStatus(appController.orderChecklistPayment(orderId))
+                                        CheckStatusView(status: appController.orderChecklistPayment(orderId))
                                         Text("Payment received")
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistIncomeTransaction(orderId))
+                                        CheckStatusView(status: appController.orderChecklistIncomeTransaction(orderId))
                                         Text("Register transaction")
                                     }
-                                    
+
                                     Text(OrderBusinessStatus.pickAndPack.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
-                                    
+
                                     GridRow {
-                                        checkStatus(appController.orderChecklistPicking(orderId))
+                                        CheckStatusView(status: appController.orderChecklistPicking(orderId))
                                         
                                         let picked = appController.pickedItems(forOrderWithId: orderId).count
                                         let total = appController.orderItems(forOrderWithId: orderId).count
@@ -123,7 +123,7 @@ struct OrderDetailView: View {
                                         }
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistVerification(orderId))
+                                        CheckStatusView(status: appController.orderChecklistVerification(orderId))
                                         
                                         let verified = appController.verifiedItems(forOrderWithId: orderId).count
                                         let total = appController.orderItems(forOrderWithId: orderId).count
@@ -136,60 +136,60 @@ struct OrderDetailView: View {
                                         }
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistPacked(orderId))
+                                        CheckStatusView(status: appController.orderChecklistPacked(orderId))
                                         Text("Pack order")
                                     }
-                                    
+
                                     Text(OrderBusinessStatus.ship.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
-                                    
+
                                     GridRow {
-                                        checkStatus(appController.orderChecklistStamping(orderId))
+                                        CheckStatusView(status: appController.orderChecklistStamping(orderId))
                                         Text("Validate stamping")
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistShippingTransaction(orderId))
+                                        CheckStatusView(status: appController.orderChecklistShippingTransaction(orderId))
                                         Text("Register transaction")
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistTrackingNo(orderId))
+                                        CheckStatusView(status: appController.orderChecklistTrackingNo(orderId))
                                         Text("Input tracking no")
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistShipped(orderId))
+                                        CheckStatusView(status: appController.orderChecklistShipped(orderId))
                                         Text("Mark Shipped")
                                     }
                                     GridRow {
-                                        checkStatus(appController.orderChecklistDriveThru(orderId))
+                                        CheckStatusView(status: appController.orderChecklistDriveThru(orderId))
                                         Text("Send drive thru")
                                     }
-                                    
+
                                     Text(OrderBusinessStatus.inTransit.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
-                                    
+
                                     GridRow {
-                                        checkStatus(appController.orderChecklistReceived(orderId))
+                                        CheckStatusView(status: appController.orderChecklistReceived(orderId))
                                         Text("Received")
                                     }
-                                    
+
                                     Text(OrderBusinessStatus.received.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
-                                    
+
                                     GridRow {
-                                        checkStatus(appController.orderChecklistCompleted(orderId))
+                                        CheckStatusView(status: appController.orderChecklistCompleted(orderId))
                                         Text("Completed")
                                     }
-                                    
+
                                     GridRow {
-                                        checkStatus(appController.orderChecklistBuyerFeedback(orderId))
+                                        CheckStatusView(status: appController.orderChecklistBuyerFeedback(orderId))
                                         Text("Buyer feedback")
                                     }
-                                    
+
                                     Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
-                                    
+
                                     GridRow {
-                                        checkStatus(appController.orderChecklistSellerFeedback(orderId))
+                                        CheckStatusView(status: appController.orderChecklistSellerFeedback(orderId))
                                         Text("Give feedback")
                                     }
                                     
@@ -281,16 +281,6 @@ struct OrderDetailView: View {
     func refreshOrder() async {
         
         await appController.forceRefreshOrder(orderId: orderId)
-    }
-    
-    
-    @ViewBuilder
-    func checkStatus(_ status: Bool) -> some View {
-        if status {
-            Text("􀁣").foregroundStyle(green)
-        } else {
-            Text("􀀀").foregroundStyle(red)
-        }
     }
 }
 
