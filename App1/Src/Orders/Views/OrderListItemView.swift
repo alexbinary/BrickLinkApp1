@@ -86,118 +86,7 @@ struct OrderListItemView: View {
                             
                             Text("")
                             
-                            let items: [StatusItem] = {
-                                
-                                let formatter = RelativeDateTimeFormatter()
-                                formatter.unitsStyle = .full
-                                
-                                var items: [StatusItem] = []
-                                
-                                switch appController.orderBusinessStatus(orderId) {
-                                
-                                case .validatePayment:
-                                    
-                                    if !appController.orderChecklistPayment(orderId) {
-                                        items.append(StatusItem(text: "Payment pending", status: .waitingOnExternalAction))
-                                        
-                                    } else if !appController.orderChecklistIncomeTransaction(orderId) {
-                                        items.append(StatusItem(text: "Register payment transaction", status: .actionRequired))
-                                    }
-                                    
-                                case .pickAndPack:
-                                    
-                                    if !appController.orderChecklistPicking(orderId) {
-                                        
-                                        let picked = appController.pickedItems(forOrderWithId: orderId).count
-                                        let total = appController.orderItems(forOrderWithId: orderId).count
-                                        
-                                        let percent = floor(Double(picked)/Double(total)*100)
-                                        items.append(StatusItem(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
-                                        
-                                    } else if !appController.orderChecklistVerification(orderId) {
-                                        
-                                        let verified = appController.verifiedItems(forOrderWithId: orderId).count
-                                        let total = appController.orderItems(forOrderWithId: orderId).count
-                                        
-                                        let percent = floor(Double(verified)/Double(total)*100)
-                                        items.append(StatusItem(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
-                                        
-                                    } else if !appController.orderChecklistPacked(orderId) {
-                                        items.append(StatusItem(text: "Not packed yet", status: .actionRequired))
-                                    }
-                                    
-                                case .ship:
-                                    
-                                    if !appController.orderChecklistStamping(orderId) {
-                                        items.append(StatusItem(text: "Stamping not validated", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistShippingTransaction(orderId) {
-                                        items.append(StatusItem(text: "No shipping transaction", status: .actionRequired))
-                                    }
-                                    if !appController.orderChecklistTrackingNo(orderId) {
-                                        items.append(StatusItem(text: "Missing tracking no", status: .actionRequired))
-                                    }
-                                    
-                                    if !appController.orderChecklistShipped(orderId) && !appController.orderChecklistDriveThru(orderId){
-                                        items.append(StatusItem(text: "Ship and send Drive thru", status: .actionRequired, action: {
-                                            Task {
-                                                await appController.updateOrderStatus(orderId: orderId, status: .shipped)
-                                                await appController.sendDriveThru(orderId: orderId)
-                                            }
-                                        }))
-                                    } else {
-                                        if !appController.orderChecklistShipped(orderId) {
-                                            items.append(StatusItem(text: "Mark Shipped", status: .actionRequired))
-                                        }
-                                        if !appController.orderChecklistDriveThru(orderId) {
-                                            items.append(StatusItem(text: "Send Drive thru", status: .actionRequired))
-                                        }
-                                    }
-                                    
-                                case .inTransit:
-                                    
-                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append(StatusItem(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
-                                    
-                                    if appController.orderChecklistUnchangedFor30Days(orderId) {
-                                        items.append(StatusItem(text: "Mark Completed and give feedback", status: .actionRequired, action: {
-                                            Task {
-                                                await appController.updateOrderStatus(orderId: orderId, status: .completed)
-                                                await appController.postPraiseOrderFeedback(orderId: order.id)
-                                            }
-                                        }))
-                                    }
-                                    
-                                case .received:
-                                        
-                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
-                                    
-                                    items.append(StatusItem(text: "Waiting Completed or buyer feedback", status: .waitingOnExternalAction))
-                                
-                                case .giveFeedback:
-                                        
-                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    if order.status == .completed {
-                                        items.append(StatusItem(text: "Completed \(formattedDate)", status: .completed))
-                                    } else {
-                                        items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
-                                    }
-                                    
-                                    items.append(StatusItem(text: "Give feedback", status: .actionRequired, action: {
-                                        Task {
-                                            await appController.postPraiseOrderFeedback(orderId: order.id)
-                                        }
-                                    }))
-                                    
-                                case .closed:
-                                    
-                                    let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
-                                    items.append(StatusItem(text: "Closed \(formattedDate)", status: .completed))
-                                }
-                                
-                                return items
-                            }()
+                            let items: [StatusItem] = statusItems
                             
                             let displayItems = items.limit(2)
                             
@@ -333,6 +222,122 @@ struct OrderListItemView: View {
         case .closed:
                 .green
         }
+    }
+    
+    
+    var statusItems: [StatusItem] {
+        
+        guard let order = appController.orderSummary(forOrderWithId: orderId) else { return [] }
+        
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        
+        var items: [StatusItem] = []
+        
+        switch appController.orderBusinessStatus(orderId) {
+        
+        case .validatePayment:
+            
+            if !appController.orderChecklistPayment(orderId) {
+                items.append(StatusItem(text: "Payment pending", status: .waitingOnExternalAction))
+                
+            } else if !appController.orderChecklistIncomeTransaction(orderId) {
+                items.append(StatusItem(text: "Register payment transaction", status: .actionRequired))
+            }
+            
+        case .pickAndPack:
+            
+            if !appController.orderChecklistPicking(orderId) {
+                
+                let picked = appController.pickedItems(forOrderWithId: orderId).count
+                let total = appController.orderItems(forOrderWithId: orderId).count
+                
+                let percent = floor(Double(picked)/Double(total)*100)
+                items.append(StatusItem(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
+                
+            } else if !appController.orderChecklistVerification(orderId) {
+                
+                let verified = appController.verifiedItems(forOrderWithId: orderId).count
+                let total = appController.orderItems(forOrderWithId: orderId).count
+                
+                let percent = floor(Double(verified)/Double(total)*100)
+                items.append(StatusItem(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
+                
+            } else if !appController.orderChecklistPacked(orderId) {
+                items.append(StatusItem(text: "Not packed yet", status: .actionRequired))
+            }
+            
+        case .ship:
+            
+            if !appController.orderChecklistStamping(orderId) {
+                items.append(StatusItem(text: "Stamping not validated", status: .actionRequired))
+            }
+            if !appController.orderChecklistShippingTransaction(orderId) {
+                items.append(StatusItem(text: "No shipping transaction", status: .actionRequired))
+            }
+            if !appController.orderChecklistTrackingNo(orderId) {
+                items.append(StatusItem(text: "Missing tracking no", status: .actionRequired))
+            }
+            
+            if !appController.orderChecklistShipped(orderId) && !appController.orderChecklistDriveThru(orderId){
+                items.append(StatusItem(text: "Ship and send Drive thru", status: .actionRequired, action: {
+                    Task {
+                        await appController.updateOrderStatus(orderId: orderId, status: .shipped)
+                        await appController.sendDriveThru(orderId: orderId)
+                    }
+                }))
+            } else {
+                if !appController.orderChecklistShipped(orderId) {
+                    items.append(StatusItem(text: "Mark Shipped", status: .actionRequired))
+                }
+                if !appController.orderChecklistDriveThru(orderId) {
+                    items.append(StatusItem(text: "Send Drive thru", status: .actionRequired))
+                }
+            }
+            
+        case .inTransit:
+            
+            let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+            items.append(StatusItem(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
+            
+            if appController.orderChecklistUnchangedFor30Days(orderId) {
+                items.append(StatusItem(text: "Mark Completed and give feedback", status: .actionRequired, action: {
+                    Task {
+                        await appController.updateOrderStatus(orderId: orderId, status: .completed)
+                        await appController.postPraiseOrderFeedback(orderId: order.id)
+                    }
+                }))
+            }
+            
+        case .received:
+                
+            let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+            items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
+            
+            items.append(StatusItem(text: "Waiting Completed or buyer feedback", status: .waitingOnExternalAction))
+        
+        case .giveFeedback:
+                
+            let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+            if order.status == .completed {
+                items.append(StatusItem(text: "Completed \(formattedDate)", status: .completed))
+            } else {
+                items.append(StatusItem(text: "Received \(formattedDate)", status: .completed))
+            }
+            
+            items.append(StatusItem(text: "Give feedback", status: .actionRequired, action: {
+                Task {
+                    await appController.postPraiseOrderFeedback(orderId: order.id)
+                }
+            }))
+            
+        case .closed:
+            
+            let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
+            items.append(StatusItem(text: "Closed \(formattedDate)", status: .completed))
+        }
+        
+        return items
     }
     
     
