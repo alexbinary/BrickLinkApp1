@@ -339,16 +339,6 @@ struct OrderListItemView: View {
         
         return items
     }
-    
-    
-    @ViewBuilder
-    func checkStatus(_ status: Bool) -> some View {
-        if status {
-            Text("􀁣").foregroundStyle(green)
-        } else {
-            Text("􀀀").foregroundStyle(red)
-        }
-    }
 }
 
 
