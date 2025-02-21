@@ -99,34 +99,14 @@ struct OrderListItemView: View {
                                         HStack {
                                             Text("Seller:")
                                             if let fb = appController.orderFeedbacks(forOrderWithId: order.id).sellerFeedback() {
-                                                Group {
-                                                    let rating = fb.rating
-                                                    if rating == 0 {
-                                                        Text("􀉿")
-                                                    } else if rating == 2 {
-                                                        Text("􀊁")
-                                                    } else {
-                                                        Text("Neutral")
-                                                    }
-                                                }
-                                                .help(fb.comment)
+                                                FeedbackRatingView(feedback: fb).help(fb.comment)
                                             }
                                         }.frame(width: 100, alignment: .leading)
                                         
                                         HStack {
                                             Text("Buyer:")
                                             if let fb = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback() {
-                                                Group {
-                                                    let rating = fb.rating
-                                                    if rating == 0 {
-                                                        Text("􀉿")
-                                                    } else if rating == 2 {
-                                                        Text("􀊁")
-                                                    } else {
-                                                        Text("Neutral")
-                                                    }
-                                                }
-                                                .help(fb.comment)
+                                                FeedbackRatingView(feedback: fb).help(fb.comment)
                                             }
                                         }.frame(width: 100, alignment: .leading)
                                     }
