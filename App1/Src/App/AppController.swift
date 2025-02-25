@@ -1504,10 +1504,13 @@ class AppController: ObservableObject {
     
     public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
         
-        let order = orderDetails(forOrderWithId: orderId)!
-        let trackingNo = order.trackingNo!
-        
-        return laPosteTrackingStatus(forTrackingNo: trackingNo)
+        if let order = orderDetails(forOrderWithId: orderId),
+           let trackingNo = order.trackingNo {
+            
+            return laPosteTrackingStatus(forTrackingNo: trackingNo)
+        } else {
+            return nil
+        }
     }
     
     

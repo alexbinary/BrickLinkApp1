@@ -3,7 +3,7 @@ import Foundation
 
 
 
-enum LaPosteTrackingStatus: String, Codable {
+enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
     
     case noData
     case inTransit

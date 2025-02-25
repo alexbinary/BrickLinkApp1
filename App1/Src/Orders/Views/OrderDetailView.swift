@@ -163,6 +163,17 @@ struct OrderDetailView: View {
                                         CheckStatusView(status: appController.orderChecklistDriveThru(orderId))
                                         Text("Send drive thru")
                                     }
+                                    
+                                    Text("􀐚 Shipped").checklistTitle()
+                                        .padding(.vertical, padding)
+                                    
+                                    GridRow {
+                                        CheckStatusView(
+                                            status: appController.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
+                                            mandatory: false
+                                        )
+                                        Text("Picked up by transported")
+                                    }
 
                                     Text(OrderBusinessStatus.inTransit.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
