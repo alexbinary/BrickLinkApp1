@@ -181,7 +181,10 @@ struct OrderDetailView: View {
                                     }
 
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistBuyerFeedback(orderId))
+                                        CheckStatusView(
+                                            status: appController.orderChecklistBuyerFeedback(orderId),
+                                            mandatory: false
+                                        )
                                         Text("Buyer feedback")
                                     }
 

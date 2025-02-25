@@ -260,7 +260,6 @@
 				29B9491D2C7DB3AC00CC7F26 /* Models */,
 				29B9491A2C7DB14D00CC7F26 /* Views */,
 				29B9493E2C87028300CC7F26 /* Modifiers */,
-				29A3C3982D68C3210063AF60 /* CheckStatusView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -319,6 +318,7 @@
 				29B949182C7DB11200CC7F26 /* HeaderTitleView.swift */,
 				29B9493A2C86F45800CC7F26 /* TransactionListView.swift */,
 				29B949442C870C0900CC7F26 /* ProgressView.swift */,
+				29A3C3982D68C3210063AF60 /* CheckStatusView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
