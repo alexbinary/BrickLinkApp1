@@ -110,6 +110,8 @@ struct OrdersActionsView: View {
                         }
                     }
                 }
+                
+                Divider()
             }
             
             if !ordersToShipAndSendDriveThru.isEmpty {
