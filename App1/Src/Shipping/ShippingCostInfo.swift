@@ -56,6 +56,11 @@ struct ShippingCostInfo: View {
                     if nextIdx < allBands.count {
                         bands.append(allBands[nextIdx])
                     }
+                    
+                    let prevIdx = idx - 1
+                    if prevIdx >= 0 {
+                        bands.insert(allBands[prevIdx], at: 0)
+                    }
                 }
                 
                 return bands
