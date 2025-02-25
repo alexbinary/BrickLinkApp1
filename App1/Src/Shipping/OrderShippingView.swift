@@ -68,8 +68,9 @@ struct OrderShippingView: View {
                             } detail: {
                                 
                                 Text(order.shippingMethodName ?? "")
+                                    .lineLimit(2, reservesSpace: true)
                                     .foregroundStyle(.secondary)
-                                    .frame(width: width2, height: height2)
+                                    .frame(height: height2)
                             }
                         }
                         
