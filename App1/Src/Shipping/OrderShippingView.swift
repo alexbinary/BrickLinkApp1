@@ -42,7 +42,8 @@ struct OrderShippingView: View {
                     let height1: CGFloat = 20
                     let height2: CGFloat = 10
                     
-                    Grid {
+                    Grid(alignment: .leading) {
+                        
                         GridRow {
                             
                             InfoCardView(title: "􀭭 Weight") {
@@ -71,6 +72,17 @@ struct OrderShippingView: View {
                                     .frame(width: width2, height: height2)
                             }
                         }
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                    
+                            HeaderTitleView(label: "􂄹 Remarks")
+                            
+                            Text(order.remarks ?? "")
+                            .font(.title3)
+                            .padding(.horizontal)
+                        }
+                        .padding(8)
+                        .roundedContainer(style: .outline)
                     }
                     
                     Spacer()

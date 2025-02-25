@@ -31,6 +31,8 @@ struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     let shippingAddress: String
     let shippingAddressCountryCode: String
     let shippingAddressName: String
+    
+    let remarks: String?
 }
 
 

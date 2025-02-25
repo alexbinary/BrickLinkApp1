@@ -24,6 +24,7 @@ struct BrickLinkOrder: Decodable {
     let status: String
     let dateStatusChanged: Date
     let payment: BrickLinkOrderPayment
+    let remarks: String?
     
     // MARK: Details
     

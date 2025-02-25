@@ -1606,6 +1606,8 @@ extension OrderDetails {
         self.shippingAddress = bl.shipping!.address.full
         self.shippingAddressCountryCode = bl.shipping!.address.countryCode
         self.shippingAddressName = bl.shipping!.address.name.full
+        
+        self.remarks = bl.remarks
     }
 }
 
