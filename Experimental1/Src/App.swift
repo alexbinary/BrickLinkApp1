@@ -10,7 +10,7 @@ struct Experimental1: App {
     var body: some Scene {
 
         WindowGroup {
-            ObservationRootView()
+            SpeechRecognitionRootView()
         }
     }
 }
