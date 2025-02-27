@@ -31,6 +31,8 @@
 		2995A7122D345AAE000FB2C9 /* UploadedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2995A7112D345AAE000FB2C9 /* UploadedItemView.swift */; };
 		29A3C3972D68BFA10063AF60 /* OrdersActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C3962D68BFA10063AF60 /* OrdersActionsView.swift */; };
 		29A3C3992D68C3210063AF60 /* CheckStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C3982D68C3210063AF60 /* CheckStatusView.swift */; };
+		29A3C39C2D706B6E0063AF60 /* objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C39B2D706B690063AF60 /* objects.swift */; };
+		29A3C39E2D706BB20063AF60 /* ObservationRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C39D2D706BB20063AF60 /* ObservationRootView.swift */; };
 		29A4258F2D4AD0C1002E5135 /* ShippingCostInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */; };
 		29A425912D4B58FD002E5135 /* InfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A425902D4B58FD002E5135 /* InfoCardView.swift */; };
 		29A425962D4BDAA5002E5135 /* shippingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A425952D4BDAA1002E5135 /* shippingData.swift */; };
@@ -106,6 +108,8 @@
 		2995A7112D345AAE000FB2C9 /* UploadedItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadedItemView.swift; sourceTree = "<group>"; };
 		29A3C3962D68BFA10063AF60 /* OrdersActionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdersActionsView.swift; sourceTree = "<group>"; };
 		29A3C3982D68C3210063AF60 /* CheckStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckStatusView.swift; sourceTree = "<group>"; };
+		29A3C39B2D706B690063AF60 /* objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = objects.swift; sourceTree = "<group>"; };
+		29A3C39D2D706BB20063AF60 /* ObservationRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationRootView.swift; sourceTree = "<group>"; };
 		29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingCostInfo.swift; sourceTree = "<group>"; };
 		29A425902D4B58FD002E5135 /* InfoCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoCardView.swift; sourceTree = "<group>"; };
 		29A425952D4BDAA1002E5135 /* shippingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shippingData.swift; sourceTree = "<group>"; };
@@ -283,6 +287,25 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		29A3C39A2D706B500063AF60 /* Observation */ = {
+			isa = PBXGroup;
+			children = (
+				29A3C39B2D706B690063AF60 /* objects.swift */,
+				29A3C39D2D706BB20063AF60 /* ObservationRootView.swift */,
+				29D758FC2D552032001C369F /* ContentView.swift */,
+			);
+			path = Observation;
+			sourceTree = "<group>";
+		};
+		29A3C3A02D706C360063AF60 /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				29D758FE2D552032001C369F /* App.swift */,
+				29A3C39A2D706B500063AF60 /* Observation */,
+			);
+			path = Src;
+			sourceTree = "<group>";
+		};
 		29A425942D4BD596002E5135 /* Shipping */ = {
 			isa = PBXGroup;
 			children = (
@@ -443,8 +466,7 @@
 			children = (
 				29D758FD2D552032001C369F /* Experimental1.entitlements */,
 				29D758FB2D552032001C369F /* Assets.xcassets */,
-				29D758FE2D552032001C369F /* App.swift */,
-				29D758FC2D552032001C369F /* ContentView.swift */,
+				29A3C3A02D706C360063AF60 /* Src */,
 				29D758FA2D552032001C369F /* Preview Content */,
 			);
 			path = Experimental1;
@@ -633,6 +655,8 @@
 			files = (
 				29D759022D552032001C369F /* ContentView.swift in Sources */,
 				29D759032D552032001C369F /* App.swift in Sources */,
+				29A3C39C2D706B6E0063AF60 /* objects.swift in Sources */,
+				29A3C39E2D706BB20063AF60 /* ObservationRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

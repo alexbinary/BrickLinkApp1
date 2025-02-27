@@ -3,26 +3,6 @@ import SwiftUI
 
 
 
-@main
-struct Experimental1: App {
-    
-    
-    @State var controller = Controller()
-    
-
-    var body: some Scene {
-
-        WindowGroup {
-            ContentView1()
-                .environment(controller)
-            ContentView2()
-                .environment(controller)
-        }
-    }
-}
-
-
-
 @Observable
 class Controller {
     
@@ -72,3 +52,4 @@ class Data {
     
     var data: String = "d"
 }
+
