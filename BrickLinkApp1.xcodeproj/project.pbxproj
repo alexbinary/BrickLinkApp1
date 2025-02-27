@@ -34,6 +34,7 @@
 		29A3C39C2D706B6E0063AF60 /* objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C39B2D706B690063AF60 /* objects.swift */; };
 		29A3C39E2D706BB20063AF60 /* ObservationRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C39D2D706BB20063AF60 /* ObservationRootView.swift */; };
 		29A3C3A32D706C720063AF60 /* SpeechRecognitionRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C3A22D706C720063AF60 /* SpeechRecognitionRootView.swift */; };
+		29A3C3BE2D70B9450063AF60 /* SpeechRecognitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3C3BD2D70B9450063AF60 /* SpeechRecognitionController.swift */; };
 		29A4258F2D4AD0C1002E5135 /* ShippingCostInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */; };
 		29A425912D4B58FD002E5135 /* InfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A425902D4B58FD002E5135 /* InfoCardView.swift */; };
 		29A425962D4BDAA5002E5135 /* shippingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A425952D4BDAA1002E5135 /* shippingData.swift */; };
@@ -112,6 +113,7 @@
 		29A3C39B2D706B690063AF60 /* objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = objects.swift; sourceTree = "<group>"; };
 		29A3C39D2D706BB20063AF60 /* ObservationRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationRootView.swift; sourceTree = "<group>"; };
 		29A3C3A22D706C720063AF60 /* SpeechRecognitionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognitionRootView.swift; sourceTree = "<group>"; };
+		29A3C3BD2D70B9450063AF60 /* SpeechRecognitionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognitionController.swift; sourceTree = "<group>"; };
 		29A4258E2D4AD0C1002E5135 /* ShippingCostInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingCostInfo.swift; sourceTree = "<group>"; };
 		29A425902D4B58FD002E5135 /* InfoCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoCardView.swift; sourceTree = "<group>"; };
 		29A425952D4BDAA1002E5135 /* shippingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shippingData.swift; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				29A3C3A22D706C720063AF60 /* SpeechRecognitionRootView.swift */,
+				29A3C3BD2D70B9450063AF60 /* SpeechRecognitionController.swift */,
 			);
 			path = SpeechRecognition;
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29A3C3BE2D70B9450063AF60 /* SpeechRecognitionController.swift in Sources */,
 				29D759022D552032001C369F /* ContentView.swift in Sources */,
 				29D759032D552032001C369F /* App.swift in Sources */,
 				29A3C3A32D706C720063AF60 /* SpeechRecognitionRootView.swift in Sources */,
