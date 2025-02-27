@@ -180,7 +180,34 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
                 
                 if let lastWord = transcribedText.split(separator: " ").last {
                     print("lastWord: \(lastWord)")
-                    self.recognizedText = String(lastWord)
+                    
+                    if let result = lastWord.wholeMatch(of: /[0-9]+/) {
+                        
+                        let number = String(lastWord)
+                        print("number: \(number)")
+                        self.recognizedText = number
+                        
+                    } else {
+                     
+                        // https://stackoverflow.com/questions/34032509/how-to-convert-an-english-string-of-a-number-into-a-float-e-g-twenty-six-26
+                        let dict = [
+                            "un": 1,
+                            "deux": 2,
+                            "trois": 3,
+                            // TODO
+                        ]
+
+                        var number = 0
+
+                        dict.forEach({ (key: String, value: Int) in
+                            if lastWord.lowercased().contains(key) {
+                                number += value
+                            }
+                        })
+                        
+                        print("number: \(number)")
+                        self.recognizedText = String(number)
+                    }
                 }
                 if result.isFinal {
                     self.stopAudio()
