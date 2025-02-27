@@ -99,22 +99,21 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     override init() {
         super.init()
         
+        updateMicrophoneAuthorisationStatus()
+        updateSpeechRecognitionAuthorisationStatus()
+        print("Microphone authorization: \(microphoneAuthorisationStatus)")
+        print("Speech recognition authorization \(speechRecognitionAuthorisationStatus)")
+        
+        print("Ready speech recognition")
         speechRecognizer = SFSpeechRecognizer()
         guard let speechRecognizer = speechRecognizer else { fatalError("Unable to created a SFSpeechRecognizer object") }
         speechRecognizer.delegate = self
-        
-        updateMicrophoneAuthorisationStatus()
-        updateSpeechRecognitionAuthorisationStatus()
     }
     
     
     func start() async {
         
-        if microphoneAuthorisationStatus != .authorized {
-            await requestMicrophoneAuthorisation()
-        }
-        updateMicrophoneAuthorisationStatus()
-        let microphoneStatus = microphoneAuthorisationStatus
+        let microphoneStatus = await requestMicrophoneAuthorisation()
         guard microphoneStatus == .authorized else {
             print("Microphone not authorized (\(microphoneStatus))")
             return
@@ -122,7 +121,6 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
         print("Microphone authorized (\(microphoneStatus))")
         
         let speechRecognitonStatus = await requestSpeechRecognitionAuthorisation()
-        updateSpeechRecognitionAuthorisationStatus()
         guard speechRecognitonStatus == .authorized else {
             print("Speech recognition not authorized (\(speechRecognitonStatus))")
             return
@@ -160,15 +158,22 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     
     func updateSpeechRecognitionAuthorisationStatus() {
         
-        speechRecognitionAuthorized = speechRecognitionAuthorisationStatus == .authorized
+        speechRecognitionAuthorized = {
+            switch speechRecognitionAuthorisationStatus {
+            case .notDetermined: nil
+            case .authorized: true
+            default: false
+            }
+        }()
     }
     
     
     func requestSpeechRecognitionAuthorisation() async -> SFSpeechRecognizerAuthorizationStatus {
         
         await withCheckedContinuation { continuation in
-            SFSpeechRecognizer.requestAuthorization { status in
-                continuation.resume(returning: status)
+            SFSpeechRecognizer.requestAuthorization { _ in
+                self.updateSpeechRecognitionAuthorisationStatus()
+                continuation.resume(returning: self.speechRecognitionAuthorisationStatus)
             }
         }
     }
@@ -182,15 +187,22 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     
     func updateMicrophoneAuthorisationStatus() {
         
-        microphoneAuthorized = microphoneAuthorisationStatus == .authorized
+        microphoneAuthorized = {
+            switch microphoneAuthorisationStatus {
+            case .notDetermined: nil
+            case .authorized: true
+            default: false
+            }
+        }()
     }
     
     
-    func requestMicrophoneAuthorisation() async {
+    func requestMicrophoneAuthorisation() async -> AVAuthorizationStatus {
         
         await withCheckedContinuation { continuation in
-            AVCaptureDevice.requestAccess(for: .audio) { granted in
-                continuation.resume()
+            AVCaptureDevice.requestAccess(for: .audio) { _ in
+                self.updateMicrophoneAuthorisationStatus()
+                continuation.resume(returning: self.microphoneAuthorisationStatus)
             }
         }
     }
@@ -254,6 +266,32 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
         }
         
         self.speechRecognitionAvailable = available
+    }
+}
+
+
+
+extension AVAuthorizationStatus: @retroactive CustomStringConvertible {
+    
+    public var description: String {
+        
+        switch self {
+            
+        case .notDetermined:
+            "notDetermined"
+            
+        case .restricted:
+            "restricted"
+            
+        case .denied:
+            "denied"
+            
+        case .authorized:
+            "authorized"
+            
+        @unknown default:
+            "unknown"
+        }
     }
 }
 
