@@ -108,9 +108,16 @@ struct LetterStamping {
 
 
 
-let shippingMethodId_France = 289751
-let shippingMethodId_Europe = 290360
-let shippingMethodId_World = 185519
+let shippingMethodId_France_LaPoste = 289751
+let shippingMethodId_France_MondialRelay = 330666
+let shippingMethodId_Europe_LaPoste = 290360
+let shippingMethodId_World_LaPoste = 185519
+
+let shippingMethodIds_LaPoste = [
+    shippingMethodId_France_LaPoste,
+    shippingMethodId_Europe_LaPoste,
+    shippingMethodId_World_LaPoste,
+]
 
 
 let priceTimbreFrance: Decimal = 1.39

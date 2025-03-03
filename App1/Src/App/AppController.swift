@@ -1298,24 +1298,27 @@ class AppController: ObservableObject {
     
     public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
+        if !shippingTransactions(forOrderWithId: orderId).isEmpty {
+            
+            return true
+        }
+        
         if orderIsValidatedWithoutShippingTransaction(orderId: orderId) {
             
             return true
         }
         
-        let stamping = stamping(forOrderWithId: orderId)
-        if (stamping ?? "").isEmpty {
-            
-            return false
-            
-        } else if stamping == "Bureau de poste" {
-            
-            return !shippingTransactions(forOrderWithId: orderId).isEmpty
-            
-        } else {
-            
-            return true
+        let order = orderDetails(forOrderWithId: orderId)!
+        if order.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
+        
+            let stamping = stamping(forOrderWithId: orderId)
+            if !(stamping ?? "").isEmpty, stamping != "Bureau de poste" {
+                
+                return true
+            }
         }
+        
+        return false
     }
     
     
@@ -1374,6 +1377,11 @@ class AppController: ObservableObject {
     public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
         
         if orderIsValidatedWithoutStamping(orderId: orderId) {
+            return true
+        }
+        
+        let order = orderDetails(forOrderWithId: orderId)!
+        if order.shippingMethodId == shippingMethodId_France_MondialRelay {
             return true
         }
         

@@ -111,3 +111,7 @@ extension Color {
         self.init(NSColor(red: r, green: g, blue: b, alpha: 1))
     }
 }
+
+
+
+extension Int: IsOneOfAble { }

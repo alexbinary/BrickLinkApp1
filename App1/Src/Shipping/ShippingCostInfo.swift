@@ -16,11 +16,11 @@ struct ShippingCostInfo: View {
             
             let scope = {
                 
-                if shippingMethodId == shippingMethodId_France {
+                if shippingMethodId == shippingMethodId_France_LaPoste {
                     return "France"
-                } else if shippingMethodId == shippingMethodId_Europe {
+                } else if shippingMethodId == shippingMethodId_Europe_LaPoste {
                     return "Europe"
-                } else if shippingMethodId == shippingMethodId_World {
+                } else if shippingMethodId == shippingMethodId_World_LaPoste {
                     return "Monde"
                 }
                 return ""
@@ -33,13 +33,13 @@ struct ShippingCostInfo: View {
                 let allBands = {
                     switch shippingMethodId {
                         
-                    case shippingMethodId_France:
+                    case shippingMethodId_France_LaPoste:
                         return shippingCostBandsFrance
                         
-                    case shippingMethodId_Europe:
+                    case shippingMethodId_Europe_LaPoste:
                         return shippingCostBandsEurope
                         
-                    case shippingMethodId_World:
+                    case shippingMethodId_World_LaPoste:
                         return shippingCostBandsWorld
                         
                     default:
@@ -97,7 +97,7 @@ struct ShippingCostInfo: View {
                     }
                 }
                 
-                if shippingMethodId == shippingMethodId_World {
+                if shippingMethodId == shippingMethodId_World_LaPoste {
                     
                     GridRow {
                         Text("􀐚ZB").foregroundStyle(.secondary)
@@ -211,15 +211,15 @@ struct ShippingCostInfo: View {
             
             VStack(alignment: .leading) {
                 
-                let stamp = (shippingMethodId == shippingMethodId_France ? priceTimbreFrance : priceTimbreWorld)
+                let stamp = (shippingMethodId == shippingMethodId_France_LaPoste ? priceTimbreFrance : priceTimbreWorld)
                     .formatted(.currency(code: "EUR").presentation(.isoCode))
                 
-                let tracking = (shippingMethodId == shippingMethodId_France ? priceTrackingFrance : priceTrackingWorld)
+                let tracking = (shippingMethodId == shippingMethodId_France_LaPoste ? priceTrackingFrance : priceTrackingWorld)
                     .formatted(.currency(code: "EUR").presentation(.isoCode))
                 
                 Text("Timbre: \(stamp) - Suivi: \(tracking)").font(.footnote)
                 
-                if shippingMethodId == shippingMethodId_World {
+                if shippingMethodId == shippingMethodId_World_LaPoste {
                     
                     Text("""
                             ZB : Europe de l'Est (hors UE et Russie), Norvège, Maghreb
@@ -235,7 +235,7 @@ struct ShippingCostInfo: View {
 
 #Preview {
     ShippingCostInfo(
-        shippingMethodId: shippingMethodId_France,
+        shippingMethodId: shippingMethodId_France_LaPoste,
         selectedShippingCost: SelectedShippingCost(
             maxWeight: 20,
             letterStamping: LetterStamping(

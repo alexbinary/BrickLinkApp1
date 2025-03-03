@@ -116,7 +116,7 @@ struct OrderShippingView: View {
                                 } else {
                                     s = "\(selectedLetterStamping.nbTimbres ?? 0) timbres"
                                     
-                                    if order.shippingMethodId != shippingMethodId_France {
+                                    if order.shippingMethodId != shippingMethodId_France_LaPoste {
                                         s += " international"
                                     }
                                     
@@ -320,7 +320,7 @@ struct OrderShippingView: View {
         
         let weight = order.totalWeight * orderWeightMarginRatio
         
-        if order.shippingMethodId == shippingMethodId_France {
+        if order.shippingMethodId == shippingMethodId_France_LaPoste {
             
             if let band = shippingCostBandsFrance
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
@@ -364,7 +364,7 @@ struct OrderShippingView: View {
             
             return nil
             
-        } else if order.shippingMethodId == shippingMethodId_Europe {
+        } else if order.shippingMethodId == shippingMethodId_Europe_LaPoste {
             
             if let band = shippingCostBandsEurope
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
@@ -408,7 +408,7 @@ struct OrderShippingView: View {
             
             return nil
             
-        } else if order.shippingMethodId == shippingMethodId_World {
+        } else if order.shippingMethodId == shippingMethodId_World_LaPoste {
             
             if let band = shippingCostBandsWorld
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {

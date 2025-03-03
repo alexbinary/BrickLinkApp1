@@ -144,7 +144,9 @@ struct OrderListItemView: View {
                                         }
                                     }
                                     
-                                    if appController.orderBusinessStatus(orderId) == .inTransit {
+                                    if appController.orderBusinessStatus(orderId) == .inTransit,
+                                       let orderDetails = appController.orderDetails(forOrderWithId: orderId),
+                                       orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
                                         
                                         LaPosteTrackingView(status: appController.laPosteTrackingStatus(forOrderWithId: orderId))
                                     }
