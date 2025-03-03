@@ -61,6 +61,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
             try initAudio()
         } catch {
             print("Failed to init audio: \(error)")
+            return
         }
         print("Audio init success")
         
