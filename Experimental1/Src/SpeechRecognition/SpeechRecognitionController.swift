@@ -130,12 +130,9 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     
     func requestMicrophoneAuthorisation() async -> AVAuthorizationStatus {
         
-        await withCheckedContinuation { continuation in
-            AVCaptureDevice.requestAccess(for: .audio) { _ in
-                self.updateMicrophoneAuthorisationStatus()
-                continuation.resume(returning: self.microphoneAuthorisationStatus)
-            }
-        }
+        await AVCaptureDevice.requestAccess(for: .audio)
+        updateMicrophoneAuthorisationStatus()
+        return microphoneAuthorisationStatus
     }
     
     
