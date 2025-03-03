@@ -12,76 +12,15 @@ struct OrdersActionsView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        Group {
             
             let ordersThatNeedCompletedAndGiveFeedback = allOrders
                 .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             
-            ForEach(ordersThatNeedCompletedAndGiveFeedback) { order in
-                
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text(order.id)
-                        Text(order.buyer)
-                    }
-                    Grid(alignment: .leading) {
-                        GridRow {
-                            CheckStatusView(status: appController.orderChecklistCompleted(order.id))
-                            Text("Mark completed")
-                        }
-                        GridRow {
-                            CheckStatusView(status: appController.orderChecklistSellerFeedback(order.id))
-                            Text("Give feedback")
-                        }
-                    }
-                }
-            }
-            
-            if !ordersThatNeedCompletedAndGiveFeedback.isEmpty {
-                Button {
-                    Task {
-                        for order in ordersThatNeedCompletedAndGiveFeedback {
-                            await appController.updateOrderStatus(orderId: order.id, status: .completed)
-                            await appController.postPraiseOrderFeedback(orderId: order.id)
-                        }
-                    }
-                } label: {
-                    Text("Complete & Give feedback (\(ordersThatNeedCompletedAndGiveFeedback.count))").padding(.horizontal)
-                }
-            }
-            
             let ordersThatNeedGiveFeedback = allOrders
                 .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            
-            ForEach(ordersThatNeedGiveFeedback) { order in
-                
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text(order.id)
-                        Text(order.buyer)
-                    }
-                    Grid(alignment: .leading) {
-                        GridRow {
-                            CheckStatusView(status: appController.orderChecklistSellerFeedback(order.id))
-                            Text("Give feedback")
-                        }
-                    }
-                }
-            }
-            
-            if !ordersThatNeedGiveFeedback.isEmpty {
-                Button {
-                    Task {
-                        for order in ordersThatNeedGiveFeedback {
-                            await appController.postPraiseOrderFeedback(orderId: order.id)
-                        }
-                    }
-                } label: {
-                    Text("Give feedback (\(ordersThatNeedGiveFeedback.count))").padding(.horizontal)
-                }
-            }
             
             let ordersToShipAndSendDriveThru = allOrders
                 .filter {
@@ -92,46 +31,114 @@ struct OrdersActionsView: View {
                 }
                 .sorted { $0.date > $1.date }
             
-            ForEach(ordersToShipAndSendDriveThru) { order in
-                
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text(order.id)
-                        Text(order.buyer)
-                    }
-                    Grid(alignment: .leading) {
-                        GridRow {
-                            CheckStatusView(status: appController.orderChecklistShipped(order.id))
-                            Text("Mark shipped")
-                        }
-                        GridRow {
-                            CheckStatusView(status: appController.orderChecklistDriveThru(order.id))
-                            Text("Send drive thru")
-                        }
-                    }
-                }
-                
-                Divider()
-            }
-            
-            if !ordersToShipAndSendDriveThru.isEmpty {
-                Button {
-                    Task {
-                        for order in ordersToShipAndSendDriveThru {
-                            await appController.updateOrderStatus(orderId: order.id, status: .shipped)
-                            await appController.sendDriveThru(orderId: order.id)
-                        }
-                    }
-                } label: {
-                    Text("Ship and send DT (\(ordersToShipAndSendDriveThru.count))").padding(.horizontal)
-                }
-            }
-            
             if ordersThatNeedCompletedAndGiveFeedback.isEmpty,
                ordersThatNeedGiveFeedback.isEmpty,
                ordersToShipAndSendDriveThru.isEmpty {
                 
                 Text("All orders ok")
+                
+            } else {
+                
+                Grid(alignment: .leading, verticalSpacing: 12) {
+                    
+                    if !ordersThatNeedCompletedAndGiveFeedback.isEmpty {
+                        
+                        Text("Complete & Give feedback (\(ordersThatNeedCompletedAndGiveFeedback.count))")
+                            .font(.title2)
+                        
+                        ForEach(ordersThatNeedCompletedAndGiveFeedback) { order in
+                            
+                            GridRow(alignment: .top) {
+                                VStack(alignment: .leading) {
+                                    Text(order.id)
+                                    Text(order.buyer)
+                                }
+                                Grid(alignment: .leading) {
+                                    GridRow {
+                                        CheckStatusView(status: appController.orderChecklistCompleted(order.id))
+                                        Text("Mark completed")
+                                    }
+                                    GridRow {
+                                        CheckStatusView(status: appController.orderChecklistSellerFeedback(order.id))
+                                        Text("Give feedback")
+                                    }
+                                }
+                            }
+                            
+                            Divider()
+                        }
+                    }
+                    
+                    if !ordersThatNeedGiveFeedback.isEmpty {
+                        
+                        Text("Give feedback (\(ordersThatNeedGiveFeedback.count))")
+                            .font(.title2)
+                        
+                        ForEach(ordersThatNeedGiveFeedback) { order in
+                            
+                            GridRow(alignment: .top) {
+                                VStack(alignment: .leading) {
+                                    Text(order.id)
+                                    Text(order.buyer)
+                                }
+                                Grid(alignment: .leading) {
+                                    GridRow {
+                                        CheckStatusView(status: appController.orderChecklistSellerFeedback(order.id))
+                                        Text("Give feedback")
+                                    }
+                                }
+                            }
+                            
+                            Divider()
+                        }
+                    }
+                    
+                    if !ordersToShipAndSendDriveThru.isEmpty {
+                        
+                        Text("Ship and send DT (\(ordersToShipAndSendDriveThru.count))")
+                            .font(.title2)
+                        
+                        ForEach(ordersToShipAndSendDriveThru) { order in
+                            
+                            GridRow(alignment: .top) {
+                                VStack(alignment: .leading) {
+                                    Text(order.id)
+                                    Text(order.buyer)
+                                }
+                                Grid(alignment: .leading) {
+                                    GridRow {
+                                        CheckStatusView(status: appController.orderChecklistShipped(order.id))
+                                        Text("Mark shipped")
+                                    }
+                                    GridRow {
+                                        CheckStatusView(status: appController.orderChecklistDriveThru(order.id))
+                                        Text("Send drive thru")
+                                    }
+                                }
+                            }
+                            
+                            Divider()
+                        }
+                    }
+                    
+                    Button {
+                        Task {
+                            for order in ordersThatNeedCompletedAndGiveFeedback {
+                                await appController.updateOrderStatus(orderId: order.id, status: .completed)
+                                await appController.postPraiseOrderFeedback(orderId: order.id)
+                            }
+                            for order in ordersThatNeedGiveFeedback {
+                                await appController.postPraiseOrderFeedback(orderId: order.id)
+                            }
+                            for order in ordersToShipAndSendDriveThru {
+                                await appController.updateOrderStatus(orderId: order.id, status: .shipped)
+                                await appController.sendDriveThru(orderId: order.id)
+                            }
+                        }
+                    } label: {
+                        Text("Do all").padding(.horizontal)
+                    }
+                }
             }
         }
         .padding()
