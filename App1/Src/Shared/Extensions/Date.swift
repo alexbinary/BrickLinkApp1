@@ -1,32 +1,5 @@
 
 import Foundation
-import SwiftUI
-
-
-
-extension String: @retroactive Error { }
-
-
-
-extension Array where Element: Equatable {
-
-
-    var stableUniqueByFirstOccurence: Self {
-        
-        var uniqueItems: Self = []
-        
-        for item in self {
-            if !uniqueItems.contains(item) {
-                uniqueItems.append(item)
-            }
-        }
-        
-        return uniqueItems
-    }
-    
-    
-    var unique: Self { stableUniqueByFirstOccurence }
-}
 
 
 
@@ -89,29 +62,3 @@ extension Date {
         return calendar.dateComponents([.day], from: self, to: date).day!
     }
 }
-
-
-
-extension Color {
-    
-    
-    public init(fromBLCode code: String) {
-        
-        let r, g, b: CGFloat
-
-        let scanner = Scanner(string: code)
-        var hexNumber: UInt64 = 0
-
-        scanner.scanHexInt64(&hexNumber)
-            
-        r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
-        g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
-        b = CGFloat((hexNumber & 0x0000ff)) / 255
-
-        self.init(NSColor(red: r, green: g, blue: b, alpha: 1))
-    }
-}
-
-
-
-extension Int: IsOneOfAble { }

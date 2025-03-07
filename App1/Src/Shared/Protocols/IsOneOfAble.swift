@@ -41,3 +41,7 @@ extension IsOneOfAble where Self: Equatable {
         !self.isOneOf(elements)
     }
 }
+
+
+
+extension Int: IsOneOfAble { }
