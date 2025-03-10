@@ -2,7 +2,7 @@
 import SwiftUI
 
 
-struct OrdersListView: View {
+struct OrdersMainListView: View {
     
     
     @EnvironmentObject
