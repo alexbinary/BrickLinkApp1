@@ -18,67 +18,16 @@ struct OrdersListView: View {
     
     var body: some View {
         
-        let orders = app.orderSummaries(matching: searchText)
+        let sections = app.ordersMainListSections(restrictingToOrdersMatching: searchText)
+        let orders = sections.allOrders
         
         ScrollView {
-            
             LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
-                
-                section(
-                    header: OrderMacroStatus.inTransitFor30PlusDays.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
-                        .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                )
-                section(
-                    header: OrderMacroStatus.giveFeedback.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .giveFeedback }
-                        .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                )
-                section(
-                    header: OrderMacroStatus.validatePayment.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .validatePayment }
-                        .sorted { $0.date > $1.date }
-                )
-                section(
-                    header: OrderMacroStatus.pickAndPack.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .pickAndPack }
-                        .sorted { $0.lots < $1.lots }
-                )
-                section(
-                    header: OrderMacroStatus.ship.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .ship }
-                        .sorted { $0.date > $1.date }
-                )
-                section(
-                    header: OrderMacroStatus.received.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .received }
-                        .sorted { $0.dateStatusChanged < $1.dateStatusChanged }
-                )
-                section(
-                    header: OrderMacroStatus.inTransit.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit }
-                        .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                )
-                section(
-                    header: OrderMacroStatus.recentlyClosed.descriptionWithPicto,
-                    orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .recentlyClosed }
-                        .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                )
-                
-                let closedOrders = orders
-                    .filter { app.macroStatus(forOrderWithId: $0.id) == .closed }
-                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-                
-                ForEach(closedOrders.grouppedByMonth, id: \.month) { item in
-                    section(header: "􀤟 \(item.month)", orders: item.elements)
+                ForEach(sections, id: \.header) { section in
+                    
+                    if section.orders.count > 0 {
+                        sectionView(section)
+                    }
                 }
             }
             .searchable(text: $searchText, prompt: "Search orders")
@@ -138,23 +87,20 @@ struct OrdersListView: View {
     
     
     @ViewBuilder
-    func section(header: String, orders: [OrderSummary]) -> some View {
-        
-        if orders.count > 0 {
+    func sectionView(_ section: OrdersMainListSection) -> some View {
             
-            Section {
+        Section {
+            
+            ForEach(section.orders) { order in
                 
-                ForEach(orders) { order in
-                    
-                    itemView(order.id)
-                }
-                
-                Color.clear.frame(width: 0, height: 24)
-                
-            } header: {
-                
-                headerView(header, secondaryText: "\(orders.count) orders")
+                itemView(order.id)
             }
+            
+            Color.clear.frame(width: 0, height: 24)
+            
+        } header: {
+            
+            headerView(section.header, secondaryText: "\(section.orders.count) orders")
         }
     }
     
