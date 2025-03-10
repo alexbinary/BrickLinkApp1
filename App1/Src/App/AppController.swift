@@ -1444,10 +1444,10 @@ class AppController: ObservableObject {
         let order = orderSummary(forOrderWithId: orderId)!
         
         if order.status.isOneOf(.cancelled, .purged) {
-            return .closed
+            return orderChecklistUnchangedFor30Days(orderId) ? .closed : .recentlyClosed
         }
         
-        var validatedStatus: OrderMacroStatus = .validatePayment
+        let initialStatus: OrderMacroStatus = .validatePayment
         
         let conditionsStatus: [
             (condition: () -> Bool, status: OrderMacroStatus)
@@ -1492,15 +1492,29 @@ class AppController: ObservableObject {
             )
         ]
         
-        for c in conditionsStatus {
-            if c.condition() {
-                validatedStatus = c.status
-            } else {
-                return validatedStatus
+        var status = {
+            
+            var validatedStatus = initialStatus
+            for c in conditionsStatus {
+                if c.condition() {
+                    validatedStatus = c.status
+                    continue
+                } else {
+                    return validatedStatus
+                }
             }
+            return validatedStatus
+        }()
+        
+        if status == .inTransit, orderChecklistUnchangedFor30Days(orderId) {
+            status = .inTransitFor30PlusDays
         }
         
-        return validatedStatus
+        if status == .closed, !orderChecklistUnchangedFor30Days(orderId) {
+            status = .recentlyClosed
+        }
+        
+        return status
     }
     
     

@@ -25,9 +25,9 @@ struct OrdersListView: View {
             LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                 
                 section(
-                    header: "􁁿 In transit for 30+ days",
+                    header: OrderMacroStatus.inTransitFor30PlusDays.descriptionWithPicto,
                     orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
@@ -63,18 +63,18 @@ struct OrdersListView: View {
                 section(
                     header: OrderMacroStatus.inTransit.descriptionWithPicto,
                     orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit && !app.orderChecklistUnchangedFor30Days($0.id) }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
-                    header: "􀐫 Recently closed",
+                    header: OrderMacroStatus.recentlyClosed.descriptionWithPicto,
                     orders: orders
-                        .filter { app.macroStatus(forOrderWithId: $0.id) == .closed && !app.orderChecklistUnchangedFor30Days($0.id) }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .recentlyClosed }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 
                 let closedOrders = orders
-                    .filter { app.macroStatus(forOrderWithId: $0.id) == .closed && app.orderChecklistUnchangedFor30Days($0.id) }
+                    .filter { app.macroStatus(forOrderWithId: $0.id) == .closed }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 
                 ForEach(closedOrders.grouppedByMonth, id: \.month) { item in

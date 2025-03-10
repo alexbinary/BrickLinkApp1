@@ -188,9 +188,13 @@ struct OrderListItemView: View {
                 .yellow
         case .inTransit:
                 .orange
+        case .inTransitFor30PlusDays:
+                .orange
         case .received:
                 .green
         case .giveFeedback:
+                .green
+        case .recentlyClosed:
                 .green
         case .closed:
                 .green
@@ -268,7 +272,7 @@ struct OrderListItemView: View {
                 }
             }
             
-        case .inTransit:
+        case .inTransit, .inTransitFor30PlusDays:
             
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(StatusItem(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
@@ -304,7 +308,7 @@ struct OrderListItemView: View {
                 }
             }))
             
-        case .closed:
+        case .recentlyClosed, .closed:
             
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(StatusItem(text: "Closed \(formattedDate)", status: .completed))

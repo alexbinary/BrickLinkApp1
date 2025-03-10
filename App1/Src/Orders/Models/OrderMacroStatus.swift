@@ -10,8 +10,10 @@ enum OrderMacroStatus: String, IsOneOfAble {
     case pickAndPack
     case ship
     case inTransit
+    case inTransitFor30PlusDays
     case received
     case giveFeedback
+    case recentlyClosed
     case closed
     
     
@@ -30,6 +32,9 @@ enum OrderMacroStatus: String, IsOneOfAble {
 
         case .inTransit:
             (picto: "􁁾", text: "In transit")
+            
+        case .inTransitFor30PlusDays:
+            (picto: "􁁿", text: "In transit for 30+ days")
 
         case .received:
             (picto: "􀐛", text: "Received")
@@ -37,6 +42,9 @@ enum OrderMacroStatus: String, IsOneOfAble {
         case .giveFeedback:
             (picto: "􀉿", text: "Give feedback")
 
+        case .recentlyClosed:
+            (picto: "􀐫", text: "Recently closed")
+        
         case .closed:
             (picto: "􀤟", text: "Closed")
         }
