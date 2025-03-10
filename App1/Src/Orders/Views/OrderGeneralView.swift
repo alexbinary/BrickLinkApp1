@@ -29,7 +29,7 @@ struct OrderGeneralView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text(order.shippingAddressName)
-                    Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
+                    Text(order.shippingAddress.htmlUnescape()).fixedSize(horizontal: false, vertical: true)
                     Text(order.shippingAddressCountryCode)
                 }
                 .font(.title3)
