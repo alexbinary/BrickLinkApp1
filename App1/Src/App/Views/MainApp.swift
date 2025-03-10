@@ -3,7 +3,7 @@ import SwiftUI
 
 
 @main
-struct App1: App {
+struct MainApp: App {
     
     
     @StateObject private var appController = AppController()
@@ -13,7 +13,7 @@ struct App1: App {
         
         WindowGroup {
             
-            ContentView()
+            WindowRootView()
                 .environmentObject(appController)
         }
     }

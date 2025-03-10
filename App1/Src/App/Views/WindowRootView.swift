@@ -2,6 +2,7 @@
 import SwiftUI
 
 
+
 enum SidebarItem {
     
     case orders
@@ -13,7 +14,8 @@ enum SidebarItem {
 }
 
 
-struct ContentView: View {
+
+struct WindowRootView: View {
     
     
     @EnvironmentObject var appController: AppController
