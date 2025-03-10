@@ -44,7 +44,7 @@ struct OrdersMainListView: View {
                 Text("􀈟").padding(.horizontal)
             }
             .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
-                OrdersActionsView(allOrders: orders)
+                OrdersActionsView(orders: orders)
             }
             
             Button {

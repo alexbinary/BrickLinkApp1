@@ -7,29 +7,16 @@ struct OrdersActionsView: View {
     
     @EnvironmentObject var app: AppController
     
-    let allOrders: [OrderSummary]
+    let orders: [OrderSummary]
     
     
     var body: some View {
         
         Group {
             
-            let ordersThatNeedCompletedAndGiveFeedback = allOrders
-                .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
-                .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            
-            let ordersThatNeedGiveFeedback = allOrders
-                .filter { app.macroStatus(forOrderWithId: $0.id) == .giveFeedback }
-                .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            
-            let ordersToShipAndSendDriveThru = allOrders
-                .filter {
-                    app.macroStatus(forOrderWithId: $0.id) == .ship
-                    && app.orderChecklistStamping($0.id)
-                    && app.orderChecklistShippingTransaction($0.id)
-                    && app.orderChecklistTrackingNo($0.id)
-                }
-                .sorted { $0.date > $1.date }
+            let ordersThatNeedCompletedAndGiveFeedback = app.ordersThatNeedCompletedAndGiveFeedback
+            let ordersThatNeedGiveFeedback = app.ordersThatNeedGiveFeedback
+            let ordersToShipAndSendDriveThru = app.ordersToShipAndSendDriveThru
             
             if ordersThatNeedCompletedAndGiveFeedback.isEmpty,
                ordersThatNeedGiveFeedback.isEmpty,
@@ -122,19 +109,7 @@ struct OrdersActionsView: View {
                     }
                     
                     Button {
-                        Task {
-                            for order in ordersThatNeedCompletedAndGiveFeedback {
-                                await app.updateOrderStatus(orderId: order.id, status: .completed)
-                                await app.postPraiseOrderFeedback(orderId: order.id)
-                            }
-                            for order in ordersThatNeedGiveFeedback {
-                                await app.postPraiseOrderFeedback(orderId: order.id)
-                            }
-                            for order in ordersToShipAndSendDriveThru {
-                                await app.updateOrderStatus(orderId: order.id, status: .shipped)
-                                await app.sendDriveThru(orderId: order.id)
-                            }
-                        }
+                        Task { await app.performActionForAllOrders() }
                     } label: {
                         Text("Do all").padding(.horizontal)
                     }
@@ -148,6 +123,6 @@ struct OrdersActionsView: View {
 
 #Preview {
     let appController = AppController()
-    OrdersActionsView(allOrders: appController.orderSummaries)
+    OrdersActionsView(orders: appController.orderSummaries)
         .environmentObject(appController)
 }

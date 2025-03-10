@@ -1612,6 +1612,57 @@ class AppController: ObservableObject {
     
     
     
+    // MARK: - Orders actions
+    
+    
+    var ordersThatNeedCompletedAndGiveFeedback: [OrderSummary] {
+        orderSummaries
+            .filter { macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
+            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+    }
+    
+    
+    var ordersThatNeedGiveFeedback: [OrderSummary] {
+        orderSummaries
+            .filter { macroStatus(forOrderWithId: $0.id) == .giveFeedback }
+            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+    }
+    
+    
+    var ordersToShipAndSendDriveThru: [OrderSummary] {
+        orderSummaries
+            .filter {
+                macroStatus(forOrderWithId: $0.id) == .ship
+                && orderChecklistStamping($0.id)
+                && orderChecklistShippingTransaction($0.id)
+                && orderChecklistTrackingNo($0.id)
+            }
+            .sorted { $0.date > $1.date }
+    }
+    
+    
+    public func performActionForAllOrders() async {
+        
+        for order in ordersThatNeedCompletedAndGiveFeedback {
+        
+            await updateOrderStatus(orderId: order.id, status: .completed)
+            await postPraiseOrderFeedback(orderId: order.id)
+        }
+        
+        for order in ordersThatNeedGiveFeedback {
+            
+            await postPraiseOrderFeedback(orderId: order.id)
+        }
+        
+        for order in ordersToShipAndSendDriveThru {
+            
+            await updateOrderStatus(orderId: order.id, status: .shipped)
+            await sendDriveThru(orderId: order.id)
+        }
+    }
+    
+    
+    
     // MARK: - Tracking status
     
     
