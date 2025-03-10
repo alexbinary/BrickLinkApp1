@@ -93,7 +93,7 @@ struct OrderDetailView: View {
                                     
                                     let padding: CGFloat = 6
                                     
-                                    Text(OrderBusinessStatus.validatePayment.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.validatePayment.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
@@ -105,7 +105,7 @@ struct OrderDetailView: View {
                                         Text("Register transaction")
                                     }
 
-                                    Text(OrderBusinessStatus.pickAndPack.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.pickAndPack.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
 
                                     GridRow {
@@ -140,7 +140,7 @@ struct OrderDetailView: View {
                                         Text("Pack order")
                                     }
 
-                                    Text(OrderBusinessStatus.ship.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.ship.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
 
                                     GridRow {
@@ -175,7 +175,7 @@ struct OrderDetailView: View {
                                         Text("Picked up by transported")
                                     }
 
-                                    Text(OrderBusinessStatus.inTransit.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.inTransit.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
 
                                     GridRow {
@@ -183,7 +183,7 @@ struct OrderDetailView: View {
                                         Text("Received")
                                     }
 
-                                    Text(OrderBusinessStatus.received.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.received.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
 
                                     GridRow {
@@ -199,7 +199,7 @@ struct OrderDetailView: View {
                                         Text("Buyer feedback")
                                     }
 
-                                    Text(OrderBusinessStatus.giveFeedback.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.giveFeedback.descriptionWithPicto).checklistTitle()
                                         .padding(.vertical, padding)
 
                                     GridRow {
@@ -207,7 +207,7 @@ struct OrderDetailView: View {
                                         Text("Give feedback")
                                     }
                                     
-                                    Text(OrderBusinessStatus.closed.descriptionWithPicto).checklistTitle()
+                                    Text(OrderMacroStatus.closed.descriptionWithPicto).checklistTitle()
                                         .padding(.top, padding)
                                 }
                                 

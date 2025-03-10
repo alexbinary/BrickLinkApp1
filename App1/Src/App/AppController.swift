@@ -958,7 +958,7 @@ class AppController: ObservableObject {
         
         let itemsNotPickedYet = orderSummaries.filter {
             
-            orderBusinessStatus($0.id).isOneOf(.validatePayment, .pickAndPack)
+            macroStatus(forOrderWithId: $0.id).isOneOf(.validatePayment, .pickAndPack)
             
         }.flatMap { order in
             
@@ -1436,10 +1436,10 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Order business status
+    // MARK: - Order macro status
     
     
-    public func orderBusinessStatus(_ orderId: OrderSummary.ID) -> OrderBusinessStatus {
+    public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
         let order = orderSummary(forOrderWithId: orderId)!
         
@@ -1447,10 +1447,10 @@ class AppController: ObservableObject {
             return .closed
         }
         
-        var validatedStatus: OrderBusinessStatus = .validatePayment
+        var validatedStatus: OrderMacroStatus = .validatePayment
         
         let conditionsStatus: [
-            (condition: () -> Bool, status: OrderBusinessStatus)
+            (condition: () -> Bool, status: OrderMacroStatus)
         ] = [
             (condition: {
                 self.orderChecklistIncomeTransaction(orderId)
@@ -1562,9 +1562,9 @@ class AppController: ObservableObject {
         
         orderSummaries.filter {
             
-            orderBusinessStatus($0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
+            macroStatus(forOrderWithId: $0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
             ||
-            (orderBusinessStatus($0.id) == .inTransit && orderChecklistUnchangedFor30Days($0.id))
+            (macroStatus(forOrderWithId: $0.id) == .inTransit && orderChecklistUnchangedFor30Days($0.id))
         }
     }
 }

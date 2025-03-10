@@ -27,54 +27,54 @@ struct OrdersListView: View {
                 section(
                     header: "􁁿 In transit for 30+ days",
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
-                    header: OrderBusinessStatus.giveFeedback.descriptionWithPicto,
+                    header: OrderMacroStatus.giveFeedback.descriptionWithPicto,
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .giveFeedback }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .giveFeedback }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
-                    header: OrderBusinessStatus.validatePayment.descriptionWithPicto,
+                    header: OrderMacroStatus.validatePayment.descriptionWithPicto,
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .validatePayment }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .validatePayment }
                         .sorted { $0.date > $1.date }
                 )
                 section(
-                    header: OrderBusinessStatus.pickAndPack.descriptionWithPicto,
+                    header: OrderMacroStatus.pickAndPack.descriptionWithPicto,
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .pickAndPack }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .pickAndPack }
                         .sorted { $0.lots < $1.lots }
                 )
                 section(
-                    header: OrderBusinessStatus.ship.descriptionWithPicto,
+                    header: OrderMacroStatus.ship.descriptionWithPicto,
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .ship }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .ship }
                         .sorted { $0.date > $1.date }
                 )
                 section(
-                    header: OrderBusinessStatus.received.descriptionWithPicto,
+                    header: OrderMacroStatus.received.descriptionWithPicto,
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .received }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .received }
                         .sorted { $0.dateStatusChanged < $1.dateStatusChanged }
                 )
                 section(
-                    header: OrderBusinessStatus.inTransit.descriptionWithPicto,
+                    header: OrderMacroStatus.inTransit.descriptionWithPicto,
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .inTransit && !app.orderChecklistUnchangedFor30Days($0.id) }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit && !app.orderChecklistUnchangedFor30Days($0.id) }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
                     header: "􀐫 Recently closed",
                     orders: orders
-                        .filter { app.orderBusinessStatus($0.id) == .closed && !app.orderChecklistUnchangedFor30Days($0.id) }
+                        .filter { app.macroStatus(forOrderWithId: $0.id) == .closed && !app.orderChecklistUnchangedFor30Days($0.id) }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 
                 let closedOrders = orders
-                    .filter { app.orderBusinessStatus($0.id) == .closed && app.orderChecklistUnchangedFor30Days($0.id) }
+                    .filter { app.macroStatus(forOrderWithId: $0.id) == .closed && app.orderChecklistUnchangedFor30Days($0.id) }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 
                 ForEach(closedOrders.grouppedByMonth, id: \.month) { item in
@@ -120,14 +120,14 @@ struct OrdersListView: View {
         let allOrders = app.orderSummaries
         
         let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
-            .filter { app.orderBusinessStatus($0.id) == .inTransit }
+            .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit }
         
         for order in ordersThatNeedRefreshLaPosteTrackingStatus {
             await app.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
         }
         
         let ordersThatNeedRefreshFeedback = allOrders
-            .filter { app.orderBusinessStatus($0.id).isOneOf(.received, .giveFeedback) }
+            .filter { app.macroStatus(forOrderWithId: $0.id).isOneOf(.received, .giveFeedback) }
         
         for order in ordersThatNeedRefreshFeedback {
             await app.reloadOrderFeedbacks(forOrderWithId: order.id)

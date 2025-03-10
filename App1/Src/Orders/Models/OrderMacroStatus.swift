@@ -3,7 +3,7 @@ import Foundation
 
 
 
-enum OrderBusinessStatus: String, IsOneOfAble {
+enum OrderMacroStatus: String, IsOneOfAble {
     
     
     case validatePayment

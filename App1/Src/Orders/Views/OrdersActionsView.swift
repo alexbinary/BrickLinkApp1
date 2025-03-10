@@ -15,16 +15,16 @@ struct OrdersActionsView: View {
         Group {
             
             let ordersThatNeedCompletedAndGiveFeedback = allOrders
-                .filter { app.orderBusinessStatus($0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
+                .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             
             let ordersThatNeedGiveFeedback = allOrders
-                .filter { app.orderBusinessStatus($0.id) == .giveFeedback }
+                .filter { app.macroStatus(forOrderWithId: $0.id) == .giveFeedback }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             
             let ordersToShipAndSendDriveThru = allOrders
                 .filter {
-                    app.orderBusinessStatus($0.id) == .ship
+                    app.macroStatus(forOrderWithId: $0.id) == .ship
                     && app.orderChecklistStamping($0.id)
                     && app.orderChecklistShippingTransaction($0.id)
                     && app.orderChecklistTrackingNo($0.id)

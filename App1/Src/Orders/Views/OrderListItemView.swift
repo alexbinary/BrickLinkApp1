@@ -144,7 +144,7 @@ struct OrderListItemView: View {
                                         }
                                     }
                                     
-                                    if app.orderBusinessStatus(orderId) == .inTransit,
+                                    if app.macroStatus(forOrderWithId: orderId) == .inTransit,
                                        let orderDetails = app.orderDetails(forOrderWithId: orderId),
                                        orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
                                         
@@ -178,7 +178,7 @@ struct OrderListItemView: View {
     
     var statusColor: Color {
         
-        switch app.orderBusinessStatus(orderId) {
+        switch app.macroStatus(forOrderWithId: orderId) {
             
         case .validatePayment:
                 .red
@@ -207,7 +207,7 @@ struct OrderListItemView: View {
         
         var items: [StatusItem] = []
         
-        switch app.orderBusinessStatus(orderId) {
+        switch app.macroStatus(forOrderWithId: orderId) {
         
         case .validatePayment:
             
