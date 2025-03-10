@@ -15,38 +15,42 @@ enum OrderMacroStatus: String, IsOneOfAble {
     case closed
     
     
-    var descriptionWithPicto: String {
+    var descriptionAndPicto: (picto: String, text: String) {
         
         switch self {
         
         case .validatePayment:
-            "􁕍 Validate payment"
+            (picto: "􁕍", text: "Validate payment")
         
         case .pickAndPack:
-            "􀈥 Pick and pack"
-        
+            (picto: "􀈥", text: "Pick and pack")
+
         case .ship:
-            "􀐚 Ship"
-        
+            (picto: "􀐚", text: "Ship")
+
         case .inTransit:
-            "􁁾 In transit"
-        
+            (picto: "􁁾", text: "In transit")
+
         case .received:
-            "􀐛 Received"
+            (picto: "􀐛", text: "Received")
             
         case .giveFeedback:
-            "􀉿 Give feedback"
-        
+            (picto: "􀉿", text: "Give feedback")
+
         case .closed:
-            "􀤟 Closed"
+            (picto: "􀤟", text: "Closed")
         }
+    }
+        
+    var descriptionWithPicto: String {
+        
+        let (picto, text) = descriptionAndPicto
+        return "\(picto) \(text)"
     }
     
     
     var descriptionWithoutPicto: String {
         
-        let sep = " "
-        let parts = self.descriptionWithPicto.split(separator: sep)
-        return parts.dropFirst().joined(separator: sep)
+        descriptionAndPicto.text
     }
 }
