@@ -63,25 +63,7 @@ struct OrdersMainListView: View {
     func refresh() async {
         
         refreshing = true
-        
-        await app.reloadOrderSummaries()
-        
-        let allOrders = app.orderSummaries
-        
-        let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
-            .filter { app.macroStatus(forOrderWithId: $0.id) == .inTransit }
-        
-        for order in ordersThatNeedRefreshLaPosteTrackingStatus {
-            await app.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
-        }
-        
-        let ordersThatNeedRefreshFeedback = allOrders
-            .filter { app.macroStatus(forOrderWithId: $0.id).isOneOf(.received, .giveFeedback) }
-        
-        for order in ordersThatNeedRefreshFeedback {
-            await app.reloadOrderFeedbacks(forOrderWithId: order.id)
-        }
-        
+        await app.refreshOrdersMainList()
         refreshing = false
     }
     
@@ -90,16 +72,12 @@ struct OrdersMainListView: View {
     func sectionView(_ section: OrdersMainListSection) -> some View {
             
         Section {
-            
             ForEach(section.orders) { order in
-                
                 itemView(order.id)
             }
-            
             Color.clear.frame(width: 0, height: 24)
             
         } header: {
-            
             headerView(section.header, secondaryText: "\(section.orders.count) orders")
         }
     }
@@ -114,7 +92,6 @@ struct OrdersMainListView: View {
             Spacer()
         }
         .padding()
-        .frame(maxWidth: .infinity)
         .background(Color(nsColor: .windowBackgroundColor).opacity(0.90))
     }
     
@@ -123,9 +100,7 @@ struct OrdersMainListView: View {
     func itemView(_ orderId: OrderSummary.ID) -> some View {
         
         OrderListItemView(orderId: orderId)
-            .onTapGesture {
-                nav.pushOrder(orderId)
-            }
+            .onTapGesture { nav.pushOrder(orderId) }
             .padding([.leading, .trailing])
     }
 }

@@ -1193,6 +1193,28 @@ class AppController: ObservableObject {
     }
     
     
+    public func refreshOrdersMainList() async {
+        
+        await reloadOrderSummaries()
+        
+        let allOrders = orderSummaries
+        
+        let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
+            .filter { macroStatus(forOrderWithId: $0.id) == .inTransit }
+        
+        for order in ordersThatNeedRefreshLaPosteTrackingStatus {
+            await reloadLaPosteTrackingStatus(forOrderWithId: order.id)
+        }
+        
+        let ordersThatNeedRefreshFeedback = allOrders
+            .filter { macroStatus(forOrderWithId: $0.id).isOneOf(.received, .giveFeedback) }
+        
+        for order in ordersThatNeedRefreshFeedback {
+            await reloadOrderFeedbacks(forOrderWithId: order.id)
+        }
+    }
+    
+    
     
     // MARK: - Profit margin
     
