@@ -11,14 +11,7 @@ class AppController: ObservableObject {
         return DataStore(dataFileUrl: URL(fileURLWithPath: path))
     }()
     
-    private let blCredentials = BrickLinkAPICredentials(
-        
-        consumerKey: Secrets.BrickLink.consumerKey,
-        consumerSecret: Secrets.BrickLink.consumerSecret,
-        
-        tokenValue: Secrets.BrickLink.tokenValue,
-        tokenSecret: Secrets.BrickLink.tokenSecret
-    )
+    private let blCredentials = Secrets.brickLinkAPICredentials
     
     
     init() {

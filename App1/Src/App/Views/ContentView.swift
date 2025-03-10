@@ -18,10 +18,10 @@ struct ContentView: View {
     
     @EnvironmentObject var appController: AppController
     
-    @State var selectedSidebarItem: SidebarItem = Secrets.Default.selectedSidebarItem
+    @State var selectedSidebarItem: SidebarItem = Secrets.Defaults.selectedSidebarItem
     
-    @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Default.ordersActiveNavigationPath
-    @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Default.resultSelectedOrderIds
+    @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Defaults.ordersActiveNavigationPath
+    @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Defaults.resultSelectedOrderIds
     @State var selectedTransactions: Set<Transaction.ID> = []
         
     var body: some View {
