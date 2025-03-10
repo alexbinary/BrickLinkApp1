@@ -389,3 +389,7 @@ let shippingCostBandsWorld = [
         priceParcelZB: 38.00, priceParcelZC: 75.00
     ),
 ]
+
+
+
+let orderWeightMarginRatio: Float = 1.2
