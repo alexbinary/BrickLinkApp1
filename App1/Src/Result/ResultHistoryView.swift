@@ -42,7 +42,7 @@ struct ResultHistoryView: View {
             let ordersByMonth = orders.grouppedByBusinessMonth
             
             let orderMonths = ordersByMonth.map { $0.month }
-                .stableUniqueByFirstOccurence.sorted()
+                .unique.sorted()
             
             let months: [BusinessMonth] = {
                 if let first = orderMonths.first {
@@ -593,7 +593,7 @@ struct ResultHistoryView: View {
             
             let allPossibleMonthsSorted = orders
                 .grouppedByBusinessMonth.map { $0.month }
-                .stableUniqueByFirstOccurence.sorted()
+                .unique.sorted()
             
             let earliestPossibleMonth = allPossibleMonthsSorted.first ?? .current
             let latestPossibleMonth = allPossibleMonthsSorted.last ?? .current
@@ -611,7 +611,7 @@ struct ResultHistoryView: View {
         
         let allPossibleMonthsSorted = orders
             .grouppedByBusinessMonth.map { $0.month }
-            .stableUniqueByFirstOccurence.sorted()
+            .unique.sorted()
         
         let earliestPossibleMonth = allPossibleMonthsSorted.first ?? .current
         let latestPossibleMonth = allPossibleMonthsSorted.last ?? .current

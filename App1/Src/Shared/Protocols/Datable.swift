@@ -24,7 +24,7 @@ extension Array where Element: Datable {
             return (day: day, element: $0)
         }
         
-        return withDay.map { $0.day } .stableUniqueByFirstOccurence .map { day in
+        return withDay.map { $0.day } .unique .map { day in
             
             return (
                 day: day,
@@ -46,7 +46,7 @@ extension Array where Element: Datable {
             return (month: month, element: $0)
         }
         
-        return withMonth.map { $0.month } .stableUniqueByFirstOccurence .map { month in
+        return withMonth.map { $0.month } .unique .map { month in
             
             return (
                 month: month,
@@ -58,7 +58,7 @@ extension Array where Element: Datable {
     
     var grouppedByBusinessMonth: [(month: BusinessMonth, elements: [Self.Element])] {
         
-        let months = self.map { $0.date.businessMonth } .stableUniqueByFirstOccurence
+        let months = self.map { $0.date.businessMonth } .unique
         
         return months.map { month in
             

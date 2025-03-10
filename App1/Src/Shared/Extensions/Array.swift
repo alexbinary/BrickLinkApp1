@@ -21,7 +21,7 @@ extension Array {
 extension Array where Element: Equatable {
     
     
-    var stableUniqueByFirstOccurence: Self {
+    var unique: Self {
         
         var uniqueItems: Self = []
         
@@ -33,7 +33,4 @@ extension Array where Element: Equatable {
         
         return uniqueItems
     }
-    
-    
-    var unique: Self { stableUniqueByFirstOccurence }
 }
