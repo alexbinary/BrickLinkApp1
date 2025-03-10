@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderComptaView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let order: OrderDetails
     
@@ -63,11 +63,11 @@ struct OrderComptaView: View {
                         Text("Register transaction")
                     }
                     Button {
-                        self.appController.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                        self.app.validateOrderWithoutIncomeTransaction(orderId: order.id)
                     } label: {
                         Text("Validate without transaction")
                     }
-                    if let date = appController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                    if let date = app.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -75,7 +75,7 @@ struct OrderComptaView: View {
             }
 
             TransactionListView(
-                transactions: appController.transactions
+                transactions: app.transactions
                     .filter { $0.type == .orderIncome && $0.orderRefIn == order.id },
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
@@ -88,7 +88,7 @@ struct OrderComptaView: View {
                
             HStack {
                 Text("Confirmed affranchissment:")
-                if let confirmedMethod = appController.stamping(forOrderWithId: order.id) {
+                if let confirmedMethod = app.stamping(forOrderWithId: order.id) {
                     Text(confirmedMethod)
                 }
             }
@@ -116,11 +116,11 @@ struct OrderComptaView: View {
                         Text("Register transaction")
                     }
                     Button {
-                        self.appController.validateOrderWithoutShippingTransaction(orderId: order.id)
+                        self.app.validateOrderWithoutShippingTransaction(orderId: order.id)
                     } label: {
                         Text("Validate without transaction")
                     }
-                    if let date = appController.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
+                    if let date = app.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -128,7 +128,7 @@ struct OrderComptaView: View {
             }
             
             TransactionListView(
-                transactions: appController.transactions
+                transactions: app.transactions
                     .filter { $0.type == .orderShipping && $0.orderRefIn == order.id },
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
@@ -141,7 +141,7 @@ struct OrderComptaView: View {
             
             HStack {
                 Text("Latest refund:")
-                if let refund = appController.refunds(for: order).last {
+                if let refund = app.refunds(for: order).last {
                     Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
                 }
             }
@@ -178,7 +178,7 @@ struct OrderComptaView: View {
             }
             
             TransactionListView(
-                transactions: appController.transactions
+                transactions: app.transactions
                     .filter { $0.type == .orderRefund && $0.orderRefIn == order.id },
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
@@ -204,12 +204,12 @@ struct OrderComptaView: View {
         self.incomeComment = ""
 
         self.shippingDate = Date()
-        self.shippingAmount = appController.shippingCost(forOrderWithId: order.id) ?? 0
+        self.shippingAmount = app.shippingCost(forOrderWithId: order.id) ?? 0
         self.shippingPaymentMethod = .cb_iban
         self.shippingComment = ""
         
         self.refundDate = Date()
-        self.refundAmount = appController.refunds(for: order).last?.amount ?? 0
+        self.refundAmount = app.refunds(for: order).last?.amount ?? 0
         self.refundPaymentMethod = .paypal
         self.refundComment = ""
     }
@@ -217,7 +217,7 @@ struct OrderComptaView: View {
     
     func submitIncomeTransaction() {
         
-        appController.registerTransaction(Transaction(
+        app.registerTransaction(Transaction(
             date: incomeDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -232,7 +232,7 @@ struct OrderComptaView: View {
     
     func submitShippingTransaction() {
      
-        appController.registerTransaction(Transaction(
+        app.registerTransaction(Transaction(
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
@@ -247,7 +247,7 @@ struct OrderComptaView: View {
     
     func submitRefundTransaction() {
      
-        appController.registerTransaction(Transaction(
+        app.registerTransaction(Transaction(
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,

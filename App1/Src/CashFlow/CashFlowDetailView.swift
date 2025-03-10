@@ -7,7 +7,7 @@ import Charts
 struct CashFlowDetailView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     
     let selectedTransactions: Set<Transaction.ID>
@@ -20,7 +20,7 @@ struct CashFlowDetailView: View {
     
     var body: some View {
         
-        let allTransactions = appController.transactions.sorted { $0.date > $1.date }
+        let allTransactions = app.transactions.sorted { $0.date > $1.date }
         
         ScrollView {
             

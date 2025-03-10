@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadedItemView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let uploadedItem: UploadedItem
     
@@ -21,7 +21,7 @@ struct UploadedItemView: View {
                 
                 GridRow(alignment: .top) {
                     
-                    AsyncImage(url: appController.imageUrl(forItemType: uploadedItem.type, ref: uploadedItem.ref, colorId: uploadedItem.colorId))
+                    AsyncImage(url: app.imageUrl(forItemType: uploadedItem.type, ref: uploadedItem.ref, colorId: uploadedItem.colorId))
                         .frame(minHeight: 70, maxHeight: 70, alignment: .top)
                         .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                     
@@ -46,8 +46,8 @@ struct UploadedItemView: View {
                 
                     Text(uploadedItem.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
                     HStack {
-                        appController.color(forLegoColorId: uploadedItem.colorId).frame(width: 18, height: 18)
-                        Text(appController.colorName(forLegoColorId: uploadedItem.colorId))
+                        app.color(forLegoColorId: uploadedItem.colorId).frame(width: 18, height: 18)
+                        Text(app.colorName(forLegoColorId: uploadedItem.colorId))
                     }.gridColumnAlignment(.leading)
                 }
             }
@@ -124,7 +124,7 @@ struct UploadedItemView: View {
             Spacer()
             
             Button {
-                appController.addUploadItem(UploadItem(
+                app.addUploadItem(UploadItem(
                     type: uploadedItem.type,
                     ref: uploadedItem.ref,
                     name: uploadedItem.name,

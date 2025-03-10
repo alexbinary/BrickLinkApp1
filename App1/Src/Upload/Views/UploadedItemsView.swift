@@ -6,15 +6,15 @@ import SwiftUI
 struct UploadedItemsView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     @State var searchText = ""
     
     
     var body: some View {
      
-        let uploadedItems = appController.uploadedItems
-            .filter { $0.matches(searchText, appController) }
+        let uploadedItems = app.uploadedItems
+            .filter { $0.matches(searchText, app) }
             .sorted { $0.uploadDate > $1.uploadDate }
         
         LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {

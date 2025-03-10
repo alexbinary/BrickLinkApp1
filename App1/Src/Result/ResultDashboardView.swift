@@ -7,7 +7,7 @@ import Charts
 struct ResultDashboardView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     @State var selectedMostProfitableOrder: OrderDetails.ID? = nil
     @State var selectedLeastProfitableOrder: OrderDetails.ID? = nil
@@ -19,22 +19,22 @@ struct ResultDashboardView: View {
             
             let periodNLastDays = 30
             
-            let orders = appController.orderDetails
+            let orders = app.orderDetails
                 .filter { $0.date.days(to: .now) < periodNLastDays }
-                .filter { appController.profitMargin(for: $0) != nil }
+                .filter { app.profitMargin(for: $0) != nil }
             
             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
             let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
             
             let totalItemCost: Float = 0
-            let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+            let totalShippingCost = orders.reduce(0) { $0 + (app.shippingCost(forOrderWithId: $1.id) ?? 0) }
             
-            let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-            let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
+            let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+            let totalRefund = orders.flatMap { app.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
             
             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
             
-            let profitMargin = appController.profitMargin(
+            let profitMargin = app.profitMargin(
                 
                 totalItems: totalItems,
                 totalShipping: totalShipping,
@@ -98,12 +98,12 @@ struct ResultDashboardView: View {
                     
                     let orders = orders
                         .filter {
-                            appController.profitMargin(for: $0) != nil
+                            app.profitMargin(for: $0) != nil
                         }
                         .sorted {
-                            (appController.profitMargin(for: $0) ?? 0)
+                            (app.profitMargin(for: $0) ?? 0)
                             >
-                            (appController.profitMargin(for: $1) ?? 0)
+                            (app.profitMargin(for: $1) ?? 0)
                         }
                     
                     VStack(alignment: .leading) {
@@ -122,7 +122,7 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Profit") { order in
                                 
-                                if let profitMargin = appController.profitMargin(for: order) {
+                                if let profitMargin = app.profitMargin(for: order) {
                                     
                                     Text(
                                         abs(profitMargin),
@@ -154,14 +154,14 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
-                                    abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
+                                    abs(app.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
                                 ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
                                 
-                                if let fees = appController.fees(for: order) {
+                                if let fees = app.fees(for: order) {
                                     
                                     Text(
                                         abs(fees),
@@ -172,7 +172,7 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Refund") { order in
                                 
-                                let totalRefund = appController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                                let totalRefund = app.refunds(for: order).reduce(0, { $0 + $1.amount })
                                 if totalRefund > 0 {
                                     
                                     Text(
@@ -206,7 +206,7 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Profit") { order in
                                 
-                                if let profitMargin = appController.profitMargin(for: order) {
+                                if let profitMargin = app.profitMargin(for: order) {
                                     
                                     Text(
                                         abs(profitMargin),
@@ -238,14 +238,14 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
-                                    abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
+                                    abs(app.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
                                 ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
                                 
-                                if let fees = appController.fees(for: order) {
+                                if let fees = app.fees(for: order) {
                                     
                                     Text(
                                         abs(fees),
@@ -256,7 +256,7 @@ struct ResultDashboardView: View {
                             
                             TableColumn("Refund") { order in
                                 
-                                let totalRefund = appController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                                let totalRefund = app.refunds(for: order).reduce(0, { $0 + $1.amount })
                                 if totalRefund > 0 {
                                     
                                     Text(

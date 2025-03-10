@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderRefundView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let order: OrderDetails
     
@@ -41,7 +41,7 @@ struct OrderRefundView: View {
                 }
             }
             
-            Table(appController.refunds(for: order)) {
+            Table(app.refunds(for: order)) {
                 
                 TableColumn("Date") { refund in
                     Text(refund.date, format: .dateTime)
@@ -76,7 +76,7 @@ struct OrderRefundView: View {
     
     func submitRefund() {
         
-        appController.createRefund(OrderRefund(
+        app.createRefund(OrderRefund(
             date: refundDate,
             amount: refundAmount,
             comment: refundComment,

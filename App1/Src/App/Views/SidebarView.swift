@@ -6,7 +6,7 @@ import SwiftUI
 struct SidebarView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     @Binding var selectedItem: SidebarItem
     
@@ -17,18 +17,18 @@ struct SidebarView: View {
             
             Section("Operations") {
                 
-                let actionOrders = appController.orderSummaries.filter {
+                let actionOrders = app.orderSummaries.filter {
                     
-                    appController.orderBusinessStatus($0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
+                    app.orderBusinessStatus($0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
                     ||
-                    (appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id))
+                    (app.orderBusinessStatus($0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id))
                 }
                 
                 Label("Orders", systemImage: "list.bullet")
                     .badge(actionOrders.count)
                     .tag(SidebarItem.orders)
                 
-                let uploadItems = appController.uploadItems
+                let uploadItems = app.uploadItems
                 
                 Label("Upload", systemImage: "tray.and.arrow.down")
                     .badge(uploadItems.count)

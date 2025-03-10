@@ -6,7 +6,7 @@ import SwiftUI
 struct ResultContentView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     @Binding var selectedOrderIds: Set<OrderSummary.ID>
     
@@ -25,7 +25,7 @@ struct ResultContentView: View {
             
             TableColumn("Profit") { order in
                 
-                if let profitMargin = appController.profitMargin(for: order) {
+                if let profitMargin = app.profitMargin(for: order) {
                     
                     Text(
                         abs(profitMargin),
@@ -57,7 +57,7 @@ struct ResultContentView: View {
             
             TableColumn("Shipping cost") { order in
                 
-                if let cost = appController.shippingCost(forOrderWithId: order.id) {
+                if let cost = app.shippingCost(forOrderWithId: order.id) {
                     
                     Text(
                         abs(cost),
@@ -67,7 +67,7 @@ struct ResultContentView: View {
             
             TableColumn("Fees") { order in
                 
-                if let fees = appController.fees(for: order) {
+                if let fees = app.fees(for: order) {
                     
                     Text(
                         abs(fees),
@@ -78,7 +78,7 @@ struct ResultContentView: View {
             
             TableColumn("Refund") { order in
                 
-                let totalRefund = appController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                let totalRefund = app.refunds(for: order).reduce(0, { $0 + $1.amount })
                 if totalRefund > 0 {
                     
                     Text(
@@ -90,7 +90,7 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = appController.orderDetails
+            let ordersByMonth = app.orderDetails
                 .grouppedByBusinessMonth
             
             let orderMonths = ordersByMonth.map { $0.month } .unique.sorted()

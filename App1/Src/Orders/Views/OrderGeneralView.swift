@@ -7,7 +7,7 @@ import HTMLEntities
 struct OrderGeneralView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let order: OrderDetails
     
@@ -90,9 +90,9 @@ struct OrderGeneralView: View {
                     
                     Group {
                         
-                        let transactions = appController.incomeTransactions(forOrderWithId: order.id)
+                        let transactions = app.incomeTransactions(forOrderWithId: order.id)
                         
-                        if let date = appController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                        if let date = app.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                             
                             HStack {
                                 
@@ -228,7 +228,7 @@ struct OrderGeneralView: View {
                                         Text("Register transaction")
                                     }
                                     Button {
-                                        self.appController.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                                        self.app.validateOrderWithoutIncomeTransaction(orderId: order.id)
                                     } label: {
                                         Text("Validate without transaction")
                                     }
@@ -249,7 +249,7 @@ struct OrderGeneralView: View {
                 ForEach(statuses, id: \.self) { status in
                     Button {
                         Task {
-                            await appController.updateOrderStatus(orderId: order.id, status: status)
+                            await app.updateOrderStatus(orderId: order.id, status: status)
                         }
                     } label: {
                         Text(status.rawValue)
@@ -262,17 +262,17 @@ struct OrderGeneralView: View {
             
             Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")
             
-            Table(appController.orderItems(forOrderWithId: order.id)) {
+            Table(app.orderItems(forOrderWithId: order.id)) {
                 
                 TableColumn("Image") { item in
-                    AsyncImage(url: appController.imageUrl(for: item))
+                    AsyncImage(url: app.imageUrl(for: item))
                         .frame(minHeight: 60)
                 }
                 TableColumn("Condition", value: \.condition)
                 TableColumn("Color") { item in
                     HStack {
-                        appController.color(for: item).frame(width: 18, height: 18)
-                        Text(appController.colorName(for: item))
+                        app.color(for: item).frame(width: 18, height: 18)
+                        Text(app.colorName(for: item))
                     }
                 }
                 TableColumn("Name") { item in
@@ -323,7 +323,7 @@ struct OrderGeneralView: View {
     
     func submitIncomeTransaction() {
         
-        appController.registerTransaction(Transaction(
+        app.registerTransaction(Transaction(
             date: incomeTransactionDate,
             createdAt: Date(),
             type: .orderIncome,

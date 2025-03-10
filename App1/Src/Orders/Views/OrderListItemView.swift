@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderListItemView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let orderId: OrderSummary.ID
     
@@ -15,7 +15,7 @@ struct OrderListItemView: View {
     
     var body: some View {
         
-        if let order = appController.orderSummary(forOrderWithId: orderId) {
+        if let order = app.orderSummary(forOrderWithId: orderId) {
             
             HStack {
                 
@@ -98,14 +98,14 @@ struct OrderListItemView: View {
                                         
                                         HStack {
                                             Text("Seller:")
-                                            if let fb = appController.orderFeedbacks(forOrderWithId: order.id).sellerFeedback() {
+                                            if let fb = app.orderFeedbacks(forOrderWithId: order.id).sellerFeedback() {
                                                 FeedbackRatingView(feedback: fb).help(fb.comment)
                                             }
                                         }.frame(width: 100, alignment: .leading)
                                         
                                         HStack {
                                             Text("Buyer:")
-                                            if let fb = appController.orderFeedbacks(forOrderWithId: order.id).buyerFeedback() {
+                                            if let fb = app.orderFeedbacks(forOrderWithId: order.id).buyerFeedback() {
                                                 FeedbackRatingView(feedback: fb).help(fb.comment)
                                             }
                                         }.frame(width: 100, alignment: .leading)
@@ -144,11 +144,11 @@ struct OrderListItemView: View {
                                         }
                                     }
                                     
-                                    if appController.orderBusinessStatus(orderId) == .inTransit,
-                                       let orderDetails = appController.orderDetails(forOrderWithId: orderId),
+                                    if app.orderBusinessStatus(orderId) == .inTransit,
+                                       let orderDetails = app.orderDetails(forOrderWithId: orderId),
                                        orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
                                         
-                                        LaPosteTrackingView(status: appController.laPosteTrackingStatus(forOrderWithId: orderId))
+                                        LaPosteTrackingView(status: app.laPosteTrackingStatus(forOrderWithId: orderId))
                                     }
                                 }
                                 .frame(width: 280, alignment: .trailing)
@@ -178,7 +178,7 @@ struct OrderListItemView: View {
     
     var statusColor: Color {
         
-        switch appController.orderBusinessStatus(orderId) {
+        switch app.orderBusinessStatus(orderId) {
             
         case .validatePayment:
                 .red
@@ -200,70 +200,70 @@ struct OrderListItemView: View {
     
     var statusItems: [StatusItem] {
         
-        guard let order = appController.orderSummary(forOrderWithId: orderId) else { return [] }
+        guard let order = app.orderSummary(forOrderWithId: orderId) else { return [] }
         
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         
         var items: [StatusItem] = []
         
-        switch appController.orderBusinessStatus(orderId) {
+        switch app.orderBusinessStatus(orderId) {
         
         case .validatePayment:
             
-            if !appController.orderChecklistPayment(orderId) {
+            if !app.orderChecklistPayment(orderId) {
                 items.append(StatusItem(text: "Payment pending", status: .waitingOnExternalAction))
                 
-            } else if !appController.orderChecklistIncomeTransaction(orderId) {
+            } else if !app.orderChecklistIncomeTransaction(orderId) {
                 items.append(StatusItem(text: "Register payment transaction", status: .actionRequired))
             }
             
         case .pickAndPack:
             
-            if !appController.orderChecklistPicking(orderId) {
+            if !app.orderChecklistPicking(orderId) {
                 
-                let picked = appController.pickedItems(forOrderWithId: orderId).count
-                let total = appController.orderItems(forOrderWithId: orderId).count
+                let picked = app.pickedItems(forOrderWithId: orderId).count
+                let total = app.orderItems(forOrderWithId: orderId).count
                 
                 let percent = floor(Double(picked)/Double(total)*100)
                 items.append(StatusItem(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
                 
-            } else if !appController.orderChecklistVerification(orderId) {
+            } else if !app.orderChecklistVerification(orderId) {
                 
-                let verified = appController.verifiedItems(forOrderWithId: orderId).count
-                let total = appController.orderItems(forOrderWithId: orderId).count
+                let verified = app.verifiedItems(forOrderWithId: orderId).count
+                let total = app.orderItems(forOrderWithId: orderId).count
                 
                 let percent = floor(Double(verified)/Double(total)*100)
                 items.append(StatusItem(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
                 
-            } else if !appController.orderChecklistPacked(orderId) {
+            } else if !app.orderChecklistPacked(orderId) {
                 items.append(StatusItem(text: "Not packed yet", status: .actionRequired))
             }
             
         case .ship:
             
-            if !appController.orderChecklistStamping(orderId) {
+            if !app.orderChecklistStamping(orderId) {
                 items.append(StatusItem(text: "Stamping not validated", status: .actionRequired))
             }
-            if !appController.orderChecklistShippingTransaction(orderId) {
+            if !app.orderChecklistShippingTransaction(orderId) {
                 items.append(StatusItem(text: "No shipping transaction", status: .actionRequired))
             }
-            if !appController.orderChecklistTrackingNo(orderId) {
+            if !app.orderChecklistTrackingNo(orderId) {
                 items.append(StatusItem(text: "Missing tracking no", status: .actionRequired))
             }
             
-            if !appController.orderChecklistShipped(orderId) && !appController.orderChecklistDriveThru(orderId){
+            if !app.orderChecklistShipped(orderId) && !app.orderChecklistDriveThru(orderId){
                 items.append(StatusItem(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
-                        await appController.updateOrderStatus(orderId: orderId, status: .shipped)
-                        await appController.sendDriveThru(orderId: orderId)
+                        await app.updateOrderStatus(orderId: orderId, status: .shipped)
+                        await app.sendDriveThru(orderId: orderId)
                     }
                 }))
             } else {
-                if !appController.orderChecklistShipped(orderId) {
+                if !app.orderChecklistShipped(orderId) {
                     items.append(StatusItem(text: "Mark Shipped", status: .actionRequired))
                 }
-                if !appController.orderChecklistDriveThru(orderId) {
+                if !app.orderChecklistDriveThru(orderId) {
                     items.append(StatusItem(text: "Send Drive thru", status: .actionRequired))
                 }
             }
@@ -273,11 +273,11 @@ struct OrderListItemView: View {
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(StatusItem(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
             
-            if appController.orderChecklistUnchangedFor30Days(orderId) {
+            if app.orderChecklistUnchangedFor30Days(orderId) {
                 items.append(StatusItem(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
-                        await appController.updateOrderStatus(orderId: orderId, status: .completed)
-                        await appController.postPraiseOrderFeedback(orderId: order.id)
+                        await app.updateOrderStatus(orderId: orderId, status: .completed)
+                        await app.postPraiseOrderFeedback(orderId: order.id)
                     }
                 }))
             }
@@ -300,7 +300,7 @@ struct OrderListItemView: View {
             
             items.append(StatusItem(text: "Give feedback", status: .actionRequired, action: {
                 Task {
-                    await appController.postPraiseOrderFeedback(orderId: order.id)
+                    await app.postPraiseOrderFeedback(orderId: order.id)
                 }
             }))
             

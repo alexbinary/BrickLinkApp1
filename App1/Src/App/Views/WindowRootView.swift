@@ -6,8 +6,6 @@ import SwiftUI
 struct WindowRootView: View {
     
     
-    @EnvironmentObject var appController: AppController
-    
     @State var selectedSidebarItem: SidebarItem = Secrets.Defaults.selectedSidebarItem
     
     @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Defaults.ordersActiveNavigationPath

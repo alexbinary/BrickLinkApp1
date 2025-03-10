@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadItemView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let uploadItem: UploadItem
     
@@ -50,7 +50,7 @@ struct UploadItemView: View {
                     
                     GridRow(alignment: .top) {
                         
-                        AsyncImage(url: appController.imageUrl(forItemType: uploadItem.type, ref: uploadItem.ref, colorId: uploadItem.colorId))
+                        AsyncImage(url: app.imageUrl(forItemType: uploadItem.type, ref: uploadItem.ref, colorId: uploadItem.colorId))
                             .frame(minHeight: 70, maxHeight: 70, alignment: .top)
                             .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                         
@@ -153,11 +153,11 @@ struct UploadItemView: View {
                         }.gridColumnAlignment(.center)
                         
                         HStack {
-                            appController.color(forLegoColorId: uploadItem.colorId).frame(width: 18, height: 18)
+                            app.color(forLegoColorId: uploadItem.colorId).frame(width: 18, height: 18)
                             
                             ZStack(alignment: .leading) {
                                 
-                                Text(appController.colorName(forLegoColorId: uploadItem.colorId))
+                                Text(app.colorName(forLegoColorId: uploadItem.colorId))
                                     .onTapGesture {
                                         editModeColor = true
                                     }
@@ -165,7 +165,7 @@ struct UploadItemView: View {
                                 
                                 Picker("Color", selection: $editColorId) {
                                     
-                                    ForEach(appController.allColors) { color in
+                                    ForEach(app.allColors) { color in
                                         
                                         Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
                                             .tag(color.id)
@@ -416,7 +416,7 @@ struct UploadItemView: View {
                                         
                                         if let inventoryItem = inventoryItem {
                                             
-                                            await appController.updateInventory(
+                                            await app.updateInventory(
                                                 
                                                 id: inventoryItem.id,
                                                 addQuantity: submitQty!,
@@ -428,7 +428,7 @@ struct UploadItemView: View {
                                             
                                         } else {
                                             
-                                            let inventoryItem = await appController.createInventory(
+                                            let inventoryItem = await app.createInventory(
                                                 
                                                 ref: submitRef!,
                                                 type: submitType,
@@ -444,7 +444,7 @@ struct UploadItemView: View {
                                         }
                                     }()
 
-                                    appController.addUploadedItem(UploadedItem(
+                                    app.addUploadedItem(UploadedItem(
                                         type: submitType,
                                         ref: submitRef!,
                                         name: submitName,
@@ -462,7 +462,7 @@ struct UploadItemView: View {
                                         inventoryStatus: inventoryStatus
                                     ))
                                     
-                                    appController.deleteUploadItem(uploadItem)
+                                    app.deleteUploadItem(uploadItem)
                                     
                                     submitting = false
                                 }
@@ -478,7 +478,7 @@ struct UploadItemView: View {
                             .fixedSize()
                             
                             Button {
-                                appController.deleteUploadItem(uploadItem)
+                                app.deleteUploadItem(uploadItem)
                             } label: {
                                 Text("􀈑 Delete")
                             }
@@ -583,7 +583,7 @@ struct UploadItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            appController.updateUploadItem(UploadItem(
+            app.updateUploadItem(UploadItem(
                 
                 id: uploadItem.id,
                 type: uploadItem.type,
@@ -612,7 +612,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return nil
         }
-        return appController.inventory(for: uploadItem)
+        return app.inventory(for: uploadItem)
     }
     
     var relatedInventories: [InventoryItem] {
@@ -620,7 +620,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return []
         }
-        return appController.inventories(forAllColorsOf: uploadItem)
+        return app.inventories(forAllColorsOf: uploadItem)
     }
     
     
@@ -636,7 +636,7 @@ struct UploadItemView: View {
     
     ) {
         
-        appController.updateUploadItem(UploadItem(
+        app.updateUploadItem(UploadItem(
             
             id: uploadItem.id,
             type: uploadItem.type,
@@ -655,7 +655,7 @@ struct UploadItemView: View {
         
         self.catalogResult = .loading
         
-        if let catalog = await appController.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
+        if let catalog = await app.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalog)
             updateItem(name: catalog.name)

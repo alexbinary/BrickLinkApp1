@@ -7,7 +7,7 @@ import Charts
 struct ResultHistoryView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     @Binding var selectedOrderIds: Set<OrderDetails.ID>
     
@@ -28,10 +28,10 @@ struct ResultHistoryView: View {
         
         (
             !selectedOrderIds.isEmpty
-                ? appController.orderDetails.filter { selectedOrderIds.contains($0.id) }
-                : appController.orderDetails
+                ? app.orderDetails.filter { selectedOrderIds.contains($0.id) }
+                : app.orderDetails
         )
-        .filter { appController.profitMargin(for: $0) != nil }
+        .filter { app.profitMargin(for: $0) != nil }
     }
     
     
@@ -150,10 +150,10 @@ struct ResultHistoryView: View {
                         
                         let totalItemCost: Float = 0
                         
-                        let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                        let totalShippingCost = orders.reduce(0) { $0 + (app.shippingCost(forOrderWithId: $1.id) ?? 0) }
                         
-                        let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-                        let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
+                        let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+                        let totalRefund = orders.flatMap { app.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                         
                         let totalExpense = totalItemCost + totalShippingCost + totalFees + totalRefund
                         
@@ -261,10 +261,10 @@ struct ResultHistoryView: View {
                             
                             let totalItemCost: Float = 0
                             
-                            let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                            let totalShippingCost = orders.reduce(0) { $0 + (app.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
-                            let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-                            let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
+                            let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+                            let totalRefund = orders.flatMap { app.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                             
                             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
                             
@@ -313,10 +313,10 @@ struct ResultHistoryView: View {
                             
                             let totalItemCost: Float = 0
                             
-                            let totalShippingCost = orders.reduce(0) { $0 + (appController.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                            let totalShippingCost = orders.reduce(0) { $0 + (app.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
-                            let totalFees = orders.reduce(0) { $0 + (appController.fees(for: $1) ?? 0) }
-                            let totalRefund = orders.flatMap { appController.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
+                            let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+                            let totalRefund = orders.flatMap { app.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                             
                             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
                             
@@ -410,7 +410,7 @@ struct ResultHistoryView: View {
                             return visibleOrders
                         }
                     }().filter {
-                        appController.profitMargin(for: $0) != nil
+                        app.profitMargin(for: $0) != nil
                     }
                     
                     let baseNumber = 5
@@ -434,7 +434,7 @@ struct ResultHistoryView: View {
                             
                             TableColumn("Profit") { order in
                                 
-                                if let profitMargin = appController.profitMargin(for: order) {
+                                if let profitMargin = app.profitMargin(for: order) {
                                     
                                     Text(
                                         abs(profitMargin),
@@ -466,14 +466,14 @@ struct ResultHistoryView: View {
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
-                                    abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
+                                    abs(app.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
                                 ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
                                 
-                                if let fees = appController.fees(for: order) {
+                                if let fees = app.fees(for: order) {
                                     
                                     Text(
                                         abs(fees),
@@ -486,10 +486,10 @@ struct ResultHistoryView: View {
                             
                             let orders = sourceOrders.sorted {
                                 (
-                                    ((appController.profitMargin(for: $0) ?? 0)*100).rounded(),
+                                    ((app.profitMargin(for: $0) ?? 0)*100).rounded(),
                                     $0.date
                                 ) > (
-                                    ((appController.profitMargin(for: $1) ?? 0)*100).rounded(),
+                                    ((app.profitMargin(for: $1) ?? 0)*100).rounded(),
                                     $1.date
                                 )
                             }
@@ -516,7 +516,7 @@ struct ResultHistoryView: View {
                             
                             TableColumn("Profit") { order in
                                 
-                                if let profitMargin = appController.profitMargin(for: order) {
+                                if let profitMargin = app.profitMargin(for: order) {
                                     
                                     Text(
                                         abs(profitMargin),
@@ -548,14 +548,14 @@ struct ResultHistoryView: View {
                             
                             TableColumn("Shipping cost") { order in
                                 Text(
-                                    abs(appController.shippingCost(forOrderWithId: order.id) ?? 0),
+                                    abs(app.shippingCost(forOrderWithId: order.id) ?? 0),
                                     format: .currency(code: "EUR").presentation(.isoCode)
                                 ).amountColor(.bad)
                             }
                             
                             TableColumn("Fees") { order in
                                 
-                                if let fees = appController.fees(for: order) {
+                                if let fees = app.fees(for: order) {
                                     
                                     Text(
                                         abs(fees),
@@ -568,10 +568,10 @@ struct ResultHistoryView: View {
                             
                             let orders = sourceOrders.sorted {
                                 (
-                                    -((appController.profitMargin(for: $0) ?? 0)*100).rounded(),
+                                    -((app.profitMargin(for: $0) ?? 0)*100).rounded(),
                                      $0.date
                                 ) > (
-                                    -((appController.profitMargin(for: $1) ?? 0)*100).rounded(),
+                                    -((app.profitMargin(for: $1) ?? 0)*100).rounded(),
                                      $1.date
                                 )
                             }

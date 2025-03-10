@@ -5,7 +5,7 @@ import SwiftUI
 struct OrdersActionsView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let allOrders: [OrderSummary]
     
@@ -15,19 +15,19 @@ struct OrdersActionsView: View {
         Group {
             
             let ordersThatNeedCompletedAndGiveFeedback = allOrders
-                .filter { appController.orderBusinessStatus($0.id) == .inTransit && appController.orderChecklistUnchangedFor30Days($0.id) }
+                .filter { app.orderBusinessStatus($0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             
             let ordersThatNeedGiveFeedback = allOrders
-                .filter { appController.orderBusinessStatus($0.id) == .giveFeedback }
+                .filter { app.orderBusinessStatus($0.id) == .giveFeedback }
                 .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             
             let ordersToShipAndSendDriveThru = allOrders
                 .filter {
-                    appController.orderBusinessStatus($0.id) == .ship
-                    && appController.orderChecklistStamping($0.id)
-                    && appController.orderChecklistShippingTransaction($0.id)
-                    && appController.orderChecklistTrackingNo($0.id)
+                    app.orderBusinessStatus($0.id) == .ship
+                    && app.orderChecklistStamping($0.id)
+                    && app.orderChecklistShippingTransaction($0.id)
+                    && app.orderChecklistTrackingNo($0.id)
                 }
                 .sorted { $0.date > $1.date }
             
@@ -55,11 +55,11 @@ struct OrdersActionsView: View {
                                 }
                                 Grid(alignment: .leading) {
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistCompleted(order.id))
+                                        CheckStatusView(status: app.orderChecklistCompleted(order.id))
                                         Text("Mark completed")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistSellerFeedback(order.id))
+                                        CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
                                         Text("Give feedback")
                                     }
                                 }
@@ -83,7 +83,7 @@ struct OrdersActionsView: View {
                                 }
                                 Grid(alignment: .leading) {
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistSellerFeedback(order.id))
+                                        CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
                                         Text("Give feedback")
                                     }
                                 }
@@ -107,11 +107,11 @@ struct OrdersActionsView: View {
                                 }
                                 Grid(alignment: .leading) {
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistShipped(order.id))
+                                        CheckStatusView(status: app.orderChecklistShipped(order.id))
                                         Text("Mark shipped")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistDriveThru(order.id))
+                                        CheckStatusView(status: app.orderChecklistDriveThru(order.id))
                                         Text("Send drive thru")
                                     }
                                 }
@@ -124,15 +124,15 @@ struct OrdersActionsView: View {
                     Button {
                         Task {
                             for order in ordersThatNeedCompletedAndGiveFeedback {
-                                await appController.updateOrderStatus(orderId: order.id, status: .completed)
-                                await appController.postPraiseOrderFeedback(orderId: order.id)
+                                await app.updateOrderStatus(orderId: order.id, status: .completed)
+                                await app.postPraiseOrderFeedback(orderId: order.id)
                             }
                             for order in ordersThatNeedGiveFeedback {
-                                await appController.postPraiseOrderFeedback(orderId: order.id)
+                                await app.postPraiseOrderFeedback(orderId: order.id)
                             }
                             for order in ordersToShipAndSendDriveThru {
-                                await appController.updateOrderStatus(orderId: order.id, status: .shipped)
-                                await appController.sendDriveThru(orderId: order.id)
+                                await app.updateOrderStatus(orderId: order.id, status: .shipped)
+                                await app.sendDriveThru(orderId: order.id)
                             }
                         }
                     } label: {

@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadContentView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
 
     @State var addViewVisible: Bool = false
     
@@ -27,12 +27,12 @@ struct UploadContentView: View {
                     
                     LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                         
-                        let uploadItems = appController.uploadItems
+                        let uploadItems = app.uploadItems
                         
                             .sorted { item1, item2 in
                                 
-                                let rem1 = appController.inventory(for: item1)?.remarks ?? appController.inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
-                                let rem2 = appController.inventory(for: item2)?.remarks ?? appController.inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
+                                let rem1 = app.inventory(for: item1)?.remarks ?? app.inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
+                                let rem2 = app.inventory(for: item2)?.remarks ?? app.inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
                                 
                                 switch (rem1, rem2) {
                                     
@@ -77,7 +77,7 @@ struct UploadContentView: View {
         .navigationTitle("Upload")
         .onAppear {
             Task {
-                await appController.reloadInventories()
+                await app.reloadInventories()
             }
         }
     }

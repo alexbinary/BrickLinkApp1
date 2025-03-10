@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderFeedbackView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let orderId: OrderDetails.ID
     
@@ -15,9 +15,9 @@ struct OrderFeedbackView: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
-            if let order = appController.orderDetails(forOrderWithId: orderId) {
+            if let order = app.orderDetails(forOrderWithId: orderId) {
                 
-                let orderFeedbacks = appController.orderFeedbacks(forOrderWithId: order.id)
+                let orderFeedbacks = app.orderFeedbacks(forOrderWithId: order.id)
                 
                 Table(orderFeedbacks.sorted { $0.dateRated < $1.dateRated }) {
                     TableColumn("From", value: \.from)
@@ -34,17 +34,17 @@ struct OrderFeedbackView: View {
                 HStack {
                     Button {
                         Task {
-                            await appController.postPraiseOrderFeedback(orderId: order.id)
+                            await app.postPraiseOrderFeedback(orderId: order.id)
                         }
                     } label: {
                         Text("Post Praise feedback")
                     }
                     Button {
-                        self.appController.validateOrderWithoutFeedback(orderId: order.id)
+                        self.app.validateOrderWithoutFeedback(orderId: order.id)
                     } label: {
                         Text("Validate without feedback")
                     }
-                    if let date = appController.dateOrderValidatedWithoutFeedback(orderId: order.id) {
+                    if let date = app.dateOrderValidatedWithoutFeedback(orderId: order.id) {
                         Text("Validated without feedback on")
                         Text(date, format: .dateTime)
                     }
@@ -65,6 +65,6 @@ struct OrderFeedbackView: View {
     
     func loadOrder() async {
         
-        await appController.loadOrderDetailsIfMissing(forOrderWithId: orderId)
+        await app.loadOrderDetailsIfMissing(forOrderWithId: orderId)
     }
 }

@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadAddView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
 
     @State var type: BrickLinkItemType = .part
     @State var ref: String = ""
@@ -61,7 +61,7 @@ struct UploadAddView: View {
                             
                             Picker("Color", selection: $colorId) {
                                 
-                                ForEach(appController.allColors) { color in
+                                ForEach(app.allColors) { color in
                                     
                                     Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
                                         .tag(color.id)
@@ -99,7 +99,7 @@ struct UploadAddView: View {
                             }()
                             
                             Button {
-                                appController.addUploadItem(UploadItem(
+                                app.addUploadItem(UploadItem(
                                     type: type,
                                     ref: ref,
                                     name: name,
@@ -114,7 +114,7 @@ struct UploadAddView: View {
                             }
                         }
                             
-                        AsyncImage(url: appController.imageUrl(forItemType: type, ref: ref, colorId: colorId))
+                        AsyncImage(url: app.imageUrl(forItemType: type, ref: ref, colorId: colorId))
                             .frame(maxWidth: 100, maxHeight: 100)
                     }
                 }
@@ -130,7 +130,7 @@ struct UploadAddView: View {
                             .lineLimit(10, reservesSpace: true)
                         
                         Button {
-                            appController.importUploadList(fromXml: self.importText)
+                            app.importUploadList(fromXml: self.importText)
                             self.importText = ""
                         } label: {
                             Text("Import")
@@ -150,7 +150,7 @@ struct UploadAddView: View {
         
         self.catalogResult = .loading
         
-        if let catalog = await appController.getCatalogItem(forItemType: type, ref: ref) {
+        if let catalog = await app.getCatalogItem(forItemType: type, ref: ref) {
             
             self.catalogResult = .found(catalog)
         } else {

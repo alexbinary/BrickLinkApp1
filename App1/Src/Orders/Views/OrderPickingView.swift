@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderPickingView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let orderId: OrderDetails.ID
     
@@ -15,9 +15,9 @@ struct OrderPickingView: View {
             
         VStack(alignment: .leading) {
             
-            let total = appController.orderItems(forOrderWithId: orderId).count
-            let picked = appController.pickedItems(forOrderWithId: orderId).count
-            let verified = appController.verifiedItems(forOrderWithId: orderId).count
+            let total = app.orderItems(forOrderWithId: orderId).count
+            let picked = app.pickedItems(forOrderWithId: orderId).count
+            let verified = app.verifiedItems(forOrderWithId: orderId).count
             
             let allPicked = picked == total
             let allVerified = verified == total
@@ -121,7 +121,7 @@ struct OrderPickingView: View {
         }
         .onAppear {
             Task {
-                await appController.reloadInventories()
+                await app.reloadInventories()
             }
         }
     }
@@ -152,7 +152,7 @@ struct OrderPickingView: View {
                 
                 GridRow(alignment: .top) {
                     
-                    AsyncImage(url: appController.imageUrl(for: item))
+                    AsyncImage(url: app.imageUrl(for: item))
                         .frame(minHeight: 70, maxHeight: 70, alignment: .top)
                         .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                     
@@ -169,13 +169,13 @@ struct OrderPickingView: View {
                 
                     Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
                     HStack {
-                        appController.color(for: item).frame(width: 18, height: 18)
-                        Text(appController.colorName(for: item))
+                        app.color(for: item).frame(width: 18, height: 18)
+                        Text(app.colorName(for: item))
                     }.gridColumnAlignment(.leading)
                 }
             }
             
-            let itemIsPicked = appController.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+            let itemIsPicked = app.pickedItems(forOrderWithId: item.orderId).contains(item.id)
             
             Grid(alignment: .leading) {
                 
@@ -189,7 +189,7 @@ struct OrderPickingView: View {
                     Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
                     Text(item.quantity).font(.title2)
                     HStack(spacing: 0) {
-                        let stock = appController.inStockQuantity(for: item)
+                        let stock = app.inStockQuantity(for: item)
                         let qty = Int(item.quantity)!
                         let (before, after) = {
                             if !itemIsPicked {
@@ -216,25 +216,25 @@ struct OrderPickingView: View {
                     switch button {
                     case .pick:
                         Button {
-                            appController.pickItem(forOrderWithId: item.orderId, item: item.id)
+                            app.pickItem(forOrderWithId: item.orderId, item: item.id)
                         } label: {
                             Text("Pick")
                         }
                     case .unpick:
                         Button {
-                            appController.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                            app.unpickItem(forOrderWithId: item.orderId, item: item.id)
                         } label: {
                             Text("Unpick")
                         }
                     case .verify:
                         Button {
-                            appController.verifyItem(forOrderWithId: item.orderId, item: item.id)
+                            app.verifyItem(forOrderWithId: item.orderId, item: item.id)
                         } label: {
                             Text("Verify")
                         }
                     case .unverify:
                         Button {
-                            appController.unverifyItem(forOrderWithId: item.orderId, item: item.id)
+                            app.unverifyItem(forOrderWithId: item.orderId, item: item.id)
                         } label: {
                             Text("Unverify")
                         }
@@ -252,26 +252,26 @@ struct OrderPickingView: View {
     
     func loadOrder() async {
         
-        await appController.loadOrderDetailsIfMissing(forOrderWithId: orderId)
+        await app.loadOrderDetailsIfMissing(forOrderWithId: orderId)
     }
     
     
     func loadOrderItems() async {
         
-        await appController.loadOrderItemsIfMissing(forOrderWithId: orderId)
+        await app.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     
     var orderItems: [OrderItem] {
-        appController.orderItems(forOrderWithId: orderId)
+        app.orderItems(forOrderWithId: orderId)
     }
     
     var pickedItems: [OrderItem.ID] {
-        appController.pickedItems(forOrderWithId: orderId)
+        app.pickedItems(forOrderWithId: orderId)
     }
     
     var verifiedItems: [OrderItem.ID] {
-        appController.verifiedItems(forOrderWithId: orderId)
+        app.verifiedItems(forOrderWithId: orderId)
     }
     
     

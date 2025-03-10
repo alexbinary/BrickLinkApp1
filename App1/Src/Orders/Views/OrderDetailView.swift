@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderDetailView: View {
     
     
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var app: AppController
     
     let orderId: OrderDetails.ID
     
@@ -17,8 +17,8 @@ struct OrderDetailView: View {
             
         VStack {
             
-            if let order = appController.orderDetails(forOrderWithId: orderId),
-               let orderSummary = appController.orderSummary(forOrderWithId: orderId) {
+            if let order = app.orderDetails(forOrderWithId: orderId),
+               let orderSummary = app.orderSummary(forOrderWithId: orderId) {
                 
                 HStack(alignment: .top, spacing: 12) {
                     
@@ -97,11 +97,11 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
                                     
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistPayment(orderId))
+                                        CheckStatusView(status: app.orderChecklistPayment(orderId))
                                         Text("Payment received")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistIncomeTransaction(orderId))
+                                        CheckStatusView(status: app.orderChecklistIncomeTransaction(orderId))
                                         Text("Register transaction")
                                     }
 
@@ -109,10 +109,10 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
 
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistPicking(orderId))
+                                        CheckStatusView(status: app.orderChecklistPicking(orderId))
                                         
-                                        let picked = appController.pickedItems(forOrderWithId: orderId).count
-                                        let total = appController.orderItems(forOrderWithId: orderId).count
+                                        let picked = app.pickedItems(forOrderWithId: orderId).count
+                                        let total = app.orderItems(forOrderWithId: orderId).count
                                         
                                         
                                         if picked == total {
@@ -123,10 +123,10 @@ struct OrderDetailView: View {
                                         }
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistVerification(orderId))
+                                        CheckStatusView(status: app.orderChecklistVerification(orderId))
                                         
-                                        let verified = appController.verifiedItems(forOrderWithId: orderId).count
-                                        let total = appController.orderItems(forOrderWithId: orderId).count
+                                        let verified = app.verifiedItems(forOrderWithId: orderId).count
+                                        let total = app.orderItems(forOrderWithId: orderId).count
                                         
                                         if verified == total {
                                             Text("Verify items")
@@ -136,7 +136,7 @@ struct OrderDetailView: View {
                                         }
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistPacked(orderId))
+                                        CheckStatusView(status: app.orderChecklistPacked(orderId))
                                         Text("Pack order")
                                     }
 
@@ -144,23 +144,23 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
 
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistStamping(orderId))
+                                        CheckStatusView(status: app.orderChecklistStamping(orderId))
                                         Text("Validate stamping")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistShippingTransaction(orderId))
+                                        CheckStatusView(status: app.orderChecklistShippingTransaction(orderId))
                                         Text("Register transaction")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistTrackingNo(orderId))
+                                        CheckStatusView(status: app.orderChecklistTrackingNo(orderId))
                                         Text("Input tracking no")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistShipped(orderId))
+                                        CheckStatusView(status: app.orderChecklistShipped(orderId))
                                         Text("Mark Shipped")
                                     }
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistDriveThru(orderId))
+                                        CheckStatusView(status: app.orderChecklistDriveThru(orderId))
                                         Text("Send drive thru")
                                     }
                                     
@@ -169,7 +169,7 @@ struct OrderDetailView: View {
                                     
                                     GridRow {
                                         CheckStatusView(
-                                            status: appController.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
+                                            status: app.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
                                             mandatory: false
                                         )
                                         Text("Picked up by transported")
@@ -179,7 +179,7 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
 
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistReceived(orderId))
+                                        CheckStatusView(status: app.orderChecklistReceived(orderId))
                                         Text("Received")
                                     }
 
@@ -187,13 +187,13 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
 
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistCompleted(orderId))
+                                        CheckStatusView(status: app.orderChecklistCompleted(orderId))
                                         Text("Completed")
                                     }
 
                                     GridRow {
                                         CheckStatusView(
-                                            status: appController.orderChecklistBuyerFeedback(orderId),
+                                            status: app.orderChecklistBuyerFeedback(orderId),
                                             mandatory: false
                                         )
                                         Text("Buyer feedback")
@@ -203,7 +203,7 @@ struct OrderDetailView: View {
                                         .padding(.vertical, padding)
 
                                     GridRow {
-                                        CheckStatusView(status: appController.orderChecklistSellerFeedback(orderId))
+                                        CheckStatusView(status: app.orderChecklistSellerFeedback(orderId))
                                         Text("Give feedback")
                                     }
                                     
@@ -294,7 +294,7 @@ struct OrderDetailView: View {
     
     func refreshOrder() async {
         
-        await appController.forceRefreshOrder(orderId: orderId)
+        await app.forceRefreshOrder(orderId: orderId)
     }
 }
 
