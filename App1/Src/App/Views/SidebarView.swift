@@ -6,14 +6,17 @@ import SwiftUI
 struct SidebarView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    @Binding var selectedItem: SidebarItem
+    @Environment(NavigationController.self)
+    var nav
     
     
     var body: some View {
             
-        List(selection: $selectedItem) {
+        @Bindable var nav = nav
+        List(selection: $nav.sidebar) {
             
             Section("Operations") {
                 

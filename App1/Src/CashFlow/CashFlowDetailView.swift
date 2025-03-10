@@ -7,15 +7,20 @@ import Charts
 struct CashFlowDetailView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
+    @Environment(NavigationController.self)
+    var nav
     
-    let selectedTransactions: Set<Transaction.ID>
     
     @State private var selectedMonth: String? = nil
     @State private var monthPositionRangesByMonth: [String: ClosedRange<CGFloat>] = [:]
     
     @State private var selectedTransaction: Transaction? = nil
+    
+    
+    var selectedTransactions: Set<Transaction.ID> { nav.selectedTransactions }
     
     
     var body: some View {

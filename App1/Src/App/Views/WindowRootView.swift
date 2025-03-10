@@ -6,26 +6,20 @@ import SwiftUI
 struct WindowRootView: View {
     
     
-    @State var selectedSidebarItem: SidebarItem = Secrets.Defaults.selectedSidebarItem
+    @State
+    var navigationController = NavigationController()
     
-    @State var ordersActiveNavigationPath: [OrderSummary.ID] = Secrets.Defaults.ordersActiveNavigationPath
-    @State var resultSelectedOrderIds: Set<OrderSummary.ID> = Secrets.Defaults.resultSelectedOrderIds
-    @State var selectedTransactions: Set<Transaction.ID> = []
-        
+    
     var body: some View {
         
         NavigationSplitView {
             
-            SidebarView(selectedItem: $selectedSidebarItem)
+            SidebarView()
             
         } detail: {
             
-            WindowContentView(
-                selectedSidebarItem: selectedSidebarItem,
-                ordersActiveNavigationPath: $ordersActiveNavigationPath,
-                resultSelectedOrderIds: $resultSelectedOrderIds,
-                selectedTransactions: $selectedTransactions
-            )
+            WindowContentView()
         }
+        .environment(navigationController)
     }
 }

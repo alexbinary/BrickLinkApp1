@@ -5,12 +5,13 @@ import SwiftUI
 struct OrdersListView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    @Binding var ordersActiveNavigationPath: [OrderSummary.ID]
+    @Environment(NavigationController.self)
+    var nav
     
     @State var refreshing: Bool = false
-    
     @State var searchText = ""
     @State var popoverPresented: Bool = false
     
@@ -178,7 +179,7 @@ struct OrdersListView: View {
         
         OrderListItemView(orderId: orderId)
             .onTapGesture {
-                ordersActiveNavigationPath.append(orderId)
+                nav.pushOrder(orderId)
             }
             .padding([.leading, .trailing])
     }

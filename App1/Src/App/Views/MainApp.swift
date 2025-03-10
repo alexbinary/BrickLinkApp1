@@ -6,7 +6,8 @@ import SwiftUI
 struct MainApp: App {
     
     
-    @StateObject private var appController = AppController()
+    @StateObject
+    private var appController = AppController()
     
     
     var body: some Scene {

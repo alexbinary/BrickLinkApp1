@@ -6,40 +6,45 @@ import SwiftUI
 struct WindowContentView: View {
     
     
-    let selectedSidebarItem: SidebarItem
-    
-    @Binding var ordersActiveNavigationPath: [OrderSummary.ID]
-    @Binding var resultSelectedOrderIds: Set<OrderSummary.ID>
-    @Binding var selectedTransactions: Set<Transaction.ID>
+    @Environment(NavigationController.self)
+    var nav
         
+    
     var body: some View {
         
-        switch selectedSidebarItem {
+        @Bindable var nav = nav
+        
+        switch nav.sidebar {
             
         case .orders:
-            NavigationStack(path: $ordersActiveNavigationPath) {
-                OrdersListView(ordersActiveNavigationPath: $ordersActiveNavigationPath)
+            
+            NavigationStack(path: $nav.orders) {
+                OrdersListView()
             }
             
         case .upload:
+            
             UploadContentView()
             
         case .resultDashboard:
+            
             HSplitView {
-                ResultContentView(selectedOrderIds: $resultSelectedOrderIds)
+                ResultContentView()
                 ResultDashboardView()
             }
             
         case .resultHistory:
+            
             HSplitView {
-                ResultContentView(selectedOrderIds: $resultSelectedOrderIds)
-                ResultHistoryView(selectedOrderIds: $resultSelectedOrderIds)
+                ResultContentView()
+                ResultHistoryView()
             }
             
         case .cashFlow:
+            
             HSplitView {
-                CashFlowContentView(selectedTransactions: $selectedTransactions)
-                CashFlowDetailView(selectedTransactions: selectedTransactions)
+                CashFlowContentView()
+                CashFlowDetailView()
             }
         }
     }

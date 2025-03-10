@@ -7,9 +7,12 @@ import Charts
 struct ResultHistoryView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    @Binding var selectedOrderIds: Set<OrderDetails.ID>
+    @Environment(NavigationController.self)
+    var nav
+    
     
     @State var firstVisibleMonth: BusinessMonth = .current
     @State var lastVisibleMonth: BusinessMonth = .current
@@ -24,8 +27,9 @@ struct ResultHistoryView: View {
     @State var selectedLeastProfitableOrder: OrderDetails.ID? = nil
     
     
+    var selectedOrderIds: Set<OrderDetails.ID> { nav.resultSelectedOrderIds }
+    
     var orders: [OrderDetails] {
-        
         (
             !selectedOrderIds.isEmpty
                 ? app.orderDetails.filter { selectedOrderIds.contains($0.id) }
@@ -71,7 +75,7 @@ struct ResultHistoryView: View {
                     Text("􀱢 View restricted to \(n) selected order\(n == 1 ? "" : "s")")
                     
                     Button {
-                        self.selectedOrderIds.removeAll()
+                        nav.resultClearSelectedOrder()
                     } label: {
                         Text("􀁠")
                     }

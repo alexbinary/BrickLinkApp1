@@ -6,14 +6,18 @@ import SwiftUI
 struct ResultContentView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    @Binding var selectedOrderIds: Set<OrderSummary.ID>
+    @Environment(NavigationController.self)
+    var nav
     
     
     var body: some View {
         
-        Table(of: OrderDetails.self, selection: $selectedOrderIds) {
+        @Bindable var nav = nav
+        
+        Table(of: OrderDetails.self, selection: $nav.resultSelectedOrderIds) {
             
             TableColumn("ID", value: \.id)
             

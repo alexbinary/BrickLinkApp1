@@ -6,14 +6,21 @@ import SwiftUI
 struct CashFlowContentView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    @Binding var selectedTransactions: Set<Transaction.ID>
+    @Environment(NavigationController.self)
+    var nav
     
     
     var body: some View {
         
-        TransactionListView(transactions: app.transactions, selectedTransactions: $selectedTransactions)
-            .navigationTitle("Cash Flow")
+        @Bindable var nav = nav
+        
+        TransactionListView(
+            transactions: app.transactions,
+            selectedTransactions: $nav.selectedTransactions
+        )
+        .navigationTitle("Cash Flow")
     }
 }
