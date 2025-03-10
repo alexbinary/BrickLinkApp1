@@ -5,18 +5,23 @@ import SwiftUI
 class AppController: ObservableObject {
     
     
-    private let dataStore: DataStore
-    private let blCredentials: BrickLinkAPICredentials
+    private let dataStore: DataStore = {
+        
+        let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")
+        return DataStore(dataFileUrl: URL(fileURLWithPath: path))
+    }()
+    
+    private let blCredentials = BrickLinkAPICredentials(
+        
+        consumerKey: Secrets.BrickLink.consumerKey,
+        consumerSecret: Secrets.BrickLink.consumerSecret,
+        
+        tokenValue: Secrets.BrickLink.tokenValue,
+        tokenSecret: Secrets.BrickLink.tokenSecret
+    )
     
     
-    init(
-        dataStore: DataStore,
-        blCredentials: BrickLinkAPICredentials
-    ) {
-        
-        self.dataStore = dataStore
-        self.blCredentials = blCredentials
-        
+    init() {
         Task {
             await parallel([
                 { await self.loadColors() },

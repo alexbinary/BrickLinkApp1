@@ -465,23 +465,6 @@ struct OrderShippingView: View {
 
 
 #Preview {
-    
-    let dataFileUrl = URL(fileURLWithPath: FileManager.default.currentDirectoryPath.appending("/data/data.json5"))
-    let dataStore = DataStore(dataFileUrl: dataFileUrl)
-    
-    let blCredentials = BrickLinkAPICredentials(
-        
-        consumerKey: Secrets.BrickLink.consumerKey,
-        consumerSecret: Secrets.BrickLink.consumerSecret,
-        
-        tokenValue: Secrets.BrickLink.tokenValue,
-        tokenSecret: Secrets.BrickLink.tokenSecret
-    )
-    
-    let appController = AppController(
-        dataStore: dataStore, blCredentials: blCredentials
-    )
-    
     OrderShippingView(orderId: "27236825")
-        .environmentObject(appController)
+        .environmentObject(AppController())
 }

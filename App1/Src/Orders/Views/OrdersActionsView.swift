@@ -147,23 +147,7 @@ struct OrdersActionsView: View {
 
 
 #Preview {
-    
-    let dataFileUrl = URL(fileURLWithPath: FileManager.default.currentDirectoryPath.appending("/data/data.json5"))
-    let dataStore = DataStore(dataFileUrl: dataFileUrl)
-    
-    let blCredentials = BrickLinkAPICredentials(
-        
-        consumerKey: Secrets.BrickLink.consumerKey,
-        consumerSecret: Secrets.BrickLink.consumerSecret,
-        
-        tokenValue: Secrets.BrickLink.tokenValue,
-        tokenSecret: Secrets.BrickLink.tokenSecret
-    )
-    
-    let appController = AppController(
-        dataStore: dataStore, blCredentials: blCredentials
-    )
-    
+    let appController = AppController()
     OrdersActionsView(allOrders: appController.orderSummaries)
         .environmentObject(appController)
 }
