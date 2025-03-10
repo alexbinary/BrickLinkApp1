@@ -139,7 +139,7 @@ struct OrderPickingView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(Color(nsColor: .windowBackgroundColor).opacity(0.90))
+        .background(Color.windowBackgroundColor.opacity(0.90))
     }
     
     
@@ -244,8 +244,8 @@ struct OrderPickingView: View {
         }
         .padding()
         .roundedContainer(
-            backgroundColor: Color(nsColor: .secondarySystemFill),
-            borderColor: Color(nsColor: .tertiarySystemFill)
+            backgroundColor: .secondarySystemFill,
+            borderColor: .tertiarySystemFill
         )
     }
     

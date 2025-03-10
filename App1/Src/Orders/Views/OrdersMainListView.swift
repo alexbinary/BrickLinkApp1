@@ -92,7 +92,7 @@ struct OrdersMainListView: View {
             Spacer()
         }
         .padding()
-        .background(Color(nsColor: .windowBackgroundColor).opacity(0.90))
+        .background(Color.windowBackgroundColor.opacity(0.90))
     }
     
     

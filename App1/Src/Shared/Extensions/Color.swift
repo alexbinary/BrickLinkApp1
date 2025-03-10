@@ -20,4 +20,10 @@ extension Color {
 
         self.init(NSColor(red: r, green: g, blue: b, alpha: 1))
     }
+    
+    
+    static let windowBackgroundColor = Color(nsColor: .windowBackgroundColor)
+    static let secondarySystemFill = Color(nsColor: .secondarySystemFill)
+    static let tertiarySystemFill = Color(nsColor: .tertiarySystemFill)
+    static let quaternarySystemFill = Color(nsColor: .quaternarySystemFill)
 }

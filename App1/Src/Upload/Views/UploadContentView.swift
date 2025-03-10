@@ -133,6 +133,6 @@ struct UploadContentView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(Color(nsColor: .windowBackgroundColor).opacity(0.90))
+        .background(Color.windowBackgroundColor.opacity(0.90))
     }
 }

@@ -32,29 +32,29 @@ extension View {
         case .primary:
             
             self.roundedContainer(
-                backgroundColor: Color(nsColor: .quaternarySystemFill),
-                borderColor: Color(nsColor: .tertiarySystemFill)
+                backgroundColor: .quaternarySystemFill,
+                borderColor: .tertiarySystemFill
             )
             
         case .secondary:
             
             self.roundedContainer(
-                backgroundColor: Color(nsColor: .windowBackgroundColor),
-                borderColor: Color(nsColor: .secondarySystemFill)
+                backgroundColor: .windowBackgroundColor,
+                borderColor: .secondarySystemFill
             )
             
         case .outline:
             
             self.roundedContainer(
                 backgroundColor: .clear,
-                borderColor: Color(nsColor: .tertiarySystemFill)
+                borderColor: .tertiarySystemFill
             )
             
         case .info:
             
             self.roundedContainer(
-                backgroundColor: Color(nsColor: .secondarySystemFill).opacity(0.7),
-                borderColor: Color(nsColor: .tertiarySystemFill)
+                backgroundColor: .secondarySystemFill.opacity(0.7),
+                borderColor: .tertiarySystemFill
             )
             
         case .tag(let color):

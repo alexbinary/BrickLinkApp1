@@ -141,8 +141,8 @@ struct UploadedItemView: View {
         }
         .padding()
         .roundedContainer(
-            backgroundColor: Color(nsColor: hover ? .secondarySystemFill : .tertiarySystemFill),
-            borderColor: Color(nsColor: .tertiarySystemFill)
+            backgroundColor: hover ? .secondarySystemFill : .tertiarySystemFill,
+            borderColor: .tertiarySystemFill
         )
         .onHover { hover in
             self.hover = hover
