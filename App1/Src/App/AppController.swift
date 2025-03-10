@@ -120,6 +120,12 @@ class AppController: ObservableObject {
     }
     
     
+    public func orderSummaries(matching searchText: String) -> [OrderSummary] {
+        
+        orderSummaries.filter { $0.matches(searchText) }
+    }
+    
+    
     private func loadOrderSummaries() async {
         
         print("Loading orders")

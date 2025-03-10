@@ -12,14 +12,13 @@ struct OrdersListView: View {
     var nav
     
     @State var refreshing: Bool = false
+    @State var actionPopoverPresented: Bool = false
     @State var searchText = ""
-    @State var popoverPresented: Bool = false
     
     
     var body: some View {
         
-        let allOrders = app.orderSummaries
-            .filter { $0.matches(searchText) }
+        let orders = app.orderSummaries(matching: searchText)
         
         ScrollView {
             
@@ -27,54 +26,54 @@ struct OrdersListView: View {
                 
                 section(
                     header: "􁁿 In transit for 30+ days",
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id) }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
                     header: OrderBusinessStatus.giveFeedback.descriptionWithPicto,
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .giveFeedback }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
                     header: OrderBusinessStatus.validatePayment.descriptionWithPicto,
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .validatePayment }
                         .sorted { $0.date > $1.date }
                 )
                 section(
                     header: OrderBusinessStatus.pickAndPack.descriptionWithPicto,
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .pickAndPack }
                         .sorted { $0.lots < $1.lots }
                 )
                 section(
                     header: OrderBusinessStatus.ship.descriptionWithPicto,
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .ship }
                         .sorted { $0.date > $1.date }
                 )
                 section(
                     header: OrderBusinessStatus.received.descriptionWithPicto,
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .received }
                         .sorted { $0.dateStatusChanged < $1.dateStatusChanged }
                 )
                 section(
                     header: OrderBusinessStatus.inTransit.descriptionWithPicto,
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .inTransit && !app.orderChecklistUnchangedFor30Days($0.id) }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 section(
                     header: "􀐫 Recently closed",
-                    orders: allOrders
+                    orders: orders
                         .filter { app.orderBusinessStatus($0.id) == .closed && !app.orderChecklistUnchangedFor30Days($0.id) }
                         .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 )
                 
-                let closedOrders = allOrders
+                let closedOrders = orders
                     .filter { app.orderBusinessStatus($0.id) == .closed && app.orderChecklistUnchangedFor30Days($0.id) }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
                 
@@ -91,12 +90,12 @@ struct OrdersListView: View {
         .toolbar {
             
             Button {
-                popoverPresented.toggle()
+                actionPopoverPresented.toggle()
             } label: {
                 Text("􀈟").padding(.horizontal)
             }
-            .popover(isPresented: $popoverPresented, arrowEdge: .bottom) {
-                OrdersActionsView(allOrders: allOrders)
+            .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
+                OrdersActionsView(allOrders: orders)
             }
             
             Button {
