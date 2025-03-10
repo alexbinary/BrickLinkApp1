@@ -17,21 +17,12 @@ struct SidebarView: View {
             
             Section("Operations") {
                 
-                let actionOrders = app.orderSummaries.filter {
-                    
-                    app.orderBusinessStatus($0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
-                    ||
-                    (app.orderBusinessStatus($0.id) == .inTransit && app.orderChecklistUnchangedFor30Days($0.id))
-                }
-                
                 Label("Orders", systemImage: "list.bullet")
-                    .badge(actionOrders.count)
+                    .badge(app.actionOrders.count)
                     .tag(SidebarItem.orders)
                 
-                let uploadItems = app.uploadItems
-                
                 Label("Upload", systemImage: "tray.and.arrow.down")
-                    .badge(uploadItems.count)
+                    .badge(app.uploadItems.count)
                     .tag(SidebarItem.upload)
             }
             

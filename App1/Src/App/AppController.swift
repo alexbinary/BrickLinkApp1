@@ -1546,6 +1546,21 @@ class AppController: ObservableObject {
         
         await loadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
+    
+    
+    
+    // MARK: - Action orders
+    
+    
+    public var actionOrders: [OrderSummary] {
+        
+        orderSummaries.filter {
+            
+            orderBusinessStatus($0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
+            ||
+            (orderBusinessStatus($0.id) == .inTransit && orderChecklistUnchangedFor30Days($0.id))
+        }
+    }
 }
 
 
