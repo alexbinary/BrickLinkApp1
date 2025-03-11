@@ -1622,6 +1622,7 @@ class AppController: ObservableObject {
     
     
     var ordersThatNeedCompletedAndGiveFeedback: [OrderSummary] {
+        
         orderSummaries
             .filter { macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
@@ -1629,6 +1630,7 @@ class AppController: ObservableObject {
     
     
     var ordersThatNeedGiveFeedback: [OrderSummary] {
+        
         orderSummaries
             .filter { macroStatus(forOrderWithId: $0.id) == .giveFeedback }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
@@ -1636,6 +1638,7 @@ class AppController: ObservableObject {
     
     
     var ordersToShipAndSendDriveThru: [OrderSummary] {
+        
         orderSummaries
             .filter {
                 macroStatus(forOrderWithId: $0.id) == .ship
@@ -1644,6 +1647,14 @@ class AppController: ObservableObject {
                 && orderChecklistTrackingNo($0.id)
             }
             .sorted { $0.date > $1.date }
+    }
+    
+    
+    var ordersThatNeedAction: [OrderSummary] {
+        
+        ordersThatNeedCompletedAndGiveFeedback
+        + ordersThatNeedGiveFeedback
+        + ordersToShipAndSendDriveThru
     }
     
     

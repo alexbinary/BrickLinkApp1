@@ -14,13 +14,7 @@ struct OrdersActionsView: View {
         
         Group {
             
-            let ordersThatNeedCompletedAndGiveFeedback = app.ordersThatNeedCompletedAndGiveFeedback
-            let ordersThatNeedGiveFeedback = app.ordersThatNeedGiveFeedback
-            let ordersToShipAndSendDriveThru = app.ordersToShipAndSendDriveThru
-            
-            if ordersThatNeedCompletedAndGiveFeedback.isEmpty,
-               ordersThatNeedGiveFeedback.isEmpty,
-               ordersToShipAndSendDriveThru.isEmpty {
+            if app.ordersThatNeedAction.isEmpty {
                 
                 Text("All orders ok")
                 
@@ -28,83 +22,32 @@ struct OrdersActionsView: View {
                 
                 Grid(alignment: .leading, verticalSpacing: 12) {
                     
-                    if !ordersThatNeedCompletedAndGiveFeedback.isEmpty {
-                        
-                        Text("Complete & Give feedback (\(ordersThatNeedCompletedAndGiveFeedback.count))")
-                            .font(.title2)
-                        
-                        ForEach(ordersThatNeedCompletedAndGiveFeedback) { order in
-                            
-                            GridRow(alignment: .top) {
-                                VStack(alignment: .leading) {
-                                    Text(order.id)
-                                    Text(order.buyer)
-                                }
-                                Grid(alignment: .leading) {
-                                    GridRow {
-                                        CheckStatusView(status: app.orderChecklistCompleted(order.id))
-                                        Text("Mark completed")
-                                    }
-                                    GridRow {
-                                        CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
-                                        Text("Give feedback")
-                                    }
-                                }
-                            }
-                            
-                            Divider()
+                    sectionView(orders: app.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
+                        HStack {
+                            CheckStatusView(status: app.orderChecklistCompleted(order.id))
+                            Text("Mark completed")
+                        }
+                        HStack {
+                            CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
+                            Text("Give feedback")
                         }
                     }
                     
-                    if !ordersThatNeedGiveFeedback.isEmpty {
-                        
-                        Text("Give feedback (\(ordersThatNeedGiveFeedback.count))")
-                            .font(.title2)
-                        
-                        ForEach(ordersThatNeedGiveFeedback) { order in
-                            
-                            GridRow(alignment: .top) {
-                                VStack(alignment: .leading) {
-                                    Text(order.id)
-                                    Text(order.buyer)
-                                }
-                                Grid(alignment: .leading) {
-                                    GridRow {
-                                        CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
-                                        Text("Give feedback")
-                                    }
-                                }
-                            }
-                            
-                            Divider()
+                    sectionView(orders: app.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
+                        HStack {
+                            CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
+                            Text("Give feedback")
                         }
                     }
                     
-                    if !ordersToShipAndSendDriveThru.isEmpty {
-                        
-                        Text("Ship and send DT (\(ordersToShipAndSendDriveThru.count))")
-                            .font(.title2)
-                        
-                        ForEach(ordersToShipAndSendDriveThru) { order in
-                            
-                            GridRow(alignment: .top) {
-                                VStack(alignment: .leading) {
-                                    Text(order.id)
-                                    Text(order.buyer)
-                                }
-                                Grid(alignment: .leading) {
-                                    GridRow {
-                                        CheckStatusView(status: app.orderChecklistShipped(order.id))
-                                        Text("Mark shipped")
-                                    }
-                                    GridRow {
-                                        CheckStatusView(status: app.orderChecklistDriveThru(order.id))
-                                        Text("Send drive thru")
-                                    }
-                                }
-                            }
-                            
-                            Divider()
+                    sectionView(orders: app.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
+                        HStack {
+                            CheckStatusView(status: app.orderChecklistShipped(order.id))
+                            Text("Mark shipped")
+                        }
+                        HStack {
+                            CheckStatusView(status: app.orderChecklistDriveThru(order.id))
+                            Text("Send drive thru")
                         }
                     }
                     
@@ -117,6 +60,31 @@ struct OrdersActionsView: View {
             }
         }
         .padding()
+    }
+    
+    
+    @ViewBuilder
+    func sectionView(orders: [OrderSummary], title: String, @ViewBuilder content: @escaping (_ order: OrderSummary) -> some View) -> some View {
+    
+        if !orders.isEmpty {
+            
+            Text("\(title) (\(orders.count))").font(.title2)
+            
+            ForEach(orders) { order in
+                
+                GridRow(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        Text(order.id)
+                        Text(order.buyer)
+                    }
+                    VStack(alignment: .leading) {
+                        content(order)
+                    }
+                }
+                
+                Divider()
+            }
+        }
     }
 }
 
