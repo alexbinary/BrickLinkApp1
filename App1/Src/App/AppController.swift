@@ -1568,7 +1568,13 @@ class AppController: ObservableObject {
                 header: OrderMacroStatus.pickAndPack.descriptionWithPicto,
                 orders: orders
                     .filter { macroStatus(forOrderWithId: $0.id) == .pickAndPack }
-                    .sorted { $0.lots < $1.lots }
+                    .sorted {
+                        orderChecklistVerification($0.id) != orderChecklistVerification($1.id)
+                        && orderChecklistVerification($0.id)
+                        ||
+                        orderChecklistVerification($0.id) != orderChecklistVerification($1.id)
+                        && $0.lots < $1.lots
+                    }
             ),
             .init(
                 header: OrderMacroStatus.ship.descriptionWithPicto,
