@@ -152,7 +152,7 @@ struct OrderPickingView: View {
                 
                 GridRow(alignment: .top) {
                     
-                    AsyncImage(url: app.imageUrl(for: item))
+                    AsyncImage(url: app.url(for: item))
                         .frame(minHeight: 70, maxHeight: 70, alignment: .top)
                         .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                     

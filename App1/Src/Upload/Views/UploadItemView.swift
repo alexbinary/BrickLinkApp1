@@ -50,7 +50,7 @@ struct UploadItemView: View {
                     
                     GridRow(alignment: .top) {
                         
-                        AsyncImage(url: app.imageUrl(forItemType: uploadItem.type, ref: uploadItem.ref, colorId: uploadItem.colorId))
+                        AsyncImage(url: app.url(forCatalogImageOfItemOfType: uploadItem.type, ref: uploadItem.ref, colorId: uploadItem.colorId))
                             .frame(minHeight: 70, maxHeight: 70, alignment: .top)
                             .frame(minWidth: 90, maxWidth: 90, alignment: .top)
                         

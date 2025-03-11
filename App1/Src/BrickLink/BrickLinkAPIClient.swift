@@ -39,19 +39,25 @@ struct BrickLinkAPIClient {
     }
     
     
-    static func catalogImageUrl(forPartWithRef ref: String, colorId: String) -> URL? {
+    static func url(forCatalogImageOfPartWithRef ref: String, colorId: String) -> URL? {
         
         return URL(string: "https://img.bricklink.com/P/\(colorId)/\(ref).jpg")
     }
     
     
-    static func catalogImageUrl(forMinifigWithRef ref: String) -> URL? {
+    static func url(forCalalogImageOfMinifigWithRef ref: String) -> URL? {
         
         return URL(string: "https://img.bricklink.com/M/\(ref).jpg")
     }
     
     
     // MARK: - Orders
+    
+    
+    static func url(forDetailsOfOrderWithId orderId: String) -> URL? {
+        
+        return URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(orderId)#/")
+    }
         
         
     static func fetchOrderSummaries(using credentials: BrickLinkAPICredentials) async -> [BrickLinkOrder] {

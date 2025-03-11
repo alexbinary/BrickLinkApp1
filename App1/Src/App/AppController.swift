@@ -213,6 +213,12 @@ class AppController: ObservableObject {
     }
     
     
+    public func url(forDetailsOfOrderWithId orderId: String) -> URL? {
+        
+        BrickLinkAPIClient.url(forDetailsOfOrderWithId: orderId)
+    }
+    
+    
     
     // MARK: - Order status, Tracking no, Drive thru
     
@@ -257,7 +263,7 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Shipping cost
+    // MARK: - Shipping
     
     
     public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
@@ -272,6 +278,13 @@ class AppController: ObservableObject {
         try! dataStore.save()
         
         self.objectWillChange.send()
+    }
+    
+    
+    public func orderIsShippedWithLaPoste(orderId: OrderSummary.ID) -> Bool {
+        
+        let orderDetails = orderDetails(forOrderWithId: orderId)!
+        return orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste)
     }
     
     
@@ -386,32 +399,32 @@ class AppController: ObservableObject {
     }
     
     
-    public func imageUrl(forItemType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+    public func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
         
         switch type {
         case .part:
-            return imageUrl(forPartWithRef: ref, colorId: colorId)
+            return url(forCatalogImageOfPartWithRef: ref, colorId: colorId)
         case .minifig:
-            return imageUrl(forMinifigWithRef: ref)
+            return url(forCatalogImageOfMinifigWithRef: ref)
         }
     }
     
     
-    public func imageUrl(forPartWithRef ref: String, colorId: String) -> URL? {
+    public func url(forCatalogImageOfPartWithRef ref: String, colorId: String) -> URL? {
         
-        BrickLinkAPIClient.catalogImageUrl(forPartWithRef: ref, colorId: colorId)
+        BrickLinkAPIClient.url(forCatalogImageOfPartWithRef: ref, colorId: colorId)
     }
     
     
-    public func imageUrl(forMinifigWithRef ref: String) -> URL? {
+    public func url(forCatalogImageOfMinifigWithRef ref: String) -> URL? {
         
-        BrickLinkAPIClient.catalogImageUrl(forMinifigWithRef: ref)
+        BrickLinkAPIClient.url(forCalalogImageOfMinifigWithRef: ref)
     }
     
     
-    public func imageUrl(for item: OrderItem) -> URL? {
+    public func url(for item: OrderItem) -> URL? {
         
-        return imageUrl(forItemType: item.type, ref: item.ref, colorId: item.colorId)
+        return url(forCatalogImageOfItemOfType: item.type, ref: item.ref, colorId: item.colorId)
     }
     
     
@@ -470,6 +483,18 @@ class AppController: ObservableObject {
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
         dataStore.orderFeedbacksByOrderId[orderId] ?? []
+    }
+    
+    
+    public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+        
+        orderFeedbacks(forOrderWithId: orderId).buyerFeedback()
+    }
+    
+    
+    public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+        
+        orderFeedbacks(forOrderWithId: orderId).sellerFeedback()
     }
     
     

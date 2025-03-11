@@ -29,8 +29,8 @@ struct OrderDetailView: View {
                             Grid(alignment: .leading, verticalSpacing: 0) {
                                 
                                 GridRow {
-                                    Text("order").cardCaption()
-                                    Text("placed").cardCaption()
+                                    Text("order").captionSyle()
+                                    Text("placed").captionSyle()
                                     
                                 }
                                 GridRow {
@@ -44,8 +44,8 @@ struct OrderDetailView: View {
                                 }
                             
                                 GridRow {
-                                    Text("status").cardCaption()
-                                    Text("changed").cardCaption()
+                                    Text("status").captionSyle()
+                                    Text("changed").captionSyle()
                                 }
                                 GridRow {
                                     Text(order.status.rawValue).font(.title3)

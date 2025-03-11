@@ -9,15 +9,23 @@ struct FeedbackRatingView: View {
     let feedback: Feedback
     
     
+    init(_ feedback: Feedback) {
+        self.feedback = feedback
+    }
+    
+    
     var body: some View {
         
-        let rating = feedback.rating
-        if rating == 0 {
-            Text("􀉿")
-        } else if rating == 2 {
-            Text("􀊁")
-        } else {
-            Text("Neutral")
+        Group {
+            switch feedback.rating {
+            case 0:
+                Text("􀉿")
+            case 2:
+                Text("􀊁")
+            default:
+                Text("Neutral")
+            }
         }
+        .help(feedback.comment)
     }
 }

@@ -265,7 +265,7 @@ struct OrderGeneralView: View {
             Table(app.orderItems(forOrderWithId: order.id)) {
                 
                 TableColumn("Image") { item in
-                    AsyncImage(url: app.imageUrl(for: item))
+                    AsyncImage(url: app.url(for: item))
                         .frame(minHeight: 60)
                 }
                 TableColumn("Condition", value: \.condition)

@@ -73,7 +73,7 @@ struct OrdersMainListView: View {
             
         Section {
             ForEach(section.orders) { order in
-                itemView(order.id)
+                itemView(order)
             }
             Color.clear.frame(width: 0, height: 24)
             
@@ -97,10 +97,10 @@ struct OrdersMainListView: View {
     
     
     @ViewBuilder
-    func itemView(_ orderId: OrderSummary.ID) -> some View {
+    func itemView(_ order: OrderSummary) -> some View {
         
-        OrderListItemView(orderId: orderId)
-            .onTapGesture { nav.pushOrder(orderId) }
+        OrdersMainListItemView(order: order)
+            .onTapGesture { nav.pushOrder(order.id) }
             .padding([.leading, .trailing])
     }
 }
