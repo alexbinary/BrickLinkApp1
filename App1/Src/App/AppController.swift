@@ -449,7 +449,6 @@ class AppController: ObservableObject {
         
         return orderItems(forOrderWithId: orderId)
             .filter { !pickedItems.contains($0.id) }
-            .sorted { $0.location < $1.location }
     }
     
     
@@ -504,7 +503,6 @@ class AppController: ObservableObject {
         
         return orderItems(forOrderWithId: orderId)
             .filter { !verifiedItems.contains($0.id) }
-            .sorted { $0.location < $1.location }
     }
     
     
