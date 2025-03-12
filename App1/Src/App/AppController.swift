@@ -1611,7 +1611,7 @@ class AppController: ObservableObject {
                 header: OrderMacroStatus.received.descriptionWithPicto,
                 orders: orders
                     .filter { macroStatus(forOrderWithId: $0.id) == .received }
-                    .sorted { $0.dateStatusChanged < $1.dateStatusChanged }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
                 header: OrderMacroStatus.inTransit.descriptionWithPicto,
