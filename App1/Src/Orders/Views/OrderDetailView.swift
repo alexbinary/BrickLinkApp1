@@ -46,7 +46,7 @@ struct OrderDetailView: View {
                 
                 TabView {
                     
-                    OrderDetailGeneralView(order: order)
+                    OrderDetailGeneralView(order)
                     .padding()
                     .tabItem { Text("􀅴 General") }.tag("general")
                     
@@ -72,16 +72,5 @@ struct OrderDetailView: View {
         .padding()
         .onChange(of: order, initial: true) { Task { await app.forceRefreshOrder(orderId: order.id)} }
         .navigationTitle("Order \(order.id)")
-    }
-}
-
-
-
-extension View {
-    
-    
-    @ViewBuilder func checklistTitle() -> some View {
-        
-        self.font(.title3).opacity(0.5)
     }
 }

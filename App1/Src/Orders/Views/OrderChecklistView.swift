@@ -156,6 +156,17 @@ struct OrderChecklistView: View {
 
 
 
+extension View {
+    
+    
+    @ViewBuilder func checklistTitle() -> some View {
+        
+        self.font(.title3).opacity(0.5)
+    }
+}
+
+
+
 #Preview {
     let appController = AppController()
     let order = appController.orderDetails.first!
