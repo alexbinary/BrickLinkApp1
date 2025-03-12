@@ -224,40 +224,6 @@ struct OrderDetailGeneralView: View {
                     }
                 }
             }
-            
-            Divider()
-            
-            Text("\(order.items) items in \(order.lots) lots - \(String(format: "%.0f", order.totalWeight))g")
-            
-            Table(app.orderItems(forOrderWithId: order.id)) {
-                
-                TableColumn("Image") { item in
-                    AsyncImage(url: app.url(for: item))
-                        .frame(minHeight: 60)
-                }
-                TableColumn("Condition", value: \.condition)
-                TableColumn("Color") { item in
-                    HStack {
-                        app.color(for: item).frame(width: 18, height: 18)
-                        Text(app.colorName(for: item))
-                    }
-                }
-                TableColumn("Name") { item in
-                    Text(item.name.htmlUnescape()).lineLimit(nil)
-                }
-                TableColumn("Ref", value: \.ref)
-                TableColumn("Comment", value: \.comment)
-                TableColumn("Quantity", value: \.quantity)
-                TableColumn("PU") { item in
-                    
-                    if item.unitPriceFinal != item.unitPrice {
-                        
-                        Text(item.unitPrice, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                            .strikethrough()
-                    }
-                    Text(item.unitPriceFinal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                }
-            }
         }
         .onChange(of: order, initial: true) {
             
