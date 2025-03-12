@@ -44,28 +44,28 @@ struct OrderDetailView: View {
                 }
                 .equalWidths($columnWidth)
                 
-                TabView {
+                TabView(selection: .constant("picking")) {
                     
                     OrderDetailGeneralView(order)
                     .padding()
                     .tabItem { Text("􀅴 General") }.tag("general")
                     
-                    OrderDetailPickingView(orderId: order.id)
-                    .tabItem { Text("􀈥 Picking") } .tag("picking")
+                    OrderDetailPickingView(order)
+                    .tabItem { Text("􀈥 Picking") }.tag("picking")
                     
                     ScrollView { OrderDetailShippingView(orderId: order.id) }
-                    .tabItem { Text("􀐚 Shipping") } .tag("shipping")
+                    .tabItem { Text("􀐚 Shipping") }.tag("shipping")
                     
                     ScrollView { OrderDetailFeedbackView(orderId: order.id) }
-                    .tabItem { Text("􀉿 Feedback") } .tag("feedback")
+                    .tabItem { Text("􀉿 Feedback") }.tag("feedback")
                     
                     ScrollView { OrderDetailRefundView(order: order) }
                     .padding()
-                    .tabItem { Text("􂈚 Refunds") } .tag("refunds")
+                    .tabItem { Text("􂈚 Refunds") }.tag("refunds")
                     
                     ScrollView { OrderDetailComptaView(order: order) }
                     .padding()
-                    .tabItem { Text("􀖧 Compta") } .tag("compta")
+                    .tabItem { Text("􀖧 Compta") }.tag("compta")
                 }
             }
         }

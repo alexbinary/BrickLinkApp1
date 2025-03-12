@@ -7,40 +7,44 @@ import HTMLEntities
 struct OrderDetailPickingView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    let orderId: OrderDetails.ID
+    
+    let order: OrderDetails
+    
+    init(_ order: OrderDetails) {
+        self.order = order
+    }
+    
     
     
     var body: some View {
             
         VStack(alignment: .leading) {
             
-            let total = app.orderItems(forOrderWithId: orderId).count
-            let picked = app.pickedItems(forOrderWithId: orderId).count
-            let verified = app.verifiedItems(forOrderWithId: orderId).count
-            
-            let allPicked = picked == total
-            let allVerified = verified == total
-            
             Grid(alignment: .leading) {
+                
                 GridRow {
                     Text("Picking")
-                    let percent = floor(Double(picked)/Double(total)*100)
-                    Text(String(format: "%3.0f%% complete", percent))
                     
-                    if !allPicked {
+                    let percentPicked = app.percentPickedItems(forOrderWithId: order.id)
+                    Text(String(format: "%3.0f%% complete", percentPicked))
+                    
+                    if percentPicked < 1 {
                         Text("\(orderItemsToPick.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToPick.count) lots left to pick")
                             .foregroundStyle(.secondary)
                             .font(.body)
                     }
                 }
+                
                 GridRow {
                     Text("Verify")
-                    let percent = floor(Double(verified)/Double(total)*100)
-                    Text(String(format: "%3.0f%% verified", percent))
                     
-                    if !allVerified {
+                    let percentVerified = app.percentVerifiedItems(forOrderWithId: order.id)
+                    Text(String(format: "%3.0f%% verified", percentVerified))
+                    
+                    if percentVerified < 1 {
                         Text("\(orderItemsToVerify.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToVerify.count) lots left to verify")
                             .foregroundStyle(.secondary)
                             .font(.body)
@@ -112,7 +116,7 @@ struct OrderDetailPickingView: View {
             }
         }
         .padding()
-        .onChange(of: orderId, initial: true) {
+        .onChange(of: order, initial: true) {
             Task {
                 await parallel([
                     { await loadOrder() },
@@ -253,26 +257,26 @@ struct OrderDetailPickingView: View {
     
     func loadOrder() async {
         
-        await app.loadOrderDetailsIfMissing(forOrderWithId: orderId)
+        await app.loadOrderDetailsIfMissing(forOrderWithId: order.id)
     }
     
     
     func loadOrderItems() async {
         
-        await app.loadOrderItemsIfMissing(forOrderWithId: orderId)
+        await app.loadOrderItemsIfMissing(forOrderWithId: order.id)
     }
     
     
     var orderItems: [OrderItem] {
-        app.orderItems(forOrderWithId: orderId)
+        app.orderItems(forOrderWithId: order.id)
     }
     
     var pickedItems: [OrderItem.ID] {
-        app.pickedItems(forOrderWithId: orderId)
+        app.pickedItems(forOrderWithId: order.id)
     }
     
     var verifiedItems: [OrderItem.ID] {
-        app.verifiedItems(forOrderWithId: orderId)
+        app.verifiedItems(forOrderWithId: order.id)
     }
     
     

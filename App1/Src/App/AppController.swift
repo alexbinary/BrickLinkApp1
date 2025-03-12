@@ -434,6 +434,15 @@ class AppController: ObservableObject {
     }
     
     
+    public func percentPickedItems(forOrderWithId orderId: OrderSummary.ID) -> Double {
+        
+        let total = orderItems(forOrderWithId: orderId).count
+        let picked = pickedItems(forOrderWithId: orderId).count
+        
+        return floor(Double(picked)/Double(total)*100)
+    }
+    
+    
     public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
         try! dataStore.addPickedItem(itemId, toOrderWithId: orderId)
@@ -455,6 +464,15 @@ class AppController: ObservableObject {
     public func verifiedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         return dataStore.verifiedItemsByOrderId[orderId] ?? []
+    }
+    
+    
+    public func percentVerifiedItems(forOrderWithId orderId: OrderSummary.ID) -> Double {
+        
+        let total = orderItems(forOrderWithId: orderId).count
+        let verified = verifiedItems(forOrderWithId: orderId).count
+        
+        return floor(Double(verified)/Double(total)*100)
     }
     
     
