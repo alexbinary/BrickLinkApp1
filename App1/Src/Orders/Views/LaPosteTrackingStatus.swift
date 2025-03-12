@@ -2,7 +2,7 @@
 import SwiftUI
 
 
-struct LaPosteTrackingView: View {
+struct LaPosteTrackingStatusIndicator: View {
     
     
     @EnvironmentObject
@@ -41,10 +41,10 @@ struct LaPosteTrackingView: View {
     let order = appController.orderSummaries.first!
     VStack {
         Group {
-            LaPosteTrackingView(order: order)
-            LaPosteTrackingView(order: order)
-            LaPosteTrackingView(order: order)
-            LaPosteTrackingView(order: order)
+            LaPosteTrackingStatusIndicator(order: order)
+            LaPosteTrackingStatusIndicator(order: order)
+            LaPosteTrackingStatusIndicator(order: order)
+            LaPosteTrackingStatusIndicator(order: order)
         }.padding()
     }
 }

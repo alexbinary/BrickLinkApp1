@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderIdLinkView: View {
+struct OrderIdLink: View {
     
     
     @EnvironmentObject
@@ -23,5 +23,5 @@ struct OrderIdLinkView: View {
 
 
 #Preview {
-    OrderIdLinkView(orderId: "123456789")
+    OrderIdLink(orderId: "123456789")
 }

@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrdersMainListItemView: View {
+struct OrdersMainListItem: View {
     
     
     @EnvironmentObject
@@ -31,7 +31,7 @@ struct OrdersMainListItemView: View {
                         }
                         
                         GridRow {
-                            OrderIdLinkView(orderId: order.id)
+                            OrderIdLink(orderId: order.id)
                                 .font(.title2)
                                 .monospacedDigit()
                             Text(order.date, format: .dateTime)
@@ -82,14 +82,14 @@ struct OrdersMainListItemView: View {
                                 HStack {
                                     Text("Seller:")
                                     if let feedback = app.sellerFeedback(forOrderWithId: order.id) {
-                                        FeedbackRatingView(feedback)
+                                        FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                                 
                                 HStack {
                                     Text("Buyer:")
                                     if let feedback = app.buyerFeedback(forOrderWithId: order.id) {
-                                        FeedbackRatingView(feedback)
+                                        FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                             }
@@ -100,7 +100,7 @@ struct OrdersMainListItemView: View {
                             ForEach(tags) { tagView($0) }
                             
                             if macroStatus == .inTransit, app.orderIsShippedWithLaPoste(orderId: order.id) {
-                                LaPosteTrackingView(order: order)
+                                LaPosteTrackingStatusIndicator(order: order)
                             }
                         }
                         .frame(width: 280, alignment: .trailing)
@@ -292,6 +292,6 @@ extension View {
 #Preview {
     let appController = AppController()
     let order = appController.orderSummaries.first!
-    OrdersMainListItemView(order: order)
+    OrdersMainListItem(order: order)
         .environmentObject(appController)
 }

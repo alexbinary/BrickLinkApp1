@@ -2,7 +2,7 @@
 import SwiftUI
 
 
-struct OrdersActionsView: View {
+struct OrdersActionsSheet: View {
     
     
     @EnvironmentObject var app: AppController
@@ -91,6 +91,6 @@ struct OrdersActionsView: View {
 
 #Preview {
     let appController = AppController()
-    OrdersActionsView(orders: appController.orderSummaries)
+    OrdersActionsSheet(orders: appController.orderSummaries)
         .environmentObject(appController)
 }

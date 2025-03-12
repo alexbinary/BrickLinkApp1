@@ -19,7 +19,7 @@ struct WindowContentView: View {
         case .orders:
             
             NavigationStack(path: $nav.orders) {
-                OrdersMainListView()
+                OrdersMainList()
             }
             
         case .upload:

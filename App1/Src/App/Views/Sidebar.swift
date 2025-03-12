@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct SidebarView: View {
+struct Sidebar: View {
     
     
     @EnvironmentObject

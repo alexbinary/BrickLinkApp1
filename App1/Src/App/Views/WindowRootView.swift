@@ -14,7 +14,7 @@ struct WindowRootView: View {
         
         NavigationSplitView {
             
-            SidebarView()
+            Sidebar()
             
         } detail: {
             

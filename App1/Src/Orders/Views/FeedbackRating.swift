@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct FeedbackRatingView: View {
+struct FeedbackRating: View {
     
     
     let feedback: Feedback

@@ -2,7 +2,7 @@
 import SwiftUI
 
 
-struct OrdersMainListView: View {
+struct OrdersMainList: View {
     
     
     @EnvironmentObject
@@ -44,7 +44,7 @@ struct OrdersMainListView: View {
                 Text("􀈟").padding(.horizontal)
             }
             .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
-                OrdersActionsView(orders: orders)
+                OrdersActionsSheet(orders: orders)
             }
             
             Button {
@@ -99,7 +99,7 @@ struct OrdersMainListView: View {
     @ViewBuilder
     func itemView(_ order: OrderSummary) -> some View {
         
-        OrdersMainListItemView(order: order)
+        OrdersMainListItem(order: order)
             .onTapGesture { nav.pushOrder(order.id) }
             .padding([.leading, .trailing])
     }
