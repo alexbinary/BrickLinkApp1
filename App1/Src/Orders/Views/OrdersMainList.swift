@@ -34,7 +34,7 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: OrderSummary.ID.self) { orderId in
-            OrderDetailView(orderId: orderId)
+            OrderDetailView(app.orderDetails(forOrderWithId: orderId)!)
         }
         .toolbar {
             

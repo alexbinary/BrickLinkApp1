@@ -214,7 +214,7 @@ struct OrdersMainListItem: View {
                 items.append(OrderStatusTag(text: "Missing tracking no", status: .actionRequired))
             }
             
-            if !app.orderChecklistShipped(order.id) && !app.orderChecklistDriveThru(order.id){
+            if !app.orderChecklistShipped(order.id) && !app.orderChecklistDriveThru(order.id) {
                 items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
                         await app.updateOrderStatus(orderId: order.id, status: .shipped)
