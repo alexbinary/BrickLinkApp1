@@ -46,24 +46,24 @@ struct OrderDetailView: View {
                 
                 TabView {
                     
-                    OrderGeneralView(order: order)
+                    OrderDetailGeneralView(order: order)
                     .padding()
                     .tabItem { Text("􀅴 General") }.tag("general")
                     
-                    OrderPickingView(orderId: order.id)
+                    OrderDetailPickingView(orderId: order.id)
                     .tabItem { Text("􀈥 Picking") } .tag("picking")
                     
-                    ScrollView { OrderShippingView(orderId: order.id) }
+                    ScrollView { OrderDetailShippingView(orderId: order.id) }
                     .tabItem { Text("􀐚 Shipping") } .tag("shipping")
                     
-                    ScrollView { OrderFeedbackView(orderId: order.id) }
+                    ScrollView { OrderDetailFeedbackView(orderId: order.id) }
                     .tabItem { Text("􀉿 Feedback") } .tag("feedback")
                     
-                    ScrollView { OrderRefundView(order: order) }
+                    ScrollView { OrderDetailRefundView(order: order) }
                     .padding()
                     .tabItem { Text("􂈚 Refunds") } .tag("refunds")
                     
-                    ScrollView { OrderComptaView(order: order) }
+                    ScrollView { OrderDetailComptaView(order: order) }
                     .padding()
                     .tabItem { Text("􀖧 Compta") } .tag("compta")
                 }

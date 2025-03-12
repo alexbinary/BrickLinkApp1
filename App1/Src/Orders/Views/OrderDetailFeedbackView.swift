@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderFeedbackView: View {
+struct OrderDetailFeedbackView: View {
     
     
     @EnvironmentObject var app: AppController

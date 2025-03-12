@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderRefundView: View {
+struct OrderDetailRefundView: View {
     
     
     @EnvironmentObject var app: AppController

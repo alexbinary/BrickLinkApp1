@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderShippingView: View {
+struct OrderDetailShippingView: View {
     
     
     @EnvironmentObject var app: AppController
@@ -465,6 +465,6 @@ struct OrderShippingView: View {
 
 
 #Preview {
-    OrderShippingView(orderId: "27236825")
+    OrderDetailShippingView(orderId: "27236825")
         .environmentObject(AppController())
 }

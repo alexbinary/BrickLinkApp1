@@ -4,7 +4,7 @@ import HTMLEntities
 
 
 
-struct OrderGeneralView: View {
+struct OrderDetailGeneralView: View {
     
     
     @EnvironmentObject var app: AppController

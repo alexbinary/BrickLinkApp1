@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderPickingView: View {
+struct OrderDetailPickingView: View {
     
     
     @EnvironmentObject var app: AppController
