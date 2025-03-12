@@ -108,10 +108,7 @@ struct OrdersMainListItemView: View {
                 }
             }
             
-            Image(systemName: "chevron.right")
-                .font(.footnote)
-                .fontWeight(.semibold)
-                .foregroundStyle(.tertiary)
+            DisclosureIndicator()
         }
         .padding()
         .roundedContainer(
