@@ -31,7 +31,7 @@ struct OrdersMainListItem: View {
                         }
                         
                         GridRow {
-                            OrderIdLink(orderId: order.id)
+                            OrderLink(order) { Text(order.id) }
                                 .font(.title2)
                                 .monospacedDigit()
                             Text(order.date, format: .dateTime)
