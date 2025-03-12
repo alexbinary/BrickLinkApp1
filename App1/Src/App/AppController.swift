@@ -443,6 +443,28 @@ class AppController: ObservableObject {
     }
     
     
+    public func orderItemsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        let pickedItems = pickedItems(forOrderWithId: orderId)
+        
+        return orderItems(forOrderWithId: orderId)
+            .filter { !pickedItems.contains($0.id) }
+            .sorted { $0.location < $1.location }
+    }
+    
+    
+    public func numberOfLotsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
+        
+        orderItemsLeftToPick(forOrderWithId: orderId).count
+    }
+    
+    
+    public func numberOfPartsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
+        
+        orderItemsLeftToPick(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
+    }
+    
+    
     public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
         
         try! dataStore.addPickedItem(itemId, toOrderWithId: orderId)
@@ -473,6 +495,28 @@ class AppController: ObservableObject {
         let verified = verifiedItems(forOrderWithId: orderId).count
         
         return floor(Double(verified)/Double(total)*100)
+    }
+    
+    
+    public func orderItemsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        let verifiedItems = verifiedItems(forOrderWithId: orderId)
+        
+        return orderItems(forOrderWithId: orderId)
+            .filter { !verifiedItems.contains($0.id) }
+            .sorted { $0.location < $1.location }
+    }
+    
+    
+    public func numberOfLotsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
+        
+        orderItemsLeftToVerify(forOrderWithId: orderId).count
+    }
+    
+    
+    public func numberOfPartsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
+        
+        orderItemsLeftToVerify(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
     }
     
     

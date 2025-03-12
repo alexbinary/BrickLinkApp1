@@ -23,38 +23,10 @@ struct OrderDetailPickingView: View {
             
         VStack(alignment: .leading) {
             
-            Grid(alignment: .leading) {
-                
-                GridRow {
-                    Text("Picking")
-                    
-                    let percentPicked = app.percentPickedItems(forOrderWithId: order.id)
-                    Text(String(format: "%3.0f%% complete", percentPicked))
-                    
-                    if percentPicked < 1 {
-                        Text("\(orderItemsToPick.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToPick.count) lots left to pick")
-                            .foregroundStyle(.secondary)
-                            .font(.body)
-                    }
-                }
-                
-                GridRow {
-                    Text("Verify")
-                    
-                    let percentVerified = app.percentVerifiedItems(forOrderWithId: order.id)
-                    Text(String(format: "%3.0f%% verified", percentVerified))
-                    
-                    if percentVerified < 1 {
-                        Text("\(orderItemsToVerify.reduce(0, { $0 + Int($1.quantity)! })) items in \(orderItemsToVerify.count) lots left to verify")
-                            .foregroundStyle(.secondary)
-                            .font(.body)
-                    }
-                }
-            }
-            .font(.title3)
-            .monospacedDigit()
-            .padding()
-            .padding(.bottom, 12)
+            OrderPickingProgressView(order)
+                .font(.title3)
+                .padding()
+                .padding(.bottom, 12)
             
             TabView {
                 
