@@ -23,13 +23,9 @@ struct OrderDetailShippingView: View {
                 
                         HeaderTitleView(label: "􂙡 Address")
                         
-                        VStack(alignment: .leading) {
-                            Text(order.shippingAddressName)
-                            Text(order.shippingAddress.htmlUnescape()).fixedSize(horizontal: false, vertical: true)
-                            Text(order.shippingAddressCountryCode)
-                        }
-                        .font(.title3)
-                        .padding(.horizontal)
+                        OrderAddressView(order)
+                            .font(.title3)
+                            .padding(.horizontal)
                     }
                     .padding(8)
                     .frame(maxHeight: .infinity, alignment: .top)

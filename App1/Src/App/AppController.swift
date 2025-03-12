@@ -1830,7 +1830,7 @@ extension OrderDetails {
         
         self.shippingMethodId = bl.shipping!.methodId
         self.shippingMethodName = bl.shipping!.method
-        self.shippingAddress = bl.shipping!.address.full
+        self.shippingAddress = bl.shipping!.address.full.htmlUnescape()
         self.shippingAddressCountryCode = bl.shipping!.address.countryCode
         self.shippingAddressName = bl.shipping!.address.name.full
         

@@ -7,9 +7,12 @@ import HTMLEntities
 struct OrderDetailGeneralView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
+    
     
     let order: OrderDetails
+    
     
     @State var incomeTransactionDate: Date = Date()
     @State var incomeTransactionAmount: Float = 0
@@ -25,12 +28,8 @@ struct OrderDetailGeneralView: View {
                 
                 VStack(alignment: .leading) {
                     
-                    Text("􂙡 Address")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(order.shippingAddressName)
-                    Text(order.shippingAddress.htmlUnescape()).fixedSize(horizontal: false, vertical: true)
-                    Text(order.shippingAddressCountryCode)
+                    Text("􂙡 Address").font(.caption).foregroundStyle(.secondary)
+                    OrderAddressView(order)
                 }
                 .font(.title3)
                 
@@ -40,9 +39,7 @@ struct OrderDetailGeneralView: View {
                         
                         VStack(alignment: .leading) {
                             
-                            Text("􀖧 Grand total")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                            Text("􀖧 Grand total").captionSyle()
                             
                             Text(order.grandTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                                 .font(.title2)
@@ -57,9 +54,7 @@ struct OrderDetailGeneralView: View {
                             
                             VStack(alignment: .leading) {
                                 
-                                Text("􀖧 Subtotal")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                Text("􀖧 Subtotal").captionSyle()
                                 
                                 Text(order.subTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                                     .font(.title3)
@@ -72,9 +67,7 @@ struct OrderDetailGeneralView: View {
                             
                             VStack(alignment: .leading) {
                                 
-                                Text("􀖧 Shipping")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                Text("􀖧 Shipping").captionSyle()
                                 
                                 Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                                     .font(.title3)
@@ -95,7 +88,6 @@ struct OrderDetailGeneralView: View {
                         if let date = app.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                             
                             HStack {
-                                
                                 Text("Validated without transaction on")
                                 Text(date, format: .dateTime)
                             }
@@ -106,9 +98,7 @@ struct OrderDetailGeneralView: View {
                                 
                                 VStack(alignment: .leading) {
                                     
-                                    Text("Amount")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    Text("Amount").captionSyle()
                                     
                                     ForEach(transactions) { transaction in
                                         Text(transaction.amount, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
@@ -118,9 +108,7 @@ struct OrderDetailGeneralView: View {
                                 
                                 VStack(alignment: .leading) {
                                     
-                                    Text("Fees")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    Text("Fees").captionSyle()
                                     
                                     ForEach(transactions) { transaction in
                                         if let fees = transaction.fees, fees != 0 {
@@ -135,9 +123,7 @@ struct OrderDetailGeneralView: View {
                                 
                                 VStack(alignment: .leading) {
                                     
-                                    Text("Method")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    Text("Method").captionSyle()
                                     
                                     ForEach(transactions) { transaction in
                                         Text(transaction.paymentMethod.rawValue)
@@ -147,9 +133,7 @@ struct OrderDetailGeneralView: View {
                                 
                                 VStack(alignment: .leading) {
                                     
-                                    Text("Date")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    Text("Date").captionSyle()
                                     
                                     ForEach(transactions) { transaction in
                                         Text(transaction.date, format: .dateTime)
@@ -159,9 +143,7 @@ struct OrderDetailGeneralView: View {
                                 
                                 VStack(alignment: .leading) {
                                     
-                                    Text("Validated")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    Text("Validated").captionSyle()
                                     
                                     ForEach(transactions) { transaction in
                                         Text(transaction.createdAt, format: .dateTime)
@@ -175,23 +157,12 @@ struct OrderDetailGeneralView: View {
                             Grid(alignment: .leading) {
                                 
                                 GridRow {
-                                    
                                     Text("Amount")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    
                                     Text("Fees")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    
                                     Text("Method")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    
                                     Text("Date")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
                                 }
+                                .captionSyle()
                                 
                                 GridRow {
                                     
@@ -222,15 +193,11 @@ struct OrderDetailGeneralView: View {
                                     DatePicker("Date", selection: $incomeTransactionDate)
                                         .labelsHidden()
                                     
-                                    Button {
+                                    Button("Register transaction") {
                                         self.submitIncomeTransaction()
-                                    } label: {
-                                        Text("Register transaction")
                                     }
-                                    Button {
+                                    Button("Validate without transaction") {
                                         self.app.validateOrderWithoutIncomeTransaction(orderId: order.id)
-                                    } label: {
-                                        Text("Validate without transaction")
                                     }
                                 }
                             }
@@ -292,32 +259,12 @@ struct OrderDetailGeneralView: View {
                 }
             }
         }
-        .onAppear {
+        .onChange(of: order, initial: true) {
             
-            self.setupFormStateFromOrder()
+            self.incomeTransactionDate = order.date
+            self.incomeTransactionAmount = order.grandTotal
+            self.incomeTransactionPaymentMethod = .paypal
         }
-        .onChange(of: order) {
-            
-            self.setupFormStateFromOrder()
-        }
-    }
-    
-    
-    @ViewBuilder
-    func checkStatus(_ status: Bool) -> some View {
-        if status {
-            Text("􀁣").foregroundStyle(green)
-        } else {
-            Text("􀀀").foregroundStyle(red)
-        }
-    }
-    
-    
-    func setupFormStateFromOrder() {
-        
-        self.incomeTransactionDate = order.date
-        self.incomeTransactionAmount = order.grandTotal
-        self.incomeTransactionPaymentMethod = .paypal
     }
     
     

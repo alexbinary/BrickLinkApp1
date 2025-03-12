@@ -278,17 +278,6 @@ struct OrdersMainListItem: View {
 
 
 
-extension View {
-    
-    
-    @ViewBuilder func captionSyle() -> some View {
-        
-        self.font(.caption).foregroundStyle(.secondary)
-    }
-}
-
-
-
 #Preview {
     let appController = AppController()
     let order = appController.orderSummaries.first!
