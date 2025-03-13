@@ -64,7 +64,7 @@ struct OrderDetailView: View {
                     .padding()
                     .tabItem { Text("􂈚 Refunds") }.tag("refunds")
                     
-                    ScrollView { OrderDetailComptaView(order: order) }
+                    ScrollView { OrderDetailComptaView(order) }
                     .padding()
                     .tabItem { Text("􀖧 Compta") }.tag("compta")
                 }

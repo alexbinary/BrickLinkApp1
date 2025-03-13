@@ -6,9 +6,16 @@ import SwiftUI
 struct OrderDetailComptaView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
+    
     
     let order: OrderDetails
+    
+    init(_ order: OrderDetails) {
+        self.order = order
+    }
+    
     
     @State var incomeDate: Date = Date()
     @State var incomeAmount: Float = 0
@@ -35,33 +42,30 @@ struct OrderDetailComptaView: View {
             HeaderTitleView(label: "􀗧 Income")
             
             Form {
-                TextField("Amount", value: $incomeAmount,
-                          format: .currency(code: "EUR").presentation(.isoCode)
+                TextField(
+                    "Amount", value: $incomeAmount,
+                    format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .onSubmit {
-                    self.submitIncomeTransaction()
-                }
-                TextField("Fees", value: $incomeFees,
-                          format: .currency(code: "EUR").presentation(.isoCode)
+                .onSubmit { self.submitIncomeTransaction() }
+                
+                TextField(
+                    "Fees", value: $incomeFees,
+                    format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .onSubmit {
-                    self.submitIncomeTransaction()
-                }
+                .onSubmit { self.submitIncomeTransaction() }
+                
                 PaymentMethodPicker("Payment method", selection: $incomePaymentMethod)
+                
                 DatePicker("Date", selection: $incomeDate)
-                TextField("Comment", text: $incomeComment, axis: .vertical)
-                    .lineLimit(3...5)
+                
+                TextField("Comment", text: $incomeComment, axis: .vertical).lineLimit(3...5)
                 
                 HStack {
-                    Button {
+                    Button("Register transaction") {
                         self.submitIncomeTransaction()
-                    } label: {
-                        Text("Register transaction")
                     }
-                    Button {
+                    Button("Validate without transaction") {
                         self.app.validateOrderWithoutIncomeTransaction(orderId: order.id)
-                    } label: {
-                        Text("Validate without transaction")
                     }
                     if let date = app.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
@@ -71,8 +75,7 @@ struct OrderDetailComptaView: View {
             }
 
             TransactionListView(
-                transactions: app.transactions
-                    .filter { $0.type == .orderIncome && $0.orderRefIn == order.id },
+                transactions: app.incomeTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -90,28 +93,24 @@ struct OrderDetailComptaView: View {
             }
             
             Form {
-                TextField("Amount", value: $shippingAmount,
-                          format: .currency(code: "EUR").presentation(.isoCode)
+                TextField(
+                    "Amount", value: $shippingAmount,
+                    format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .onSubmit {
-                    self.submitShippingTransaction()
-                }
+                .onSubmit { self.submitShippingTransaction() }
                 
                 PaymentMethodPicker("Payment method", selection: $shippingPaymentMethod)
+                
                 DatePicker("Date", selection: $shippingDate)
-                TextField("Comment", text: $shippingComment, axis: .vertical)
-                    .lineLimit(3...5)
+                
+                TextField("Comment", text: $shippingComment, axis: .vertical).lineLimit(3...5)
                 
                 HStack {
-                    Button {
+                    Button("Register transaction") {
                         self.submitShippingTransaction()
-                    } label: {
-                        Text("Register transaction")
                     }
-                    Button {
+                    Button("Validate without transaction") {
                         self.app.validateOrderWithoutShippingTransaction(orderId: order.id)
-                    } label: {
-                        Text("Validate without transaction")
                     }
                     if let date = app.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
@@ -121,8 +120,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: app.transactions
-                    .filter { $0.type == .orderShipping && $0.orderRefIn == order.id },
+                transactions: app.shippingTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -140,70 +138,56 @@ struct OrderDetailComptaView: View {
             }
                
             Form {
-                TextField("Amount", value: $refundAmount,
-                          format: .currency(code: "EUR").presentation(.isoCode)
+                TextField(
+                    "Amount", value: $refundAmount,
+                    format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .onSubmit {
-                    self.submitRefundTransaction()
-                }
-                TextField("Fees", value: $refundFees,
-                          format: .currency(code: "EUR").presentation(.isoCode)
+                .onSubmit { self.submitRefundTransaction() }
+
+                TextField(
+                    "Fees", value: $refundFees,
+                    format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .onSubmit {
-                    self.submitRefundTransaction()
-                }
-                PaymentMethodPicker("Payment method", selection: $refundPaymentMethod)
-                DatePicker("Date", selection: $refundDate)
-                TextField("Comment", text: $refundComment, axis: .vertical)
-                    .lineLimit(3...5)
+                .onSubmit { self.submitRefundTransaction() }
                 
-                HStack {
-                    Button {
-                        self.submitRefundTransaction()
-                    } label: {
-                        Text("Register transaction")
-                    }
+                PaymentMethodPicker("Payment method", selection: $refundPaymentMethod)
+                
+                DatePicker("Date", selection: $refundDate)
+                
+                TextField("Comment", text: $refundComment, axis: .vertical).lineLimit(3...5)
+                
+                Button("Register transaction") {
+                    self.submitRefundTransaction()
                 }
             }
             
             TransactionListView(
-                transactions: app.transactions
-                    .filter { $0.type == .orderRefund && $0.orderRefIn == order.id },
+                transactions: app.refundTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
             .frame(minHeight: 100)
         }
-        .onAppear {
+        .onChange(of: order, initial: true) {
             
-            self.setupFormStateFromOrder()
-        }
-        .onChange(of: order) {
-            
-            self.setupFormStateFromOrder()
-        }
-    }
-    
-    
-    func setupFormStateFromOrder() {
-        
-        self.incomeDate = order.date
-        self.incomeAmount = order.grandTotal
-        self.incomePaymentMethod = .paypal
-        self.incomeComment = ""
+            self.incomeDate = order.date
+            self.incomeAmount = order.grandTotal
+            self.incomePaymentMethod = .paypal
+            self.incomeComment = ""
 
-        self.shippingDate = Date()
-        self.shippingAmount = app.shippingCost(forOrderWithId: order.id) ?? 0
-        self.shippingPaymentMethod = .cb_iban
-        self.shippingComment = ""
-        
-        self.refundDate = Date()
-        self.refundAmount = app.refunds(for: order).last?.amount ?? 0
-        self.refundPaymentMethod = .paypal
-        self.refundComment = ""
+            self.shippingDate = Date()
+            self.shippingAmount = app.shippingCost(forOrderWithId: order.id) ?? 0
+            self.shippingPaymentMethod = .cb_iban
+            self.shippingComment = ""
+            
+            self.refundDate = Date()
+            self.refundAmount = app.refunds(for: order).last?.amount ?? 0
+            self.refundPaymentMethod = .paypal
+            self.refundComment = ""
+        }
     }
     
-    
+
     func submitIncomeTransaction() {
         
         app.registerTransaction(Transaction(
