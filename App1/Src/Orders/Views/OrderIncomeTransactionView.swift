@@ -110,29 +110,23 @@ struct OrderIncomeTransactionView: View {
                     
                     GridRow {
                         
-                        TextField("Amount", value: $incomeTransactionAmount,
-                                  format: .currency(code: "EUR").presentation(.isoCode)
+                        TextField(
+                            "Amount", value: $incomeTransactionAmount,
+                            format: .currency(code: "EUR").presentation(.isoCode)
                         )
-                        .onSubmit {
-                            self.submitIncomeTransaction()
-                        }
+                        .onSubmit { self.submitIncomeTransaction() }
                         .frame(maxWidth: 70)
                         
-                        TextField("Fees", value: $incomeTransactionFees,
-                                  format: .currency(code: "EUR").presentation(.isoCode)
+                        TextField(
+                            "Fees", value: $incomeTransactionFees,
+                            format: .currency(code: "EUR").presentation(.isoCode)
                         )
-                        .onSubmit {
-                            self.submitIncomeTransaction()
-                        }
+                        .onSubmit { self.submitIncomeTransaction() }
                         .frame(maxWidth: 70)
                         
-                        Picker("Payment method", selection: $incomeTransactionPaymentMethod) {
-                            ForEach(PaymentMethod.allCases, id: \.self) { method in
-                                Text(method.rawValue).tag(method)
-                            }
-                        }
-                        .labelsHidden()
-                        .frame(maxWidth: 70)
+                        PaymentMethodPicker("Payment method", selection: $incomeTransactionPaymentMethod)
+                            .labelsHidden()
+                            .frame(maxWidth: 70)
                         
                         DatePicker("Date", selection: $incomeTransactionDate)
                             .labelsHidden()

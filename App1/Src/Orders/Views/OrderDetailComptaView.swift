@@ -47,11 +47,7 @@ struct OrderDetailComptaView: View {
                 .onSubmit {
                     self.submitIncomeTransaction()
                 }
-                Picker("Payment method", selection: $incomePaymentMethod) {
-                    ForEach(PaymentMethod.allCases, id: \.self) { method in
-                        Text(method.rawValue).tag(method)
-                    }
-                }
+                PaymentMethodPicker("Payment method", selection: $incomePaymentMethod)
                 DatePicker("Date", selection: $incomeDate)
                 TextField("Comment", text: $incomeComment, axis: .vertical)
                     .lineLimit(3...5)
@@ -100,11 +96,8 @@ struct OrderDetailComptaView: View {
                 .onSubmit {
                     self.submitShippingTransaction()
                 }
-                Picker("Payment method", selection: $shippingPaymentMethod) {
-                    ForEach(PaymentMethod.allCases, id: \.self) { method in
-                        Text(method.rawValue).tag(method)
-                    }
-                }
+                
+                PaymentMethodPicker("Payment method", selection: $shippingPaymentMethod)
                 DatePicker("Date", selection: $shippingDate)
                 TextField("Comment", text: $shippingComment, axis: .vertical)
                     .lineLimit(3...5)
@@ -159,11 +152,7 @@ struct OrderDetailComptaView: View {
                 .onSubmit {
                     self.submitRefundTransaction()
                 }
-                Picker("Payment method", selection: $refundPaymentMethod) {
-                    ForEach(PaymentMethod.allCases, id: \.self) { method in
-                        Text(method.rawValue).tag(method)
-                    }
-                }
+                PaymentMethodPicker("Payment method", selection: $refundPaymentMethod)
                 DatePicker("Date", selection: $refundDate)
                 TextField("Comment", text: $refundComment, axis: .vertical)
                     .lineLimit(3...5)
