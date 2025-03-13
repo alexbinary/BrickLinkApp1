@@ -370,10 +370,10 @@ class AppController: ObservableObject {
                     colorId: "\(item.colorId)",
                     colorName: item.colorName,
                     ref: item.item.no,
-                    name: item.item.name,
+                    name: item.item.name.htmlUnescape(),
                     type: item.item.type,
                     location: item.remarks ?? "",
-                    comment: item.description ?? "",
+                    comment: (item.description ?? "").htmlUnescape(),
                     quantity: "\(item.quantity)",
                     unitPrice: item.unitPrice.floatValue,
                     unitPriceFinal: item.unitPriceFinal.floatValue

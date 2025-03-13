@@ -45,7 +45,7 @@ struct OrderDetailView: View {
                 .equalWidths($columnWidth)
                 
                 TabView(
-                    selection: .constant("compta")
+                    selection: .constant("picking")
                 ) {
                     ScrollView { OrderDetailGeneralView(order) }
                     .padding()

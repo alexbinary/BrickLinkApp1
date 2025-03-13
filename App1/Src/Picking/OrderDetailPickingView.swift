@@ -39,7 +39,7 @@ struct OrderDetailPickingView: View {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(nextOrderItemsToPick) { PickingItemView($0, buttons: [.pick]) }
+                            ForEach(nextOrderItemsToPick) { PickingItemView($0, button: .pick) }
                         }
                     }
                     .padding()
@@ -50,7 +50,7 @@ struct OrderDetailPickingView: View {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(pickedOrderItems) { PickingItemView($0, buttons: [.unpick]) }
+                            ForEach(pickedOrderItems) { PickingItemView($0, button: .unpick) }
                         }
                     }
                     .padding()
@@ -61,7 +61,7 @@ struct OrderDetailPickingView: View {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(nextOrderItemsToVerify) { PickingItemView($0, buttons: [.verify]) }
+                            ForEach(nextOrderItemsToVerify) { PickingItemView($0, button: .verify) }
                         }
                     }
                     .padding()
@@ -72,7 +72,7 @@ struct OrderDetailPickingView: View {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(verifiedOrderItems) { PickingItemView($0, buttons: [.unverify]) }
+                            ForEach(verifiedOrderItems) { PickingItemView($0, button: .unverify) }
                         }
                     }
                     .padding()

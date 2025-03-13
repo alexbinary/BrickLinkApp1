@@ -11,11 +11,11 @@ struct PickingItemView: View {
     
     
     let item: OrderItem
-    let buttons: [ButtonType]
+    let button: ButtonType
     
-    init(_ item: OrderItem, buttons: [ButtonType]) {
+    init(_ item: OrderItem, button: ButtonType) {
         self.item = item
-        self.buttons = buttons
+        self.button = button
     }
         
     
@@ -31,10 +31,8 @@ struct PickingItemView: View {
                     
                     VStack(alignment: .leading) {
                         Text(item.ref).font(.caption).foregroundStyle(.secondary)
-                        Text(item.name.htmlUnescape()).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
-                        if !item.comment.isEmpty {
-                            Text(item.comment.htmlUnescape())
-                        }
+                        Text(item.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
+                        if !item.comment.isEmpty { Text(item.comment) }
                     }
                 }
                 
@@ -85,32 +83,22 @@ struct PickingItemView: View {
             
             VStack (alignment: .leading) {
                 
-                ForEach(buttons, id: \.self) { button in
-                    switch button {
-                    case .pick:
-                        Button {
-                            app.pickItem(forOrderWithId: item.orderId, itemId: item.id)
-                        } label: {
-                            Text("Pick")
-                        }
-                    case .unpick:
-                        Button {
-                            app.unpickItem(forOrderWithId: item.orderId, itemId: item.id)
-                        } label: {
-                            Text("Unpick")
-                        }
-                    case .verify:
-                        Button {
-                            app.verifyItem(forOrderWithId: item.orderId, itemId: item.id)
-                        } label: {
-                            Text("Verify")
-                        }
-                    case .unverify:
-                        Button {
-                            app.unverifyItem(forOrderWithId: item.orderId, itemId: item.id)
-                        } label: {
-                            Text("Unverify")
-                        }
+                switch button {
+                case .pick:
+                    Button("Pick") {
+                        app.pickItem(forOrderWithId: item.orderId, itemId: item.id)
+                    }
+                case .unpick:
+                    Button("Unpick") {
+                        app.unpickItem(forOrderWithId: item.orderId, itemId: item.id)
+                    }
+                case .verify:
+                    Button("Verify") {
+                        app.verifyItem(forOrderWithId: item.orderId, itemId: item.id)
+                    }
+                case .unverify:
+                    Button("Unverify") {
+                        app.unverifyItem(forOrderWithId: item.orderId, itemId: item.id)
                     }
                 }
             }
@@ -139,5 +127,5 @@ enum ButtonType {
     let appController = AppController()
     let order = appController.orderSummaries.first!
     let item = appController.orderItems(forOrderWithId: order.id).first!
-    PickingItemView(item, buttons: [.pick]).environmentObject(appController)
+    PickingItemView(item, button: .pick).environmentObject(appController)
 }
