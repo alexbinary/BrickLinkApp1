@@ -28,7 +28,7 @@ struct OrderDetailPickingView: View {
             
         VStack(alignment: .leading) {
             
-            OrderPickingProgressView(order)
+            PickingProgressView(order)
                 .font(.title3)
                 .padding()
                 .padding(.bottom, 12)

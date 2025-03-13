@@ -4,7 +4,7 @@ import Percentage
 
 
 
-struct OrderPickingProgressView: View {
+struct PickingProgressView: View {
     
     
     @EnvironmentObject
@@ -59,5 +59,5 @@ struct OrderPickingProgressView: View {
 #Preview {
     let appController = AppController()
     let order = appController.orderDetails.first!
-    OrderPickingProgressView(order).environmentObject(appController)
+    PickingProgressView(order).environmentObject(appController)
 }
