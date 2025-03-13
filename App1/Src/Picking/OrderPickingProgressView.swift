@@ -1,5 +1,6 @@
 
 import SwiftUI
+import Percentage
 
 
 
@@ -27,7 +28,7 @@ struct OrderPickingProgressView: View {
                 let progress = app.pickingProgress(forOrderWithId: order.id)
                 Text("\(progress) complete")
                 
-                if progress < 1 {
+                if progress < 100% {
                     let parts = app.totalPartsLeftToPick(forOrderWithId: order.id)
                     let lots = app.totalLotsLeftToPick(forOrderWithId: order.id)
                     Text("\(parts) parts in \(lots) lots left to pick")
@@ -42,7 +43,7 @@ struct OrderPickingProgressView: View {
                 let progress = app.pickingVerificationProgress(forOrderWithId: order.id)
                 Text("\(progress) verified")
                 
-                if progress < 1 {
+                if progress < 100% {
                     let parts = app.totalPartsLeftToVerify(forOrderWithId: order.id)
                     let lots = app.totalLotsLeftToVerify(forOrderWithId: order.id)
                     Text("\(parts) parts in \(lots) lots left to verify")

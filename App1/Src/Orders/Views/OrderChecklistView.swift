@@ -1,5 +1,6 @@
 
 import SwiftUI
+import Percentage
 
 
 
@@ -47,28 +48,20 @@ struct OrderChecklistView: View {
 
                     GridRow {
                         CheckStatusView(status: app.orderChecklistPicking(order.id))
-                        
-                        let picked = app.pickedItemIds(forOrderWithId: order.id).count
-                        let total = app.orderItems(forOrderWithId: order.id).count
-                        
-                        if picked == total {
+                        let progress = app.pickingProgress(forOrderWithId: order.id)
+                        if progress == 100% {
                             Text("Pick items")
                         } else {
-                            let percent = floor(Double(picked)/Double(total)*100)
-                            Text(String(format: "Pick items - %3.0f%% complete", percent))
+                            Text("Pick items - \(progress) complete")
                         }
                     }
                     GridRow {
                         CheckStatusView(status: app.orderChecklistVerification(order.id))
-                        
-                        let verified = app.verifiedItemIds(forOrderWithId: order.id).count
-                        let total = app.orderItems(forOrderWithId: order.id).count
-                        
-                        if verified == total {
+                        let progress = app.pickingVerificationProgress(forOrderWithId: order.id)
+                        if progress == 100% {
                             Text("Verify items")
                         } else {
-                            let percent = floor(Double(verified)/Double(total)*100)
-                            Text(String(format: "Verify items - %3.0f%% complete", percent))
+                            Text("Verify items - \(progress) complete")
                         }
                     }
                     GridRow {
