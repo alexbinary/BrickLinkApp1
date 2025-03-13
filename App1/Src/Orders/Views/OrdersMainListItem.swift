@@ -184,7 +184,7 @@ struct OrdersMainListItem: View {
             
             if !app.orderChecklistPicking(order.id) {
                 
-                let picked = app.pickedItems(forOrderWithId: order.id).count
+                let picked = app.pickedItemIds(forOrderWithId: order.id).count
                 let total = app.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(picked)/Double(total)*100)
@@ -192,7 +192,7 @@ struct OrdersMainListItem: View {
                 
             } else if !app.orderChecklistVerification(order.id) {
                 
-                let verified = app.verifiedItems(forOrderWithId: order.id).count
+                let verified = app.verifiedItemIds(forOrderWithId: order.id).count
                 let total = app.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(verified)/Double(total)*100)

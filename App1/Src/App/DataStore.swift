@@ -240,23 +240,23 @@ class DataStore {
     }
     
     
-    public var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
+    public var pickedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
         
-        data?.pickedItemsByOrderId ?? [:]
+        data?.pickedItemIdsByOrderId ?? [:]
     }
     
     
-    public func setPickedItemsByOrderId(_ pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
+    public func setPickedItemIdsByOrderId(_ pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
-        data!.pickedItemsByOrderId = pickedItemsByOrderId
+        data!.pickedItemIdsByOrderId = pickedItemsByOrderId
     }
     
     
-    public func addPickedItem(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
+    public func addPickedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
         
-        var pickedItemsByOrderId = self.pickedItemsByOrderId
+        var pickedItemsByOrderId = self.pickedItemIdsByOrderId
         var pickedItemsForOrder = pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         guard !pickedItemsForOrder.contains(itemId) else { return }
@@ -264,13 +264,13 @@ class DataStore {
         pickedItemsForOrder.append(itemId)
         pickedItemsByOrderId[orderId] = pickedItemsForOrder
         
-        try setPickedItemsByOrderId(pickedItemsByOrderId)
+        try setPickedItemIdsByOrderId(pickedItemsByOrderId)
     }
     
     
-    public func removePickedItem(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
+    public func removePickedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
         
-        var pickedItemsByOrderId = self.pickedItemsByOrderId
+        var pickedItemsByOrderId = self.pickedItemIdsByOrderId
         var pickedItemsForOrder = pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         pickedItemsForOrder.removeAll { $0 == itemId }
@@ -280,27 +280,27 @@ class DataStore {
             pickedItemsByOrderId.removeValue(forKey: orderId)
         }
         
-        try setPickedItemsByOrderId(pickedItemsByOrderId)
+        try setPickedItemIdsByOrderId(pickedItemsByOrderId)
     }
     
     
-    public var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
+    public var verifiedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
         
-        data?.verifiedItemsByOrderId ?? [:]
+        data?.verifiedItemIdsByOrderId ?? [:]
     }
     
     
-    public func setVerifiedItemsByOrderId(_ verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
+    public func setVerifiedItemIdsByOrderId(_ verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
-        data!.verifiedItemsByOrderId = verifiedItemsByOrderId
+        data!.verifiedItemIdsByOrderId = verifiedItemsByOrderId
     }
     
     
-    public func addVerifiedItem(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
+    public func addVerifiedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
         
-        var verifiedItemsByOrderId = self.verifiedItemsByOrderId
+        var verifiedItemsByOrderId = self.verifiedItemIdsByOrderId
         var verifiedItemsForOrder = verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         guard !verifiedItemsForOrder.contains(itemId) else { return }
@@ -308,13 +308,13 @@ class DataStore {
         verifiedItemsForOrder.append(itemId)
         verifiedItemsByOrderId[orderId] = verifiedItemsForOrder
         
-        try setVerifiedItemsByOrderId(verifiedItemsByOrderId)
+        try setVerifiedItemIdsByOrderId(verifiedItemsByOrderId)
     }
     
     
-    public func removeVerifiedItem(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
+    public func removeVerifiedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
         
-        var verifiedItemsByOrderId = self.verifiedItemsByOrderId
+        var verifiedItemsByOrderId = self.verifiedItemIdsByOrderId
         var verifiedItemsForOrder = verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
         
         verifiedItemsForOrder.removeAll { $0 == itemId }
@@ -324,7 +324,7 @@ class DataStore {
             verifiedItemsByOrderId.removeValue(forKey: orderId)
         }
         
-        try setVerifiedItemsByOrderId(verifiedItemsByOrderId)
+        try setVerifiedItemIdsByOrderId(verifiedItemsByOrderId)
     }
     
     
@@ -596,8 +596,8 @@ struct DataRoot: Codable {
     
     var shippingCostsByOrderId: [OrderSummary.ID: Float]?
     var stampingMethodByOrderId: [OrderSummary.ID: String]?
-    var pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
-    var verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
+    var pickedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
+    var verifiedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
     var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]?
     var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]?
     var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]?

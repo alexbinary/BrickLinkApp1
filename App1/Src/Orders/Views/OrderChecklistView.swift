@@ -48,7 +48,7 @@ struct OrderChecklistView: View {
                     GridRow {
                         CheckStatusView(status: app.orderChecklistPicking(order.id))
                         
-                        let picked = app.pickedItems(forOrderWithId: order.id).count
+                        let picked = app.pickedItemIds(forOrderWithId: order.id).count
                         let total = app.orderItems(forOrderWithId: order.id).count
                         
                         if picked == total {
@@ -61,7 +61,7 @@ struct OrderChecklistView: View {
                     GridRow {
                         CheckStatusView(status: app.orderChecklistVerification(order.id))
                         
-                        let verified = app.verifiedItems(forOrderWithId: order.id).count
+                        let verified = app.verifiedItemIds(forOrderWithId: order.id).count
                         let total = app.orderItems(forOrderWithId: order.id).count
                         
                         if verified == total {

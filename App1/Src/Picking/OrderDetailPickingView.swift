@@ -90,7 +90,7 @@ struct OrderDetailPickingView: View {
     }
     
     var pickedOrderItemIds: [OrderItem.ID] {
-        app.pickedItems(forOrderWithId: order.id)
+        app.pickedItemIds(forOrderWithId: order.id)
     }
     
     var pickedOrderItems: [OrderItem] {
@@ -98,7 +98,7 @@ struct OrderDetailPickingView: View {
     }
     
     var verifiedOrderItemIds: [OrderItem.ID] {
-        app.verifiedItems(forOrderWithId: order.id)
+        app.verifiedItemIds(forOrderWithId: order.id)
     }
     
     var verifiedOrderItems: [OrderItem] {

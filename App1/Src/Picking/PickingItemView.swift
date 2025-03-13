@@ -50,7 +50,7 @@ struct PickingItemView: View {
                 }
             }
             
-            let itemIsPicked = app.pickedItems(forOrderWithId: item.orderId).contains(item.id)
+            let itemIsPicked = app.pickedItemIds(forOrderWithId: item.orderId).contains(item.id)
             
             Grid(alignment: .leading) {
                 
@@ -91,25 +91,25 @@ struct PickingItemView: View {
                     switch button {
                     case .pick:
                         Button {
-                            app.pickItem(forOrderWithId: item.orderId, item: item.id)
+                            app.pickItem(forOrderWithId: item.orderId, itemId: item.id)
                         } label: {
                             Text("Pick")
                         }
                     case .unpick:
                         Button {
-                            app.unpickItem(forOrderWithId: item.orderId, item: item.id)
+                            app.unpickItem(forOrderWithId: item.orderId, itemId: item.id)
                         } label: {
                             Text("Unpick")
                         }
                     case .verify:
                         Button {
-                            app.verifyItem(forOrderWithId: item.orderId, item: item.id)
+                            app.verifyItem(forOrderWithId: item.orderId, itemId: item.id)
                         } label: {
                             Text("Verify")
                         }
                     case .unverify:
                         Button {
-                            app.unverifyItem(forOrderWithId: item.orderId, item: item.id)
+                            app.unverifyItem(forOrderWithId: item.orderId, itemId: item.id)
                         } label: {
                             Text("Unverify")
                         }

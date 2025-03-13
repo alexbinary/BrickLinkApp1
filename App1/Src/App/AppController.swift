@@ -433,48 +433,48 @@ class AppController: ObservableObject {
     // MARK: - Pick & Verify
     
     
-    public func pickedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        return dataStore.pickedItemsByOrderId[orderId] ?? []
+        return dataStore.pickedItemIdsByOrderId[orderId] ?? []
     }
     
     
-    public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+    public func pickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.addPickedItem(itemId, toOrderWithId: orderId)
+        try! dataStore.addPickedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
     }
     
     
-    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.removePickedItem(itemId, fromOrderWithId: orderId)
+        try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
     }
     
     
-    public func verifiedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        return dataStore.verifiedItemsByOrderId[orderId] ?? []
+        return dataStore.verifiedItemIdsByOrderId[orderId] ?? []
     }
     
     
-    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.addVerifiedItem(itemId, toOrderWithId: orderId)
+        try! dataStore.addVerifiedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
     }
     
     
-    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.removeVerifiedItem(itemId, fromOrderWithId: orderId)
+        try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
@@ -484,7 +484,7 @@ class AppController: ObservableObject {
     public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percentage {
         
         let total = orderItems(forOrderWithId: orderId).count
-        let picked = pickedItems(forOrderWithId: orderId).count
+        let picked = pickedItemIds(forOrderWithId: orderId).count
         
         return Percentage(fraction: Double(picked)/Double(total))
     }
@@ -492,10 +492,10 @@ class AppController: ObservableObject {
     
     public func orderItemsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        let pickedItems = pickedItems(forOrderWithId: orderId)
+        let pickedIds = pickedItemIds(forOrderWithId: orderId)
         
         return orderItems(forOrderWithId: orderId)
-            .filter { !pickedItems.contains($0.id) }
+            .filter { !pickedIds.contains($0.id) }
     }
     
     
@@ -514,7 +514,7 @@ class AppController: ObservableObject {
     public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percentage {
         
         let total = orderItems(forOrderWithId: orderId).count
-        let verified = verifiedItems(forOrderWithId: orderId).count
+        let verified = verifiedItemIds(forOrderWithId: orderId).count
         
         return Percentage(fraction: Double(verified)/Double(total))
     }
@@ -522,10 +522,10 @@ class AppController: ObservableObject {
     
     public func orderItemsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        let verifiedItems = verifiedItems(forOrderWithId: orderId)
+        let verifiedIds = verifiedItemIds(forOrderWithId: orderId)
         
         return orderItems(forOrderWithId: orderId)
-            .filter { !verifiedItems.contains($0.id) }
+            .filter { !verifiedIds.contains($0.id) }
     }
     
     
@@ -1054,7 +1054,7 @@ class AppController: ObservableObject {
             
             orderItems(forOrderWithId: order.id).filter { item in
                 
-                !pickedItems(forOrderWithId: order.id).contains(item.id)
+                !pickedItemIds(forOrderWithId: order.id).contains(item.id)
             }
         }
         
@@ -1442,7 +1442,7 @@ class AppController: ObservableObject {
         
         let items = orderItems(forOrderWithId: orderId)
         
-        let pickedItemIds = pickedItems(forOrderWithId: orderId)
+        let pickedItemIds = pickedItemIds(forOrderWithId: orderId)
         
         return items.allSatisfy { pickedItemIds.contains($0.id) }
     }
@@ -1452,7 +1452,7 @@ class AppController: ObservableObject {
         
         let items = orderItems(forOrderWithId: orderId)
         
-        let verifiedItemIds = verifiedItems(forOrderWithId: orderId)
+        let verifiedItemIds = verifiedItemIds(forOrderWithId: orderId)
         
         return items.allSatisfy { verifiedItemIds.contains($0.id) }
     }
