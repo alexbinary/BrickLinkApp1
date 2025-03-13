@@ -56,6 +56,8 @@ struct PickingProgressView: View {
     }
 }
 
+
+
 #Preview {
     let appController = AppController()
     let order = appController.orderDetails.first!

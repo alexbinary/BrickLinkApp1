@@ -89,3 +89,11 @@ struct OrderDetailPickingView: View {
         }
     }
 }
+
+
+
+#Preview {
+    let appController = AppController()
+    let order = appController.orderDetails.first!
+    OrderDetailPickingView(order).environmentObject(appController)
+}

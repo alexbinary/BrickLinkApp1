@@ -45,7 +45,7 @@ struct OrderDetailView: View {
                 .equalWidths($columnWidth)
                 
                 TabView(
-                    selection: .constant("picking")
+                    selection: .constant("shipping")
                 ) {
                     ScrollView { OrderDetailGeneralView(order) }
                     .padding()
@@ -54,7 +54,7 @@ struct OrderDetailView: View {
                     OrderDetailPickingView(order)
                     .tabItem { Text("􀈥 Picking") }.tag("picking")
                     
-                    ScrollView { OrderDetailShippingView(orderId: order.id) }
+                    ScrollView { OrderDetailShippingView(order) }
                     .tabItem { Text("􀐚 Shipping") }.tag("shipping")
                     
                     ScrollView { OrderDetailFeedbackView(orderId: order.id) }

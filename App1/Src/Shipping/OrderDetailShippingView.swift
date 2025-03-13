@@ -6,272 +6,228 @@ import SwiftUI
 struct OrderDetailShippingView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
     
-    let orderId: OrderDetails.ID
+    
+    let order: OrderDetails
+    
+    init(_ order: OrderDetails) {
+        self.order = order
+    }
     
     
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
                 
-            if let order = app.orderDetails(forOrderWithId: orderId) {
+            HStack(alignment: .top, spacing: 12) {
                 
-                HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 12) {
+                    HeaderTitleView(label: "􂙡 Address")
+                    OrderAddressView(order).font(.title3).padding(.horizontal)
+                }
+                .padding(8)
+                .frame(maxHeight: .infinity, alignment: .top)
+                .roundedContainer(style: .outline)
+                
+                Spacer()
+                
+                let width1: CGFloat = 90
+                let width2: CGFloat = 170
+                let height1: CGFloat = 20
+                let height2: CGFloat = 10
+                
+                Grid(alignment: .leading) {
+                    
+                    GridRow {
+                        
+                        InfoCardView(title: "􀭭 Weight") {
+                            
+                            Text("\(String(format: "%.0f", order.totalWeight))g")
+                                .bold()
+                                .frame(width: width1, height: height1)
+                            
+                        } detail: {
+                            
+                            Text("Charged \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
+                                .foregroundStyle(.secondary)
+                                .frame(width: width1, height: height2)
+                        }
+                        
+                        InfoCardView(title: "􀖧 Shipping") {
+                            
+                            Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                .bold()
+                                .frame(width: width2, height: height1)
+                            
+                        } detail: {
+                            
+                            Text(order.shippingMethodName ?? "")
+                                .lineLimit(2, reservesSpace: true)
+                                .foregroundStyle(.secondary)
+                                .frame(height: height2)
+                        }
+                    }
                     
                     VStack(alignment: .leading, spacing: 12) {
                 
-                        HeaderTitleView(label: "􂙡 Address")
+                        HeaderTitleView(label: "􂄹 Remarks")
                         
-                        OrderAddressView(order)
-                            .font(.title3)
-                            .padding(.horizontal)
+                        Text(order.remarks ?? "").font(.title3).padding(.horizontal)
                     }
                     .padding(8)
-                    .frame(maxHeight: .infinity, alignment: .top)
                     .roundedContainer(style: .outline)
+                }
+                
+                Spacer()
+                
+                ShippingCostInfo(
+                    shippingMethodId: order.shippingMethodId,
+                    selectedShippingCost: selectedShippingCost
+                )
+                .padding()
+                .frame(maxHeight: .infinity, alignment: .top)
+                .roundedContainer(style: .info)
+            }
+            
+            Divider()
+            
+            HStack(alignment: .top, spacing: 48) {
+                
+                VStack(alignment: .leading, spacing: 12) {
                     
-                    Spacer()
+                    HeaderTitleView(label: "􀐚 Packing & Stamping")
                     
-                    let width1: CGFloat = 90
-                    let width2: CGFloat = 170
-                    let height1: CGFloat = 20
-                    let height2: CGFloat = 10
+                    let recommendedStampingMethod = app.recommendedStampingMethod(forOrderWithId: order.id)
                     
-                    Grid(alignment: .leading) {
+                    Grid(alignment: .leading, verticalSpacing: 8) {
+                        
+                        GridRow {
+                            Text("Shipping cost :")
+                            
+                            var shippingCostEditValue = app.shippingCost(forOrderWithId: order.id) ?? 0
+                            
+                            let shippingCostBinding = Binding<Float> {
+                                return shippingCostEditValue
+                            } set: { newValue in
+                                shippingCostEditValue = newValue
+                            }
+                            
+                            TextField(
+                                "Shipping cost", value: shippingCostBinding,
+                                format: .currency(code: "EUR").presentation(.isoCode)
+                            )
+                            .onSubmit {
+                                app.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                            }
+                            .frame(maxWidth: 120)
+                            
+                            HStack {
+                                Button("Save") {
+                                    app.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                }
+                                
+                                if let shippingCostPredictedValue = selectedShippingCost?.value {
+                                    
+                                    Button {
+                                        app.updateShippingCost(forOrderWithId: order.id, cost: NSDecimalNumber(decimal:  shippingCostPredictedValue).floatValue)
+                                    } label: {
+                                        HStack {
+                                            Text("Predicted:")
+                                            Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        GridRow {
+                            Text("Stamping :")
+                            
+                            if let confirmedMethod = app.stamping(forOrderWithId: order.id) {
+                                Text(confirmedMethod)
+                            } else {
+                                Text("")
+                            }
+                            
+                            HStack {
+                                Button("Recommended: \(recommendedStampingMethod)") {
+                                    app.updateStamping(forOrderWithId: order.id, method: recommendedStampingMethod)
+                                }
+                                
+                                if recommendedStampingMethod != "Bureau de poste" {
+                                    Button("Bureau de poste") {
+                                        app.updateStamping(forOrderWithId: order.id, method: "Bureau de poste")
+                                    }
+                                }
+                            }
+                        }
+                        
+                        GridRow {
+                            Text("")
+                            Text("")
+                            HStack {
+                                Button("Validate without stamping") {
+                                    self.app.validateOrderWithoutStamping(orderId: order.id)
+                                }
+                                if let date = app.dateOrderValidatedWithoutStamping(orderId: order.id) {
+                                    Text("Validated without stamping on")
+                                    Text(date, format: .dateTime)
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    
+                    HeaderTitleView(label: "􁁾 Shipping")
+                    
+                    Grid(alignment: .leading, verticalSpacing: 8) {
                         
                         GridRow {
                             
-                            InfoCardView(title: "􀭭 Weight") {
-                                
-                                Text("\(String(format: "%.0f", order.totalWeight))g")
-                                    .bold()
-                                    .frame(width: width1, height: height1)
-                                
-                            } detail: {
-                                
-                                Text("Charged \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
-                                    .foregroundStyle(.secondary)
-                                    .frame(width: width1, height: height2)
+                            Text("Tracking no :")
+                            
+                            var trackingNoEditValue = order.trackingNo
+                            
+                            let trackingNoBinding = Binding<String> {
+                                return trackingNoEditValue ?? ""
+                            } set: { newValue in
+                                trackingNoEditValue = newValue
                             }
                             
-                            InfoCardView(title: "􀖧 Shipping") {
-                                
-                                Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                    .bold()
-                                    .frame(width: width2, height: height1)
-                                
-                            } detail: {
-                                
-                                Text(order.shippingMethodName ?? "")
-                                    .lineLimit(2, reservesSpace: true)
-                                    .foregroundStyle(.secondary)
-                                    .frame(height: height2)
-                            }
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 12) {
-                    
-                            HeaderTitleView(label: "􂄹 Remarks")
-                            
-                            Text(order.remarks ?? "")
-                            .font(.title3)
-                            .padding(.horizontal)
-                        }
-                        .padding(8)
-                        .roundedContainer(style: .outline)
-                    }
-                    
-                    Spacer()
-                    
-                    ShippingCostInfo(
-                        shippingMethodId: order.shippingMethodId,
-                        selectedShippingCost: selectedShippingCost
-                    )
-                    .padding()
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .roundedContainer(style: .info)
-                }
-                
-                Divider()
-                
-                HStack(alignment: .top, spacing: 48) {
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        HeaderTitleView(label: "􀐚 Packing & Stamping")
-                        
-                        let recommendedStampingMethod = {
-                            
-                            var s = ""
-                            
-                            if let selectedLetterStamping = selectedShippingCost?.letterStamping {
-                                
-                                if selectedLetterStamping.usePostOffice {
-                                    return "Bureau de poste"
-                                } else {
-                                    s = "\(selectedLetterStamping.nbTimbres ?? 0) timbres"
-                                    
-                                    if order.shippingMethodId != shippingMethodId_France_LaPoste {
-                                        s += " international"
-                                    }
-                                    
-                                    return s
-                                }
-                            }
-                            
-                            return s
-                        }()
-                        
-                        Grid(alignment: .leading, verticalSpacing: 8) {
-                            
-                            GridRow {
-                                Text("Shipping cost :")
-                                
-                                var shippingCostEditValue = app.shippingCost(forOrderWithId: order.id) ?? 0
-                                
-                                let shippingCostBinding = Binding<Float> {
-                                    return shippingCostEditValue
-                                } set: { newValue in
-                                    shippingCostEditValue = newValue
-                                }
-                                
-                                TextField("Shipping cost", value: shippingCostBinding,
-                                          format: .currency(code: "EUR").presentation(.isoCode)
-                                )
+                            TextField("Tracking No", text: trackingNoBinding)
                                 .onSubmit {
-                                    app.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                    Task { await app.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
                                 }
-                                .frame(maxWidth: 120)
-                                
-                                HStack {
-                                    Button {
-                                        Task {
-                                            app.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
-                                        }
-                                    } label: {
-                                        Text("Save")
-                                    }
-                                    
-                                    if let shippingCostPredictedValue = selectedShippingCost?.value {
-                                        
-                                        Button {
-                                            app.updateShippingCost(forOrderWithId: order.id, cost: NSDecimalNumber(decimal:  shippingCostPredictedValue).floatValue)
-                                        } label: {
-                                            HStack {
-                                                Text("Predicted:")
-                                                Text(shippingCostPredictedValue, format: .currency(code: "EUR").presentation(.isoCode))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                                .frame(maxWidth: 140)
                             
-                            GridRow {
-                                Text("Stamping :")
-                                
-                                if let confirmedMethod = app.stamping(forOrderWithId: order.id) {
-                                    Text(confirmedMethod)
-                                } else {
-                                    Text("")
-                                }
-                                
-                                HStack {
-                                    Button {
-                                        app.updateStamping(forOrderWithId: order.id, method: recommendedStampingMethod)
-                                    } label: {
-                                        Text("Recommended: \(recommendedStampingMethod)")
-                                    }
-                                    
-                                    if recommendedStampingMethod != "Bureau de poste" {
-                                        Button {
-                                            app.updateStamping(forOrderWithId: order.id, method: "Bureau de poste")
-                                        } label: {
-                                            Text("Bureau de poste")
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            GridRow {
-                                Text("")
-                                Text("")
-                                HStack {
-                                    Button {
-                                        self.app.validateOrderWithoutStamping(orderId: order.id)
-                                    } label: {
-                                        Text("Validate without stamping")
-                                    }
-                                    if let date = app.dateOrderValidatedWithoutStamping(orderId: order.id) {
-                                        Text("Validated without stamping on")
-                                        Text(date, format: .dateTime)
-                                    }
-                                }
+                            Button("Save") {
+                                Task { await app.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
                             }
                         }
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 12) {
                         
-                        HeaderTitleView(label: "􁁾 Shipping")
-                        
-                        Grid(alignment: .leading, verticalSpacing: 8) {
+                        GridRow {
                             
-                            GridRow {
-                                
-                                Text("Tracking no :")
-                                
-                                var trackingNoEditValue = order.trackingNo
-                                
-                                let trackingNoBinding = Binding<String> {
-                                    return trackingNoEditValue ?? ""
-                                } set: { newValue in
-                                    trackingNoEditValue = newValue
-                                }
-                                
-                                TextField("Tracking No", text: trackingNoBinding)
-                                    .onSubmit {
-                                        Task {
-                                            await app.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
-                                        }
-                                    }
-                                    .frame(maxWidth: 140)
-                                
-                                Button {
-                                    Task {
-                                        await app.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "")
-                                    }
-                                } label: {
-                                    Text("Save")
-                                }
+                            Text("Drive thru :")
+                            
+                            if order.driveThruSent {
+                                Text("sent")
+                            } else {
+                                Text("not sent")
                             }
                             
-                            GridRow {
-                                
-                                Text("Drive thru :")
-                                
-                                if order.driveThruSent {
-                                    Text("sent")
-                                } else {
-                                    Text("not sent")
-                                }
-                                
-                                Button {
-                                    Task {
-                                        await app.sendDriveThru(orderId: order.id)
-                                    }
-                                } label: {
-                                    Text("Send")
-                                }
+                            Button("Send") {
+                                Task { await app.sendDriveThru(orderId: order.id) }
                             }
-                            
-                            Button {
-                                Task {
-                                    await app.updateOrderStatus(orderId: order.id, status: .shipped)
-                                    await app.sendDriveThru(orderId: order.id)
-                                }
-                            } label: {
-                                Text("Ship and send Drive thru")
+                        }
+                        
+                        Button("Ship and send Drive thru") {
+                            Task {
+                                await app.updateOrderStatus(orderId: order.id, status: .shipped)
+                                await app.sendDriveThru(orderId: order.id)
                             }
                         }
                     }
@@ -279,188 +235,19 @@ struct OrderDetailShippingView: View {
             }
         }
         .padding()
-        .task {
-            await parallel([
-                { await loadOrder() },
-                { await loadOrderItems() },
-            ])
-        }
-        .onChange(of: orderId) { oldValue, newValue in
-            Task {
-                await parallel([
-                    { await loadOrder() },
-                    { await loadOrderItems() },
-                ])
-            }
-        }
-    }
-    
-    
-    func loadOrder() async {
-        
-        await app.loadOrderDetailsIfMissing(forOrderWithId: orderId)
-    }
-    
-    
-    func loadOrderItems() async {
-        
-        await app.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     
     var selectedShippingCost: SelectedShippingCost? {
         
-        guard let order = app.orderDetails(forOrderWithId: orderId) else {
-            return nil
-        }
-        
-        let weight = order.totalWeight * orderWeightMarginRatio
-        
-        if order.shippingMethodId == shippingMethodId_France_LaPoste {
-            
-            if let band = shippingCostBandsFrance
-                .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                
-                var chooseLetter: Bool = false
-                var chooseParcel: Bool = false
-                let chooseParcelZB: Bool = false
-                let chooseParcelZC: Bool = false
-                
-                var value: Decimal?
-                
-                if weight < 250 {
-                    chooseLetter = true
-                    value = band.letter?.bestPrice
-                } else {
-                    chooseParcel = true
-                    value = band.priceParcel
-                }
-                
-                var letterStamping: LetterStamping? = nil
-                    
-                if let priceLetter = band.letter {
-                    
-                    letterStamping = LetterStamping(
-                    
-                        useTimbresParMultiples: priceLetter.preferTimbresParMultiples,
-                        useTimbres: priceLetter.preferCoverRefPriceWithTimbres,
-                        usePostOffice: priceLetter.preferPostOffice,
-                        nbTimbres: priceLetter.nbTimbres
-                    )
-                }
-                
-                return SelectedShippingCost(
-                    maxWeight: band.maxWeight,
-                    preferLetter: chooseLetter, preferParcel: chooseParcel,
-                    preferParcelZB: chooseParcelZB, preferParcelZC: chooseParcelZC,
-                    letterStamping: letterStamping,
-                    value: value
-                )
-            }
-            
-            return nil
-            
-        } else if order.shippingMethodId == shippingMethodId_Europe_LaPoste {
-            
-            if let band = shippingCostBandsEurope
-                .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                  
-                var chooseLetter: Bool = false
-                var chooseParcel: Bool = false
-                let chooseParcelZB: Bool = false
-                let chooseParcelZC: Bool = false
-                
-                var value: Decimal?
-                
-                if weight < 250 {
-                    chooseLetter = true
-                    value = band.letter?.bestPrice
-                } else {
-                    chooseParcel = true
-                    value = band.priceParcel
-                }
-                
-                var letterStamping: LetterStamping? = nil
-                    
-                if let priceLetter = band.letter {
-                    
-                    letterStamping = LetterStamping(
-                        
-                        useTimbresParMultiples: priceLetter.preferTimbresParMultiples,
-                        useTimbres: priceLetter.preferCoverRefPriceWithTimbres,
-                        usePostOffice: priceLetter.preferPostOffice,
-                        nbTimbres: priceLetter.nbTimbres
-                    )
-                }
-                
-                return SelectedShippingCost(
-                    maxWeight: band.maxWeight,
-                    preferLetter: chooseLetter, preferParcel: chooseParcel,
-                    preferParcelZB: chooseParcelZB, preferParcelZC: chooseParcelZC,
-                    letterStamping: letterStamping,
-                    value: value
-                )
-            }
-            
-            return nil
-            
-        } else if order.shippingMethodId == shippingMethodId_World_LaPoste {
-            
-            if let band = shippingCostBandsWorld
-                .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
-                    
-                var chooseLetter: Bool = false
-                let chooseParcel: Bool = false
-                var chooseParcelZB: Bool = false
-                var chooseParcelZC: Bool = false
-                
-                var value: Decimal?
-                
-                if weight < 250 {
-                    chooseLetter = true
-                    value = band.letter?.bestPrice
-                } else {
-                    if ["US"].contains(order.shippingAddressCountryCode) {
-                        chooseParcelZC = true
-                        value = band.priceParcelZC
-                    } else {
-                        chooseParcelZB = true
-                        value = band.priceParcelZB
-                    }
-                }
-                
-                var letterStamping: LetterStamping? = nil
-                    
-                if let priceLetter = band.letter {
-                    
-                    letterStamping = LetterStamping(
-                        
-                        useTimbresParMultiples: priceLetter.preferTimbresParMultiples,
-                        useTimbres: priceLetter.preferCoverRefPriceWithTimbres,
-                        usePostOffice: priceLetter.preferPostOffice,
-                        nbTimbres: priceLetter.nbTimbres
-                    )
-                }
-                
-                return SelectedShippingCost(
-                    maxWeight: band.maxWeight,
-                    preferLetter: chooseLetter, preferParcel: chooseParcel,
-                    preferParcelZB: chooseParcelZB, preferParcelZC: chooseParcelZC,
-                    letterStamping: letterStamping,
-                    value: value
-                )
-            }
-            
-            return nil
-        }
-        
-        return nil
+        app.selectedShippingCost(forOrderWithId: order.id)
     }
 }
 
 
 
 #Preview {
-    OrderDetailShippingView(orderId: "27236825")
-        .environmentObject(AppController())
+    let appController = AppController()
+    let order = appController.orderDetails.first!
+    OrderDetailShippingView(order).environmentObject(appController)
 }
