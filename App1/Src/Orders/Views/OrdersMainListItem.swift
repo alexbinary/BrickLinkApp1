@@ -26,8 +26,8 @@ struct OrdersMainListItem: View {
                     Grid(alignment: .leading, verticalSpacing: 0) {
                         
                         GridRow {
-                            Text("order").captionSyle()
-                            Text("placed").captionSyle()
+                            Text("order").captionStyle()
+                            Text("placed").captionStyle()
                         }
                         
                         GridRow {
@@ -62,8 +62,8 @@ struct OrdersMainListItem: View {
                     Grid(alignment: .leading, verticalSpacing: 0) {
                         
                         GridRow {
-                            Text("status").captionSyle()
-                            Text("changed").captionSyle()
+                            Text("status").captionStyle()
+                            Text("changed").captionStyle()
                         }
                         GridRow {
                             Text(order.status.rawValue).font(.title3)
@@ -76,7 +76,7 @@ struct OrdersMainListItem: View {
                     HStack(alignment: tags.count == 1 ? .bottom : .top, spacing: 24) {
                         
                         VStack(alignment: .leading) {
-                            Text("feedback").captionSyle()
+                            Text("feedback").captionStyle()
                             HStack(alignment: .firstTextBaseline, spacing: 12) {
                                 
                                 HStack {

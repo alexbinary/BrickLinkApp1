@@ -6,12 +6,20 @@ import SwiftUI
 struct UploadItemView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
+    
     
     let uploadItem: UploadItem
     
-    @State var hover = false
+    init(uploadItem: UploadItem) {
+        
+        self.uploadItem = uploadItem
+        self._editColorId = State(initialValue: uploadItem.colorId)
+    }
     
+    
+    @State var hover = false
     @State var catalogResult: Result<CatalogItem>? = nil
     
     @State var editModeRef = false
@@ -30,160 +38,131 @@ struct UploadItemView: View {
     @State var editRemarks: String = ""
     
     @State var submitting = false
-    
-    
-    init(uploadItem: UploadItem) {
-        
-        self.uploadItem = uploadItem
-        
-        self._editColorId = State(initialValue: uploadItem.colorId)
-    }
 
     
     var body: some View {
         
         HStack(alignment: .top) {
             
-            HStack(alignment: .center, spacing: 48) {
+            Grid(verticalSpacing: 0) {
                 
-                Grid(verticalSpacing: 0) {
+                GridRow(alignment: .top) {
                     
-                    GridRow(alignment: .top) {
+                    CatalogImage(uploadItem: uploadItem)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
                         
-                        CatalogImage(uploadItem: uploadItem)
-                        
-                        VStack(alignment: .leading, spacing: 0) {
+                        ZStack(alignment: .leading) {
                             
-                            ZStack(alignment: .leading) {
-                                
-                                Text(uploadItem.ref)
-                                    .onTapGesture {
-                                        editModeRef = true
+                            Text(uploadItem.ref)
+                                .onTapGesture { editModeRef = true }
+                                .captionStyle()
+                                .opacity(editModeRef ? 0 : 1)
+                            
+                            TextField("Ref", text: $editRef)
+                                .frame(maxWidth: 100)
+                                .onSubmit({
+                                    if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                        editRef = uploadItem.ref
                                     }
-                                    .font(.caption).foregroundStyle(.secondary)
-                                    .opacity(editModeRef ? 0 : 1)
+                                    editModeRef = false
+                                })
+                                .opacity(editModeRef ? 1 : 0)
+                        }
+                        
+                        Group {
+                            
+                            if let catalogResult = catalogResult {
                                 
-                                TextField("Ref", text: $editRef)
-                                    .frame(maxWidth: 100)
-                                    .onSubmit({
-                                        if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-                                            editRef = uploadItem.ref
-                                        }
-                                        editModeRef = false
-                                    })
-                                    .opacity(editModeRef ? 1 : 0)
+                                switch catalogResult {
+                                    
+                                case .loading:
+                                    Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                    
+                                case .found(let catalogItem):
+                                    Text(catalogItem.name).lineLimit(nil)
+                                    
+                                case .notFound:
+                                    Text("no catalog entry").foregroundStyle(.secondary)
+                                }
+                                
+                            } else if let name = uploadItem.name {
+                                    
+                                Text(name).lineLimit(nil)
+                                
+                            } else {
+                                
+                                Text("name unknown").foregroundStyle(.secondary).italic()
                             }
+                        }
+                        .font(.title3).frame(width: 300, alignment: .leading)
+                        
+                        ZStack(alignment: .leading) {
                             
                             Group {
-                                
-                                if let catalogResult = catalogResult {
-                                    
-                                    switch catalogResult {
-                                        
-                                    case .loading:
-                                        Text("Loading name from catalog...").foregroundStyle(.secondary)
-                                        
-                                    case .found(let catalogItem):
-                                        Text(catalogItem.name).lineLimit(nil)
-                                        
-                                    case .notFound:
-                                        Text("no catalog entry").foregroundStyle(.secondary)
-                                    }
-                                    
-                                } else if let name = uploadItem.name {
-                                        
-                                    Text(name).lineLimit(nil)
-                                    
+                                if !(uploadItem.comment ?? "").isEmpty {
+                                    Text((uploadItem.comment ?? "").htmlUnescape())
                                 } else {
-                                    
-                                    Text("name unknown").foregroundStyle(.secondary).italic()
+                                    Text("no comment").italic().foregroundStyle(.secondary)
                                 }
                             }
-                            .font(.title3).frame(width: 300, alignment: .leading)
+                            .onTapGesture { editModeComment = true }
+                            .opacity(editModeComment ? 0 : 1)
                             
-                            ZStack(alignment: .leading) {
-                                
-                                Group {
-                                    if !(uploadItem.comment ?? "").isEmpty {
-                                        Text((uploadItem.comment ?? "").htmlUnescape())
-                                    } else {
-                                        Text("no comment").italic().foregroundStyle(.secondary)
-                                    }
-                                }
-                                .onTapGesture {
-                                    editModeComment = true
-                                }
-                                .opacity(editModeComment ? 0 : 1)
-                                
-                                TextField("Comment", text: $editComment)
-                                    .frame(maxWidth: 200)
-                                    .onSubmit({
-                                        editModeComment = false
-                                    })
-                                    .opacity(editModeComment ? 1 : 0)
-                            }
+                            TextField("Comment", text: $editComment)
+                                .frame(maxWidth: 200)
+                                .onSubmit { editModeComment = false }
+                                .opacity(editModeComment ? 1 : 0)
                         }
                     }
+                }
+                
+                GridRow {
                     
-                    GridRow {
+                    ZStack {
                         
-                        ZStack {
-                            
-                            Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-").font(.title3)
-                                .onTapGesture {
-                                    editModeCondition = true
-                                }
-                                .opacity(editModeCondition ? 0 : 1)
-                            
-                            Picker("Condition", selection: $editCondition) {
-                                
-                                Text("").tag(nil as String?)
-                                Text("NEW").tag("N")
-                                Text("USED").tag("U")
-                            }
-                            .labelsHidden()
-                            .frame(maxWidth: 90)
-                            .onChange(of: editCondition) {
-                                editModeCondition = false
-                            }
-                            .opacity(editModeCondition ? 1 : 0)
-                            
-                        }.gridColumnAlignment(.center)
+                        Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-").font(.title3)
+                            .onTapGesture { editModeCondition = true }
+                            .opacity(editModeCondition ? 0 : 1)
                         
-                        HStack {
-                            LegoColorView(uploadItem: uploadItem, style: .compact)
+                        Picker("Condition", selection: $editCondition) {
                             
-                            ZStack(alignment: .leading) {
-                                
-                                Text(app.colorName(forLegoColorId: uploadItem.colorId))
-                                    .onTapGesture {
-                                        editModeColor = true
-                                    }
-                                    .opacity(editModeColor ? 0 : 1)
-                                
-                                Picker("Color", selection: $editColorId) {
-                                    
-                                    ForEach(app.allColors) { color in
-                                        
-                                        Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode))
-                                            .tag(color.id)
-                                    }
-                                }
-                                .pickerStyle(.menu)
-                                .labelsHidden()
-                                .frame(maxWidth: 150)
-                                .onChange(of: editColorId, {
-                                    editModeColor = false
-                                })
-                                .opacity(editModeColor ? 1 : 0)
-                            }
+                            Text("").tag(nil as String?)
+                            Text("NEW").tag("N")
+                            Text("USED").tag("U")
                         }
-                        .gridColumnAlignment(.leading)
+                        .labelsHidden()
+                        .frame(maxWidth: 90)
+                        .onChange(of: editCondition) {
+                            editModeCondition = false
+                        }
+                        .opacity(editModeCondition ? 1 : 0)
+                        
+                    }.gridColumnAlignment(.center)
+                    
+                    HStack {
+                        LegoColorView(uploadItem: uploadItem, style: .compact)
+                        
+                        ZStack(alignment: .leading) {
+                            
+                            Text(app.colorName(forLegoColorId: uploadItem.colorId))
+                                .onTapGesture { editModeColor = true }
+                                .opacity(editModeColor ? 0 : 1)
+                            
+                            LegoColorPicker("Color", selection: $editColorId)
+                            .labelsHidden()
+                            .frame(maxWidth: 150)
+                            .onChange(of: editColorId, {
+                                editModeColor = false
+                            })
+                            .opacity(editModeColor ? 1 : 0)
+                        }
                     }
+                    .gridColumnAlignment(.leading)
                 }
             }
             
-            let errors = {
+            let errors: [String] = {
                 
                 var errors = [String]()
                 
@@ -215,7 +194,7 @@ struct UploadItemView: View {
                     GridRow(alignment: .firstTextBaseline) {
                         Text("Inventory ID").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                         if let inventoryItem = inventoryItem {
-                            Link("\(inventoryItem.id)", destination: URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryItem.id)#/")!)
+                            InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
                         } else {
                             Text("-")
                         }
@@ -514,9 +493,7 @@ struct UploadItemView: View {
             fill: hover ? .secondarySystemFill : .tertiarySystemFill,
             stroke: .tertiarySystemFill
         )
-        .onHover { hover in
-            self.hover = hover
-        }
+        .onHover { self.hover = $0 }
         
         .onChange(of: editModeRef) { old, new in
             if new == true {
@@ -665,17 +642,7 @@ struct UploadItemView: View {
 
 
 
-enum Result<T> {
-    
-    case loading
-    case notFound
-    case found(T)
-}
-
-
-
 extension Int? {
-    
     
     var normalizedOptional: Int? {
         return (self ?? 0) > 0 ? self : nil
@@ -685,7 +652,6 @@ extension Int? {
 
 
 extension Float? {
-    
     
     var normalizedOptional: Float? {
         return (self ?? 0) > 0 ? self : nil

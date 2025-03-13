@@ -23,7 +23,7 @@ struct OrderCostView: View {
             
             VStack(alignment: .leading) {
                 
-                Text("􀖧 Grand total").captionSyle()
+                Text("􀖧 Grand total").captionStyle()
                 
                 Text(order.grandTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                     .font(.title2)
@@ -38,7 +38,7 @@ struct OrderCostView: View {
                 
                 VStack(alignment: .leading) {
                     
-                    Text("􀖧 Subtotal").captionSyle()
+                    Text("􀖧 Subtotal").captionStyle()
                     
                     Text(order.subTotal, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                         .font(.title3)
@@ -51,7 +51,7 @@ struct OrderCostView: View {
                 
                 VStack(alignment: .leading) {
                     
-                    Text("􀖧 Shipping").captionSyle()
+                    Text("􀖧 Shipping").captionStyle()
                     
                     Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                         .font(.title3)

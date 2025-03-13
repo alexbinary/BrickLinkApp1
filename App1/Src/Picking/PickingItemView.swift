@@ -30,7 +30,7 @@ struct PickingItemView: View {
                     CatalogImage(orderItem: item)
                     
                     VStack(alignment: .leading) {
-                        Text(item.ref).captionSyle()
+                        Text(item.ref).captionStyle()
                         Text(item.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
                         if !item.comment.isEmpty { Text(item.comment) }
                     }
@@ -45,8 +45,8 @@ struct PickingItemView: View {
             Grid(alignment: .leading) {
                 
                 GridRow {
-                    Text("Location").captionSyle()
-                    Text("Quantity").captionSyle().gridColumnAlignment(.center)
+                    Text("Location").captionStyle()
+                    Text("Quantity").captionStyle().gridColumnAlignment(.center)
                 }
                 
                 GridRow(alignment: .lastTextBaseline) {

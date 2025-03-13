@@ -198,6 +198,12 @@ struct BrickLinkAPIClient {
     // MARK: - Inventory
         
         
+    static func url(forInventoryItemWithId inventoryId: String) -> URL? {
+        
+        return URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryId)#/")
+    }
+    
+    
     static func fetchInventories(matchingItemType itemType: BrickLinkItemType? = nil, matchingColorId colorId: String? = nil, using credentials: BrickLinkAPICredentials) async -> [BrickLinkInventoryItem] {
         
         var url = URL(string: "https://api.bricklink.com/api/store/v1/inventories")!

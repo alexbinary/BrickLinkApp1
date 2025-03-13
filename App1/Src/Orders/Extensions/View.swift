@@ -6,7 +6,7 @@ import SwiftUI
 extension View {
     
     
-    @ViewBuilder func captionSyle() -> some View {
+    @ViewBuilder func captionStyle() -> some View {
         
         self.font(.caption).foregroundStyle(.secondary)
     }

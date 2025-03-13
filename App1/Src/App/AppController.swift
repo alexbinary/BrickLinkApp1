@@ -1285,6 +1285,12 @@ class AppController: ObservableObject {
     }
     
     
+    public func url(forInventoryItemWithId inventoryId: String) -> URL? {
+        
+        BrickLinkAPIClient.url(forInventoryItemWithId: inventoryId)
+    }
+    
+    
     
     // MARK: - Quantity
     

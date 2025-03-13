@@ -42,7 +42,7 @@ struct OrderIncomeTransactionView: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text("Amount").captionSyle()
+                        Text("Amount").captionStyle()
                         
                         ForEach(transactions) { transaction in
                             Text(transaction.amount, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
@@ -52,7 +52,7 @@ struct OrderIncomeTransactionView: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text("Fees").captionSyle()
+                        Text("Fees").captionStyle()
                         
                         ForEach(transactions) { transaction in
                             if let fees = transaction.fees, fees != 0 {
@@ -67,7 +67,7 @@ struct OrderIncomeTransactionView: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text("Method").captionSyle()
+                        Text("Method").captionStyle()
                         
                         ForEach(transactions) { transaction in
                             Text(transaction.paymentMethod.rawValue)
@@ -77,7 +77,7 @@ struct OrderIncomeTransactionView: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text("Date").captionSyle()
+                        Text("Date").captionStyle()
                         
                         ForEach(transactions) { transaction in
                             Text(transaction.date, format: .dateTime)
@@ -87,7 +87,7 @@ struct OrderIncomeTransactionView: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text("Validated").captionSyle()
+                        Text("Validated").captionStyle()
                         
                         ForEach(transactions) { transaction in
                             Text(transaction.createdAt, format: .dateTime)
@@ -106,7 +106,7 @@ struct OrderIncomeTransactionView: View {
                         Text("Method")
                         Text("Date")
                     }
-                    .captionSyle()
+                    .captionStyle()
                     
                     GridRow {
                         

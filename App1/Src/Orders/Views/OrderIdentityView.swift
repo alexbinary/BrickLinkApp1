@@ -25,8 +25,8 @@ struct OrderIdentityView: View {
             Grid(alignment: .leading, verticalSpacing: 0) {
                 
                 GridRow {
-                    Text("order").captionSyle()
-                    Text("placed").captionSyle()
+                    Text("order").captionStyle()
+                    Text("placed").captionStyle()
                 }
                 GridRow {
                     OrderLink(orderSummary) { Text(order.id) }
@@ -38,8 +38,8 @@ struct OrderIdentityView: View {
                 }
             
                 GridRow {
-                    Text("status").captionSyle()
-                    Text("changed").captionSyle()
+                    Text("status").captionStyle()
+                    Text("changed").captionStyle()
                 }
                 GridRow {
                     Text(order.status.rawValue).font(.title3)
