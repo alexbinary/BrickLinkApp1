@@ -114,8 +114,7 @@ struct UploadAddView: View {
                             }
                         }
                             
-                        AsyncImage(url: app.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId))
-                            .frame(maxWidth: 100, maxHeight: 100)
+                        CatalogImage(itemType: type, ref: ref, colorId: colorId)
                     }
                 }
                 .padding()

@@ -27,9 +27,7 @@ struct PickingItemView: View {
                 
                 GridRow(alignment: .top) {
                     
-                    AsyncImage(url: app.url(for: item))
-                        .frame(minHeight: 70, maxHeight: 70, alignment: .top)
-                        .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+                    CatalogImage(orderItem: item)
                     
                     VStack(alignment: .leading) {
                         Text(item.ref).font(.caption).foregroundStyle(.secondary)
