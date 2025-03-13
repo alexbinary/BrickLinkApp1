@@ -6,9 +6,16 @@ import SwiftUI
 struct OrderDetailRefundView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
+    
     
     let order: OrderDetails
+    
+    init(_ order: OrderDetails) {
+        self.order = order
+    }
+    
     
     @State var refundDate: Date = Date()
     @State var refundAmount: Float = 0
@@ -22,23 +29,17 @@ struct OrderDetailRefundView: View {
             HeaderTitleView(label: "􂈚 Refund")
                
             Form {
-                TextField("Amount", value: $refundAmount,
-                          format: .currency(code: "EUR").presentation(.isoCode)
+                TextField(
+                    "Amount", value: $refundAmount,
+                    format: .currency(code: "EUR").presentation(.isoCode)
                 )
-                .onSubmit {
-                    self.submitRefund()
-                }
-                DatePicker("Date", selection: $refundDate)
-                TextField("Comment", text: $refundComment, axis: .vertical)
-                    .lineLimit(3...5)
+                .onSubmit { self.submitRefund() }
                 
-                HStack {
-                    Button {
-                        self.submitRefund()
-                    } label: {
-                        Text("Create refund")
-                    }
-                }
+                DatePicker("Date", selection: $refundDate)
+                
+                TextField("Comment", text: $refundComment, axis: .vertical).lineLimit(3...5)
+                
+                Button("Create refund") { self.submitRefund() }
             }
             
             Table(app.refunds(for: order)) {
@@ -56,21 +57,11 @@ struct OrderDetailRefundView: View {
             }
             .frame(minHeight: 100)
         }
-        .onAppear {
+        .onChange(of: order, initial: true) {
             
-            self.setupFormStateFromOrder()
+            self.refundDate = Date()
+            self.refundComment = ""
         }
-        .onChange(of: order) {
-            
-            self.setupFormStateFromOrder()
-        }
-    }
-    
-    
-    func setupFormStateFromOrder() {
-        
-        self.refundDate = Date()
-        self.refundComment = ""
     }
     
     
