@@ -25,7 +25,7 @@ struct OrderPickingProgressView: View {
                 Text("Picking")
                 
                 let progress = app.pickingProgress(forOrderWithId: order.id)
-                Text(String(format: "%3.0f%% complete", progress))
+                Text("\(progress) complete")
                 
                 if progress < 1 {
                     let parts = app.totalPartsLeftToPick(forOrderWithId: order.id)
@@ -40,7 +40,7 @@ struct OrderPickingProgressView: View {
                 Text("Verify")
                 
                 let progress = app.pickingVerificationProgress(forOrderWithId: order.id)
-                Text(String(format: "%3.0f%% verified", progress))
+                Text("\(progress) verified")
                 
                 if progress < 1 {
                     let parts = app.totalPartsLeftToVerify(forOrderWithId: order.id)

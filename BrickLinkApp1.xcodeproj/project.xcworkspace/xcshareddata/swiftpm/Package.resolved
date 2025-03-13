@@ -1,5 +1,5 @@
 {
-  "originHash" : "e981a7e743f01eda82e07bec1e60699beaae15ead54d19907e2fdde30b7efc26",
+  "originHash" : "4f111571e5d05d2d605909df986103a411dcbbc3c10c1e94ab98658c00b19581",
   "pins" : [
     {
       "identity" : "cryptoswift",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
         "version" : "1.8.3"
+      }
+    },
+    {
+      "identity" : "percentage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/Percentage.git",
+      "state" : {
+        "revision" : "fb281e5d511c848b719285f0c7b44fd015d88ecd",
+        "version" : "1.2.0"
       }
     },
     {

@@ -1,5 +1,6 @@
 
 import SwiftUI
+import Percentage
 
 
 class AppController: ObservableObject {
@@ -485,7 +486,7 @@ class AppController: ObservableObject {
         let total = orderItems(forOrderWithId: orderId).count
         let picked = pickedItems(forOrderWithId: orderId).count
         
-        return floor(Double(picked)/Double(total)*100)
+        return Percentage(fraction: Double(picked)/Double(total))
     }
     
     
@@ -515,7 +516,7 @@ class AppController: ObservableObject {
         let total = orderItems(forOrderWithId: orderId).count
         let verified = verifiedItems(forOrderWithId: orderId).count
         
-        return floor(Double(verified)/Double(total)*100)
+        return Percentage(fraction: Double(verified)/Double(total))
     }
     
     
