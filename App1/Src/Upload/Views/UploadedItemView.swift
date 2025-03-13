@@ -6,9 +6,12 @@ import SwiftUI
 struct UploadedItemView: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
+    
     
     let uploadedItem: UploadedItem
+    
     
     @State var hover = false
 
@@ -139,8 +142,6 @@ struct UploadedItemView: View {
             fill: hover ? .secondarySystemFill : .tertiarySystemFill,
             stroke: .tertiarySystemFill
         )
-        .onHover { hover in
-            self.hover = hover
-        }
+        .onHover { self.hover = $0 }
     }
 }
