@@ -78,21 +78,8 @@ struct OrdersMainList: View {
             Color.clear.frame(width: 0, height: 24)
             
         } header: {
-            headerView(section.header, secondaryText: "\(section.orders.count) orders")
+            SectionHeader(section.header, secondaryText: "\(section.orders.count) orders")
         }
-    }
-    
-    
-    @ViewBuilder
-    func headerView(_ primaryText: String, secondaryText: String) -> some View {
-        
-        HStack(spacing: 24) {
-            Text(primaryText).font(.title3)
-            Text(secondaryText).foregroundStyle(.secondary)
-            Spacer()
-        }
-        .padding()
-        .background(Color.windowBackgroundColor.opacity(0.90))
     }
     
     

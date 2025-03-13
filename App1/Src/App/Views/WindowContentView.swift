@@ -24,7 +24,7 @@ struct WindowContentView: View {
             
         case .upload:
             
-            UploadContentView()
+            UploadView()
             
         case .resultDashboard:
             

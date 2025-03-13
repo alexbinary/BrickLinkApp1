@@ -884,6 +884,31 @@ class AppController: ObservableObject {
     }
     
     
+    public var uploadItemsForList: [UploadItem] {
+        
+        uploadItems.sorted { item1, item2 in
+                
+            let rem1 = inventory(for: item1)?.remarks ?? inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
+            let rem2 = inventory(for: item2)?.remarks ?? inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
+            
+            switch (rem1, rem2) {
+                
+            case (nil, nil):
+                return true
+                
+            case (.some, nil):
+                return true
+                
+            case (nil, .some):
+                return false
+                
+            case (.some(let rem1), .some(let rem2)):
+                return rem1 < rem2
+            }
+        }
+    }
+    
+    
     public func addUploadItem(_ uploadItem: UploadItem) {
         
         try! dataStore.addUploadItem(uploadItem)
@@ -1049,6 +1074,14 @@ class AppController: ObservableObject {
     public var uploadedItems: [UploadedItem] {
         
         dataStore.uploadedItems
+    }
+    
+    
+    public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
+        
+        uploadedItems
+            .filter { $0.matches(searchText, self) }
+            .sorted { $0.uploadDate > $1.uploadDate }
     }
     
     
