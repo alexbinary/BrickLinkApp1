@@ -444,12 +444,24 @@ class AppController: ObservableObject {
     }
     
     
+    public func pick(_ item: OrderItem) {
+        
+        pickItem(forOrderWithId: item.orderId, itemId: item.id)
+    }
+    
+    
     public func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
         try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
+    }
+    
+    
+    public func unpick(_ item: OrderItem) {
+        
+        unpickItem(forOrderWithId: item.orderId, itemId: item.id)
     }
     
     
@@ -468,12 +480,24 @@ class AppController: ObservableObject {
     }
     
     
+    public func verify(_ item: OrderItem) {
+        
+        verifyItem(forOrderWithId: item.orderId, itemId: item.id)
+    }
+    
+    
     public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
         try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
         
         self.objectWillChange.send()
+    }
+    
+    
+    public func unverify(_ item: OrderItem) {
+        
+        unverifyItem(forOrderWithId: item.orderId, itemId: item.id)
     }
     
     
@@ -1115,6 +1139,20 @@ class AppController: ObservableObject {
             colorId: orderItem.colorId,
             condition: orderItem.condition
         )
+    }
+    
+    
+    public func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
+        
+        let itemIsPicked = pickedItemIds(forOrderWithId: orderItem.orderId).contains(orderItem.id)
+        let stock = inStockQuantity(for: orderItem)
+        let qty = Int(orderItem.quantity)!
+        
+        if !itemIsPicked {
+            return (before: stock, after: stock - qty)
+        } else {
+            return (before: stock + qty, after: stock)
+        }
     }
     
     
