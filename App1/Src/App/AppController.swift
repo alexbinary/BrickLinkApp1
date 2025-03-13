@@ -345,6 +345,14 @@ class AppController: ObservableObject {
     }
     
     
+    public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+        
+        let items = orderItems(forOrderWithId: orderId)
+        
+        return itemsIds.map { id in items.first { $0.id == id }! }
+    }
+    
+    
     private func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
         
         print("Loading order items \(orderId)")
@@ -538,6 +546,43 @@ class AppController: ObservableObject {
     public func totalPartsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
         
         orderItemsLeftToVerify(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
+    }
+    
+    
+    public func nextOrderItemsToPick(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        let pickedIds = pickedItemIds(forOrderWithId: orderId)
+        
+        return orderItems(forOrderWithId: orderId)
+            .filter { !pickedIds.contains($0.id) }
+            .sorted { $0.location < $1.location }
+    }
+    
+    
+    public func pickedOrderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        let pickedIds = pickedItemIds(forOrderWithId: orderId)
+        
+        return orderItems(forOrderWithId: orderId, fromItemIds: pickedIds).reversed()
+    }
+    
+    
+    public func nextOrderItemsToVerify(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    
+        let pickedIds = pickedItemIds(forOrderWithId: orderId)
+        let verifiedIds = verifiedItemIds(forOrderWithId: orderId)
+        
+        return orderItems(forOrderWithId: orderId)
+            .filter { pickedIds.contains($0.id) && !verifiedIds.contains($0.id) }
+            .sorted { a, b in a.condition == "N" }
+    }
+    
+    
+    public func verifiedOrderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        let verifiedIds = verifiedItemIds(forOrderWithId: orderId)
+        
+        return orderItems(forOrderWithId: orderId, fromItemIds: verifiedIds).reversed()
     }
     
     

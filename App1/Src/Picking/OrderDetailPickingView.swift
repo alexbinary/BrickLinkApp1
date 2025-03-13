@@ -18,6 +18,11 @@ struct OrderDetailPickingView: View {
     }
     
     
+    var pickedOrderItems: [OrderItem] { app.pickedOrderItems(forOrderWithId: order.id) }
+    var verifiedOrderItems: [OrderItem] { app.verifiedOrderItems(forOrderWithId: order.id) }
+    var nextOrderItemsToPick: [OrderItem] { app.nextOrderItemsToPick(forOrderWithId: order.id) }
+    var nextOrderItemsToVerify: [OrderItem] { app.nextOrderItemsToVerify(forOrderWithId: order.id) }
+    
     
     var body: some View {
             
@@ -45,7 +50,7 @@ struct OrderDetailPickingView: View {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(pickedOrderItems.reversed()) { PickingItemView($0, buttons: [.unpick]) }
+                            ForEach(pickedOrderItems) { PickingItemView($0, buttons: [.unpick]) }
                         }
                     }
                     .padding()
@@ -67,7 +72,7 @@ struct OrderDetailPickingView: View {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(verifiedOrderItems.reversed()) { PickingItemView($0, buttons: [.unverify]) }
+                            ForEach(verifiedOrderItems) { PickingItemView($0, buttons: [.unverify]) }
                         }
                     }
                     .padding()
@@ -82,36 +87,5 @@ struct OrderDetailPickingView: View {
         .onAppear {
             Task { await app.reloadInventories() }
         }
-    }
-    
-    
-    var orderItems: [OrderItem] {
-        app.orderItems(forOrderWithId: order.id)
-    }
-    
-    var pickedOrderItemIds: [OrderItem.ID] {
-        app.pickedItemIds(forOrderWithId: order.id)
-    }
-    
-    var pickedOrderItems: [OrderItem] {
-        pickedOrderItemIds.map { id in orderItems.first { $0.id == id }! }
-    }
-    
-    var verifiedOrderItemIds: [OrderItem.ID] {
-        app.verifiedItemIds(forOrderWithId: order.id)
-    }
-    
-    var verifiedOrderItems: [OrderItem] {
-        verifiedOrderItemIds.map { id in orderItems.first { $0.id == id }! }
-    }
-    
-    
-    var nextOrderItemsToPick: [OrderItem] { orderItems
-        .filter { !pickedOrderItemIds.contains($0.id) }
-        .sorted { $0.location < $1.location }
-    }
-    var nextOrderItemsToVerify: [OrderItem] { orderItems
-        .filter { pickedOrderItemIds.contains($0.id) && !verifiedOrderItemIds.contains($0.id) }
-        .sorted { a, b in a.condition == "N" }
     }
 }
