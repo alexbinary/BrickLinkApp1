@@ -8,20 +8,16 @@ extension View {
     
     @ViewBuilder func roundedContainer(
         
-        backgroundColor: Color,
-        borderColor: Color,
+        fill backgroundColor: Color,
+        stroke borderColor: Color,
         lineWidth: CGFloat = 1,
         cornerRadius: CGFloat = 6
         
     ) -> some View {
         
-        self
-            .background(backgroundColor)
+        self.background(backgroundColor)
             .cornerRadius(cornerRadius)
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(borderColor, lineWidth: lineWidth)
-            )
+            .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(borderColor, lineWidth: lineWidth))
     }
     
     
@@ -30,40 +26,20 @@ extension View {
         switch style {
             
         case .primary:
-            
-            self.roundedContainer(
-                backgroundColor: .quaternarySystemFill,
-                borderColor: .tertiarySystemFill
-            )
+            self.roundedContainer(fill: .quaternarySystemFill, stroke: .tertiarySystemFill)
             
         case .secondary:
-            
-            self.roundedContainer(
-                backgroundColor: .windowBackgroundColor,
-                borderColor: .secondarySystemFill
-            )
+            self.roundedContainer(fill: .windowBackgroundColor, stroke: .secondarySystemFill)
             
         case .outline:
-            
-            self.roundedContainer(
-                backgroundColor: .clear,
-                borderColor: .tertiarySystemFill
-            )
+            self.roundedContainer(fill: .clear, stroke: .tertiarySystemFill)
             
         case .info:
-            
-            self.roundedContainer(
-                backgroundColor: .secondarySystemFill.opacity(0.7),
-                borderColor: .tertiarySystemFill
-            )
+            self.roundedContainer(fill: .secondarySystemFill.opacity(0.7), stroke: .tertiarySystemFill)
             
         case .tag(let color):
-            
-            self.roundedContainer(
-                backgroundColor: color.opacity(0.1),
-                borderColor: color.opacity(0.7),
-                lineWidth: 0.5,
-                cornerRadius: 3
+            self.roundedContainer(fill: color.opacity(0.1), stroke: color.opacity(0.7),
+                                  lineWidth: 0.5, cornerRadius: 3
             )
         }
     }

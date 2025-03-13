@@ -112,8 +112,8 @@ struct OrdersMainListItem: View {
         }
         .padding()
         .roundedContainer(
-            backgroundColor: hover ? .tertiarySystemFill : .windowBackgroundColor,
-            borderColor: statusColor.opacity(0.25)
+            fill: hover ? .tertiarySystemFill : .windowBackgroundColor,
+            stroke: statusColor.opacity(0.25)
         )
         .onHover { self.hover = $0 }
     }

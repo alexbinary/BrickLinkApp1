@@ -73,10 +73,7 @@ struct PickingItemView: View {
             }
         }
         .padding()
-        .roundedContainer(
-            backgroundColor: .secondarySystemFill,
-            borderColor: .tertiarySystemFill
-        )
+        .roundedContainer(fill: .secondarySystemFill, stroke: .tertiarySystemFill)
     }
 }
 
