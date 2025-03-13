@@ -44,9 +44,10 @@ struct OrderDetailView: View {
                 }
                 .equalWidths($columnWidth)
                 
-                TabView(selection: .constant("picking")) {
-                    
-                    OrderDetailGeneralView(order)
+                TabView(
+                    selection: .constant("picking")
+                ) {
+                    ScrollView { OrderDetailGeneralView(order) }
                     .padding()
                     .tabItem { Text("􀅴 General") }.tag("general")
                     
@@ -70,7 +71,9 @@ struct OrderDetailView: View {
             }
         }
         .padding()
-        .onChange(of: order, initial: true) { Task { await app.forceRefreshOrder(orderId: order.id)} }
+        .onChange(of: order, initial: true) {
+            Task { await app.forceRefreshOrder(orderId: order.id)}
+        }
         .navigationTitle("Order \(order.id)")
     }
 }
