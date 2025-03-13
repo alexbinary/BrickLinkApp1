@@ -24,12 +24,12 @@ struct OrderPickingProgressView: View {
             GridRow {
                 Text("Picking")
                 
-                let percentPicked = app.percentPickedItems(forOrderWithId: order.id)
-                Text(String(format: "%3.0f%% complete", percentPicked))
+                let progress = app.pickingProgress(forOrderWithId: order.id)
+                Text(String(format: "%3.0f%% complete", progress))
                 
-                if percentPicked < 1 {
-                    let parts = app.numberOfPartsLeftToPick(forOrderWithId: order.id)
-                    let lots = app.numberOfLotsLeftToPick(forOrderWithId: order.id)
+                if progress < 1 {
+                    let parts = app.totalPartsLeftToPick(forOrderWithId: order.id)
+                    let lots = app.totalLotsLeftToPick(forOrderWithId: order.id)
                     Text("\(parts) parts in \(lots) lots left to pick")
                         .foregroundStyle(.secondary)
                         .font(.body)
@@ -39,12 +39,12 @@ struct OrderPickingProgressView: View {
             GridRow {
                 Text("Verify")
                 
-                let percentVerified = app.percentVerifiedItems(forOrderWithId: order.id)
-                Text(String(format: "%3.0f%% verified", percentVerified))
+                let progress = app.pickingVerificationProgress(forOrderWithId: order.id)
+                Text(String(format: "%3.0f%% verified", progress))
                 
-                if percentVerified < 1 {
-                    let parts = app.numberOfPartsLeftToVerify(forOrderWithId: order.id)
-                    let lots = app.numberOfLotsLeftToVerify(forOrderWithId: order.id)
+                if progress < 1 {
+                    let parts = app.totalPartsLeftToVerify(forOrderWithId: order.id)
+                    let lots = app.totalLotsLeftToVerify(forOrderWithId: order.id)
                     Text("\(parts) parts in \(lots) lots left to verify")
                         .foregroundStyle(.secondary)
                         .font(.body)

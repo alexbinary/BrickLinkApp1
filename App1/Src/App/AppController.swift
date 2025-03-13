@@ -480,7 +480,7 @@ class AppController: ObservableObject {
     }
     
     
-    public func percentPickedItems(forOrderWithId orderId: OrderSummary.ID) -> Double {
+    public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percentage {
         
         let total = orderItems(forOrderWithId: orderId).count
         let picked = pickedItems(forOrderWithId: orderId).count
@@ -498,19 +498,19 @@ class AppController: ObservableObject {
     }
     
     
-    public func numberOfLotsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalLotsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
         
         orderItemsLeftToPick(forOrderWithId: orderId).count
     }
     
     
-    public func numberOfPartsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalPartsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
         
         orderItemsLeftToPick(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
     }
     
     
-    public func percentVerifiedItems(forOrderWithId orderId: OrderSummary.ID) -> Double {
+    public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percentage {
         
         let total = orderItems(forOrderWithId: orderId).count
         let verified = verifiedItems(forOrderWithId: orderId).count
@@ -528,13 +528,13 @@ class AppController: ObservableObject {
     }
     
     
-    public func numberOfLotsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalLotsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
         
         orderItemsLeftToVerify(forOrderWithId: orderId).count
     }
     
     
-    public func numberOfPartsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalPartsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
         
         orderItemsLeftToVerify(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
     }
