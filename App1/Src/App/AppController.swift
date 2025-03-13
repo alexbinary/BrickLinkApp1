@@ -428,9 +428,55 @@ class AppController: ObservableObject {
     }
     
     
+    
+    // MARK: - Pick & Verify
+    
+    
     public func pickedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         return dataStore.pickedItemsByOrderId[orderId] ?? []
+    }
+    
+    
+    public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+        
+        try! dataStore.addPickedItem(itemId, toOrderWithId: orderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+        
+        try! dataStore.removePickedItem(itemId, fromOrderWithId: orderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func verifiedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+        
+        return dataStore.verifiedItemsByOrderId[orderId] ?? []
+    }
+    
+    
+    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+        
+        try! dataStore.addVerifiedItem(itemId, toOrderWithId: orderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
+    }
+    
+    
+    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
+        
+        try! dataStore.removeVerifiedItem(itemId, fromOrderWithId: orderId)
+        try! dataStore.save()
+        
+        self.objectWillChange.send()
     }
     
     
@@ -464,30 +510,6 @@ class AppController: ObservableObject {
     }
     
     
-    public func pickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
-        
-        try! dataStore.addPickedItem(itemId, toOrderWithId: orderId)
-        try! dataStore.save()
-        
-        self.objectWillChange.send()
-    }
-    
-    
-    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
-        
-        try! dataStore.removePickedItem(itemId, fromOrderWithId: orderId)
-        try! dataStore.save()
-        
-        self.objectWillChange.send()
-    }
-    
-    
-    public func verifiedItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
-        
-        return dataStore.verifiedItemsByOrderId[orderId] ?? []
-    }
-    
-    
     public func percentVerifiedItems(forOrderWithId orderId: OrderSummary.ID) -> Double {
         
         let total = orderItems(forOrderWithId: orderId).count
@@ -515,24 +537,6 @@ class AppController: ObservableObject {
     public func numberOfPartsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
         
         orderItemsLeftToVerify(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
-    }
-    
-    
-    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
-        
-        try! dataStore.addVerifiedItem(itemId, toOrderWithId: orderId)
-        try! dataStore.save()
-        
-        self.objectWillChange.send()
-    }
-    
-    
-    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, item itemId: OrderItem.ID) {
-        
-        try! dataStore.removeVerifiedItem(itemId, fromOrderWithId: orderId)
-        try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
