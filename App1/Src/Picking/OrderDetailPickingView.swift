@@ -30,48 +30,44 @@ struct OrderDetailPickingView: View {
             
             TabView {
                 
-                if !orderItemsToPick.isEmpty {
+                if !nextOrderItemsToPick.isEmpty {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(orderItemsToPick) { PickingItemView($0, buttons: [.pick]) }
+                            ForEach(nextOrderItemsToPick) { PickingItemView($0, buttons: [.pick]) }
                         }
                     }
                     .padding()
                     .tabItem { Text("􀈥 Pick") }
                 }
                 
-                if !pickedItems.isEmpty {
+                if !pickedOrderItems.isEmpty {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(pickedItems.reversed(), id: \.self) { item in
-                                PickingItemView(orderItems.first { $0.id == item }!, buttons: [.unpick])
-                            }
+                            ForEach(pickedOrderItems.reversed()) { PickingItemView($0, buttons: [.unpick]) }
                         }
                     }
                     .padding()
                     .tabItem { Text("􀐫 Picked") }
                 }
             
-                if !orderItemsToVerify.isEmpty {
+                if !nextOrderItemsToVerify.isEmpty {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(orderItemsToVerify) { PickingItemView($0, buttons: [.verify]) }
+                            ForEach(nextOrderItemsToVerify) { PickingItemView($0, buttons: [.verify]) }
                         }
                     }
                     .padding()
                     .tabItem { Text("􀁢 Verify") }
                 }
                 
-                if !verifiedItems.isEmpty {
+                if !verifiedOrderItems.isEmpty {
                     
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(verifiedItems.reversed(), id: \.self) { item in
-                                PickingItemView(orderItems.first { $0.id == item }!, buttons: [.unverify])
-                            }
+                            ForEach(verifiedOrderItems.reversed()) { PickingItemView($0, buttons: [.unverify]) }
                         }
                     }
                     .padding()
@@ -93,21 +89,29 @@ struct OrderDetailPickingView: View {
         app.orderItems(forOrderWithId: order.id)
     }
     
-    var pickedItems: [OrderItem.ID] {
+    var pickedOrderItemIds: [OrderItem.ID] {
         app.pickedItems(forOrderWithId: order.id)
     }
     
-    var verifiedItems: [OrderItem.ID] {
+    var pickedOrderItems: [OrderItem] {
+        pickedOrderItemIds.map { id in orderItems.first { $0.id == id }! }
+    }
+    
+    var verifiedOrderItemIds: [OrderItem.ID] {
         app.verifiedItems(forOrderWithId: order.id)
     }
     
+    var verifiedOrderItems: [OrderItem] {
+        verifiedOrderItemIds.map { id in orderItems.first { $0.id == id }! }
+    }
     
-    var orderItemsToPick: [OrderItem] { orderItems
-        .filter { !pickedItems.contains($0.id) }
+    
+    var nextOrderItemsToPick: [OrderItem] { orderItems
+        .filter { !pickedOrderItemIds.contains($0.id) }
         .sorted { $0.location < $1.location }
     }
-    var orderItemsToVerify: [OrderItem] { orderItems
-        .filter { pickedItems.contains($0.id) && !verifiedItems.contains($0.id) }
+    var nextOrderItemsToVerify: [OrderItem] { orderItems
+        .filter { pickedOrderItemIds.contains($0.id) && !verifiedOrderItemIds.contains($0.id) }
         .sorted { a, b in a.condition == "N" }
     }
 }
