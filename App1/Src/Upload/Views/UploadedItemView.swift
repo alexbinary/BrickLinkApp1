@@ -43,10 +43,7 @@ struct UploadedItemView: View {
                 GridRow {
                 
                     Text(uploadedItem.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
-                    HStack {
-                        app.color(forLegoColorId: uploadedItem.colorId).frame(width: 18, height: 18)
-                        Text(app.colorName(forLegoColorId: uploadedItem.colorId))
-                    }.gridColumnAlignment(.leading)
+                    LegoColorView(uploadedItem: uploadedItem).gridColumnAlignment(.leading)
                 }
             }
                 

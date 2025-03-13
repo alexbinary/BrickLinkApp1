@@ -151,7 +151,7 @@ struct UploadItemView: View {
                         }.gridColumnAlignment(.center)
                         
                         HStack {
-                            app.color(forLegoColorId: uploadItem.colorId).frame(width: 18, height: 18)
+                            LegoColorView(uploadItem: uploadItem, style: .compact)
                             
                             ZStack(alignment: .leading) {
                                 

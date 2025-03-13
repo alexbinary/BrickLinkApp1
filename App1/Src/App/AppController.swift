@@ -46,21 +46,9 @@ class AppController: ObservableObject {
     }
     
     
-    public func color(for item: OrderItem) -> Color? {
-        
-        return color(forLegoColorId: item.colorId)
-    }
-    
-    
     public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
         
         return dataStore.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
-    }
-    
-    
-    public func colorName(for item: OrderItem) -> String {
-        
-        item.colorName
     }
     
     

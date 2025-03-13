@@ -37,12 +37,8 @@ struct PickingItemView: View {
                 }
                 
                 GridRow {
-                
                     Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
-                    HStack {
-                        app.color(for: item).frame(width: 18, height: 18)
-                        Text(app.colorName(for: item))
-                    }.gridColumnAlignment(.leading)
+                    LegoColorView(orderItem: item).gridColumnAlignment(.leading)
                 }
             }
             
