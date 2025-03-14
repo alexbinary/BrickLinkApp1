@@ -1650,6 +1650,54 @@ class AppController: ObservableObject {
     }
     
     
+    var resultDashboardModel: ResultDashboardModel {
+        
+        let periodNLastDays = 30
+        
+        let orders = orderDetails
+            .filter { $0.date.days(to: .now) < periodNLastDays }
+            .filter { self.profitMargin(for: $0) != nil }
+            .sorted { (self.profitMargin(for: $0) ?? 0) > (self.profitMargin(for: $1) ?? 0) }
+        
+        let totalItems = orders.reduce(0) { $0 + $1.subTotal }
+        let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+        
+        let totalItemCost: Float = 0
+        let totalShippingCost = orders.reduce(0) { $0 + (shippingCost(forOrderWithId: $1.id) ?? 0) }
+        
+        let totalFees = orders.reduce(0) { $0 + (fees(for: $1) ?? 0) }
+        let totalRefund = orders.flatMap { refunds(for: $0) }.reduce(0) { $0 + $1.amount }
+        
+        let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
+        
+        let profitMargin = profitMargin(
+            
+            totalItems: totalItems,
+            totalShipping: totalShipping,
+            
+            itemsCost: totalItemCost,
+            shippingCost: totalShippingCost,
+            
+            fees: totalFees,
+            refund: totalRefund
+            
+        ) ?? 0
+        
+        return ResultDashboardModel(
+            periodNLastDays: periodNLastDays,
+            orders: orders,
+            totalItems: totalItems,
+            totalShipping: totalShipping,
+            totalItemCost: totalItemCost,
+            totalShippingCost: totalShippingCost,
+            totalFees: totalFees,
+            totalRefund: totalRefund,
+            totalResult: totalResult,
+            profitMargin: profitMargin
+        )
+    }
+    
+    
     
     // MARK: - Refunds
     

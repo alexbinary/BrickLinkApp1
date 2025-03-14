@@ -30,7 +30,7 @@ struct WindowContentView: View {
             
             HSplitView {
                 ResultContentView()
-                ResultDashboardView()
+                ResultDashboard()
             }
             
         case .resultHistory:
