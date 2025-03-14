@@ -11,20 +11,6 @@ struct SpeechRecognitionRootView: View {
     
     var body: some View {
         
-        let ready = {
-            
-            if let authorized = controller.microphoneAuthorized, authorized == false {
-                return false
-            }
-            if let available = controller.speechRecognitionAvailable, available == false {
-                return false
-            }
-            if let authorized = controller.speechRecognitionAuthorized, authorized == false {
-                return false
-            }
-            return true
-        }()
-
         VStack(alignment: .leading, spacing: 24) {
             
             Grid(alignment: .leading, verticalSpacing: 12) {
@@ -66,13 +52,11 @@ struct SpeechRecognitionRootView: View {
                         }
                     } else {
                         Button("Start") {
-                            Task {
-                                await controller.start()
-                            }
+                            Task { await controller.start() }
                         }
                     }
                 }
-                .disabled(!ready)
+                .disabled(!controller.ready)
                 
                 if controller.listening {
                     Text("Listening")

@@ -7,24 +7,23 @@ import Speech
 @Observable
 class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     
-    var microphoneAuthorized: Bool?
+    public var microphoneAuthorized: Bool?
+    public var speechRecognitionAvailable: Bool?
+    public var speechRecognitionAuthorized: Bool?
+    public var ready: Bool { ![microphoneAuthorized, speechRecognitionAvailable, speechRecognitionAuthorized].contains(false) }
     
-    var speechRecognitionAvailable: Bool?
-    var speechRecognitionAuthorized: Bool?
+    public var listening = false
+    public var recognizedText: String?
     
-    var listening = false
-    var recognizedText: String?
+    private var audioEngine: AVAudioEngine!
+    private var inputNode: AVAudioInputNode!
     
-    
-    var audioEngine: AVAudioEngine!
-    var inputNode: AVAudioInputNode!
-    
-    var speechRecognizer: SFSpeechRecognizer!
-    var recognitionRequest: SFSpeechAudioBufferRecognitionRequest!
-    var recognitionTask: SFSpeechRecognitionTask!
+    private var speechRecognizer: SFSpeechRecognizer!
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest!
+    private var recognitionTask: SFSpeechRecognitionTask!
     
     
-    override init() {
+    public override init() {
         super.init()
         
         updateMicrophoneAuthorisationStatus()
@@ -41,7 +40,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func start() async {
+    public func start() async {
         
         let microphoneStatus = await requestMicrophoneAuthorisation()
         guard microphoneStatus == .authorized else {
@@ -72,7 +71,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func stop() {
+    public func stop() {
         
         stopRecognition()
         stopAudio()
@@ -81,13 +80,13 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    var speechRecognitionAuthorisationStatus: SFSpeechRecognizerAuthorizationStatus {
+    private var speechRecognitionAuthorisationStatus: SFSpeechRecognizerAuthorizationStatus {
         
         SFSpeechRecognizer.authorizationStatus()
     }
     
     
-    func updateSpeechRecognitionAuthorisationStatus() {
+    private func updateSpeechRecognitionAuthorisationStatus() {
         
         speechRecognitionAuthorized = {
             switch speechRecognitionAuthorisationStatus {
@@ -99,7 +98,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func requestSpeechRecognitionAuthorisation() async -> SFSpeechRecognizerAuthorizationStatus {
+    private func requestSpeechRecognitionAuthorisation() async -> SFSpeechRecognizerAuthorizationStatus {
         
         await withCheckedContinuation { continuation in
             SFSpeechRecognizer.requestAuthorization { _ in
@@ -110,13 +109,13 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
 
     
-    var microphoneAuthorisationStatus: AVAuthorizationStatus {
+    private var microphoneAuthorisationStatus: AVAuthorizationStatus {
         
         AVCaptureDevice.authorizationStatus(for: .audio)
     }
     
     
-    func updateMicrophoneAuthorisationStatus() {
+    private func updateMicrophoneAuthorisationStatus() {
         
         microphoneAuthorized = {
             switch microphoneAuthorisationStatus {
@@ -128,7 +127,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func requestMicrophoneAuthorisation() async -> AVAuthorizationStatus {
+    private func requestMicrophoneAuthorisation() async -> AVAuthorizationStatus {
         
         await AVCaptureDevice.requestAccess(for: .audio)
         updateMicrophoneAuthorisationStatus()
@@ -136,7 +135,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func initAudio() throws {
+    private func initAudio() throws {
         
         audioEngine = AVAudioEngine()
         inputNode = audioEngine.inputNode
@@ -146,14 +145,14 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func stopAudio() {
+    private func stopAudio() {
         
         audioEngine.stop()
         inputNode.removeTap(onBus: 0)
     }
     
     
-    func startRecognition() {
+    private func startRecognition() {
         
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { fatalError("Unable to created a SFSpeechAudioBufferRecognitionRequest object") }
@@ -173,40 +172,8 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
                 
             } else if let result = result {
                 
-                let transcribedText = result.bestTranscription.formattedString
-                print("Transcribed: \(transcribedText)")
+                self.processRecognitionResult(result)
                 
-                if let lastWord = transcribedText.split(separator: " ").last {
-                    print("lastWord: \(lastWord)")
-                    
-                    if let result = lastWord.wholeMatch(of: /[0-9]+/) {
-                        
-                        let number = String(lastWord)
-                        print("number: \(number)")
-                        self.recognizedText = number
-                        
-                    } else {
-                     
-                        // https://stackoverflow.com/questions/34032509/how-to-convert-an-english-string-of-a-number-into-a-float-e-g-twenty-six-26
-                        let dict = [
-                            "un": 1,
-                            "deux": 2,
-                            "trois": 3,
-                            // TODO
-                        ]
-
-                        var number = 0
-
-                        dict.forEach({ (key: String, value: Int) in
-                            if lastWord.lowercased().contains(key) {
-                                number += value
-                            }
-                        })
-                        
-                        print("number: \(number)")
-                        self.recognizedText = String(number)
-                    }
-                }
                 if result.isFinal {
                     self.stopAudio()
                     print("Recognition complete")
@@ -216,13 +183,52 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    func stopRecognition() {
+    private func processRecognitionResult(_ result: SFSpeechRecognitionResult) {
+        
+        let transcribedText = result.bestTranscription.formattedString
+        print("Transcribed: \(transcribedText)")
+        
+        if let lastWord = transcribedText.split(separator: " ").last {
+            print("lastWord: \(lastWord)")
+            
+            if let _ = lastWord.wholeMatch(of: /[0-9]+/) {
+                
+                let number = String(lastWord)
+                print("number: \(number)")
+                self.recognizedText = number
+                
+            } else {
+             
+                // https://stackoverflow.com/questions/34032509/how-to-convert-an-english-string-of-a-number-into-a-float-e-g-twenty-six-26
+                let dict = [
+                    "un": 1,
+                    "deux": 2,
+                    "trois": 3,
+                    // TODO
+                ]
+
+                var number = 0
+
+                dict.forEach({ (key: String, value: Int) in
+                    if lastWord.lowercased().contains(key) {
+                        number += value
+                    }
+                })
+                
+                print("number: \(number)")
+                self.recognizedText = String(number)
+            }
+        }
+    }
+    
+    
+    private func stopRecognition() {
         
         recognitionRequest.endAudio()
     }
     
     
-    func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+    internal func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         
         if available {
             print("Speech recognition is available")
@@ -231,57 +237,5 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
         }
         
         self.speechRecognitionAvailable = available
-    }
-}
-
-
-
-extension AVAuthorizationStatus: @retroactive CustomStringConvertible {
-    
-    public var description: String {
-        
-        switch self {
-            
-        case .notDetermined:
-            "notDetermined"
-            
-        case .restricted:
-            "restricted"
-            
-        case .denied:
-            "denied"
-            
-        case .authorized:
-            "authorized"
-            
-        @unknown default:
-            "unknown"
-        }
-    }
-}
-
-
-
-extension SFSpeechRecognizerAuthorizationStatus: @retroactive CustomStringConvertible {
-    
-    public var description: String {
-        
-        switch self {
-            
-        case .notDetermined:
-            "notDetermined"
-        
-        case .denied:
-            "denied"
-        
-        case .restricted:
-            "restricted"
-        
-        case .authorized:
-            "authorized"
-        
-        @unknown default:
-            "unknown"
-        }
     }
 }
