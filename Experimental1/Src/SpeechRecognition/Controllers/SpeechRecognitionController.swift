@@ -14,6 +14,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     
     public var listening = false
     public var recognizedText: String?
+    public var recognizedNumber: Int?
     
     private var audioEngine: AVAudioEngine!
     private var inputNode: AVAudioInputNode!
@@ -31,12 +32,11 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
         print("Microphone authorization: \(microphoneAuthorisationStatus)")
         print("Speech recognition authorization \(speechRecognitionAuthorisationStatus)")
         
-        print("Ready speech recognition")
-        let locale = Locale(identifier: "fr_FR")
-        print("Locale: \(locale)")
-        speechRecognizer = SFSpeechRecognizer(locale: locale)
-        guard let speechRecognizer = speechRecognizer else { fatalError("Unable to created a SFSpeechRecognizer object") }
+        let locale = Locale(identifier: "fr_FR");print("Locale: \(locale)")
+        guard let recognizer = SFSpeechRecognizer(locale: locale) else { fatalError("Unable to create a SFSpeechRecognizer object") }
+        speechRecognizer = recognizer
         speechRecognizer.delegate = self
+        print("Speech recognition ready")
     }
     
     
@@ -56,9 +56,8 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
         }
         print("Speech recognition authorized (\(speechRecognitonStatus))")
         
-        do {
-            try initAudio()
-        } catch {
+        do { try initAudio() }
+        catch {
             print("Failed to init audio: \(error)")
             return
         }
@@ -77,6 +76,32 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
         stopAudio()
         
         listening = false
+    }
+    
+    
+    private var microphoneAuthorisationStatus: AVAuthorizationStatus {
+        
+        AVCaptureDevice.authorizationStatus(for: .audio)
+    }
+    
+    
+    private func updateMicrophoneAuthorisationStatus() {
+        
+        microphoneAuthorized = {
+            switch microphoneAuthorisationStatus {
+            case .notDetermined: nil
+            case .authorized: true
+            default: false
+            }
+        }()
+    }
+    
+    
+    private func requestMicrophoneAuthorisation() async -> AVAuthorizationStatus {
+        
+        await AVCaptureDevice.requestAccess(for: .audio)
+        updateMicrophoneAuthorisationStatus()
+        return microphoneAuthorisationStatus
     }
     
     
@@ -107,31 +132,17 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
             }
         }
     }
-
     
-    private var microphoneAuthorisationStatus: AVAuthorizationStatus {
+    
+    internal func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         
-        AVCaptureDevice.authorizationStatus(for: .audio)
-    }
-    
-    
-    private func updateMicrophoneAuthorisationStatus() {
+        if available {
+            print("Speech recognition is available")
+        } else {
+            print("Speech recognition is not available")
+        }
         
-        microphoneAuthorized = {
-            switch microphoneAuthorisationStatus {
-            case .notDetermined: nil
-            case .authorized: true
-            default: false
-            }
-        }()
-    }
-    
-    
-    private func requestMicrophoneAuthorisation() async -> AVAuthorizationStatus {
-        
-        await AVCaptureDevice.requestAccess(for: .audio)
-        updateMicrophoneAuthorisationStatus()
-        return microphoneAuthorisationStatus
+        self.speechRecognitionAvailable = available
     }
     
     
@@ -148,54 +159,57 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     private func stopAudio() {
         
         audioEngine.stop()
-        inputNode.removeTap(onBus: 0)
     }
     
     
     private func startRecognition() {
         
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        guard let recognitionRequest = recognitionRequest else { fatalError("Unable to created a SFSpeechAudioBufferRecognitionRequest object") }
         recognitionRequest.shouldReportPartialResults = true
         
         let recordingFormat = inputNode.outputFormat(forBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, time) in
-            self.recognitionRequest?.append(buffer)
+            self.recognitionRequest.append(buffer)
         }
 
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             
             if let error = error {
                 
-                self.stopAudio()
-                print("Recognition error: \(error)")
+                print("Recognition error: \(error)"); self.stop()
                 
             } else if let result = result {
                 
                 self.processRecognitionResult(result)
                 
                 if result.isFinal {
-                    self.stopAudio()
-                    print("Recognition complete")
+                    print("Recognition complete"); self.stopAudio()
                 }
             }
         }
     }
     
     
+    private func stopRecognition() {
+        
+        recognitionRequest.endAudio()
+        inputNode.removeTap(onBus: 0)
+    }
+    
+    
     private func processRecognitionResult(_ result: SFSpeechRecognitionResult) {
         
-        let transcribedText = result.bestTranscription.formattedString
-        print("Transcribed: \(transcribedText)")
+        let transcription = result.bestTranscription.formattedString
+        print("best transcription: \(transcription)")
+        self.recognizedText = transcription
         
-        if let lastWord = transcribedText.split(separator: " ").last {
+        if let lastWord = transcription.split(separator: " ").last {
             print("lastWord: \(lastWord)")
             
-            if let _ = lastWord.wholeMatch(of: /[0-9]+/) {
+            if let number = Int(String(lastWord)) {
                 
-                let number = String(lastWord)
                 print("number: \(number)")
-                self.recognizedText = number
+                self.emitNumber(number)
                 
             } else {
              
@@ -216,26 +230,14 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
                 })
                 
                 print("number: \(number)")
-                self.recognizedText = String(number)
+                self.emitNumber(number)
             }
         }
     }
     
     
-    private func stopRecognition() {
+    private func emitNumber(_ number: Int) {
         
-        recognitionRequest.endAudio()
-    }
-    
-    
-    internal func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        
-        if available {
-            print("Speech recognition is available")
-        } else {
-            print("Speech recognition is not available")
-        }
-        
-        self.speechRecognitionAvailable = available
+        self.recognizedNumber = number
     }
 }

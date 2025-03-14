@@ -69,9 +69,12 @@ struct SpeechRecognitionRootView: View {
                 } else {
                     Text("Recognized text will appear here").foregroundStyle(.secondary).italic()
                 }
+                if let number = controller.recognizedNumber {
+                    Text("Recognized number: \(number)")
+                }
             }
-                .font(.title)
-                .lineLimit(5, reservesSpace: true)
+            .font(.title)
+            .lineLimit(5, reservesSpace: true)
         }
         .padding()
     }
