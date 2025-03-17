@@ -13,6 +13,9 @@ struct OrderDetailPickingView: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(PickingController.self)
+    var pickingController
+    
     
     let order: OrderDetails
     
@@ -21,10 +24,10 @@ struct OrderDetailPickingView: View {
     }
     
     
-    var pickedOrderItems: [OrderItem] { app.pickedOrderItems(forOrderWithId: order.id) }
-    var verifiedOrderItems: [OrderItem] { app.verifiedOrderItems(forOrderWithId: order.id) }
-    var nextOrderItemsToPick: [OrderItem] { app.nextOrderItemsToPick(forOrderWithId: order.id) }
-    var nextOrderItemsToVerify: [OrderItem] { app.nextOrderItemsToVerify(forOrderWithId: order.id) }
+    var pickedOrderItems: [OrderItem] { pickingController.pickedOrderItems(forOrderWithId: order.id) }
+    var verifiedOrderItems: [OrderItem] { pickingController.verifiedOrderItems(forOrderWithId: order.id) }
+    var nextOrderItemsToPick: [OrderItem] { pickingController.nextOrderItemsToPick(forOrderWithId: order.id) }
+    var nextOrderItemsToVerify: [OrderItem] { pickingController.nextOrderItemsToVerify(forOrderWithId: order.id) }
     
     
     var body: some View {
@@ -99,9 +102,12 @@ struct OrderDetailPickingView: View {
     
     let appController = AppController()
     let orderStore = appController.orderStore
+    let pickingController = appController.pickingController
+    
     let order = orderStore.orderDetails.first!
     
     OrderDetailPickingView(order)
         .environmentObject(appController)
         .environment(orderStore)
+        .environment(pickingController)
 }

@@ -12,6 +12,9 @@ struct OrderChecklistView: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(PickingController.self)
+    var pickingController
+    
     
     let order: OrderDetails
     var orderSummary: OrderSummary { orderStore.orderSummary(forOrderWithId: order.id)! }
@@ -50,7 +53,7 @@ struct OrderChecklistView: View {
 
                     GridRow {
                         CheckStatusView(status: app.orderChecklistPicking(order.id))
-                        let progress = app.pickingProgress(forOrderWithId: order.id)
+                        let progress = pickingController.pickingProgress(forOrderWithId: order.id)
                         if progress == 100% {
                             Text("Pick items")
                         } else {
@@ -59,7 +62,7 @@ struct OrderChecklistView: View {
                     }
                     GridRow {
                         CheckStatusView(status: app.orderChecklistVerification(order.id))
-                        let progress = app.pickingVerificationProgress(forOrderWithId: order.id)
+                        let progress = pickingController.pickingVerificationProgress(forOrderWithId: order.id)
                         if progress == 100% {
                             Text("Verify items")
                         } else {
@@ -163,8 +166,15 @@ extension View {
 
 
 #Preview {
+    
     let appController = AppController()
-    let order = appController.orderDetails.first!
+    let orderStore = appController.orderStore
+    let pickingController = appController.pickingController
+    
+    let order = orderStore.orderDetails.first!
+    
     OrderChecklistView(order)
         .environmentObject(appController)
+        .environment(orderStore)
+        .environment(pickingController)
 }
