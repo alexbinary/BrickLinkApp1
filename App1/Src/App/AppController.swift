@@ -2110,10 +2110,9 @@ class AppController: ObservableObject {
     public var actionOrders: [OrderSummary] {
         
         orderSummaries.filter {
-            
-            macroStatus(forOrderWithId: $0.id).isOneOf(.ship, .pickAndPack, .validatePayment, .giveFeedback)
-            ||
-            (macroStatus(forOrderWithId: $0.id) == .inTransit && orderChecklistUnchangedFor30Days($0.id))
+            macroStatus(forOrderWithId: $0.id).isOneOf(
+                .ship, .pickAndPack, .validatePayment, .giveFeedback, .inTransitFor30PlusDays
+            )
         }
     }
 }
