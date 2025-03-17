@@ -94,31 +94,11 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = app.orderDetails
-                .grouppedByBusinessMonth
+            let ordersByMonth = app.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
             
-            let orderMonths = ordersByMonth.map { $0.month } .unique.sorted()
-            
-            let allMonths: [BusinessMonth] = {
-                if let first = orderMonths.first {
-                    return BusinessMonth.allMonths(
-                        between: first, and: .current
-                    )
-                } else {
-                    return []
-                }
-            }()
-            
-            ForEach(allMonths.reversed()) { month in
-                
+            ForEach(ordersByMonth, id: \.month) { (month, elements) in
                 Section(month.name) {
-                    
-                    let orders = ordersByMonth[month].sorted { $0.date > $1.date }
-                    
-                    ForEach(orders) { order in
-
-                        TableRow(order)
-                    }
+                    ForEach(elements) { TableRow($0) }
                 }
             }
         }

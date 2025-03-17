@@ -51,7 +51,7 @@ struct ResultHistoryView: View {
             let months: [BusinessMonth] = {
                 if let first = orderMonths.first {
                     return BusinessMonth.allMonths(
-                        between: first, and: .current
+                        from: first, to: .current
                     )
                 } else {
                     return [.current]
@@ -59,7 +59,7 @@ struct ResultHistoryView: View {
             }()
             
             let visibleMonths = BusinessMonth.allMonths(
-                between: firstVisibleMonth, and: lastVisibleMonth
+                from: firstVisibleMonth, to: lastVisibleMonth
             )
             
             let visibleOrders = orders
@@ -332,7 +332,7 @@ struct ResultHistoryView: View {
                             let monthsSpan = {
                                 if let first = visibleMonths.first,
                                    let last = visibleMonths.last {
-                                    return BusinessMonth.allMonths(between: first, and: last)
+                                    return BusinessMonth.allMonths(from: first, to: last)
                                 } else {
                                     return []
                                 }

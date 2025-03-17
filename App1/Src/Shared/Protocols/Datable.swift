@@ -90,4 +90,20 @@ extension Array where Element == (month: BusinessMonth, elements: [OrderDetails]
         
         return self.first(where: { $0.month == month })?.elements ?? []
     }
+    
+    
+    var withAllMonthsToCurrent: [(month: BusinessMonth, elements: [OrderDetails])] {
+        
+        let orderMonths = self.map { $0.month } .unique.sorted()
+        
+        let allMonths: [BusinessMonth] = {
+            if let first = orderMonths.first {
+                return BusinessMonth.allMonths(from: first, to: .current)
+            } else {
+                return []
+            }
+        }()
+        
+        return allMonths.map { (month: $0, elements: self[$0]) }
+    }
 }

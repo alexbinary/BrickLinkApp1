@@ -128,8 +128,8 @@ extension BusinessMonth {
     
     static func allMonths(
         
-        between monthStart: BusinessMonth,
-        and monthEnd: BusinessMonth
+        from monthStart: BusinessMonth,
+        to monthEnd: BusinessMonth
     
     ) -> [BusinessMonth] {
         
