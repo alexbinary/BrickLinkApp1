@@ -183,12 +183,6 @@ class AppController: ObservableObject {
     }
     
     
-    public func url(forDetailsOfOrderWithId orderId: String) -> URL? {
-        
-        BrickLinkAPIClient.url(forDetailsOfOrderWithId: orderId)
-    }
-    
-    
     
     // MARK: - Order status, Tracking no, Drive thru
     
@@ -538,35 +532,6 @@ class AppController: ObservableObject {
             
             await loadOrderItems(forOrderWithId: orderId)
         }
-    }
-    
-    
-    public func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
-        
-        switch type {
-        case .part:
-            return url(forCatalogImageOfPartWithRef: ref, colorId: colorId)
-        case .minifig:
-            return url(forCatalogImageOfMinifigWithRef: ref)
-        }
-    }
-    
-    
-    public func url(forCatalogImageOfPartWithRef ref: String, colorId: String) -> URL? {
-        
-        BrickLinkAPIClient.url(forCatalogImageOfPartWithRef: ref, colorId: colorId)
-    }
-    
-    
-    public func url(forCatalogImageOfMinifigWithRef ref: String) -> URL? {
-        
-        BrickLinkAPIClient.url(forCalalogImageOfMinifigWithRef: ref)
-    }
-    
-    
-    public func url(for item: OrderItem) -> URL? {
-        
-        return url(forCatalogImageOfItemOfType: item.type, ref: item.ref, colorId: item.colorId)
     }
     
     
@@ -1221,12 +1186,6 @@ class AppController: ObservableObject {
         )
         
         await self.reloadInventory(withId: id)
-    }
-    
-    
-    public func url(forInventoryItemWithId inventoryId: String) -> URL? {
-        
-        BrickLinkAPIClient.url(forInventoryItemWithId: inventoryId)
     }
     
     

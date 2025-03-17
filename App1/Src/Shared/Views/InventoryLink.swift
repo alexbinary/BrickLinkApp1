@@ -6,10 +6,6 @@ import SwiftUI
 struct InventoryLink<Label>: View where Label: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-
-    
     let inventoryItem: InventoryItem
     let label: () -> Label
     
@@ -21,7 +17,7 @@ struct InventoryLink<Label>: View where Label: View {
     
     var body: some View {
 
-        Link(destination: app.url(forInventoryItemWithId: inventoryItem.id)!, label: label)
+        Link(destination: BrickLinkUtility.url(forInventoryItemWithId: inventoryItem.id)!, label: label)
     }
 }
 

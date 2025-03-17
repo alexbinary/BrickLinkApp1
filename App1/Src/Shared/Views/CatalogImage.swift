@@ -6,10 +6,6 @@ import SwiftUI
 struct CatalogImage: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
-    
     let type: BrickLinkItemType
     let ref: String
     let colorId: String
@@ -41,7 +37,7 @@ struct CatalogImage: View {
 
     var body: some View {
 
-        AsyncImage(url: app.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId))
+        AsyncImage(url: BrickLinkUtility.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId))
             .frame(minHeight: 70, maxHeight: 70, alignment: .top)
             .frame(minWidth: 90, maxWidth: 90, alignment: .top)
     }
@@ -50,5 +46,5 @@ struct CatalogImage: View {
 
 
 #Preview {
-    CatalogImage(itemType: .part, ref: "3001", colorId: "11").environmentObject(AppController())
+    CatalogImage(itemType: .part, ref: "3001", colorId: "11")
 }

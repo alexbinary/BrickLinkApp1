@@ -6,9 +6,6 @@ import SwiftUI
 struct OrderLink<Label>: View where Label: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-
     let order: OrderSummary
     let label: () -> Label
     
@@ -21,7 +18,7 @@ struct OrderLink<Label>: View where Label: View {
     
     var body: some View {
 
-        Link(destination: app.url(forDetailsOfOrderWithId: order.id)!, label: label)
+        Link(destination: BrickLinkUtility.url(forDetailsOfOrderWithId: order.id)!, label: label)
     }
 }
 
