@@ -9,6 +9,9 @@ struct PickingItemView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(PickingStore.self)
+    var pickingStore
+    
     
     let item: OrderItem
     let button: ButtonType
@@ -66,10 +69,10 @@ struct PickingItemView: View {
             Spacer()
             
             switch button {
-            case .pick: Button("Pick") { app.pick(item) }
-            case .unpick: Button("Unpick") { app.unpick(item) }
-            case .verify: Button("Verify") { app.verify(item) }
-            case .unverify: Button("Unverify") { app.unverify(item) }
+            case .pick: Button("Pick") { pickingStore.pick(item) }
+            case .unpick: Button("Unpick") { pickingStore.unpick(item) }
+            case .verify: Button("Verify") { pickingStore.verify(item) }
+            case .unverify: Button("Unverify") { pickingStore.unverify(item) }
             }
         }
         .padding()
@@ -93,9 +96,12 @@ enum ButtonType {
     
     let appController = AppController()
     let orderStore = appController.orderStore
+    let pickingStore = appController.pickingStore
+    
     let order = orderStore.orderSummaries.first!
     let item = orderStore.orderItems(forOrderWithId: order.id).first!
     
     PickingItemView(item, button: .pick)
         .environmentObject(appController)
+        .environment(pickingStore)
 }

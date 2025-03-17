@@ -12,6 +12,9 @@ struct OrdersMainListItem: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(PickingStore.self)
+    var pickingStore
+    
     
     let order: OrderSummary
     var macroStatus: OrderMacroStatus { app.macroStatus(forOrderWithId: order.id) }
@@ -189,7 +192,7 @@ struct OrdersMainListItem: View {
             
             if !app.orderChecklistPicking(order.id) {
                 
-                let picked = app.pickedItemIds(forOrderWithId: order.id).count
+                let picked = pickingStore.pickedItemIds(forOrderWithId: order.id).count
                 let total = orderStore.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(picked)/Double(total)*100)
@@ -197,7 +200,7 @@ struct OrdersMainListItem: View {
                 
             } else if !app.orderChecklistVerification(order.id) {
                 
-                let verified = app.verifiedItemIds(forOrderWithId: order.id).count
+                let verified = pickingStore.verifiedItemIds(forOrderWithId: order.id).count
                 let total = orderStore.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(verified)/Double(total)*100)
@@ -284,11 +287,15 @@ struct OrdersMainListItem: View {
 
 
 #Preview {
+    
     let appController = AppController()
     let orderStore = appController.orderStore
+    let pickingStore = appController.pickingStore
+    
     let order = orderStore.orderSummaries.first!
     
     OrdersMainListItem(order: order)
         .environmentObject(appController)
         .environment(orderStore)
+        .environment(pickingStore)
 }

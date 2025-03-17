@@ -14,6 +14,7 @@ class AppController: ObservableObject {
     private let blCredentials = Secrets.brickLinkAPICredentials
     
     let orderStore: OrderStore
+    let pickingStore: PickingStore
     let shippingStore: ShippingStore
     
     let shippingController: ShippingController
@@ -22,6 +23,7 @@ class AppController: ObservableObject {
     init() {
         
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
+        pickingStore = PickingStore(dataStore: dataStore)
         shippingStore = ShippingStore(dataStore: dataStore)
         
         shippingController = ShippingController(orderStore: orderStore)
@@ -231,65 +233,13 @@ class AppController: ObservableObject {
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        return dataStore.pickedItemIdsByOrderId[orderId] ?? []
-    }
-    
-    
-    public func pickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
-        
-        try! dataStore.addPickedItemId(itemId, toOrderWithId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public func pick(_ item: OrderItem) {
-        
-        pickItem(forOrderWithId: item.orderId, itemId: item.id)
-    }
-    
-    
-    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
-        
-        try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public func unpick(_ item: OrderItem) {
-        
-        unpickItem(forOrderWithId: item.orderId, itemId: item.id)
+        pickingStore.pickedItemIds(forOrderWithId: orderId)
     }
     
     
     public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        return dataStore.verifiedItemIdsByOrderId[orderId] ?? []
-    }
-    
-    
-    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
-        
-        try! dataStore.addVerifiedItemId(itemId, toOrderWithId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public func verify(_ item: OrderItem) {
-        
-        verifyItem(forOrderWithId: item.orderId, itemId: item.id)
-    }
-    
-    
-    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
-        
-        try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public func unverify(_ item: OrderItem) {
-        
-        unverifyItem(forOrderWithId: item.orderId, itemId: item.id)
+        pickingStore.verifiedItemIds(forOrderWithId: orderId)
     }
     
     
