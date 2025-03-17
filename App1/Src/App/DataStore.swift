@@ -8,7 +8,7 @@ class DataStore {
     
     private let dataFileUrl: URL
     
-    private var data: DataRoot? = nil
+    private var data: DataFile? = nil
     
     
     init(dataFileUrl: URL) {
@@ -30,12 +30,12 @@ class DataStore {
         
         if let rawData = try? Data(contentsOf: dataFileUrl) {
         
-            let decodedData = try! decoder.decode(DataRoot.self, from: rawData)
+            let decodedData = try! decoder.decode(DataFile.self, from: rawData)
             self.data = decodedData
             
         } else {
             
-            self.data = DataRoot()
+            self.data = DataFile()
         }
     }
     
@@ -579,7 +579,7 @@ class DataStore {
 
 
 
-struct DataRoot: Codable {
+struct DataFile: Codable {
     
     var _meta: String?
     
