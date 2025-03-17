@@ -1,6 +1,5 @@
 
 import SwiftUI
-import Percentage
 
 
 
@@ -25,19 +24,19 @@ struct ResultCircleView: View {
     
     var body: some View {
         
-        let ratios: (income: Percentage, expense: Percentage) = {
+        let ratios: (income: Percent, expense: Percent) = {
             
             let income = Double(income)
             let expense = Double(expense)
             
             if income == 0 || expense == 0 {
-                return (income: 0, expense: 0)
+                return (income: 0%, expense: 0%)
             }
             
             if income > expense {
-                return (income: 100%, expense: Percentage(fraction: expense/income))
+                return (income: 100%, expense: Percent(expense/income))
             } else {
-                return (income: Percentage(fraction: income/expense), expense: 100%)
+                return (income: Percent(income/expense), expense: 100%)
             }
         }()
         
@@ -65,10 +64,10 @@ struct ResultCircleView: View {
     
     
     @ViewBuilder
-    func circle(size: CGFloat, lineWidth: CGFloat, value: Percentage, color: Color) -> some View {
+    func circle(size: CGFloat, lineWidth: CGFloat, value: Percent, color: Color) -> some View {
         
         Circle()
-            .trim(from: 0, to: circleBaseTrim * value.fraction)
+            .trim(from: 0, to: circleBaseTrim * value)
             .rotation(circleRotation)
             .stroke(color, style: .init(lineWidth: lineWidth, lineCap: .round))
             .frame(width: size, height: size)

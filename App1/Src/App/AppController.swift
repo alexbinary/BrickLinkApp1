@@ -1,6 +1,5 @@
 
 import SwiftUI
-import Percentage
 
 
 class AppController: ObservableObject {
@@ -675,12 +674,12 @@ class AppController: ObservableObject {
     }
     
     
-    public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percentage {
+    public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
         
         let total = orderItems(forOrderWithId: orderId).count
         let picked = pickedItemIds(forOrderWithId: orderId).count
         
-        return Percentage(fraction: Double(picked)/Double(total))
+        return Percent(Double(picked)/Double(total))
     }
     
     
@@ -705,12 +704,12 @@ class AppController: ObservableObject {
     }
     
     
-    public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percentage {
+    public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
         
         let total = orderItems(forOrderWithId: orderId).count
         let verified = verifiedItemIds(forOrderWithId: orderId).count
         
-        return Percentage(fraction: Double(verified)/Double(total))
+        return Percent(Double(verified)/Double(total))
     }
     
     
