@@ -67,10 +67,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setColors(colors)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -126,10 +122,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setOrderSummaries(orderSummaries)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -176,10 +168,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setOrderDetail(order)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -264,8 +252,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setShippingCost(cost, forOrderId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -464,8 +450,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setStampingMethod(method, forOrderId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -479,8 +463,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setDateValidatedWithoutStamping(Date(), forOrderId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -544,10 +526,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setOrderItems(batches, forOrderId: orderId)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -612,8 +590,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addPickedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -627,8 +603,6 @@ class AppController: ObservableObject {
         
         try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -648,8 +622,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addVerifiedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -663,8 +635,6 @@ class AppController: ObservableObject {
         
         try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -802,10 +772,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -856,8 +822,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -912,8 +876,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addUploadItem(uploadItem)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -921,8 +883,6 @@ class AppController: ObservableObject {
         
         try! dataStore.deleteUploadItem(uploadItem)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -930,8 +890,6 @@ class AppController: ObservableObject {
         
         try! dataStore.updateUploadItem(updatedItem)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -949,8 +907,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addUploadItems(uploadItems)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -1088,8 +1044,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addUploadedItem(uploadedItem)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -1166,10 +1120,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setInventories(inventories)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -1180,10 +1130,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setInventory(inventory)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     
@@ -1397,8 +1343,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addTransaction(transaction)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -1430,8 +1374,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -1457,8 +1399,6 @@ class AppController: ObservableObject {
         
         try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -1717,8 +1657,6 @@ class AppController: ObservableObject {
         
         try! dataStore.addOrderRefund(refund)
         try! dataStore.save()
-        
-        self.objectWillChange.send()
     }
     
     
@@ -2128,10 +2066,6 @@ class AppController: ObservableObject {
     
         try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
         try! dataStore.save()
-        
-        DispatchQueue.main.sync {
-            self.objectWillChange.send()
-        }
     }
     
     

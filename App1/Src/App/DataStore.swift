@@ -579,8 +579,10 @@ class DataStore {
 
 
 
-struct DataFile: Codable {
+@Observable
+class DataFile: Codable {
     
+    @ObservationIgnored
     var _meta: String?
     
     // MARK: - External data
@@ -607,4 +609,28 @@ struct DataFile: Codable {
     var transactions: [Transaction]?
     var orderRefunds: [OrderRefund]?
     var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]?
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case _meta = "_meta"
+        case _colors = "colors"
+        case _inventories = "inventories"
+        case _orderSummaries = "orderSummaries"
+        case _orderDetails = "orderDetails"
+        case _orderItemsByOrderId = "orderItemsByOrderId"
+        case _orderFeedbacksByOrderId = "orderFeedbacksByOrderId"
+        case _shippingCostsByOrderId = "shippingCostsByOrderId"
+        case _stampingMethodByOrderId = "stampingMethodByOrderId"
+        case _pickedItemIdsByOrderId = "pickedItemIdsByOrderId"
+        case _verifiedItemIdsByOrderId = "verifiedItemIdsByOrderId"
+        case _dateValidatedWithoutIncomeTransactionByOrderId = "dateValidatedWithoutIncomeTransactionByOrderId"
+        case _dateValidatedWithoutShippingTransactionByOrderId = "dateValidatedWithoutShippingTransactionByOrderId"
+        case _dateValidatedWithoutStampingByOrderId = "dateValidatedWithoutStampingByOrderId"
+        case _dateValidatedWithoutFeedbackByOrderId = "dateValidatedWithoutFeedbackByOrderId"
+        case _uploadItems = "uploadItems"
+        case _uploadedItems = "uploadedItems"
+        case _transactions = "transactions"
+        case _orderRefunds = "orderRefunds"
+        case _laPosteTrackingStatusByTrackingNo = "laPosteTrackingStatusByTrackingNo"
+    }
 }
