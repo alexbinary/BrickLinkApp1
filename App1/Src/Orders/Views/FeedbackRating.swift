@@ -29,3 +29,9 @@ struct FeedbackRating: View {
         .help(feedback.comment)
     }
 }
+
+
+
+#Preview {
+    FeedbackRating(Feedback(id: 1, orderId: "", from: "", to: "", dateRated: .now, rating: 0, author: .buyer, comment: ""))
+}
