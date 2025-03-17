@@ -9,8 +9,13 @@ struct OrdersMainListItem: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
+    
     let order: OrderSummary
     var macroStatus: OrderMacroStatus { app.macroStatus(forOrderWithId: order.id) }
+    
     
     @State var hover: Bool = false
     
@@ -217,8 +222,8 @@ struct OrdersMainListItem: View {
             if !app.orderChecklistShipped(order.id) && !app.orderChecklistDriveThru(order.id) {
                 items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
-                        await app.updateOrderStatus(orderId: order.id, status: .shipped)
-                        await app.sendDriveThru(orderId: order.id)
+                        await orderStore.updateOrderStatus(orderId: order.id, status: .shipped)
+                        await orderStore.sendDriveThru(orderId: order.id)
                     }
                 }))
             } else {
@@ -238,7 +243,7 @@ struct OrdersMainListItem: View {
             if app.orderChecklistUnchangedFor30Days(order.id) {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
-                        await app.updateOrderStatus(orderId: order.id, status: .completed)
+                        await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
                         await app.postPraiseOrderFeedback(orderId: order.id)
                     }
                 }))
@@ -280,7 +285,10 @@ struct OrdersMainListItem: View {
 
 #Preview {
     let appController = AppController()
-    let order = appController.orderSummaries.first!
+    let orderStore = appController.orderStore
+    let order = orderStore.orderSummaries.first!
+    
     OrdersMainListItem(order: order)
         .environmentObject(appController)
+        .environment(orderStore)
 }

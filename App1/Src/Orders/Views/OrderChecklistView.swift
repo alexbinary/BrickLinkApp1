@@ -9,9 +9,12 @@ struct OrderChecklistView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
     
     let order: OrderDetails
-    var orderSummary: OrderSummary { app.orderSummary(forOrderWithId: order.id)! }
+    var orderSummary: OrderSummary { orderStore.orderSummary(forOrderWithId: order.id)! }
     
     init(_ order: OrderDetails) {
         self.order = order

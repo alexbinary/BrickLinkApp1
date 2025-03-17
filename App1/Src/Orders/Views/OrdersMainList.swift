@@ -8,8 +8,12 @@ struct OrdersMainList: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
     @Environment(NavigationController.self)
     var nav
+    
     
     @State var refreshing: Bool = false
     @State var actionPopoverPresented: Bool = false
@@ -34,7 +38,7 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: OrderSummary.ID.self) { orderId in
-            OrderDetailView(orderSummary: app.orderSummary(forOrderWithId: orderId)!)
+            OrderDetailView(orderSummary: orderStore.orderSummary(forOrderWithId: orderId)!)
         }
         .toolbar {
             
@@ -54,7 +58,7 @@ struct OrdersMainList: View {
             }
             .disabled(refreshing)
         }
-        .onChange(of: app.orderSummaries, initial: true) {
+        .onChange(of: orderStore.orderSummaries, initial: true) {
             Task { await refresh() }
         }
     }
@@ -90,4 +94,18 @@ struct OrdersMainList: View {
             .onTapGesture { nav.pushOrder(order.id) }
             .padding([.leading, .trailing])
     }
+}
+
+
+
+#Preview {
+    
+    let appController = AppController()
+    let orderStore = appController.orderStore
+    let navigationController = NavigationController()
+    
+    OrdersMainList()
+        .environmentObject(appController)
+        .environment(orderStore)
+        .environment(navigationController)
 }

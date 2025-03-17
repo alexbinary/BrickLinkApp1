@@ -16,6 +16,7 @@ struct MainApp: App {
             
             WindowRootView()
                 .environmentObject(appController)
+                .environment(appController.orderStore)
         }
     }
 }

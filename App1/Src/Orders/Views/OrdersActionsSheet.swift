@@ -93,6 +93,7 @@ struct OrdersActionsSheet: View {
 
 #Preview {
     let appController = AppController()
-    OrdersActionsSheet(orders: appController.orderSummaries)
-        .environmentObject(appController)
+    let orderStore = appController.orderStore
+    let orders = orderStore.orderSummaries
+    OrdersActionsSheet(orders: orders).environmentObject(appController)
 }

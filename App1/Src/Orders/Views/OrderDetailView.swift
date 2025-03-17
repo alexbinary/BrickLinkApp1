@@ -9,9 +9,12 @@ struct OrderDetailView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
     
     let orderSummary: OrderSummary
-    var order: OrderDetails? { app.orderDetails(forOrderWithId: orderSummary.id) }
+    var order: OrderDetails? { orderStore.orderDetails(forOrderWithId: orderSummary.id) }
     
     
     @State private var columnWidth: CGFloat?

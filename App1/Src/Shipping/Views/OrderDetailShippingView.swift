@@ -9,6 +9,9 @@ struct OrderDetailShippingView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
     
     let order: OrderDetails
     
@@ -200,12 +203,12 @@ struct OrderDetailShippingView: View {
                             
                             TextField("Tracking No", text: trackingNoBinding)
                                 .onSubmit {
-                                    Task { await app.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
+                                    Task { await orderStore.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
                                 }
                                 .frame(maxWidth: 140)
                             
                             Button("Save") {
-                                Task { await app.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
+                                Task { await orderStore.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
                             }
                         }
                         
@@ -220,14 +223,14 @@ struct OrderDetailShippingView: View {
                             }
                             
                             Button("Send") {
-                                Task { await app.sendDriveThru(orderId: order.id) }
+                                Task { await orderStore.sendDriveThru(orderId: order.id) }
                             }
                         }
                         
                         Button("Ship and send Drive thru") {
                             Task {
-                                await app.updateOrderStatus(orderId: order.id, status: .shipped)
-                                await app.sendDriveThru(orderId: order.id)
+                                await orderStore.updateOrderStatus(orderId: order.id, status: .shipped)
+                                await orderStore.sendDriveThru(orderId: order.id)
                             }
                         }
                     }
@@ -247,7 +250,12 @@ struct OrderDetailShippingView: View {
 
 
 #Preview {
+    
     let appController = AppController()
-    let order = appController.orderDetails.first!
-    OrderDetailShippingView(order).environmentObject(appController)
+    let orderStore = appController.orderStore
+    let order = orderStore.orderDetails.first!
+    
+    OrderDetailShippingView(order)
+        .environmentObject(appController)
+        .environment(orderStore)
 }

@@ -13,8 +13,13 @@ class AppController: ObservableObject {
     
     private let blCredentials = Secrets.brickLinkAPICredentials
     
+    let orderStore: OrderStore
+    
     
     init() {
+        
+        orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
+        
         Task {
             await parallel([
                 { await self.loadColors() },
@@ -94,46 +99,25 @@ class AppController: ObservableObject {
     
     public var orderSummaries: [OrderSummary] {
         
-        dataStore.orderSummaries
+        orderStore.orderSummaries
     }
     
     
     public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
-        orderSummaries.first { $0.id == orderId }
+        orderStore.orderSummary(forOrderWithId: orderId)
     }
     
     
     private func loadOrderSummaries() async {
         
-        print("Loading orders")
-        
-        let blOrders = await BrickLinkAPIClient.fetchOrderSummaries(using: blCredentials)
-           
-        let orderSummaries = blOrders
-            .map { OrderSummary(fromBl: $0) }
-            .sorted { $0.date > $1.date }
-        
-        try! dataStore.setOrderSummaries(orderSummaries)
-        try! dataStore.save()
-    }
-    
-    
-    public func loadOrderSummariesIfMissing() async {
-        
-        if orderSummaries.isEmpty {
-        
-            await loadOrderSummaries()
-        }
+        await orderStore.loadOrderSummaries()
     }
     
     
     public func reloadOrderSummaries() async {
         
-        if !orderSummaries.isEmpty {
-        
-            await loadOrderSummaries()
-        }
+        await orderStore.reloadOrderSummaries()
     }
     
     
@@ -143,43 +127,25 @@ class AppController: ObservableObject {
     
     public var orderDetails: [OrderDetails] {
         
-        dataStore.orderDetails
+        orderStore.orderDetails
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        dataStore.orderDetails.first { $0.id == orderId }
+        orderStore.orderDetails(forOrderWithId: orderId)
     }
     
     
     private func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
         
-        print("Loading order details \(orderId)")
-        
-        let blOrder = await BrickLinkAPIClient.fetchDetails(forOrderWithId: orderId, using: blCredentials)
-        let order = OrderDetails(fromBl: blOrder)
-        
-        try! dataStore.setOrderDetail(order)
-        try! dataStore.save()
+        await orderStore.loadOrderDetails(forOrderWithId: orderId)
     }
     
     
     public func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
         
-        if !dataStore.orderDetails.contains(where: { $0.id == orderId }) {
-            
-            await loadOrderDetails(forOrderWithId: orderId)
-        }
-    }
-    
-    
-    public func reloadOrderDetails(forOrderWithId orderId: String) async {
-        
-        if dataStore.orderDetails.contains(where: { $0.id == orderId }) {
-            
-            await loadOrderDetails(forOrderWithId: orderId)
-        }
+        await orderStore.loadOrderDetailsIfMissing(forOrderWithId: orderId)
     }
     
     
@@ -189,40 +155,13 @@ class AppController: ObservableObject {
     
     public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
         
-        print("update status \(status) for order \(orderId)")
-        
-        await BrickLinkAPIClient.updateStatus(ofOrderWithId: orderId, to: status, using: blCredentials)
-        
-        await parallel([
-            { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(forOrderWithId: orderId) },
-        ])
+        await orderStore.updateOrderStatus(orderId: orderId, status: status)
     }
     
     
-    public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
-        
-        print("update tracking no \(trackingNo) for order \(orderId)")
-        
-        await BrickLinkAPIClient.updateTrackingNo(ofOrderWithId: orderId, to: trackingNo, using: blCredentials)
-        
-        await parallel([
-            { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(forOrderWithId: orderId) },
-        ])
-    }
-
-
     public func sendDriveThru(orderId: OrderSummary.ID) async {
         
-        print("send drive thru for order \(orderId)")
-        
-        await BrickLinkAPIClient.sendDriveThru(forOrderWithId: orderId, using: blCredentials, mailMe: true)
-        
-        await parallel([
-            { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(forOrderWithId: orderId) },
-        ])
+        await orderStore.sendDriveThru(orderId: orderId)
     }
     
     

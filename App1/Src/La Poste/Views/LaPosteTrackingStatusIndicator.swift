@@ -38,7 +38,8 @@ struct LaPosteTrackingStatusIndicator: View {
 #Preview {
     
     let appController = AppController()
-    let order = appController.orderSummaries.first!
+    let orderStore = appController.orderStore
+    let order = orderStore.orderSummaries.first!
     VStack {
         Group {
             LaPosteTrackingStatusIndicator(order: order)
