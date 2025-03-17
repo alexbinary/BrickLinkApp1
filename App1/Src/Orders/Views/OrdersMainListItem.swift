@@ -190,7 +190,7 @@ struct OrdersMainListItem: View {
             if !app.orderChecklistPicking(order.id) {
                 
                 let picked = app.pickedItemIds(forOrderWithId: order.id).count
-                let total = app.orderItems(forOrderWithId: order.id).count
+                let total = orderStore.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(picked)/Double(total)*100)
                 items.append(OrderStatusTag(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
@@ -198,7 +198,7 @@ struct OrdersMainListItem: View {
             } else if !app.orderChecklistVerification(order.id) {
                 
                 let verified = app.verifiedItemIds(forOrderWithId: order.id).count
-                let total = app.orderItems(forOrderWithId: order.id).count
+                let total = orderStore.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(verified)/Double(total)*100)
                 items.append(OrderStatusTag(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))

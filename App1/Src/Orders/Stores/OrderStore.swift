@@ -150,4 +150,47 @@ class OrderStore {
             { await self.reloadOrderDetails(forOrderWithId: orderId) },
         ])
     }
+    
+    
+    // MARK: - Order items
+    
+    
+    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
+    }
+    
+    
+    public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+        
+        let items = orderItems(forOrderWithId: orderId)
+        
+        return itemsIds.map { id in items.first { $0.id == id }! }
+    }
+    
+    
+    public func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
+        
+        print("Loading order items \(orderId)")
+        
+        let blBatches = await BrickLinkAPIClient.fetchItems(forOrderWithId: orderId, using: blCredentials)
+        
+        let batches = blBatches.map { blItems in
+            blItems.map { blItem in
+                OrderItem(fromBl: blItem, orderId: orderId)
+            }
+        }
+        
+        try! dataStore.setOrderItems(batches, forOrderId: orderId)
+        try! dataStore.save()
+    }
+    
+    
+    public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
+        
+        if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
+            
+            await loadOrderItems(forOrderWithId: orderId)
+        }
+    }
 }

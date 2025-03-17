@@ -90,9 +90,12 @@ enum ButtonType {
 
 
 #Preview {
+    
     let appController = AppController()
     let orderStore = appController.orderStore
     let order = orderStore.orderSummaries.first!
-    let item = appController.orderItems(forOrderWithId: order.id).first!
-    PickingItemView(item, button: .pick).environmentObject(appController)
+    let item = orderStore.orderItems(forOrderWithId: order.id).first!
+    
+    PickingItemView(item, button: .pick)
+        .environmentObject(appController)
 }

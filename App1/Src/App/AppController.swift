@@ -203,66 +203,25 @@ class AppController: ObservableObject {
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
+        orderStore.orderItems(forOrderWithId: orderId)
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        let items = orderItems(forOrderWithId: orderId)
-        
-        return itemsIds.map { id in items.first { $0.id == id }! }
+        orderStore.orderItems(forOrderWithId: orderId, fromItemIds: itemsIds)
     }
     
     
     private func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
         
-        print("Loading order items \(orderId)")
-        
-        let blBatches = await BrickLinkAPIClient.fetchItems(forOrderWithId: orderId, using: blCredentials)
-        
-        let batches = blBatches.map { blItems in
-            
-            blItems.map { item in
-                
-                OrderItem(
-                    inventoryId: "\(item.inventoryId)",
-                    orderId: orderId,
-                    condition: item.newOrUsed,
-                    colorId: "\(item.colorId)",
-                    colorName: item.colorName,
-                    ref: item.item.no,
-                    name: item.item.name.htmlUnescape(),
-                    type: item.item.type,
-                    location: item.remarks ?? "",
-                    comment: (item.description ?? "").htmlUnescape(),
-                    quantity: "\(item.quantity)",
-                    unitPrice: item.unitPrice.floatValue,
-                    unitPriceFinal: item.unitPriceFinal.floatValue
-                )
-            }
-        }
-        
-        try! dataStore.setOrderItems(batches, forOrderId: orderId)
-        try! dataStore.save()
+        await orderStore.loadOrderItems(forOrderWithId: orderId)
     }
     
     
     public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
         
-        if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
-            
-            await loadOrderItems(forOrderWithId: orderId)
-        }
-    }
-    
-    
-    public func reloadOrderItems(forOrderWithId orderId: String) async {
-        
-        if dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
-            
-            await loadOrderItems(forOrderWithId: orderId)
-        }
+        await orderStore.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     
@@ -1848,6 +1807,28 @@ extension OrderDetails {
         self.shippingAddressName = bl.shipping!.address.name.full
         
         self.remarks = bl.remarks
+    }
+}
+
+
+extension OrderItem {
+    
+    
+    init(fromBl bl: BrickLinkOrderItem, orderId: String) {
+        
+        self.inventoryId = "\(bl.inventoryId)"
+        self.orderId = orderId
+        self.condition = bl.newOrUsed
+        self.colorId = "\(bl.colorId)"
+        self.colorName = bl.colorName
+        self.ref = bl.item.no
+        self.name = bl.item.name.htmlUnescape()
+        self.type = bl.item.type
+        self.location = bl.remarks ?? ""
+        self.comment = (bl.description ?? "").htmlUnescape()
+        self.quantity = "\(bl.quantity)"
+        self.unitPrice = bl.unitPrice.floatValue
+        self.unitPriceFinal = bl.unitPriceFinal.floatValue
     }
 }
 
