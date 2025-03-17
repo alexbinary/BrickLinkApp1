@@ -20,6 +20,7 @@ struct InfoCardView<Content, Detail>: View where Content: View, Detail: View {
         self.detail = detail()
     }
     
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
