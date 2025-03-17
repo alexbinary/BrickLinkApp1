@@ -47,4 +47,5 @@ struct LaPosteTrackingStatusIndicator: View {
             LaPosteTrackingStatusIndicator(order: order)
         }.padding()
     }
+    .environmentObject(appController)
 }
