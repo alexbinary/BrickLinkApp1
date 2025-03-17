@@ -15,6 +15,9 @@ struct OrderDetailShippingView: View {
     @Environment(ShippingStore.self)
     var shippingStore
     
+    @Environment(ShippingController.self)
+    var shippingController
+    
     
     let order: OrderDetails
     
@@ -105,7 +108,7 @@ struct OrderDetailShippingView: View {
                     
                     HeaderTitleView(label: "􀐚 Packing & Stamping")
                     
-                    let recommendedStampingMethod = app.recommendedStampingMethod(forOrderWithId: order.id)
+                    let recommendedStampingMethod = shippingController.recommendedStampingMethod(forOrderWithId: order.id)
                     
                     Grid(alignment: .leading, verticalSpacing: 8) {
                         
@@ -246,7 +249,7 @@ struct OrderDetailShippingView: View {
     
     var selectedShippingCost: SelectedShippingCost? {
         
-        app.selectedShippingCost(forOrderWithId: order.id)
+        shippingController.selectedShippingCost(forOrderWithId: order.id)
     }
 }
 
@@ -258,9 +261,11 @@ struct OrderDetailShippingView: View {
     let orderStore = appController.orderStore
     let order = orderStore.orderDetails.first!
     let shippingStore = appController.shippingStore
+    let shippingController = appController.shippingController
     
     OrderDetailShippingView(order)
         .environmentObject(appController)
         .environment(orderStore)
         .environment(shippingStore)
+        .environment(shippingController)
 }

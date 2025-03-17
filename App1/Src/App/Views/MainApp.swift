@@ -18,6 +18,7 @@ struct MainApp: App {
                 .environmentObject(appController)
                 .environment(appController.orderStore)
                 .environment(appController.shippingStore)
+                .environment(appController.shippingController)
         }
     }
 }
