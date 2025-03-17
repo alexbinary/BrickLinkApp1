@@ -104,7 +104,7 @@ class AppController: ObservableObject {
     
     public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
-        dataStore.orderSummaries.first { $0.id == orderId }
+        orderSummaries.first { $0.id == orderId }
     }
     
     
@@ -135,7 +135,7 @@ class AppController: ObservableObject {
     
     public func loadOrderSummariesIfMissing() async {
         
-        if dataStore.orderSummaries.isEmpty {
+        if orderSummaries.isEmpty {
         
             await loadOrderSummaries()
         }
@@ -144,7 +144,7 @@ class AppController: ObservableObject {
     
     public func reloadOrderSummaries() async {
         
-        if !dataStore.orderSummaries.isEmpty {
+        if !orderSummaries.isEmpty {
         
             await loadOrderSummaries()
         }
