@@ -14,11 +14,13 @@ class AppController: ObservableObject {
     private let blCredentials = Secrets.brickLinkAPICredentials
     
     let orderStore: OrderStore
+    let shippingStore: ShippingStore
     
     
     init() {
         
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
+        shippingStore = ShippingStore(dataStore: dataStore)
         
         Task {
             await parallel([
@@ -171,14 +173,7 @@ class AppController: ObservableObject {
     
     public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
-        return dataStore.shippingCostsByOrderId[orderId]
-    }
-    
-    
-    public func updateShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
-        
-        try! dataStore.setShippingCost(cost, forOrderId: orderId)
-        try! dataStore.save()
+        shippingStore.shippingCost(forOrderWithId: orderId)
     }
     
     
@@ -362,39 +357,13 @@ class AppController: ObservableObject {
     
     public func stamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        return dataStore.stampingMethodByOrderId[orderId]
-    }
-    
-    
-    public func updateStamping(forOrderWithId orderId: OrderSummary.ID, method: String) {
-        
-        try! dataStore.setStampingMethod(method, forOrderId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
-        
-        dataStore.dateValidatedWithoutStampingByOrderId
-    }
-    
-    
-    public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
-        
-        try! dataStore.setDateValidatedWithoutStamping(Date(), forOrderId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public func dateOrderValidatedWithoutStamping(orderId: OrderDetails.ID) -> Date? {
-        
-        return dateValidatedWithoutStampingByOrderId[orderId]
+        shippingStore.stamping(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutStamping(orderId: OrderDetails.ID) -> Bool {
         
-        return dateValidatedWithoutStampingByOrderId[orderId] != nil
+        shippingStore.orderIsValidatedWithoutStamping(orderId: orderId)
     }
     
     

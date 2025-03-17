@@ -9,6 +9,9 @@ struct ResultOrderList: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(ShippingStore.self)
+    var shippingStore
+    
     
     let orders: [OrderDetails]
     let title: String
@@ -71,7 +74,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Shipping cost") { order in
                     Text(
-                        abs(app.shippingCost(forOrderWithId: order.id) ?? 0),
+                        abs(shippingStore.shippingCost(forOrderWithId: order.id) ?? 0),
                         format: .currency(code: "EUR").presentation(.isoCode)
                     ).amountColor(.bad)
                 }
@@ -106,5 +109,11 @@ struct ResultOrderList: View {
 
 
 #Preview {
-    ResultOrderList([], title: "Title", selection: .constant(nil)).environmentObject(AppController())
+    
+    let appController = AppController()
+    let shippingStore = appController.shippingStore
+    
+    ResultOrderList([], title: "Title", selection: .constant(nil))
+        .environmentObject(appController)
+        .environment(shippingStore)
 }

@@ -12,6 +12,9 @@ struct OrderDetailShippingView: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(ShippingStore.self)
+    var shippingStore
+    
     
     let order: OrderDetails
     
@@ -109,7 +112,7 @@ struct OrderDetailShippingView: View {
                         GridRow {
                             Text("Shipping cost :")
                             
-                            var shippingCostEditValue = app.shippingCost(forOrderWithId: order.id) ?? 0
+                            var shippingCostEditValue = shippingStore.shippingCost(forOrderWithId: order.id) ?? 0
                             
                             let shippingCostBinding = Binding<Float> {
                                 return shippingCostEditValue
@@ -122,19 +125,19 @@ struct OrderDetailShippingView: View {
                                 format: .currency(code: "EUR").presentation(.isoCode)
                             )
                             .onSubmit {
-                                app.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                shippingStore.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
                             }
                             .frame(maxWidth: 120)
                             
                             HStack {
                                 Button("Save") {
-                                    app.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                    shippingStore.updateShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
                                 }
                                 
                                 if let shippingCostPredictedValue = selectedShippingCost?.value {
                                     
                                     Button {
-                                        app.updateShippingCost(forOrderWithId: order.id, cost: NSDecimalNumber(decimal:  shippingCostPredictedValue).floatValue)
+                                        shippingStore.updateShippingCost(forOrderWithId: order.id, cost: NSDecimalNumber(decimal:  shippingCostPredictedValue).floatValue)
                                     } label: {
                                         HStack {
                                             Text("Predicted:")
@@ -148,7 +151,7 @@ struct OrderDetailShippingView: View {
                         GridRow {
                             Text("Stamping :")
                             
-                            if let confirmedMethod = app.stamping(forOrderWithId: order.id) {
+                            if let confirmedMethod = shippingStore.stamping(forOrderWithId: order.id) {
                                 Text(confirmedMethod)
                             } else {
                                 Text("")
@@ -156,12 +159,12 @@ struct OrderDetailShippingView: View {
                             
                             HStack {
                                 Button("Recommended: \(recommendedStampingMethod)") {
-                                    app.updateStamping(forOrderWithId: order.id, method: recommendedStampingMethod)
+                                    shippingStore.updateStamping(forOrderWithId: order.id, method: recommendedStampingMethod)
                                 }
                                 
                                 if recommendedStampingMethod != "Bureau de poste" {
                                     Button("Bureau de poste") {
-                                        app.updateStamping(forOrderWithId: order.id, method: "Bureau de poste")
+                                        shippingStore.updateStamping(forOrderWithId: order.id, method: "Bureau de poste")
                                     }
                                 }
                             }
@@ -172,9 +175,9 @@ struct OrderDetailShippingView: View {
                             Text("")
                             HStack {
                                 Button("Validate without stamping") {
-                                    self.app.validateOrderWithoutStamping(orderId: order.id)
+                                    shippingStore.validateOrderWithoutStamping(orderId: order.id)
                                 }
-                                if let date = app.dateOrderValidatedWithoutStamping(orderId: order.id) {
+                                if let date = shippingStore.dateOrderValidatedWithoutStamping(orderId: order.id) {
                                     Text("Validated without stamping on")
                                     Text(date, format: .dateTime)
                                 }
@@ -254,8 +257,10 @@ struct OrderDetailShippingView: View {
     let appController = AppController()
     let orderStore = appController.orderStore
     let order = orderStore.orderDetails.first!
+    let shippingStore = appController.shippingStore
     
     OrderDetailShippingView(order)
         .environmentObject(appController)
         .environment(orderStore)
+        .environment(shippingStore)
 }

@@ -9,6 +9,9 @@ struct ResultContentView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(ShippingStore.self)
+    var shippingStore
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -61,7 +64,7 @@ struct ResultContentView: View {
             
             TableColumn("Shipping cost") { order in
                 
-                if let cost = app.shippingCost(forOrderWithId: order.id) {
+                if let cost = shippingStore.shippingCost(forOrderWithId: order.id) {
                     
                     Text(
                         abs(cost),
@@ -104,4 +107,18 @@ struct ResultContentView: View {
         }
         .navigationTitle("Result")
     }
+}
+
+
+
+#Preview {
+    
+    let appController = AppController()
+    let shippingStore = appController.shippingStore
+    let navigationController = NavigationController()
+    
+    ResultContentView()
+        .environmentObject(appController)
+        .environment(shippingStore)
+        .environment(navigationController)
 }

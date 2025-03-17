@@ -9,6 +9,9 @@ struct OrderDetailComptaView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(ShippingStore.self)
+    var shippingStore
+    
     
     let order: OrderDetails
     
@@ -87,7 +90,7 @@ struct OrderDetailComptaView: View {
                
             HStack {
                 Text("Confirmed affranchissment:")
-                if let confirmedMethod = app.stamping(forOrderWithId: order.id) {
+                if let confirmedMethod = shippingStore.stamping(forOrderWithId: order.id) {
                     Text(confirmedMethod)
                 }
             }
@@ -176,7 +179,7 @@ struct OrderDetailComptaView: View {
             self.incomeComment = ""
 
             self.shippingDate = Date()
-            self.shippingAmount = app.shippingCost(forOrderWithId: order.id) ?? 0
+            self.shippingAmount = shippingStore.shippingCost(forOrderWithId: order.id) ?? 0
             self.shippingPaymentMethod = .cb_iban
             self.shippingComment = ""
             
@@ -231,4 +234,18 @@ struct OrderDetailComptaView: View {
             orderRefIn: order.id
         ))
     }
+}
+
+
+
+#Preview {
+    
+    let appController = AppController()
+    let orderStore = appController.orderStore
+    let order = orderStore.orderDetails.first!
+    let shippingStore = appController.shippingStore
+    
+    OrderDetailComptaView(order)
+        .environmentObject(appController)
+        .environment(shippingStore)
 }
