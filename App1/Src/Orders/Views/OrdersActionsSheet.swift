@@ -5,7 +5,9 @@ import SwiftUI
 struct OrdersActionsSheet: View {
     
     
-    @EnvironmentObject var app: AppController
+    @EnvironmentObject
+    var app: AppController
+    
     
     let orders: [OrderSummary]
     
