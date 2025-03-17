@@ -33,6 +33,9 @@ struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     let shippingAddressName: String
     
     let remarks: String?
+    
+    
+    var isShippedWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
 }
 
 

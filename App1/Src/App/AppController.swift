@@ -182,13 +182,6 @@ class AppController: ObservableObject {
     }
     
     
-    public func orderIsShippedWithLaPoste(orderId: OrderSummary.ID) -> Bool {
-        
-        let orderDetails = orderDetails(forOrderWithId: orderId)!
-        return orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste)
-    }
-    
-    
     public func selectedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> SelectedShippingCost? {
         
         let order = orderDetails(forOrderWithId: orderId)!
