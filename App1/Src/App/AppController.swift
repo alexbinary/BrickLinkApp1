@@ -23,6 +23,7 @@ class AppController: ObservableObject {
     let orderStore: OrderStore
     let pickingStore: PickingStore
     let shippingStore: ShippingStore
+    let trackingStore: TrackingStore
     let feedbackStore: FeedbackStore
     
     let uploadController: UploadController
@@ -43,6 +44,7 @@ class AppController: ObservableObject {
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
         pickingStore = PickingStore(dataStore: dataStore)
         shippingStore = ShippingStore(dataStore: dataStore)
+        trackingStore = TrackingStore(dataStore: dataStore)
         feedbackStore = FeedbackStore(dataStore: dataStore, blCredentials: blCredentials)
         
         uploadController = UploadController(uploadStore: uploadStore, catalogStore: catalogStore, inventoryStore: inventoryStore)
@@ -1048,7 +1050,7 @@ class AppController: ObservableObject {
     
     public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
-        dataStore.laPosteTrackingStatusByTrackingNo[trackingNo]
+        trackingStore.laPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     
@@ -1066,10 +1068,7 @@ class AppController: ObservableObject {
     
     private func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
-        let status = await LaPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
-    
-        try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
-        try! dataStore.save()
+        await trackingStore.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     
