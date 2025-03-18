@@ -7,19 +7,67 @@ import Foundation
 class UploadController {
     
     
-    private let uploadStore: UploadStore
     private let colorStore: ColorStore
+    private let uploadStore: UploadStore
+    private let inventoryStore: InventoryStore
     
     
-    init(uploadStore: UploadStore, colorStore: ColorStore) {
+    init(uploadStore: UploadStore, colorStore: ColorStore, inventoryStore: InventoryStore) {
         self.uploadStore = uploadStore
         self.colorStore = colorStore
+        self.inventoryStore = inventoryStore
+    }
+    
+    
+    public var uploadItems: [UploadItem] {
+        
+        uploadStore.uploadItems
     }
     
     
     public var uploadedItems: [UploadedItem] {
         
         uploadStore.uploadedItems
+    }
+    
+    
+    public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
+        
+        inventoryStore.inventory(for: uploadItem)
+    }
+    
+    
+    public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
+        
+        inventoryStore.inventories(forAllColorsOf: uploadItem)
+    }
+    
+    
+    // MARK: - Upload
+    
+    
+    public var uploadItemsForList: [UploadItem] {
+        
+        uploadItems.sorted { item1, item2 in
+                
+            let rem1 = inventory(for: item1)?.remarks ?? inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
+            let rem2 = inventory(for: item2)?.remarks ?? inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
+            
+            switch (rem1, rem2) {
+                
+            case (nil, nil):
+                return true
+                
+            case (.some, nil):
+                return true
+                
+            case (nil, .some):
+                return false
+                
+            case (.some(let rem1), .some(let rem2)):
+                return rem1 < rem2
+            }
+        }
     }
     
     
