@@ -29,6 +29,7 @@ class AppController: ObservableObject {
     let uploadController: UploadController
     let pickingController: PickingController
     let shippingController: ShippingController
+    let trackingController: TrackingController
     let feedbackController: FeedbackController
     
     
@@ -50,6 +51,7 @@ class AppController: ObservableObject {
         uploadController = UploadController(uploadStore: uploadStore, catalogStore: catalogStore, inventoryStore: inventoryStore)
         pickingController = PickingController(orderStore: orderStore, pickingStore: pickingStore)
         shippingController = ShippingController(orderStore: orderStore)
+        trackingController = TrackingController(orderStore: orderStore, trackingStore: trackingStore)
         feedbackController = FeedbackController(orderStore: orderStore, feedbackStore: feedbackStore)
         
         Task {
@@ -1048,42 +1050,9 @@ class AppController: ObservableObject {
     // MARK: - Tracking status
     
     
-    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
-        
-        trackingStore.laPosteTrackingStatus(forTrackingNo: trackingNo)
-    }
-    
-    
-    public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
-        
-        if let order = orderDetails(forOrderWithId: orderId),
-           let trackingNo = order.trackingNo {
-            
-            return laPosteTrackingStatus(forTrackingNo: trackingNo)
-        } else {
-            return nil
-        }
-    }
-    
-    
-    private func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
-        
-        await trackingStore.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
-    }
-    
-    
-    private func loadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
-        
-        let order = orderDetails(forOrderWithId: orderId)!
-        let trackingNo = order.trackingNo!
-            
-        await loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
-    }
-    
-    
     public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await loadLaPosteTrackingStatus(forOrderWithId: orderId)
+        await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     

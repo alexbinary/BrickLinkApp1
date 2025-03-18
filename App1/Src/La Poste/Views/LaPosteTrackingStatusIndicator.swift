@@ -5,11 +5,12 @@ import SwiftUI
 struct LaPosteTrackingStatusIndicator: View {
     
     
-    @EnvironmentObject
-    var app: AppController
+    @Environment(TrackingController.self)
+    var trackingController
+    
     
     let order: OrderSummary
-    var status: LaPosteTrackingStatus? { app.laPosteTrackingStatus(forOrderWithId: order.id) }
+    var status: LaPosteTrackingStatus? { trackingController.laPosteTrackingStatus(forOrderWithId: order.id) }
     
     
     var body: some View {
@@ -19,7 +20,7 @@ struct LaPosteTrackingStatusIndicator: View {
             .padding(.vertical, 2)
             .roundedContainer(style: .tag(baseColor: color))
             .onChange(of: order, initial: true) {
-                Task { await app.reloadLaPosteTrackingStatus(forOrderWithId: order.id) }
+                Task { await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: order.id) }
             }
     }
     
@@ -39,7 +40,10 @@ struct LaPosteTrackingStatusIndicator: View {
     
     let appController = AppController()
     let orderStore = appController.orderStore
+    let trackingController = appController.trackingController
+    
     let order = orderStore.orderSummaries.first!
+    
     VStack {
         Group {
             LaPosteTrackingStatusIndicator(order: order)
@@ -48,5 +52,5 @@ struct LaPosteTrackingStatusIndicator: View {
             LaPosteTrackingStatusIndicator(order: order)
         }.padding()
     }
-    .environmentObject(appController)
+    .environment(trackingController)
 }

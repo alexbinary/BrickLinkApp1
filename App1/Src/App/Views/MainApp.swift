@@ -33,6 +33,7 @@ struct MainApp: App {
                 .environment(appController.uploadController)
                 .environment(appController.pickingController)
                 .environment(appController.shippingController)
+                .environment(appController.trackingController)
                 .environment(appController.feedbackController)
         }
     }

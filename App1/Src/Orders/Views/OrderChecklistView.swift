@@ -15,6 +15,9 @@ struct OrderChecklistView: View {
     @Environment(PickingController.self)
     var pickingController
     
+    @Environment(TrackingController.self)
+    var trackingController
+    
     
     let order: OrderDetails
     var orderSummary: OrderSummary { orderStore.orderSummary(forOrderWithId: order.id)! }
@@ -103,7 +106,7 @@ struct OrderChecklistView: View {
                     
                     GridRow {
                         CheckStatusView(
-                            status: app.laPosteTrackingStatus(forOrderWithId: order.id)?.isOneOf(.inTransit, .delivered) ?? false,
+                            status: trackingController.laPosteTrackingStatus(forOrderWithId: order.id)?.isOneOf(.inTransit, .delivered) ?? false,
                             mandatory: false
                         )
                         Text("Picked up by transported")
@@ -170,6 +173,7 @@ extension View {
     let appController = AppController()
     let orderStore = appController.orderStore
     let pickingController = appController.pickingController
+    let trackingController = appController.trackingController
     
     let order = orderStore.orderDetails.first!
     
@@ -177,4 +181,5 @@ extension View {
         .environmentObject(appController)
         .environment(orderStore)
         .environment(pickingController)
+        .environment(trackingController)
 }
