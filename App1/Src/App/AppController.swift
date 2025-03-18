@@ -21,6 +21,7 @@ class AppController: ObservableObject {
     let shippingStore: ShippingStore
     let feedbackStore: FeedbackStore
     
+    let uploadController: UploadController
     let pickingController: PickingController
     let shippingController: ShippingController
     let feedbackController: FeedbackController
@@ -36,6 +37,7 @@ class AppController: ObservableObject {
         shippingStore = ShippingStore(dataStore: dataStore)
         feedbackStore = FeedbackStore(dataStore: dataStore, blCredentials: blCredentials)
         
+        uploadController = UploadController(uploadStore: uploadStore, colorStore: colorStore)
         pickingController = PickingController(orderStore: orderStore, pickingStore: pickingStore)
         shippingController = ShippingController(orderStore: orderStore)
         feedbackController = FeedbackController(orderStore: orderStore, feedbackStore: feedbackStore)
@@ -290,14 +292,6 @@ class AppController: ObservableObject {
     public var uploadedItems: [UploadedItem] {
         
         uploadStore.uploadedItems
-    }
-    
-    
-    public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
-        
-        uploadedItems
-            .filter { $0.matches(searchText, colorStore) }
-            .sorted { $0.uploadDate > $1.uploadDate }
     }
     
     

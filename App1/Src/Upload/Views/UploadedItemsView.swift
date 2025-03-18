@@ -9,13 +9,16 @@ struct UploadedItemsView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(UploadController.self)
+    var uploadController
+    
     
     @State var searchText = ""
     
     
     var body: some View {
      
-        let items = app.uploadedItemsForList(matching: searchText)
+        let items = uploadController.uploadedItemsForList(matching: searchText)
         
         LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
             ForEach(items.grouppedByDay, id: \.day) { (day, items) in
@@ -34,5 +37,11 @@ struct UploadedItemsView: View {
 
 
 #Preview {
-    UploadedItemsView().environmentObject(AppController())
+    
+    let appController = AppController()
+    let uploadController = appController.uploadController
+    
+    UploadedItemsView()
+        .environmentObject(appController)
+        .environment(uploadController)
 }
