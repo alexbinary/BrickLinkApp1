@@ -10,6 +10,9 @@ struct CashFlowDetailView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(TransactionStore.self)
+    var transactionStore
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -25,7 +28,7 @@ struct CashFlowDetailView: View {
     
     var body: some View {
         
-        let allTransactions = app.transactions.sorted { $0.date > $1.date }
+        let allTransactions = transactionStore.transactions.sorted { $0.date > $1.date }
         
         ScrollView {
             

@@ -12,6 +12,9 @@ struct OrderDetailComptaView: View {
     @Environment(ShippingStore.self)
     var shippingStore
     
+    @Environment(TransactionStore.self)
+    var transactionStore
+    
     
     let order: OrderDetails
     
@@ -68,9 +71,9 @@ struct OrderDetailComptaView: View {
                         self.submitIncomeTransaction()
                     }
                     Button("Validate without transaction") {
-                        self.app.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                        transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
                     }
-                    if let date = app.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                    if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -78,7 +81,7 @@ struct OrderDetailComptaView: View {
             }
 
             TransactionListView(
-                transactions: app.incomeTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.incomeTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -113,9 +116,9 @@ struct OrderDetailComptaView: View {
                         self.submitShippingTransaction()
                     }
                     Button("Validate without transaction") {
-                        self.app.validateOrderWithoutShippingTransaction(orderId: order.id)
+                        transactionStore.validateOrderWithoutShippingTransaction(orderId: order.id)
                     }
-                    if let date = app.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
+                    if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -123,7 +126,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: app.shippingTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.shippingTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -165,7 +168,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: app.refundTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.refundTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -193,7 +196,7 @@ struct OrderDetailComptaView: View {
 
     func submitIncomeTransaction() {
         
-        app.registerTransaction(Transaction(
+        transactionStore.registerTransaction(Transaction(
             date: incomeDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -208,7 +211,7 @@ struct OrderDetailComptaView: View {
     
     func submitShippingTransaction() {
      
-        app.registerTransaction(Transaction(
+        transactionStore.registerTransaction(Transaction(
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
@@ -223,7 +226,7 @@ struct OrderDetailComptaView: View {
     
     func submitRefundTransaction() {
      
-        app.registerTransaction(Transaction(
+        transactionStore.registerTransaction(Transaction(
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,
@@ -242,10 +245,13 @@ struct OrderDetailComptaView: View {
     
     let appController = AppController()
     let orderStore = appController.orderStore
-    let order = orderStore.orderDetails.first!
     let shippingStore = appController.shippingStore
+    let transactionStore = appController.transactionStore
+
+    let order = orderStore.orderDetails.first!
     
     OrderDetailComptaView(order)
         .environmentObject(appController)
         .environment(shippingStore)
+        .environment(transactionStore)
 }

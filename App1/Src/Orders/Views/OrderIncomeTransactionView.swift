@@ -9,6 +9,9 @@ struct OrderIncomeTransactionView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(TransactionStore.self)
+    var transactionStore
+    
     
     let order: OrderDetails
     
@@ -27,9 +30,9 @@ struct OrderIncomeTransactionView: View {
 
         Group {
             
-            let transactions = app.incomeTransactions(forOrderWithId: order.id)
+            let transactions = transactionStore.incomeTransactions(forOrderWithId: order.id)
             
-            if let date = app.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+            if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                 
                 HStack {
                     Text("Validated without transaction on")
@@ -135,7 +138,7 @@ struct OrderIncomeTransactionView: View {
                             self.submitIncomeTransaction()
                         }
                         Button("Validate without transaction") {
-                            self.app.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                            transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
                         }
                     }
                 }
@@ -152,7 +155,7 @@ struct OrderIncomeTransactionView: View {
     
     func submitIncomeTransaction() {
         
-        app.registerTransaction(Transaction(
+        transactionStore.registerTransaction(Transaction(
             date: incomeTransactionDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -168,7 +171,13 @@ struct OrderIncomeTransactionView: View {
 
 
 #Preview {
+    
     let appController = AppController()
+    let transactionStore = appController.transactionStore
+    
     let order = appController.orderDetails.first!
-    OrderIncomeTransactionView(order).environmentObject(appController)
+    
+    OrderIncomeTransactionView(order)
+        .environmentObject(appController)
+        .environment(transactionStore)
 }
