@@ -24,9 +24,12 @@ struct OrdersMainListItem: View {
     @Environment(OrderChecklistController.self)
     var orderChecklistController
     
+    @Environment(OrderController.self)
+    var orderController
+    
     
     let order: OrderSummary
-    var macroStatus: OrderMacroStatus { app.macroStatus(forOrderWithId: order.id) }
+    var macroStatus: OrderMacroStatus { orderController.macroStatus(forOrderWithId: order.id) }
     
     
     @State var hover: Bool = false
@@ -303,6 +306,7 @@ struct OrdersMainListItem: View {
     let feedbackStore = appController.feedbackStore
     let feedbackController = appController.feedbackController
     let orderChecklistController = appController.orderChecklistController
+    let orderController = appController.orderController
     
     let order = orderStore.orderSummaries.first!
     
@@ -313,4 +317,5 @@ struct OrdersMainListItem: View {
         .environment(feedbackStore)
         .environment(feedbackController)
         .environment(orderChecklistController)
+        .environment(orderController)
 }

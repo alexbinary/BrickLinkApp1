@@ -38,6 +38,8 @@ struct MainApp: App {
             
                 .environment(appController.orderChecklistController)
                 .environment(appController.resultController)
+            
+                .environment(appController.orderController)
         }
     }
 }

@@ -11,6 +11,9 @@ struct OrdersMainList: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(OrderController.self)
+    var orderController
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -22,7 +25,7 @@ struct OrdersMainList: View {
     
     var body: some View {
         
-        let sections = app.ordersMainListSections(restrictingToOrdersMatching: searchText)
+        let sections = orderController.ordersMainListSections(restrictingToOrdersMatching: searchText)
         let orders = sections.allOrders
         
         ScrollView {
@@ -102,10 +105,12 @@ struct OrdersMainList: View {
     
     let appController = AppController()
     let orderStore = appController.orderStore
+    let orderController = appController.orderController
     let navigationController = NavigationController()
     
     OrdersMainList()
         .environmentObject(appController)
         .environment(orderStore)
+        .environment(orderController)
         .environment(navigationController)
 }
