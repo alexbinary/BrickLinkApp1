@@ -9,6 +9,12 @@ struct OrderDetailFeedbackView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(FeedbackStore.self)
+    var feedbackStore
+    
+    @Environment(FeedbackController.self)
+    var feedbackController
+    
     
     let order: OrderDetails
     
@@ -21,7 +27,7 @@ struct OrderDetailFeedbackView: View {
         
         VStack(alignment: .leading, spacing: 12) {
                 
-            let orderFeedbacks = app.orderFeedbacks(forOrderWithId: order.id)
+            let orderFeedbacks = feedbackStore.orderFeedbacks(forOrderWithId: order.id)
             Table(orderFeedbacks.sorted { $0.dateRated < $1.dateRated }) {
                 
                 TableColumn("From", value: \.from)
@@ -33,12 +39,12 @@ struct OrderDetailFeedbackView: View {
             
             HStack {
                 Button("Post Praise feedback") {
-                    Task { await app.postPraiseOrderFeedback(orderId: order.id) }
+                    Task { await feedbackController.postPraiseOrderFeedback(orderId: order.id) }
                 }
                 Button("Validate without feedback") {
-                    app.validateOrderWithoutFeedback(orderId: order.id)
+                    feedbackStore.validateOrderWithoutFeedback(orderId: order.id)
                 }
-                if let date = app.dateOrderValidatedWithoutFeedback(orderId: order.id) {
+                if let date = feedbackStore.dateOrderValidatedWithoutFeedback(orderId: order.id) {
                     Text("Validated without feedback on")
                     Text(date, format: .dateTime)
                 }

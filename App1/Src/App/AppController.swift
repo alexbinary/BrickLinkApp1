@@ -17,9 +17,11 @@ class AppController: ObservableObject {
     let orderStore: OrderStore
     let pickingStore: PickingStore
     let shippingStore: ShippingStore
+    let feedbackStore: FeedbackStore
     
     let pickingController: PickingController
     let shippingController: ShippingController
+    let feedbackController: FeedbackController
     
     
     init() {
@@ -28,9 +30,11 @@ class AppController: ObservableObject {
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
         pickingStore = PickingStore(dataStore: dataStore)
         shippingStore = ShippingStore(dataStore: dataStore)
+        feedbackStore = FeedbackStore(dataStore: dataStore, blCredentials: blCredentials)
         
         pickingController = PickingController(orderStore: orderStore, pickingStore: pickingStore)
         shippingController = ShippingController(orderStore: orderStore)
+        feedbackController = FeedbackController(orderStore: orderStore, feedbackStore: feedbackStore)
         
         Task {
             await parallel([
@@ -200,93 +204,43 @@ class AppController: ObservableObject {
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        dataStore.orderFeedbacksByOrderId[orderId] ?? []
-    }
-    
-    
-    public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
-        
-        orderFeedbacks(forOrderWithId: orderId).buyerFeedback()
-    }
-    
-    
-    public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
-        
-        orderFeedbacks(forOrderWithId: orderId).sellerFeedback()
+        feedbackStore.orderFeedbacks(forOrderWithId: orderId)
     }
     
     
     private func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        print("Loading order feedbacks \(orderId)")
-        
-        let blFeedbacks = await BrickLinkAPIClient.fetchFeedbacks(forOrderWithId: orderId, using: blCredentials)
-        let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
-        
-        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
-        try! dataStore.save()
+        await feedbackStore.loadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if !dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
-            
-            await loadOrderFeedbacks(forOrderWithId: orderId)
-        }
+        await feedbackStore.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
     }
     
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
-            
-            await loadOrderFeedbacks(forOrderWithId: orderId)
-        }
+        await feedbackStore.reloadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
     public func postOrderFeedback(orderId: OrderSummary.ID, rating: Int, comment: String) async {
         
-        await BrickLinkAPIClient.postFeedback(forOrderWithId: orderId, rating: rating, comment: comment, using: blCredentials)
-        
-        await reloadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackStore.postOrderFeedback(orderId: orderId, rating: rating, comment: comment)
     }
     
     
     public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
         
-        guard let order = orderDetails(forOrderWithId: orderId) else { return }
-        
-        await postOrderFeedback(
-            orderId: orderId, rating: 0,
-            comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
-        )
-    }
-    
-    
-    public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
-        
-        dataStore.dateValidatedWithoutFeedbackByOrderId
-    }
-    
-    
-    public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
-        
-        try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
-        try! dataStore.save()
-    }
-    
-    
-    public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
-        
-        return dateValidatedWithoutFeedbackByOrderId[orderId]
+        await feedbackController.postPraiseOrderFeedback(orderId: orderId)
     }
     
     
     public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
         
-        return dateValidatedWithoutFeedbackByOrderId[orderId] != nil
+        feedbackStore.orderIsValidatedWithoutFeedback(orderId: orderId)
     }
     
     

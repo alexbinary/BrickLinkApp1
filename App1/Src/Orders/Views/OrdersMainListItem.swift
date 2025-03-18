@@ -15,6 +15,12 @@ struct OrdersMainListItem: View {
     @Environment(PickingStore.self)
     var pickingStore
     
+    @Environment(FeedbackStore.self)
+    var feedbackStore
+    
+    @Environment(FeedbackController.self)
+    var feedbackController
+    
     
     let order: OrderSummary
     var macroStatus: OrderMacroStatus { app.macroStatus(forOrderWithId: order.id) }
@@ -89,14 +95,14 @@ struct OrdersMainListItem: View {
                                 
                                 HStack {
                                     Text("Seller:")
-                                    if let feedback = app.sellerFeedback(forOrderWithId: order.id) {
+                                    if let feedback = feedbackStore.sellerFeedback(forOrderWithId: order.id) {
                                         FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                                 
                                 HStack {
                                     Text("Buyer:")
-                                    if let feedback = app.buyerFeedback(forOrderWithId: order.id) {
+                                    if let feedback = feedbackStore.buyerFeedback(forOrderWithId: order.id) {
                                         FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
@@ -247,7 +253,7 @@ struct OrdersMainListItem: View {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
-                        await app.postPraiseOrderFeedback(orderId: order.id)
+                        await feedbackController.postPraiseOrderFeedback(orderId: order.id)
                     }
                 }))
             }
@@ -270,7 +276,7 @@ struct OrdersMainListItem: View {
             
             items.append(OrderStatusTag(text: "Give feedback", status: .actionRequired, action: {
                 Task {
-                    await app.postPraiseOrderFeedback(orderId: order.id)
+                    await feedbackController.postPraiseOrderFeedback(orderId: order.id)
                 }
             }))
             
@@ -291,6 +297,8 @@ struct OrdersMainListItem: View {
     let appController = AppController()
     let orderStore = appController.orderStore
     let pickingStore = appController.pickingStore
+    let feedbackStore = appController.feedbackStore
+    let feedbackController = appController.feedbackController
     
     let order = orderStore.orderSummaries.first!
     
@@ -298,4 +306,6 @@ struct OrdersMainListItem: View {
         .environmentObject(appController)
         .environment(orderStore)
         .environment(pickingStore)
+        .environment(feedbackStore)
+        .environment(feedbackController)
 }
