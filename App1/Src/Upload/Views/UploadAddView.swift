@@ -8,6 +8,9 @@ struct UploadAddView: View {
     
     @EnvironmentObject
     var app: AppController
+    
+    @Environment(UploadStore.self)
+    var uploadStore
 
     
     @State var type: BrickLinkItemType = .part
@@ -52,7 +55,7 @@ struct UploadAddView: View {
                             TextField("Comment", text: $comment)
                             
                             Button("Add") {
-                                app.addUploadItem(UploadItem(
+                                uploadStore.addUploadItem(UploadItem(
                                     type: type,
                                     ref: ref,
                                     name: name,
@@ -80,7 +83,7 @@ struct UploadAddView: View {
                             .lineLimit(10, reservesSpace: true)
                         
                         Button("Import") {
-                            app.importUploadList(fromXml: self.importText)
+                            uploadStore.importUploadList(fromXml: self.importText)
                             self.importText = ""
                         }
                     }

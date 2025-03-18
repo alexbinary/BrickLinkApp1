@@ -14,6 +14,8 @@ class AppController: ObservableObject {
     private let blCredentials = Secrets.brickLinkAPICredentials
     
     let colorStore: ColorStore
+    let uploadStore: UploadStore
+    
     let orderStore: OrderStore
     let pickingStore: PickingStore
     let shippingStore: ShippingStore
@@ -27,6 +29,8 @@ class AppController: ObservableObject {
     init() {
         
         colorStore = ColorStore(dataStore: dataStore, blCredentials: blCredentials)
+        uploadStore = UploadStore(dataStore: dataStore)
+        
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
         pickingStore = PickingStore(dataStore: dataStore)
         shippingStore = ShippingStore(dataStore: dataStore)
@@ -250,7 +254,7 @@ class AppController: ObservableObject {
     
     public var uploadItems: [UploadItem] {
         
-        dataStore.uploadItems
+        uploadStore.uploadItems
     }
     
     
@@ -279,163 +283,13 @@ class AppController: ObservableObject {
     }
     
     
-    public func addUploadItem(_ uploadItem: UploadItem) {
-        
-        try! dataStore.addUploadItem(uploadItem)
-        try! dataStore.save()
-    }
-    
-    
-    public func deleteUploadItem(_ uploadItem: UploadItem) {
-        
-        try! dataStore.deleteUploadItem(uploadItem)
-        try! dataStore.save()
-    }
-    
-    
-    public func updateUploadItem(_ updatedItem: UploadItem) {
-        
-        try! dataStore.updateUploadItem(updatedItem)
-        try! dataStore.save()
-    }
-    
-    
-    public func importUploadList(fromXml xml: String) {
-        
-        let parser = XMLParser(data: Data(xml.utf8))
-        let delegate = UploadListXMLParser()
-        parser.delegate = delegate
-        
-        let success = parser.parse()
-        guard success else {
-            print("parsing failed")
-            return
-        }
-        
-        try! dataStore.addUploadItems(uploadItems)
-        try! dataStore.save()
-    }
-    
-    
-    class UploadListXMLParser : NSObject, XMLParserDelegate {
-
-        var uploadItems: [UploadItem] = []
-        
-        var ref: String = ""
-        var colorId: String = ""
-        var type: String = ""
-        var qty: String = ""
-        var unitPrice: String = ""
-        var condition: String = ""
-        var comment: String = ""
-        
-        var currentElementName: String? = nil
-        
-        func parser(
-            _ parser: XMLParser,
-            didStartElement elementName: String,
-            namespaceURI: String?,
-            qualifiedName qName: String?,
-            attributes attributeDict: [String : String] = [:]
-        ) {
-            self.currentElementName = elementName
-        }
-        
-        func parser(
-            _ parser: XMLParser,
-            didEndElement elementName: String,
-            namespaceURI: String?,
-            qualifiedName qName: String?
-        ) {
-            self.currentElementName = nil
-            
-            if elementName == "ITEM" {
-                
-                let ref: String = self.ref
-                let type: BrickLinkItemType? = {
-                    if self.type == "P" {
-                        return BrickLinkItemType.part
-                    }
-                    return nil
-                }()
-                let colorId = self.colorId
-                let qty = Int(self.qty)
-                let condition = self.condition
-                let unitPrice = Float(self.unitPrice)
-                let comment = self.comment
-                
-                defer {
-                    self.ref = ""
-                    self.colorId = ""
-                    self.type = ""
-                    self.qty = ""
-                    self.unitPrice = ""
-                    self.condition = ""
-                    self.comment = ""
-                }
-                
-                guard let type = type else {
-                    print("could not parse type: \(self.type)")
-                    return
-                }
-                guard let qty = qty else {
-                    print("could not parse qty: \(self.qty)")
-                    return
-                }
-                guard let unitPrice = unitPrice else {
-                    print("could not parse price: \(self.unitPrice)")
-                    return
-                }
-                    
-                self.uploadItems.append(UploadItem(
-                    type: type,
-                    ref: ref,
-                    name: nil,
-                    colorId: colorId,
-                    qty: qty,
-                    condition: condition,
-                    comment: comment,
-                    unitPrice: unitPrice
-                ))
-            }
-        }
-        
-        func parser(
-            _ parser: XMLParser,
-            foundCharacters string: String
-        ) {
-            if let elementName = self.currentElementName {
-                
-                switch elementName {
-                case "ITEMID":
-                    ref = string
-                case "COLOR":
-                    colorId = string
-                case "ITEMTYPE":
-                    type = string
-                case "QTY":
-                    qty = string
-                case "PRICE":
-                    unitPrice = string
-                case "CONDITION":
-                    condition = string
-                case "DESCRIPTION":
-                    comment = string
-                default:
-                    break
-                }
-            }
-        }
-    }
-    
-    
     
     // MARK: - Uploaded items
     
     
     public var uploadedItems: [UploadedItem] {
         
-        dataStore.uploadedItems
+        uploadStore.uploadedItems
     }
     
     
@@ -444,13 +298,6 @@ class AppController: ObservableObject {
         uploadedItems
             .filter { $0.matches(searchText, colorStore) }
             .sorted { $0.uploadDate > $1.uploadDate }
-    }
-    
-    
-    public func addUploadedItem(_ uploadedItem: UploadedItem) {
-        
-        try! dataStore.addUploadedItem(uploadedItem)
-        try! dataStore.save()
     }
     
     

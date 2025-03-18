@@ -9,6 +9,9 @@ struct Sidebar: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(UploadStore.self)
+    var uploadStore
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -25,7 +28,7 @@ struct Sidebar: View {
                     .tag(SidebarItem.orders)
                 
                 Label("Upload", systemImage: "tray.and.arrow.down")
-                    .badge(app.uploadItems.count)
+                    .badge(uploadStore.uploadItems.count)
                     .tag(SidebarItem.upload)
             }
             

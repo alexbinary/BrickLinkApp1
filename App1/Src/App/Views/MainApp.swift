@@ -18,6 +18,8 @@ struct MainApp: App {
                 .environmentObject(appController)
                 
                 .environment(appController.colorStore)
+                .environment(appController.uploadStore)
+            
                 .environment(appController.orderStore)
                 .environment(appController.pickingStore)
                 .environment(appController.shippingStore)

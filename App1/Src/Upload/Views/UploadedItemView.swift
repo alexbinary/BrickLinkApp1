@@ -9,6 +9,9 @@ struct UploadedItemView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(UploadStore.self)
+    var uploadStore
+    
     
     let uploadedItem: UploadedItem
     
@@ -122,7 +125,7 @@ struct UploadedItemView: View {
             Spacer()
             
             Button {
-                app.addUploadItem(UploadItem(
+                uploadStore.addUploadItem(UploadItem(
                     type: uploadedItem.type,
                     ref: uploadedItem.ref,
                     name: uploadedItem.name,

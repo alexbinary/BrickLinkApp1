@@ -12,6 +12,9 @@ struct UploadItemView: View {
     @Environment(ColorStore.self)
     var colorStore
     
+    @Environment(UploadStore.self)
+    var uploadStore
+    
     
     let uploadItem: UploadItem
     
@@ -424,7 +427,7 @@ struct UploadItemView: View {
                                         }
                                     }()
 
-                                    app.addUploadedItem(UploadedItem(
+                                    uploadStore.addUploadedItem(UploadedItem(
                                         type: submitType,
                                         ref: submitRef!,
                                         name: submitName,
@@ -442,7 +445,7 @@ struct UploadItemView: View {
                                         inventoryStatus: inventoryStatus
                                     ))
                                     
-                                    app.deleteUploadItem(uploadItem)
+                                    uploadStore.deleteUploadItem(uploadItem)
                                     
                                     submitting = false
                                 }
@@ -458,7 +461,7 @@ struct UploadItemView: View {
                             .fixedSize()
                             
                             Button {
-                                app.deleteUploadItem(uploadItem)
+                                uploadStore.deleteUploadItem(uploadItem)
                             } label: {
                                 Text("􀈑 Delete")
                             }
@@ -561,7 +564,7 @@ struct UploadItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            app.updateUploadItem(UploadItem(
+            uploadStore.updateUploadItem(UploadItem(
                 
                 id: uploadItem.id,
                 type: uploadItem.type,
@@ -614,7 +617,7 @@ struct UploadItemView: View {
     
     ) {
         
-        app.updateUploadItem(UploadItem(
+        uploadStore.updateUploadItem(UploadItem(
             
             id: uploadItem.id,
             type: uploadItem.type,
