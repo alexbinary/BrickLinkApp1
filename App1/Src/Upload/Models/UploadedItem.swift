@@ -41,7 +41,7 @@ enum UploadInventoryStatus: String, Codable {
 extension UploadedItem {
     
     
-    func matches(_ rawSearchText: String, _ appController: AppController) -> Bool {
+    func matches(_ rawSearchText: String, _ colorStore: ColorStore) -> Bool {
         
         let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
@@ -49,19 +49,19 @@ extension UploadedItem {
             return true
         }
         
-        let searchableText = searchableText(appController)
+        let searchableText = searchableText(colorStore)
         
         return searchableText.contains(searchText)
     }
     
     
-    func searchableText(_ appController: AppController) -> String {
+    func searchableText(_ colorStore: ColorStore) -> String {
         
         [
             rawSearchableText_type,
             rawSearchableText_ref,
             rawSearchableText_name,
-            appController.colorName(forLegoColorId: colorId),
+            colorStore.colorName(forLegoColorId: colorId),
             rawSearchableText_qtyBefore,
             rawSearchableText_qtyAfter,
             rawSearchableText_condition,

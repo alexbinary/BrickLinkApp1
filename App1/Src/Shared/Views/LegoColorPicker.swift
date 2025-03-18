@@ -6,8 +6,8 @@ import SwiftUI
 struct LegoColorPicker: View {
 
     
-    @EnvironmentObject
-    var app: AppController
+    @Environment(ColorStore.self)
+    var colorStore
     
     
     let label: String
@@ -25,7 +25,7 @@ struct LegoColorPicker: View {
     var body: some View {
 
         Picker(label, selection: $selection) {
-            ForEach(app.allColors) { color in
+            ForEach(colorStore.allColors) { color in
                 Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode)).tag(color.id)
             }
         }
@@ -37,5 +37,10 @@ struct LegoColorPicker: View {
 
 #Preview {
     @Previewable @State var selection: LegoColor.ID = "11"
+    
+    let appController = AppController()
+    let colorStore = appController.colorStore
+    
     LegoColorPicker("Color", selection: $selection)
+        .environment(colorStore)
 }

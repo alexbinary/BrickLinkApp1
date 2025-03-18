@@ -6,8 +6,8 @@ import SwiftUI
 struct LegoColorView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
+    @Environment(ColorStore.self)
+    var colorStore
     
     
     let colorId: String
@@ -37,8 +37,8 @@ struct LegoColorView: View {
     var body: some View {
         
         HStack {
-            app.color(forLegoColorId: colorId).frame(width: 18, height: 18)
-            if style == .full { Text(app.colorName(forLegoColorId: colorId)) }
+            colorStore.color(forLegoColorId: colorId).frame(width: 18, height: 18)
+            if style == .full { Text(colorStore.colorName(forLegoColorId: colorId)) }
         }
     }
     
@@ -53,5 +53,10 @@ struct LegoColorView: View {
 
 
 #Preview {
-    LegoColorView(colorId: "11").environmentObject(AppController())
+    
+    let appController = AppController()
+    let colorStore = appController.colorStore
+    
+    LegoColorView(colorId: "11")
+        .environment(colorStore)
 }

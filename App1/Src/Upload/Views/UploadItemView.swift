@@ -9,6 +9,9 @@ struct UploadItemView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(ColorStore.self)
+    var colorStore
+    
     
     let uploadItem: UploadItem
     
@@ -145,7 +148,7 @@ struct UploadItemView: View {
                         
                         ZStack(alignment: .leading) {
                             
-                            Text(app.colorName(forLegoColorId: uploadItem.colorId))
+                            Text(colorStore.colorName(forLegoColorId: uploadItem.colorId))
                                 .onTapGesture { editModeColor = true }
                                 .opacity(editModeColor ? 0 : 1)
                             

@@ -13,6 +13,7 @@ class AppController: ObservableObject {
     
     private let blCredentials = Secrets.brickLinkAPICredentials
     
+    let colorStore: ColorStore
     let orderStore: OrderStore
     let pickingStore: PickingStore
     let shippingStore: ShippingStore
@@ -23,6 +24,7 @@ class AppController: ObservableObject {
     
     init() {
         
+        colorStore = ColorStore(dataStore: dataStore, blCredentials: blCredentials)
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
         pickingStore = PickingStore(dataStore: dataStore)
         shippingStore = ShippingStore(dataStore: dataStore)
@@ -44,62 +46,9 @@ class AppController: ObservableObject {
     // MARK: - Colors
     
     
-    public var allColors: [LegoColor] {
-        
-        dataStore.colors
-    }
-    
-    
-    public func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
-        
-        if let c = dataStore.colors.first(where: { $0.id == colorId }) {
-            return Color(fromBLCode: c.colorCode)
-        } else {
-            return nil
-        }
-    }
-    
-    
-    public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
-        
-        return dataStore.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
-    }
-    
-    
     private func loadColors() async {
         
-        print("Loading colors")
-        
-        let blColors = await BrickLinkAPIClient.fetchColors(using: blCredentials)
-        
-        let colors = blColors.map {
-            LegoColor(
-                id: "\($0.colorId)",
-                name: $0.colorName,
-                colorCode: $0.colorCode
-            )
-        }
-        
-        try! dataStore.setColors(colors)
-        try! dataStore.save()
-    }
-    
-    
-    func loadColorsIfMissing() async {
-        
-        if dataStore.colors.isEmpty {
-            
-            await loadColors()
-        }
-    }
-    
-    
-    func reloadColors() async {
-        
-        if !dataStore.colors.isEmpty {
-            
-            await loadColors()
-        }
+        await colorStore.loadColors()
     }
     
     
@@ -539,7 +488,7 @@ class AppController: ObservableObject {
     public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
         
         uploadedItems
-            .filter { $0.matches(searchText, self) }
+            .filter { $0.matches(searchText, colorStore) }
             .sorted { $0.uploadDate > $1.uploadDate }
     }
     
@@ -1600,6 +1549,18 @@ class AppController: ObservableObject {
 
 // MARK: - Decoding
 
+
+
+extension LegoColor {
+    
+    
+    init(fromBl bl: BrickLinkColor) {
+        
+        self.id = "\(bl.colorId)"
+        self.name = bl.colorName
+        self.colorCode = bl.colorCode
+    }
+}
 
 
 extension OrderSummary {
