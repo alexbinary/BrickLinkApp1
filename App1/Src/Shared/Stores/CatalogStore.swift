@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-class ColorStore {
+class CatalogStore {
     
     
     private let dataStore: DataStore
@@ -16,6 +16,9 @@ class ColorStore {
         self.dataStore = dataStore
         self.blCredentials = blCredentials
     }
+    
+    
+    // MARK: - Colors
     
     
     public var allColors: [LegoColor] {
@@ -49,5 +52,19 @@ class ColorStore {
         
         try! dataStore.setColors(colors)
         try! dataStore.save()
+    }
+    
+    
+    // MARK: - Items
+    
+    
+    public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
+        
+        if let catalogItem = await BrickLinkAPIClient.fetchCatalogEntry(forItemType: type, ref: ref, using: blCredentials) {
+            
+            return CatalogItem(fromBl: catalogItem)
+        }
+        
+        return nil
     }
 }

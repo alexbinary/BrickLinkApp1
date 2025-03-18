@@ -7,14 +7,14 @@ import Foundation
 class UploadController {
     
     
-    private let colorStore: ColorStore
+    private let catalogStore: CatalogStore
     private let uploadStore: UploadStore
     private let inventoryStore: InventoryStore
     
     
-    init(uploadStore: UploadStore, colorStore: ColorStore, inventoryStore: InventoryStore) {
+    init(uploadStore: UploadStore, catalogStore: CatalogStore, inventoryStore: InventoryStore) {
         self.uploadStore = uploadStore
-        self.colorStore = colorStore
+        self.catalogStore = catalogStore
         self.inventoryStore = inventoryStore
     }
     
@@ -77,7 +77,7 @@ class UploadController {
     public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
         
         uploadedItems
-            .filter { $0.matches(searchText, colorStore) }
+            .filter { $0.matches(searchText, catalogStore) }
             .sorted { $0.uploadDate > $1.uploadDate }
     }
 }

@@ -13,8 +13,8 @@ class AppController: ObservableObject {
     
     private let blCredentials = Secrets.brickLinkAPICredentials
     
-    let colorStore: ColorStore
     let uploadStore: UploadStore
+    let catalogStore: CatalogStore
     let inventoryStore: InventoryStore
     
     let orderStore: OrderStore
@@ -30,8 +30,8 @@ class AppController: ObservableObject {
     
     init() {
         
-        colorStore = ColorStore(dataStore: dataStore, blCredentials: blCredentials)
         uploadStore = UploadStore(dataStore: dataStore)
+        catalogStore = CatalogStore(dataStore: dataStore, blCredentials: blCredentials)
         inventoryStore = InventoryStore(dataStore: dataStore, blCredentials: blCredentials)
         
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
@@ -39,7 +39,7 @@ class AppController: ObservableObject {
         shippingStore = ShippingStore(dataStore: dataStore)
         feedbackStore = FeedbackStore(dataStore: dataStore, blCredentials: blCredentials)
         
-        uploadController = UploadController(uploadStore: uploadStore, colorStore: colorStore, inventoryStore: inventoryStore)
+        uploadController = UploadController(uploadStore: uploadStore, catalogStore: catalogStore, inventoryStore: inventoryStore)
         pickingController = PickingController(orderStore: orderStore, pickingStore: pickingStore)
         shippingController = ShippingController(orderStore: orderStore)
         feedbackController = FeedbackController(orderStore: orderStore, feedbackStore: feedbackStore)
@@ -60,7 +60,7 @@ class AppController: ObservableObject {
     
     private func loadColors() async {
         
-        await colorStore.loadColors()
+        await catalogStore.loadColors()
     }
     
     
@@ -388,21 +388,6 @@ class AppController: ObservableObject {
         } else {
             return (before: stock + qty, after: stock)
         }
-    }
-    
-    
-    
-    // MARK: - Catalog
-    
-    
-    public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
-        
-        if let catalogItem = await BrickLinkAPIClient.fetchCatalogEntry(forItemType: type, ref: ref, using: blCredentials) {
-            
-            return CatalogItem(fromBl: catalogItem)
-        }
-        
-        return nil
     }
     
     
