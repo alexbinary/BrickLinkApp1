@@ -15,6 +15,9 @@ struct UploadItemView: View {
     @Environment(UploadStore.self)
     var uploadStore
     
+    @Environment(InventoryStore.self)
+    var inventoryStore
+    
     
     let uploadItem: UploadItem
     
@@ -399,7 +402,7 @@ struct UploadItemView: View {
                                         
                                         if let inventoryItem = inventoryItem {
                                             
-                                            await app.updateInventory(
+                                            await inventoryStore.updateInventory(
                                                 
                                                 id: inventoryItem.id,
                                                 addQuantity: submitQty!,
@@ -411,7 +414,7 @@ struct UploadItemView: View {
                                             
                                         } else {
                                             
-                                            let inventoryItem = await app.createInventory(
+                                            let inventoryItem = await inventoryStore.createInventory(
                                                 
                                                 ref: submitRef!,
                                                 type: submitType,
@@ -593,7 +596,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return nil
         }
-        return app.inventory(for: uploadItem)
+        return inventoryStore.inventory(for: uploadItem)
     }
     
     var relatedInventories: [InventoryItem] {
@@ -601,7 +604,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return []
         }
-        return app.inventories(forAllColorsOf: uploadItem)
+        return inventoryStore.inventories(forAllColorsOf: uploadItem)
     }
     
     

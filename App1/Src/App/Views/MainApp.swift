@@ -19,6 +19,7 @@ struct MainApp: App {
                 
                 .environment(appController.colorStore)
                 .environment(appController.uploadStore)
+                .environment(appController.inventoryStore)
             
                 .environment(appController.orderStore)
                 .environment(appController.pickingStore)
