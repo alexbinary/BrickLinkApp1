@@ -16,7 +16,9 @@ class AppController: ObservableObject {
     let uploadStore: UploadStore
     let catalogStore: CatalogStore
     let inventoryStore: InventoryStore
+    
     let transactionStore: TransactionStore
+    let refundStore: RefundStore
     
     let orderStore: OrderStore
     let pickingStore: PickingStore
@@ -34,7 +36,9 @@ class AppController: ObservableObject {
         uploadStore = UploadStore(dataStore: dataStore)
         catalogStore = CatalogStore(dataStore: dataStore, blCredentials: blCredentials)
         inventoryStore = InventoryStore(dataStore: dataStore, blCredentials: blCredentials)
+        
         transactionStore = TransactionStore(dataStore: dataStore)
+        refundStore = RefundStore(dataStore: dataStore)
         
         orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
         pickingStore = PickingStore(dataStore: dataStore)
@@ -654,22 +658,9 @@ class AppController: ObservableObject {
     // MARK: - Refunds
     
     
-    public var orderRefunds: [OrderRefund] {
-        
-        dataStore.orderRefunds
-    }
-    
-    
     public func refunds(for order: OrderDetails) -> [OrderRefund] {
         
-        orderRefunds.filter { $0.orderId == order.id }
-    }
-    
-    
-    public func createRefund(_ refund: OrderRefund) {
-        
-        try! dataStore.addOrderRefund(refund)
-        try! dataStore.save()
+        refundStore.refunds(for: order)
     }
     
     

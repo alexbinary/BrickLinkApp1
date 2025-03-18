@@ -9,6 +9,9 @@ struct OrderDetailRefundView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(RefundStore.self)
+    var refundStore
+    
     
     let order: OrderDetails
     
@@ -42,7 +45,7 @@ struct OrderDetailRefundView: View {
                 Button("Create refund") { self.submitRefund() }
             }
             
-            Table(app.refunds(for: order)) {
+            Table(refundStore.refunds(for: order)) {
                 
                 TableColumn("Date") { refund in
                     Text(refund.date, format: .dateTime)
@@ -67,7 +70,7 @@ struct OrderDetailRefundView: View {
     
     func submitRefund() {
         
-        app.createRefund(OrderRefund(
+        refundStore.createRefund(OrderRefund(
             date: refundDate,
             amount: refundAmount,
             comment: refundComment,

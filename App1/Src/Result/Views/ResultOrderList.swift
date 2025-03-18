@@ -12,6 +12,9 @@ struct ResultOrderList: View {
     @Environment(ShippingStore.self)
     var shippingStore
     
+    @Environment(RefundStore.self)
+    var refundStore
+    
     
     let orders: [OrderDetails]
     let title: String
@@ -92,7 +95,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Refund") { order in
                     
-                    let totalRefund = app.refunds(for: order).reduce(0, { $0 + $1.amount })
+                    let totalRefund = refundStore.refunds(for: order).reduce(0, { $0 + $1.amount })
                     if totalRefund > 0 {
                         
                         Text(
@@ -112,8 +115,10 @@ struct ResultOrderList: View {
     
     let appController = AppController()
     let shippingStore = appController.shippingStore
+    let refundStore = appController.refundStore
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
         .environmentObject(appController)
         .environment(shippingStore)
+        .environment(refundStore)
 }
