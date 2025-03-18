@@ -15,6 +15,9 @@ struct ResultOrderList: View {
     @Environment(RefundStore.self)
     var refundStore
     
+    @Environment(ResultController.self)
+    var resultController
+    
     
     let orders: [OrderDetails]
     let title: String
@@ -45,7 +48,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Profit") { order in
                     
-                    if let profitMargin = app.profitMargin(for: order) {
+                    if let profitMargin = resultController.profitMargin(for: order) {
                         
                         Text(
                             abs(profitMargin),
@@ -84,7 +87,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Fees") { order in
                     
-                    if let fees = app.fees(for: order) {
+                    if let fees = resultController.fees(for: order) {
                         
                         Text(
                             abs(fees),
@@ -116,9 +119,11 @@ struct ResultOrderList: View {
     let appController = AppController()
     let shippingStore = appController.shippingStore
     let refundStore = appController.refundStore
+    let resultController = appController.resultController
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
         .environmentObject(appController)
         .environment(shippingStore)
+        .environment(resultController)
         .environment(refundStore)
 }

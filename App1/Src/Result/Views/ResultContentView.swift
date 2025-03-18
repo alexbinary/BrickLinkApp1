@@ -18,6 +18,9 @@ struct ResultContentView: View {
     @Environment(RefundStore.self)
     var refundStore
     
+    @Environment(ResultController.self)
+    var resultController
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -38,7 +41,7 @@ struct ResultContentView: View {
             
             TableColumn("Profit") { order in
                 
-                if let profitMargin = app.profitMargin(for: order) {
+                if let profitMargin = resultController.profitMargin(for: order) {
                     
                     Text(
                         abs(profitMargin),
@@ -80,7 +83,7 @@ struct ResultContentView: View {
             
             TableColumn("Fees") { order in
                 
-                if let fees = app.fees(for: order) {
+                if let fees = resultController.fees(for: order) {
                     
                     Text(
                         abs(fees),
@@ -123,6 +126,7 @@ struct ResultContentView: View {
     let orderStore = appController.orderStore
     let shippingStore = appController.shippingStore
     let refundStore = appController.refundStore
+    let resultController = appController.resultController
     
     let navigationController = NavigationController()
     
@@ -131,5 +135,6 @@ struct ResultContentView: View {
         .environment(orderStore)
         .environment(shippingStore)
         .environment(refundStore)
+        .environment(resultController)
         .environment(navigationController)
 }

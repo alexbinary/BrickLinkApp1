@@ -19,6 +19,9 @@ struct ResultHistoryView: View {
     @Environment(RefundStore.self)
     var refundStore
     
+    @Environment(ResultController.self)
+    var resultController
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -44,7 +47,7 @@ struct ResultHistoryView: View {
                 ? orderStore.orderDetails.filter { selectedOrderIds.contains($0.id) }
                 : orderStore.orderDetails
         )
-        .filter { app.profitMargin(for: $0) != nil }
+        .filter { resultController.profitMargin(for: $0) != nil }
     }
     
     
@@ -165,7 +168,7 @@ struct ResultHistoryView: View {
                         
                         let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.shippingCost(forOrderWithId: $1.id) ?? 0) }
                         
-                        let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+                        let totalFees = orders.reduce(0) { $0 + (resultController.fees(for: $1) ?? 0) }
                         let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                         
                         let totalExpense = totalItemCost + totalShippingCost + totalFees + totalRefund
@@ -276,7 +279,7 @@ struct ResultHistoryView: View {
                             
                             let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
-                            let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+                            let totalFees = orders.reduce(0) { $0 + (resultController.fees(for: $1) ?? 0) }
                             let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                             
                             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
@@ -328,7 +331,7 @@ struct ResultHistoryView: View {
                             
                             let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.shippingCost(forOrderWithId: $1.id) ?? 0) }
                             
-                            let totalFees = orders.reduce(0) { $0 + (app.fees(for: $1) ?? 0) }
+                            let totalFees = orders.reduce(0) { $0 + (resultController.fees(for: $1) ?? 0) }
                             let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
                             
                             let totalResult = totalItems + totalShipping - totalItemCost - totalShippingCost - totalFees - totalRefund
@@ -423,7 +426,7 @@ struct ResultHistoryView: View {
                             return visibleOrders
                         }
                     }().filter {
-                        app.profitMargin(for: $0) != nil
+                        resultController.profitMargin(for: $0) != nil
                     }
                     
                     let baseNumber = 5
@@ -435,10 +438,10 @@ struct ResultHistoryView: View {
                     
                     let orders = sourceOrders.sorted {
                         (
-                            ((app.profitMargin(for: $0) ?? 0)*100).rounded(),
+                            ((resultController.profitMargin(for: $0) ?? 0)*100).rounded(),
                             $0.date
                         ) > (
-                            ((app.profitMargin(for: $1) ?? 0)*100).rounded(),
+                            ((resultController.profitMargin(for: $1) ?? 0)*100).rounded(),
                             $1.date
                         )
                     }
@@ -510,6 +513,7 @@ extension VerticalAlignment {
     let orderStore = appController.orderStore
     let shippingStore = appController.shippingStore
     let refundStore = appController.refundStore
+    let resultController = appController.resultController
     
     let navigationController = NavigationController()
     
@@ -518,5 +522,6 @@ extension VerticalAlignment {
         .environment(orderStore)
         .environment(shippingStore)
         .environment(refundStore)
+        .environment(resultController)
         .environment(navigationController)
 }

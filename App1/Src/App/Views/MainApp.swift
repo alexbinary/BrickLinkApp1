@@ -35,6 +35,8 @@ struct MainApp: App {
                 .environment(appController.shippingController)
                 .environment(appController.trackingController)
                 .environment(appController.feedbackController)
+            
+                .environment(appController.resultController)
         }
     }
 }
