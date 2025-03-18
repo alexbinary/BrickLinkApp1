@@ -6,9 +6,6 @@ import SwiftUI
 struct OrderChecklistView: View {
 
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -17,6 +14,9 @@ struct OrderChecklistView: View {
     
     @Environment(TrackingController.self)
     var trackingController
+    
+    @Environment(OrderChecklistController.self)
+    var orderChecklistController
     
     
     let order: OrderDetails
@@ -43,11 +43,11 @@ struct OrderChecklistView: View {
                         .padding(.vertical, padding)
                     
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistPayment(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistPayment(order.id))
                         Text("Payment received")
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistIncomeTransaction(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistIncomeTransaction(order.id))
                         Text("Register transaction")
                     }
 
@@ -55,7 +55,7 @@ struct OrderChecklistView: View {
                         .padding(.vertical, padding)
 
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistPicking(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistPicking(order.id))
                         let progress = pickingController.pickingProgress(forOrderWithId: order.id)
                         if progress == 100% {
                             Text("Pick items")
@@ -64,7 +64,7 @@ struct OrderChecklistView: View {
                         }
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistVerification(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistVerification(order.id))
                         let progress = pickingController.pickingVerificationProgress(forOrderWithId: order.id)
                         if progress == 100% {
                             Text("Verify items")
@@ -73,7 +73,7 @@ struct OrderChecklistView: View {
                         }
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistPacked(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistPacked(order.id))
                         Text("Pack order")
                     }
 
@@ -81,23 +81,23 @@ struct OrderChecklistView: View {
                         .padding(.vertical, padding)
 
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistStamping(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistStamping(order.id))
                         Text("Validate stamping")
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistShippingTransaction(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistShippingTransaction(order.id))
                         Text("Register transaction")
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistTrackingNo(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistTrackingNo(order.id))
                         Text("Input tracking no")
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistShipped(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistShipped(order.id))
                         Text("Mark Shipped")
                     }
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistDriveThru(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistDriveThru(order.id))
                         Text("Send drive thru")
                     }
                     
@@ -116,7 +116,7 @@ struct OrderChecklistView: View {
                         .padding(.vertical, padding)
 
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistReceived(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistReceived(order.id))
                         Text("Received")
                     }
 
@@ -124,13 +124,13 @@ struct OrderChecklistView: View {
                         .padding(.vertical, padding)
 
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistCompleted(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistCompleted(order.id))
                         Text("Completed")
                     }
 
                     GridRow {
                         CheckStatusView(
-                            status: app.orderChecklistBuyerFeedback(order.id),
+                            status: orderChecklistController.orderChecklistBuyerFeedback(order.id),
                             mandatory: false
                         )
                         Text("Buyer feedback")
@@ -140,7 +140,7 @@ struct OrderChecklistView: View {
                         .padding(.vertical, padding)
 
                     GridRow {
-                        CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
+                        CheckStatusView(status: orderChecklistController.orderChecklistSellerFeedback(order.id))
                         Text("Give feedback")
                     }
                     
@@ -174,6 +174,7 @@ extension View {
     let orderStore = appController.orderStore
     let pickingController = appController.pickingController
     let trackingController = appController.trackingController
+    let orderChecklistController = appController.orderChecklistController
     
     let order = orderStore.orderDetails.first!
     
@@ -182,4 +183,5 @@ extension View {
         .environment(orderStore)
         .environment(pickingController)
         .environment(trackingController)
+        .environment(orderChecklistController)
 }

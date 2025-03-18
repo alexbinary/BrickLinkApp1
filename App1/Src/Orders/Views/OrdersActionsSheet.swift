@@ -8,6 +8,9 @@ struct OrdersActionsSheet: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderChecklistController.self)
+    var orderChecklistController
+    
     
     let orders: [OrderSummary]
     
@@ -26,29 +29,29 @@ struct OrdersActionsSheet: View {
                     
                     sectionView(orders: app.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckStatusView(status: app.orderChecklistCompleted(order.id))
+                            CheckStatusView(status: orderChecklistController.orderChecklistCompleted(order.id))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
+                            CheckStatusView(status: orderChecklistController.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: app.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckStatusView(status: app.orderChecklistSellerFeedback(order.id))
+                            CheckStatusView(status: orderChecklistController.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: app.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckStatusView(status: app.orderChecklistShipped(order.id))
+                            CheckStatusView(status: orderChecklistController.orderChecklistShipped(order.id))
                             Text("Mark shipped")
                         }
                         HStack {
-                            CheckStatusView(status: app.orderChecklistDriveThru(order.id))
+                            CheckStatusView(status: orderChecklistController.orderChecklistDriveThru(order.id))
                             Text("Send drive thru")
                         }
                     }
@@ -92,8 +95,14 @@ struct OrdersActionsSheet: View {
 
 
 #Preview {
+    
     let appController = AppController()
     let orderStore = appController.orderStore
+    let orderChecklistController = appController.orderChecklistController
+    
     let orders = orderStore.orderSummaries
-    OrdersActionsSheet(orders: orders).environmentObject(appController)
+    
+    OrdersActionsSheet(orders: orders)
+        .environmentObject(appController)
+        .environment(orderChecklistController)
 }

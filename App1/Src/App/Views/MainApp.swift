@@ -36,6 +36,7 @@ struct MainApp: App {
                 .environment(appController.trackingController)
                 .environment(appController.feedbackController)
             
+                .environment(appController.orderChecklistController)
                 .environment(appController.resultController)
         }
     }

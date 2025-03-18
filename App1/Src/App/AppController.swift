@@ -32,6 +32,7 @@ class AppController: ObservableObject {
     let trackingController: TrackingController
     let feedbackController: FeedbackController
     
+    let orderChecklistController: OrderChecklistController
     let resultController: ResultController
     
     
@@ -56,6 +57,7 @@ class AppController: ObservableObject {
         trackingController = TrackingController(orderStore: orderStore, trackingStore: trackingStore)
         feedbackController = FeedbackController(orderStore: orderStore, feedbackStore: feedbackStore)
         
+        orderChecklistController = OrderChecklistController(orderStore: orderStore, pickingStore: pickingStore, shippingStore: shippingStore, feedbackStore: feedbackStore, transactionStore: transactionStore)
         resultController = ResultController(orderStore: orderStore, shippingStore: shippingStore, refundStore: refundStore, transactionStore: transactionStore)
         
         Task {
@@ -567,155 +569,87 @@ class AppController: ObservableObject {
     // MARK: - Order checklist
     
     
-    public func orderChecklistPayment(_ orderId: OrderSummary.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
-        
-        return order.paymentStatus.isOneOf(.completed, .received)
-    }
-    
-    
     public func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
-        if orderIsValidatedWithoutIncomeTransaction(orderId: orderId) {
-            return true
-        }
-        return !incomeTransactions(forOrderWithId: orderId).isEmpty
+        orderChecklistController.orderChecklistIncomeTransaction(orderId)
     }
     
     
     public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
-        if !shippingTransactions(forOrderWithId: orderId).isEmpty {
-            
-            return true
-        }
-        
-        if orderIsValidatedWithoutShippingTransaction(orderId: orderId) {
-            
-            return true
-        }
-        
-        let order = orderDetails(forOrderWithId: orderId)!
-        if order.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
-        
-            let stamping = stamping(forOrderWithId: orderId)
-            if !(stamping ?? "").isEmpty, stamping != "Bureau de poste" {
-                
-                return true
-            }
-        }
-        
-        return false
+        orderChecklistController.orderChecklistShippingTransaction(orderId)
     }
     
     
     public func orderChecklistPicking(_ orderId: OrderSummary.ID) -> Bool {
         
-        let items = orderItems(forOrderWithId: orderId)
-        
-        let pickedItemIds = pickedItemIds(forOrderWithId: orderId)
-        
-        return items.allSatisfy { pickedItemIds.contains($0.id) }
+        orderChecklistController.orderChecklistPicking(orderId)
     }
     
     
     public func orderChecklistVerification(_ orderId: OrderSummary.ID) -> Bool {
         
-        let items = orderItems(forOrderWithId: orderId)
-        
-        let verifiedItemIds = verifiedItemIds(forOrderWithId: orderId)
-        
-        return items.allSatisfy { verifiedItemIds.contains($0.id) }
+        orderChecklistController.orderChecklistVerification(orderId)
     }
     
     
     public func orderChecklistPacked(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderSummary(forOrderWithId: orderId)!
-        
-        return order.status.isOneOf(.packed, .shipped, .received, .completed)
+        orderChecklistController.orderChecklistPacked(orderId)
     }
     
     
     public func orderChecklistShipped(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderSummary(forOrderWithId: orderId)!
-        
-        return order.status.isOneOf(.shipped, .received, .completed)
+        orderChecklistController.orderChecklistShipped(orderId)
     }
     
     
     public func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderDetails(forOrderWithId: orderId)!
-        
-        return !(order.trackingNo ?? "").isEmpty
+        orderChecklistController.orderChecklistTrackingNo(orderId)
     }
     
     
     public func orderChecklistDriveThru(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderDetails(forOrderWithId: orderId)!
-        
-        return order.driveThruSent
+        orderChecklistController.orderChecklistDriveThru(orderId)
     }
     
     
     public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
         
-        if orderIsValidatedWithoutStamping(orderId: orderId) {
-            return true
-        }
-        
-        let order = orderDetails(forOrderWithId: orderId)!
-        if order.shippingMethodId == shippingMethodId_France_MondialRelay {
-            return true
-        }
-        
-        let stamping = stamping(forOrderWithId: orderId)
-        
-        return !(stamping ?? "").isEmpty
+        orderChecklistController.orderChecklistStamping(orderId)
     }
     
     
     public func orderChecklistReceived(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderSummary(forOrderWithId: orderId)!
-        
-        return order.status.isOneOf(.received, .completed)
+        orderChecklistController.orderChecklistReceived(orderId)
     }
     
     
     public func orderChecklistCompleted(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderSummary(forOrderWithId: orderId)!
-        
-        return order.status == .completed
+        orderChecklistController.orderChecklistCompleted(orderId)
     }
     
     
     public func orderChecklistBuyerFeedback(_ orderId: OrderSummary.ID) -> Bool {
         
-        return orderFeedbacks(forOrderWithId: orderId).buyerFeedback() != nil
+        orderChecklistController.orderChecklistBuyerFeedback(orderId)
     }
     
     
     public func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
         
-        if orderIsValidatedWithoutFeedback(orderId: orderId) {
-            return true
-        }
-        
-        return orderFeedbacks(forOrderWithId: orderId).sellerFeedback() != nil
+        orderChecklistController.orderChecklistSellerFeedback(orderId)
     }
     
     
     public func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
         
-        let order = orderSummary(forOrderWithId: orderId)!
-        
-        return order.dateStatusChanged.days(to: Date()) > 30
+        orderChecklistController.orderChecklistUnchangedFor30Days(orderId)
     }
     
     

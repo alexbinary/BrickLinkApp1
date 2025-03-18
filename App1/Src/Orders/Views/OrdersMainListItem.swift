@@ -21,6 +21,9 @@ struct OrdersMainListItem: View {
     @Environment(FeedbackController.self)
     var feedbackController
     
+    @Environment(OrderChecklistController.self)
+    var orderChecklistController
+    
     
     let order: OrderSummary
     var macroStatus: OrderMacroStatus { app.macroStatus(forOrderWithId: order.id) }
@@ -187,16 +190,16 @@ struct OrdersMainListItem: View {
         
         case .validatePayment:
             
-            if !app.orderChecklistPayment(order.id) {
+            if !orderChecklistController.orderChecklistPayment(order.id) {
                 items.append(OrderStatusTag(text: "Payment pending", status: .waitingOnExternalAction))
                 
-            } else if !app.orderChecklistIncomeTransaction(order.id) {
+            } else if !orderChecklistController.orderChecklistIncomeTransaction(order.id) {
                 items.append(OrderStatusTag(text: "Register payment transaction", status: .actionRequired))
             }
             
         case .pickAndPack:
             
-            if !app.orderChecklistPicking(order.id) {
+            if !orderChecklistController.orderChecklistPicking(order.id) {
                 
                 let picked = pickingStore.pickedItemIds(forOrderWithId: order.id).count
                 let total = orderStore.orderItems(forOrderWithId: order.id).count
@@ -204,7 +207,7 @@ struct OrdersMainListItem: View {
                 let percent = floor(Double(picked)/Double(total)*100)
                 items.append(OrderStatusTag(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
                 
-            } else if !app.orderChecklistVerification(order.id) {
+            } else if !orderChecklistController.orderChecklistVerification(order.id) {
                 
                 let verified = pickingStore.verifiedItemIds(forOrderWithId: order.id).count
                 let total = orderStore.orderItems(forOrderWithId: order.id).count
@@ -212,23 +215,23 @@ struct OrdersMainListItem: View {
                 let percent = floor(Double(verified)/Double(total)*100)
                 items.append(OrderStatusTag(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
                 
-            } else if !app.orderChecklistPacked(order.id) {
+            } else if !orderChecklistController.orderChecklistPacked(order.id) {
                 items.append(OrderStatusTag(text: "Not packed yet", status: .actionRequired))
             }
             
         case .ship:
             
-            if !app.orderChecklistStamping(order.id) {
+            if !orderChecklistController.orderChecklistStamping(order.id) {
                 items.append(OrderStatusTag(text: "Stamping not validated", status: .actionRequired))
             }
-            if !app.orderChecklistShippingTransaction(order.id) {
+            if !orderChecklistController.orderChecklistShippingTransaction(order.id) {
                 items.append(OrderStatusTag(text: "No shipping transaction", status: .actionRequired))
             }
-            if !app.orderChecklistTrackingNo(order.id) {
+            if !orderChecklistController.orderChecklistTrackingNo(order.id) {
                 items.append(OrderStatusTag(text: "Missing tracking no", status: .actionRequired))
             }
             
-            if !app.orderChecklistShipped(order.id) && !app.orderChecklistDriveThru(order.id) {
+            if !orderChecklistController.orderChecklistShipped(order.id) && !orderChecklistController.orderChecklistDriveThru(order.id) {
                 items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateOrderStatus(orderId: order.id, status: .shipped)
@@ -236,10 +239,10 @@ struct OrdersMainListItem: View {
                     }
                 }))
             } else {
-                if !app.orderChecklistShipped(order.id) {
+                if !orderChecklistController.orderChecklistShipped(order.id) {
                     items.append(OrderStatusTag(text: "Mark Shipped", status: .actionRequired))
                 }
-                if !app.orderChecklistDriveThru(order.id) {
+                if !orderChecklistController.orderChecklistDriveThru(order.id) {
                     items.append(OrderStatusTag(text: "Send Drive thru", status: .actionRequired))
                 }
             }
@@ -249,7 +252,7 @@ struct OrdersMainListItem: View {
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(OrderStatusTag(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
             
-            if app.orderChecklistUnchangedFor30Days(order.id) {
+            if orderChecklistController.orderChecklistUnchangedFor30Days(order.id) {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
@@ -299,6 +302,7 @@ struct OrdersMainListItem: View {
     let pickingStore = appController.pickingStore
     let feedbackStore = appController.feedbackStore
     let feedbackController = appController.feedbackController
+    let orderChecklistController = appController.orderChecklistController
     
     let order = orderStore.orderSummaries.first!
     
@@ -308,4 +312,5 @@ struct OrdersMainListItem: View {
         .environment(pickingStore)
         .environment(feedbackStore)
         .environment(feedbackController)
+        .environment(orderChecklistController)
 }
