@@ -37,10 +37,9 @@ class OrderStore {
         print("Loading orders")
         
         let blOrders = await BrickLinkAPIClient.fetchOrderSummaries(using: blCredentials)
-           
-        let orderSummaries = blOrders
-            .map { OrderSummary(fromBl: $0) }
-            .sorted { $0.date > $1.date }
+        let orderSummaries = blOrders.map { OrderSummary(fromBl: $0) }.sorted { $0.date > $1.date }
+        
+        print("loaded \(orderSummaries.count) orders")
         
         try! dataStore.setOrderSummaries(orderSummaries)
         try! dataStore.save()
@@ -115,7 +114,7 @@ class OrderStore {
     
     public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
         
-        print("update status \(status) for order \(orderId)")
+        print("Update status \(status) for order \(orderId)")
         
         await BrickLinkAPIClient.updateStatus(ofOrderWithId: orderId, to: status, using: blCredentials)
         
@@ -128,7 +127,7 @@ class OrderStore {
     
     public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
         
-        print("update tracking no \(trackingNo) for order \(orderId)")
+        print("Update tracking no \(trackingNo) for order \(orderId)")
         
         await BrickLinkAPIClient.updateTrackingNo(ofOrderWithId: orderId, to: trackingNo, using: blCredentials)
         
@@ -141,7 +140,7 @@ class OrderStore {
     
     public func sendDriveThru(orderId: OrderSummary.ID) async {
         
-        print("send drive thru for order \(orderId)")
+        print("Send drive thru for order \(orderId)")
         
         await BrickLinkAPIClient.sendDriveThru(forOrderWithId: orderId, using: blCredentials, mailMe: true)
         
@@ -176,10 +175,10 @@ class OrderStore {
         let blBatches = await BrickLinkAPIClient.fetchItems(forOrderWithId: orderId, using: blCredentials)
         
         let batches = blBatches.map { blItems in
-            blItems.map { blItem in
-                OrderItem(fromBl: blItem, orderId: orderId)
-            }
+            blItems.map { OrderItem(fromBl: $0, orderId: orderId) }
         }
+        
+        print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items")
         
         try! dataStore.setOrderItems(batches, forOrderId: orderId)
         try! dataStore.save()

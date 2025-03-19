@@ -50,6 +50,8 @@ class CatalogStore {
         let blColors = await BrickLinkAPIClient.fetchColors(using: blCredentials)
         let colors = blColors.map { LegoColor(fromBl: $0) }
         
+        print("Loaded \(colors.count) colors")
+        
         try! dataStore.setColors(colors)
         try! dataStore.save()
     }

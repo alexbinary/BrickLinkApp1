@@ -85,9 +85,9 @@ class InventoryStore {
         
         let blInventories = await BrickLinkAPIClient.fetchInventories(using: blCredentials)
         
-        let inventories = blInventories.map {
-            InventoryItem(fromBl: $0)
-        }
+        let inventories = blInventories.map { InventoryItem(fromBl: $0) }
+        
+        print("loaded \(inventories.count) inventories")
         
         try! dataStore.setInventories(inventories)
         try! dataStore.save()
@@ -95,6 +95,8 @@ class InventoryStore {
     
     
     public func loadInventory(withId id: InventoryItem.ID) async {
+        
+        print("Loading inventory \(id)")
         
         let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id, using: blCredentials)
         let inventory = InventoryItem(fromBl: blInventory)

@@ -42,6 +42,8 @@ class FeedbackStore {
         let blFeedbacks = await BrickLinkAPIClient.fetchFeedbacks(forOrderWithId: orderId, using: blCredentials)
         let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
         
+        print("loaded \(feedbacks.count) feedbacks")
+        
         try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
         try! dataStore.save()
     }
