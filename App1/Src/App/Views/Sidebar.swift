@@ -12,6 +12,9 @@ struct Sidebar: View {
     @Environment(UploadStore.self)
     var uploadStore
     
+    @Environment(OrderActionController.self)
+    var orderActionController
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -24,7 +27,7 @@ struct Sidebar: View {
             Section("Operations") {
                 
                 Label("Orders", systemImage: "list.bullet")
-                    .badge(app.actionOrders.count)
+                    .badge(orderActionController.actionOrders.count)
                     .tag(SidebarItem.orders)
                 
                 Label("Upload", systemImage: "tray.and.arrow.down")

@@ -11,6 +11,9 @@ struct OrdersActionsSheet: View {
     @Environment(OrderChecklistController.self)
     var orderChecklistController
     
+    @Environment(OrderActionController.self)
+    var orderActionController
+    
     
     let orders: [OrderSummary]
     
@@ -19,7 +22,7 @@ struct OrdersActionsSheet: View {
         
         Group {
             
-            if app.ordersThatNeedAction.isEmpty {
+            if orderActionController.ordersThatNeedAction.isEmpty {
                 
                 Text("All orders ok")
                 
@@ -27,7 +30,7 @@ struct OrdersActionsSheet: View {
                 
                 Grid(alignment: .leading, verticalSpacing: 12) {
                     
-                    sectionView(orders: app.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
+                    sectionView(orders: orderActionController.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
                             CheckStatusView(status: orderChecklistController.orderChecklistCompleted(order.id))
                             Text("Mark completed")
@@ -38,14 +41,14 @@ struct OrdersActionsSheet: View {
                         }
                     }
                     
-                    sectionView(orders: app.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
+                    sectionView(orders: orderActionController.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
                             CheckStatusView(status: orderChecklistController.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
-                    sectionView(orders: app.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
+                    sectionView(orders: orderActionController.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
                             CheckStatusView(status: orderChecklistController.orderChecklistShipped(order.id))
                             Text("Mark shipped")
@@ -57,7 +60,7 @@ struct OrdersActionsSheet: View {
                     }
                     
                     Button {
-                        Task { await app.performActionForAllOrders() }
+                        Task { await orderActionController.performActionForAllOrders() }
                     } label: {
                         Text("Do all").padding(.horizontal)
                     }
@@ -99,10 +102,12 @@ struct OrdersActionsSheet: View {
     let appController = AppController()
     let orderStore = appController.orderStore
     let orderChecklistController = appController.orderChecklistController
+    let orderActionController = appController.orderActionController
     
     let orders = orderStore.orderSummaries
     
     OrdersActionsSheet(orders: orders)
         .environmentObject(appController)
         .environment(orderChecklistController)
+        .environment(orderActionController)
 }

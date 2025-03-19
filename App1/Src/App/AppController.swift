@@ -38,6 +38,7 @@ class AppController: ObservableObject {
     let orderController: OrderController
     let stockController: StockController
     let reloadController: ReloadController
+    let orderActionController: OrderActionController
     
     
     init() {
@@ -67,6 +68,7 @@ class AppController: ObservableObject {
         orderController = OrderController(orderStore: orderStore, orderChecklistController: orderChecklistController)
         stockController = StockController(orderStore: orderStore, pickingStore: pickingStore, inventoryStore: inventoryStore, orderController: orderController)
         reloadController = ReloadController(orderStore: orderStore, feedbackStore: feedbackStore, orderController: orderController, trackingController: trackingController)
+        orderActionController = OrderActionController(orderStore: orderStore, orderController: orderController, orderChecklistController: orderChecklistController, feedbackController: feedbackController)
         
         Task {
             await parallel([
@@ -480,88 +482,12 @@ class AppController: ObservableObject {
     
     
     
-    // MARK: - Orders actions
-    
-    
-    var ordersThatNeedCompletedAndGiveFeedback: [OrderSummary] {
-        
-        orderSummaries
-            .filter { macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
-            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-    }
-    
-    
-    var ordersThatNeedGiveFeedback: [OrderSummary] {
-        
-        orderSummaries
-            .filter { macroStatus(forOrderWithId: $0.id) == .giveFeedback }
-            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-    }
-    
-    
-    var ordersToShipAndSendDriveThru: [OrderSummary] {
-        
-        orderSummaries
-            .filter {
-                macroStatus(forOrderWithId: $0.id) == .ship
-                && orderChecklistStamping($0.id)
-                && orderChecklistShippingTransaction($0.id)
-                && orderChecklistTrackingNo($0.id)
-            }
-            .sorted { $0.date > $1.date }
-    }
-    
-    
-    var ordersThatNeedAction: [OrderSummary] {
-        
-        ordersThatNeedCompletedAndGiveFeedback
-        + ordersThatNeedGiveFeedback
-        + ordersToShipAndSendDriveThru
-    }
-    
-    
-    public func performActionForAllOrders() async {
-        
-        for order in ordersThatNeedCompletedAndGiveFeedback {
-        
-            await updateOrderStatus(orderId: order.id, status: .completed)
-            await postPraiseOrderFeedback(orderId: order.id)
-        }
-        
-        for order in ordersThatNeedGiveFeedback {
-            
-            await postPraiseOrderFeedback(orderId: order.id)
-        }
-        
-        for order in ordersToShipAndSendDriveThru {
-            
-            await updateOrderStatus(orderId: order.id, status: .shipped)
-            await sendDriveThru(orderId: order.id)
-        }
-    }
-    
-    
-    
     // MARK: - Tracking status
     
     
     public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
         await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
-    }
-    
-    
-    
-    // MARK: - Action orders
-    
-    
-    public var actionOrders: [OrderSummary] {
-        
-        orderSummaries.filter {
-            macroStatus(forOrderWithId: $0.id).isOneOf(
-                .ship, .pickAndPack, .validatePayment, .giveFeedback, .inTransitFor30PlusDays
-            )
-        }
     }
 }
 
