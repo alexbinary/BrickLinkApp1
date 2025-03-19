@@ -69,31 +69,5 @@ class AppController: ObservableObject {
         stockController = StockController(orderStore, pickingStore, inventoryStore, orderController)
         reloadController = ReloadController(orderStore, feedbackStore, orderController, trackingController)
         orderActionController = OrderActionController(orderStore, orderController, orderChecklistController, feedbackController)
-        
-        Task {
-            await parallel([
-                { await self.loadColors() },
-                { await self.loadInventories() },
-                { await self.loadOrderSummaries() },
-            ])
-        }
-    }
-    
-    
-    private func loadColors() async {
-        
-        await catalogStore.loadColors()
-    }
-    
-    
-    private func loadOrderSummaries() async {
-        
-        await orderStore.loadOrderSummaries()
-    }
-    
-    
-    private func loadInventories() async {
-        
-        await inventoryStore.loadInventories()
     }
 }

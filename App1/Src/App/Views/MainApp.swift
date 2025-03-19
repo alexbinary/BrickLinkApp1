@@ -42,6 +42,12 @@ struct MainApp: App {
                 .environment(appController.stockController)
                 .environment(appController.reloadController)
                 .environment(appController.orderActionController)
+            
+                .task { await parallel([
+                    { await appController.catalogStore.loadColors() },
+                    { await appController.inventoryStore.loadInventories() },
+                    { await appController.orderStore.loadOrderSummaries() },
+                ])}
         }
     }
 }
