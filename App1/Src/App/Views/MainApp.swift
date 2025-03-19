@@ -40,6 +40,7 @@ struct MainApp: App {
                 .environment(appController.resultController)
             
                 .environment(appController.orderController)
+                .environment(appController.stockController)
         }
     }
 }

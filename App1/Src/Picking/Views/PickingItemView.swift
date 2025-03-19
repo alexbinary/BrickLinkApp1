@@ -12,6 +12,9 @@ struct PickingItemView: View {
     @Environment(PickingStore.self)
     var pickingStore
     
+    @Environment(StockController.self)
+    var stockController
+    
     
     let item: OrderItem
     let button: ButtonType
@@ -57,7 +60,7 @@ struct PickingItemView: View {
                     Text(item.quantity).font(.title2)
                     
                     HStack(spacing: 0) {
-                        let (before, after) = app.inStockQuantityBeforeAfter(for: item)
+                        let (before, after) = stockController.inStockQuantityBeforeAfter(for: item)
                         Text("(\(before) 􁉂 ")
                         Text("\(after)").foregroundStyle(after == 0 ? .red.opacity(0.7) : .secondary)
                         Text(")")
@@ -97,6 +100,7 @@ enum ButtonType {
     let appController = AppController()
     let orderStore = appController.orderStore
     let pickingStore = appController.pickingStore
+    let stockController = appController.stockController
     
     let order = orderStore.orderSummaries.first!
     let item = orderStore.orderItems(forOrderWithId: order.id).first!
@@ -104,4 +108,5 @@ enum ButtonType {
     PickingItemView(item, button: .pick)
         .environmentObject(appController)
         .environment(pickingStore)
+        .environment(stockController)
 }
