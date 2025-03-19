@@ -12,6 +12,9 @@ struct OrderDetailView: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(ReloadController.self)
+    var reloadController
+    
     
     let orderSummary: OrderSummary
     var order: OrderDetails? { orderStore.orderDetails(forOrderWithId: orderSummary.id) }
@@ -77,7 +80,7 @@ struct OrderDetailView: View {
         }
         .padding()
         .onChange(of: orderSummary.id, initial: true) {
-            Task { await app.forceRefreshOrder(orderId: orderSummary.id)}
+            Task { await reloadController.forceRefreshOrder(orderId: orderSummary.id)}
         }
         .navigationTitle("Order \(orderSummary.id)")
     }

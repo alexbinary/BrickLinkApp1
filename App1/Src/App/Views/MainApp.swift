@@ -41,6 +41,7 @@ struct MainApp: App {
             
                 .environment(appController.orderController)
                 .environment(appController.stockController)
+                .environment(appController.reloadController)
         }
     }
 }

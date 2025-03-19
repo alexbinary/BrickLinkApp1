@@ -14,6 +14,9 @@ struct OrdersMainList: View {
     @Environment(OrderController.self)
     var orderController
     
+    @Environment(ReloadController.self)
+    var reloadController
+    
     @Environment(NavigationController.self)
     var nav
     
@@ -70,7 +73,7 @@ struct OrdersMainList: View {
     func refresh() async {
         
         refreshing = true
-        await app.refreshOrdersMainList()
+        await reloadController.refreshOrdersMainList()
         refreshing = false
     }
     
@@ -106,11 +109,13 @@ struct OrdersMainList: View {
     let appController = AppController()
     let orderStore = appController.orderStore
     let orderController = appController.orderController
+    let reloadController = appController.reloadController
     let navigationController = NavigationController()
     
     OrdersMainList()
         .environmentObject(appController)
         .environment(orderStore)
         .environment(orderController)
+        .environment(reloadController)
         .environment(navigationController)
 }

@@ -37,6 +37,7 @@ class AppController: ObservableObject {
     
     let orderController: OrderController
     let stockController: StockController
+    let reloadController: ReloadController
     
     
     init() {
@@ -65,6 +66,7 @@ class AppController: ObservableObject {
         
         orderController = OrderController(orderStore: orderStore, orderChecklistController: orderChecklistController)
         stockController = StockController(orderStore: orderStore, pickingStore: pickingStore, inventoryStore: inventoryStore, orderController: orderController)
+        reloadController = ReloadController(orderStore: orderStore, feedbackStore: feedbackStore, orderController: orderController, trackingController: trackingController)
         
         Task {
             await parallel([
@@ -366,120 +368,6 @@ class AppController: ObservableObject {
     public func orderIsValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Bool {
         
         transactionStore.orderIsValidatedWithoutShippingTransaction(orderId: orderId)
-    }
-    
-    
-    
-    // MARK: - Import & Refresh
-    
-    
-    private func loadMissingOrders() async {
-        
-        for order in orderSummaries {
-            
-            await loadOrderDetailsIfMissing(forOrderWithId: order.id)
-            await loadOrderItemsIfMissing(forOrderWithId: order.id)
-            await loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
-        }
-    }
-    
-    
-    public func refreshAllOrders() async {
-        
-        for order in orderSummaries {
-            
-            await refreshOrder(orderId: order.id)
-        }
-    }
-    
-    
-    public func refreshOrder(orderId: OrderSummary.ID) async {
-        
-        if shouldRefreshOrder(orderId: orderId) {
-            
-            await loadOrderDetails(forOrderWithId: orderId)
-            await loadOrderItems(forOrderWithId: orderId)
-            await loadOrderFeedbacks(forOrderWithId: orderId)
-        }
-    }
-    
-    
-    public func forceRefreshOrder(orderId: OrderSummary.ID) async {
-        
-        await loadOrderDetails(forOrderWithId: orderId)
-        await loadOrderItems(forOrderWithId: orderId)
-        await loadOrderFeedbacks(forOrderWithId: orderId)
-    }
-    
-    
-    private func orderIsClosedForMoreThan30Days(orderId: OrderSummary.ID) -> Bool {
-        
-        let orderSummary = orderSummary(forOrderWithId: orderId)!
-        
-        return (
-            orderSummary.status.isOneOf(.completed, .cancelled, .purged)
-            &&
-            orderSummary.dateStatusChanged.days(to: Date()) > 30
-        )
-    }
-    
-    
-    private func shouldRefreshOrder(orderId: OrderSummary.ID) -> Bool {
-        
-        if orderIsClosedForMoreThan30Days(orderId: orderId) {
-            
-            guard
-                let orderDetails = orderDetails(forOrderWithId: orderId)
-            else {
-                return true
-            }
-            
-            let orderItems = orderItems(forOrderWithId: orderId)
-            if orderItems.isEmpty {
-                
-                return true
-            }
-            
-            let orderSummary = orderSummary(forOrderWithId: orderId)!
-            if orderDetails.differs(from: orderSummary) {
-                
-                return true
-            }
-            
-            let feedbacks = orderFeedbacks(forOrderWithId: orderId)
-            if !feedbacks.hasSellerFeedback() {
-                
-                return true
-            }
-            
-            return false
-            
-        } else {
-        
-            return true
-        }
-    }
-    
-    
-    public func refreshOrdersMainList() async {
-        
-        await reloadOrderSummaries()
-        
-        let allOrders = orderSummaries
-        
-        let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
-            .filter { macroStatus(forOrderWithId: $0.id) == .inTransit }
-        
-        for order in ordersThatNeedRefreshLaPosteTrackingStatus {
-            await reloadLaPosteTrackingStatus(forOrderWithId: order.id)
-        }
-        
-        let ordersThatNeedRefreshFeedback = allOrders
-            .filter { macroStatus(forOrderWithId: $0.id).isOneOf(.received, .giveFeedback) }
-        
-        for order in ordersThatNeedRefreshFeedback {
-            await reloadOrderFeedbacks(forOrderWithId: order.id)
-        }
     }
     
     
