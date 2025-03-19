@@ -5,9 +5,6 @@ import SwiftUI
 struct OrdersActionsSheet: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderChecklistController.self)
     var orderChecklistController
     
@@ -107,7 +104,6 @@ struct OrdersActionsSheet: View {
     let orders = orderStore.orderSummaries
     
     OrdersActionsSheet(orders: orders)
-        .environmentObject(appController)
         .environment(orderChecklistController)
         .environment(orderActionController)
 }

@@ -179,7 +179,6 @@ extension View {
     let order = orderStore.orderDetails.first!
     
     OrderChecklistView(order)
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(pickingController)
         .environment(trackingController)

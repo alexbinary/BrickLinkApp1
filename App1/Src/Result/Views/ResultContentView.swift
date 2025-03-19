@@ -6,9 +6,6 @@ import SwiftUI
 struct ResultContentView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -131,7 +128,6 @@ struct ResultContentView: View {
     let navigationController = NavigationController()
     
     ResultContentView()
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(shippingStore)
         .environment(refundStore)

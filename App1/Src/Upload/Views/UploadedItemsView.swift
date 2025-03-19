@@ -6,9 +6,6 @@ import SwiftUI
 struct UploadedItemsView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(UploadController.self)
     var uploadController
     
@@ -42,6 +39,5 @@ struct UploadedItemsView: View {
     let uploadController = appController.uploadController
     
     UploadedItemsView()
-        .environmentObject(appController)
         .environment(uploadController)
 }

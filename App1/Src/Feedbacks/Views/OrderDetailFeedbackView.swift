@@ -6,9 +6,6 @@ import SwiftUI
 struct OrderDetailFeedbackView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(FeedbackStore.self)
     var feedbackStore
     

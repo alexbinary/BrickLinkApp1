@@ -6,10 +6,6 @@ import SwiftUI
 struct OrderCostView: View {
 
     
-    @EnvironmentObject
-    var app: AppController
-    
-    
     let order: OrderDetails
     
     init(_ order: OrderDetails) {
@@ -74,5 +70,4 @@ struct OrderCostView: View {
     let order = orderStore.orderDetails.first!
     
     OrderCostView(order)
-        .environmentObject(appController)
 }

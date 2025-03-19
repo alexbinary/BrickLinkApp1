@@ -6,9 +6,6 @@ import SwiftUI
 struct ResultOrderList: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(ShippingStore.self)
     var shippingStore
     
@@ -122,7 +119,6 @@ struct ResultOrderList: View {
     let resultController = appController.resultController
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
-        .environmentObject(appController)
         .environment(shippingStore)
         .environment(resultController)
         .environment(refundStore)

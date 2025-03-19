@@ -7,9 +7,6 @@ import Charts
 struct ResultHistoryView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -518,7 +515,6 @@ extension VerticalAlignment {
     let navigationController = NavigationController()
     
     ResultHistoryView()
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(shippingStore)
         .environment(refundStore)

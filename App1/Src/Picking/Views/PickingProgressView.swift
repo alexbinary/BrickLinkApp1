@@ -6,9 +6,6 @@ import SwiftUI
 struct PickingProgressView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(PickingController.self)
     var pickingController
     
@@ -69,6 +66,5 @@ struct PickingProgressView: View {
     let order = orderStore.orderDetails.first!
     
     PickingProgressView(order)
-        .environmentObject(appController)
         .environment(pickingController)
 }

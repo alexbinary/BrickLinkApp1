@@ -5,9 +5,6 @@ import SwiftUI
 struct OrdersMainList: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -113,7 +110,6 @@ struct OrdersMainList: View {
     let navigationController = NavigationController()
     
     OrdersMainList()
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(orderController)
         .environment(reloadController)

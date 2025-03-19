@@ -6,9 +6,6 @@ import SwiftUI
 struct OrderDetailShippingView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -264,7 +261,6 @@ struct OrderDetailShippingView: View {
     let shippingController = appController.shippingController
     
     OrderDetailShippingView(order)
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(shippingStore)
         .environment(shippingController)

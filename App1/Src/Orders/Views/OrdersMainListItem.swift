@@ -6,9 +6,6 @@ import SwiftUI
 struct OrdersMainListItem: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -311,7 +308,6 @@ struct OrdersMainListItem: View {
     let order = orderStore.orderSummaries.first!
     
     OrdersMainListItem(order: order)
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(pickingStore)
         .environment(feedbackStore)

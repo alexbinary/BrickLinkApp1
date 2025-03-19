@@ -6,9 +6,6 @@ import SwiftUI
 struct OrderIncomeTransactionView: View {
 
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(TransactionStore.self)
     var transactionStore
     
@@ -179,6 +176,5 @@ struct OrderIncomeTransactionView: View {
     let order = orderStore.orderDetails.first!
     
     OrderIncomeTransactionView(order)
-        .environmentObject(appController)
         .environment(transactionStore)
 }

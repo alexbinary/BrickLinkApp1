@@ -7,9 +7,6 @@ import Charts
 struct CashFlowDetailView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(TransactionStore.self)
     var transactionStore
     

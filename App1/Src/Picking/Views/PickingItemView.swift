@@ -6,9 +6,6 @@ import SwiftUI
 struct PickingItemView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(PickingStore.self)
     var pickingStore
     
@@ -106,7 +103,6 @@ enum ButtonType {
     let item = orderStore.orderItems(forOrderWithId: order.id).first!
     
     PickingItemView(item, button: .pick)
-        .environmentObject(appController)
         .environment(pickingStore)
         .environment(stockController)
 }

@@ -6,9 +6,6 @@ import SwiftUI
 struct OrderIdentityView: View {
 
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -80,6 +77,5 @@ struct OrderIdentityView: View {
     let order = orderStore.orderDetails.first!
     
     OrderIdentityView(order)
-        .environmentObject(appController)
         .environment(orderStore)
 }

@@ -15,7 +15,6 @@ struct MainApp: App {
         WindowGroup {
             
             WindowRootView()
-                .environmentObject(appController)
                 
                 .environment(appController.catalogStore)
                 .environment(appController.uploadStore)

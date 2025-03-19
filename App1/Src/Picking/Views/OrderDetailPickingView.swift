@@ -7,9 +7,6 @@ import HTMLEntities
 struct OrderDetailPickingView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(OrderStore.self)
     var orderStore
     
@@ -111,7 +108,6 @@ struct OrderDetailPickingView: View {
     let order = orderStore.orderDetails.first!
     
     OrderDetailPickingView(order)
-        .environmentObject(appController)
         .environment(orderStore)
         .environment(inventoryStore)
         .environment(pickingController)

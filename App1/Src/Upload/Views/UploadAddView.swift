@@ -6,9 +6,6 @@ import SwiftUI
 struct UploadAddView: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(UploadStore.self)
     var uploadStore
 

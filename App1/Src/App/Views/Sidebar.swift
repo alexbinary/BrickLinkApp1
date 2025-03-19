@@ -6,9 +6,6 @@ import SwiftUI
 struct Sidebar: View {
     
     
-    @EnvironmentObject
-    var app: AppController
-    
     @Environment(UploadStore.self)
     var uploadStore
     
