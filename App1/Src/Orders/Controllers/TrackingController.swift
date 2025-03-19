@@ -11,7 +11,7 @@ class TrackingController {
     private let trackingStore: TrackingStore
     
     
-    init(orderStore: OrderStore, trackingStore: TrackingStore) {
+    init(_ orderStore: OrderStore, _ trackingStore: TrackingStore) {
         self.orderStore = orderStore
         self.trackingStore = trackingStore
     }

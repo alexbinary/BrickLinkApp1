@@ -12,7 +12,7 @@ class InventoryStore {
     private let blCredentials: BrickLinkAPICredentials
     
     
-    init(dataStore: DataStore, blCredentials: BrickLinkAPICredentials) {
+    init(_ dataStore: DataStore, _ blCredentials: BrickLinkAPICredentials) {
         self.dataStore = dataStore
         self.blCredentials = blCredentials
     }

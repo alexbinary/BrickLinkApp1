@@ -11,7 +11,7 @@ class PickingController {
     private let pickingStore: PickingStore
     
     
-    init(orderStore: OrderStore, pickingStore: PickingStore) {
+    init(_ orderStore: OrderStore, _ pickingStore: PickingStore) {
         self.orderStore = orderStore
         self.pickingStore = pickingStore
     }

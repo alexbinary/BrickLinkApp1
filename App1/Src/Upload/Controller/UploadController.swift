@@ -12,7 +12,7 @@ class UploadController {
     private let inventoryStore: InventoryStore
     
     
-    init(uploadStore: UploadStore, catalogStore: CatalogStore, inventoryStore: InventoryStore) {
+    init(_ uploadStore: UploadStore, _ catalogStore: CatalogStore, _ inventoryStore: InventoryStore) {
         self.uploadStore = uploadStore
         self.catalogStore = catalogStore
         self.inventoryStore = inventoryStore

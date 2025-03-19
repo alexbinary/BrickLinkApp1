@@ -13,7 +13,7 @@ class ResultController {
     private let transactionStore: TransactionStore
     
     
-    init(orderStore: OrderStore, shippingStore: ShippingStore, refundStore: RefundStore, transactionStore: TransactionStore) {
+    init(_ orderStore: OrderStore, _ shippingStore: ShippingStore, _ refundStore: RefundStore, _ transactionStore: TransactionStore) {
         self.orderStore = orderStore
         self.shippingStore = shippingStore
         self.refundStore = refundStore

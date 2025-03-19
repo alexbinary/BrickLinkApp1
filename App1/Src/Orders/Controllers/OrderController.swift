@@ -11,7 +11,7 @@ class OrderController {
     private let orderChecklistController: OrderChecklistController
     
     
-    init(orderStore: OrderStore, orderChecklistController: OrderChecklistController) {
+    init(_ orderStore: OrderStore, _ orderChecklistController: OrderChecklistController) {
         self.orderStore = orderStore
         self.orderChecklistController = orderChecklistController
     }

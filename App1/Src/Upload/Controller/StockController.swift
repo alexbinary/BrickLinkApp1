@@ -13,7 +13,7 @@ class StockController {
     private let orderController: OrderController
     
     
-    init(orderStore: OrderStore, pickingStore: PickingStore, inventoryStore: InventoryStore, orderController: OrderController) {
+    init(_ orderStore: OrderStore, _ pickingStore: PickingStore, _ inventoryStore: InventoryStore, _ orderController: OrderController) {
         self.orderStore = orderStore
         self.pickingStore = pickingStore
         self.inventoryStore = inventoryStore

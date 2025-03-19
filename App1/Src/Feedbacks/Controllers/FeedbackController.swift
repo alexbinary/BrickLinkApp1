@@ -11,7 +11,7 @@ class FeedbackController {
     private let feedbackStore: FeedbackStore
     
     
-    init(orderStore: OrderStore, feedbackStore: FeedbackStore) {
+    init(_ orderStore: OrderStore, _ feedbackStore: FeedbackStore) {
         self.orderStore = orderStore
         self.feedbackStore = feedbackStore
     }

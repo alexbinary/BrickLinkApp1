@@ -14,7 +14,7 @@ class OrderChecklistController {
     private let transactionStore: TransactionStore
     
     
-    init(orderStore: OrderStore, pickingStore: PickingStore, shippingStore: ShippingStore, feedbackStore: FeedbackStore, transactionStore: TransactionStore) {
+    init(_ orderStore: OrderStore, _ pickingStore: PickingStore, _ shippingStore: ShippingStore, _ feedbackStore: FeedbackStore, _ transactionStore: TransactionStore) {
         self.orderStore = orderStore
         self.pickingStore = pickingStore
         self.shippingStore = shippingStore

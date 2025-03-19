@@ -10,7 +10,7 @@ class ShippingController {
     private let orderStore: OrderStore
     
     
-    init(orderStore: OrderStore) {
+    init(_ orderStore: OrderStore) {
         self.orderStore = orderStore
     }
     

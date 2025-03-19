@@ -10,7 +10,7 @@ class UploadStore {
     private let dataStore: DataStore
     
     
-    init(dataStore: DataStore) {
+    init(_ dataStore: DataStore) {
         self.dataStore = dataStore
     }
     

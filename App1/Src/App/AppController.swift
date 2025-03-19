@@ -43,32 +43,32 @@ class AppController: ObservableObject {
     
     init() {
         
-        uploadStore = UploadStore(dataStore: dataStore)
-        catalogStore = CatalogStore(dataStore: dataStore, blCredentials: blCredentials)
-        inventoryStore = InventoryStore(dataStore: dataStore, blCredentials: blCredentials)
+        uploadStore = UploadStore(dataStore)
+        catalogStore = CatalogStore(dataStore, blCredentials)
+        inventoryStore = InventoryStore(dataStore, blCredentials)
         
-        transactionStore = TransactionStore(dataStore: dataStore)
-        refundStore = RefundStore(dataStore: dataStore)
+        transactionStore = TransactionStore(dataStore)
+        refundStore = RefundStore(dataStore)
         
-        orderStore = OrderStore(dataStore: dataStore, blCredentials: blCredentials)
-        pickingStore = PickingStore(dataStore: dataStore)
-        shippingStore = ShippingStore(dataStore: dataStore)
-        trackingStore = TrackingStore(dataStore: dataStore)
-        feedbackStore = FeedbackStore(dataStore: dataStore, blCredentials: blCredentials)
+        orderStore = OrderStore(dataStore, blCredentials)
+        pickingStore = PickingStore(dataStore)
+        shippingStore = ShippingStore(dataStore)
+        trackingStore = TrackingStore(dataStore)
+        feedbackStore = FeedbackStore(dataStore, blCredentials)
         
-        uploadController = UploadController(uploadStore: uploadStore, catalogStore: catalogStore, inventoryStore: inventoryStore)
-        pickingController = PickingController(orderStore: orderStore, pickingStore: pickingStore)
-        shippingController = ShippingController(orderStore: orderStore)
-        trackingController = TrackingController(orderStore: orderStore, trackingStore: trackingStore)
-        feedbackController = FeedbackController(orderStore: orderStore, feedbackStore: feedbackStore)
+        uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
+        pickingController = PickingController(orderStore, pickingStore)
+        shippingController = ShippingController(orderStore)
+        trackingController = TrackingController(orderStore, trackingStore)
+        feedbackController = FeedbackController(orderStore, feedbackStore)
         
-        orderChecklistController = OrderChecklistController(orderStore: orderStore, pickingStore: pickingStore, shippingStore: shippingStore, feedbackStore: feedbackStore, transactionStore: transactionStore)
-        resultController = ResultController(orderStore: orderStore, shippingStore: shippingStore, refundStore: refundStore, transactionStore: transactionStore)
+        orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore)
+        resultController = ResultController(orderStore, shippingStore, refundStore, transactionStore)
         
-        orderController = OrderController(orderStore: orderStore, orderChecklistController: orderChecklistController)
-        stockController = StockController(orderStore: orderStore, pickingStore: pickingStore, inventoryStore: inventoryStore, orderController: orderController)
-        reloadController = ReloadController(orderStore: orderStore, feedbackStore: feedbackStore, orderController: orderController, trackingController: trackingController)
-        orderActionController = OrderActionController(orderStore: orderStore, orderController: orderController, orderChecklistController: orderChecklistController, feedbackController: feedbackController)
+        orderController = OrderController(orderStore, orderChecklistController)
+        stockController = StockController(orderStore, pickingStore, inventoryStore, orderController)
+        reloadController = ReloadController(orderStore, feedbackStore, orderController, trackingController)
+        orderActionController = OrderActionController(orderStore, orderController, orderChecklistController, feedbackController)
         
         Task {
             await parallel([

@@ -13,7 +13,7 @@ class OrderActionController {
     private let feedbackController: FeedbackController
     
     
-    init(orderStore: OrderStore, orderController: OrderController, orderChecklistController: OrderChecklistController, feedbackController: FeedbackController) {
+    init(_ orderStore: OrderStore, _ orderController: OrderController, _ orderChecklistController: OrderChecklistController, _ feedbackController: FeedbackController) {
         self.orderStore = orderStore
         self.orderController = orderController
         self.orderChecklistController = orderChecklistController

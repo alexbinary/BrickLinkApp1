@@ -13,7 +13,7 @@ class ReloadController {
     private let trackingController: TrackingController
     
     
-    init(orderStore: OrderStore, feedbackStore: FeedbackStore, orderController: OrderController, trackingController: TrackingController) {
+    init(_ orderStore: OrderStore, _ feedbackStore: FeedbackStore, _ orderController: OrderController, _ trackingController: TrackingController) {
         self.orderStore = orderStore
         self.feedbackStore = feedbackStore
         self.orderController = orderController
