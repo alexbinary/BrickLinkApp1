@@ -6,14 +6,14 @@ import SwiftUI
 struct Sidebar: View {
     
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(NavigationController.self)
+    var nav
     
     @Environment(OrderActionController.self)
     var orderActionController
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(UploadStore.self)
+    var uploadStore
     
     
     var body: some View {
@@ -48,4 +48,21 @@ struct Sidebar: View {
             }
         }
     }
+}
+
+
+
+#Preview {
+    
+    let navigationController = NavigationController()
+    
+    let controllers = AppController.createControllers()
+    let orderActionController = controllers.orderActionController
+    
+    let uploadStore = controllers.uploadStore
+    
+    Sidebar()
+        .environment(navigationController)
+        .environment(orderActionController)
+        .environment(uploadStore)
 }
