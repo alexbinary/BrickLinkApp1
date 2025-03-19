@@ -12,14 +12,18 @@ class OrderChecklistController {
     private let shippingStore: ShippingStore
     private let feedbackStore: FeedbackStore
     private let transactionStore: TransactionStore
+    private let trackingController: TrackingController
+    private let pickingController: PickingController
     
     
-    init(_ orderStore: OrderStore, _ pickingStore: PickingStore, _ shippingStore: ShippingStore, _ feedbackStore: FeedbackStore, _ transactionStore: TransactionStore) {
+    init(_ orderStore: OrderStore, _ pickingStore: PickingStore, _ shippingStore: ShippingStore, _ feedbackStore: FeedbackStore, _ transactionStore: TransactionStore, _ trackingController: TrackingController, _ pickingController: PickingController) {
         self.orderStore = orderStore
         self.pickingStore = pickingStore
         self.shippingStore = shippingStore
         self.feedbackStore = feedbackStore
         self.transactionStore = transactionStore
+        self.trackingController = trackingController
+        self.pickingController = pickingController
     }
     
     
@@ -253,5 +257,155 @@ class OrderChecklistController {
         let order = orderSummary(forOrderWithId: orderId)!
         
         return order.dateStatusChanged.days(to: Date()) > 30
+    }
+    
+    
+    // -
+    
+    
+    public func checklistData(forOrderWithId orderId: OrderSummary.ID) -> Checklist {
+        
+        Checklist(sections: [
+            .init(
+                title: OrderMacroStatus.validatePayment.descriptionWithPicto,
+                items: [
+                    .init(
+                        label: "Payment received",
+                        checked: orderChecklistPayment(orderId)
+                    ),
+                    .init(
+                        label: "Register transaction",
+                        checked: orderChecklistIncomeTransaction(orderId)
+                    ),
+                ]
+            ),
+            .init(
+                title: OrderMacroStatus.pickAndPack.descriptionWithPicto,
+                items: [
+                    .init(
+                        label: {
+                            let progress = pickingController.pickingProgress(forOrderWithId: orderId)
+                            if progress == 100% {
+                                return  "Pick items"
+                            } else {
+                                return "Pick items - \(progress) complete"
+                            }
+                        }(),
+                        checked: orderChecklistPicking(orderId)
+                    ),
+                    .init(
+                        label: {
+                            let progress = pickingController.pickingVerificationProgress(forOrderWithId: orderId)
+                            if progress == 100% {
+                                return "Verify items"
+                            } else {
+                                return "Verify items - \(progress) complete"
+                            }
+                        }(),
+                        checked: orderChecklistVerification(orderId)
+                    ),
+                    .init(
+                        label: "Pack order",
+                        checked: orderChecklistPacked(orderId)
+                    ),
+                ]
+            ),
+            .init(
+                title: OrderMacroStatus.ship.descriptionWithPicto,
+                items: [
+                    .init(
+                        label: "Validate stamping",
+                        checked: orderChecklistStamping(orderId)
+                    ),
+                    .init(
+                        label: "Register transaction",
+                        checked: orderChecklistShippingTransaction(orderId)
+                    ),
+                    .init(
+                        label: "Input tracking no",
+                        checked: orderChecklistTrackingNo(orderId)
+                    ),
+                    .init(
+                        label: "Mark Shipped",
+                        checked: orderChecklistShipped(orderId)
+                    ),
+                    .init(
+                        label: "Send drive thru",
+                        checked: orderChecklistDriveThru(orderId)
+                    ),
+                ]
+            ),
+            .init(
+                title: "􀐚 Shipped",
+                items: [
+                    .init(
+                        label: "Picked up by transporter",
+                        checked: trackingController.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
+                        mandatory: false
+                    ),
+                ]
+            ),
+            .init(
+                title: OrderMacroStatus.inTransit.descriptionWithPicto,
+                items: [
+                    .init(
+                        label: "Received",
+                        checked: orderChecklistReceived(orderId)
+                    ),
+                ]
+            ),
+            .init(
+                title: OrderMacroStatus.received.descriptionWithPicto,
+                items: [
+                    .init(
+                        label: "Completed",
+                        checked: orderChecklistCompleted(orderId)
+                    ),
+                    .init(
+                        label: "Buyer feedback",
+                        checked: orderChecklistBuyerFeedback(orderId)
+                    ),
+                ]
+            ),
+            .init(
+                title: OrderMacroStatus.giveFeedback.descriptionWithPicto,
+                items: [
+                    .init(
+                        label: "Give feedback",
+                        checked: orderChecklistSellerFeedback(orderId)
+                    ),
+                ]
+            ),
+            .init(
+                title: OrderMacroStatus.closed.descriptionWithPicto,
+                items: []
+            ),
+        ])
+    }
+}
+
+
+
+struct Checklist {
+    
+    let sections: [Section]
+    
+    struct Section {
+        
+        let title: String
+        let items: [Item]
+    }
+    
+    struct Item {
+        
+        let label: String
+        let checked: Bool
+        let mandatory: Bool
+        
+        init(label: String, checked: Bool, mandatory: Bool = true) {
+            self.label = label
+            self.checked = checked
+            self.mandatory = mandatory
+        }
     }
 }

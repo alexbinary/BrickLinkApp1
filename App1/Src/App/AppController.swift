@@ -61,7 +61,7 @@ enum AppController {
         let trackingController = TrackingController(orderStore, trackingStore)
         let feedbackController = FeedbackController(orderStore, feedbackStore)
         
-        let orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore)
+        let orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore, trackingController, pickingController)
         let resultController = ResultController(orderStore, shippingStore, refundStore, transactionStore)
         
         let orderController = OrderController(orderStore, orderChecklistController)
