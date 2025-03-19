@@ -67,7 +67,12 @@ struct OrderCostView: View {
 }
 
 #Preview {
+    
     let appController = AppController()
-    let order = appController.orderDetails.first!
-    OrderCostView(order).environmentObject(appController)
+    let orderStore = appController.orderStore
+    
+    let order = orderStore.orderDetails.first!
+    
+    OrderCostView(order)
+        .environmentObject(appController)
 }

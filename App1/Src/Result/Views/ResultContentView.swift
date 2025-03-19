@@ -9,6 +9,9 @@ struct ResultContentView: View {
     @EnvironmentObject
     var app: AppController
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
     @Environment(ShippingStore.self)
     var shippingStore
     
@@ -97,7 +100,7 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = app.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
+            let ordersByMonth = orderStore.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
             
             ForEach(ordersByMonth, id: \.month) { (month, elements) in
                 Section(month.name) {
@@ -114,11 +117,13 @@ struct ResultContentView: View {
 #Preview {
     
     let appController = AppController()
+    let orderStore = appController.orderStore
     let shippingStore = appController.shippingStore
     let navigationController = NavigationController()
     
     ResultContentView()
         .environmentObject(appController)
+        .environment(orderStore)
         .environment(shippingStore)
         .environment(navigationController)
 }

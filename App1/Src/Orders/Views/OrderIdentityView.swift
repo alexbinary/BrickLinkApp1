@@ -73,7 +73,13 @@ struct OrderIdentityView: View {
 
 
 #Preview {
+    
     let appController = AppController()
-    let order = appController.orderDetails.first!
-    OrderIdentityView(order).environmentObject(appController)
+    let orderStore = appController.orderStore
+    
+    let order = orderStore.orderDetails.first!
+    
+    OrderIdentityView(order)
+        .environmentObject(appController)
+        .environment(orderStore)
 }

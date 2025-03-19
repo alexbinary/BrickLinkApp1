@@ -173,9 +173,10 @@ struct OrderIncomeTransactionView: View {
 #Preview {
     
     let appController = AppController()
+    let orderStore = appController.orderStore
     let transactionStore = appController.transactionStore
     
-    let order = appController.orderDetails.first!
+    let order = orderStore.orderDetails.first!
     
     OrderIncomeTransactionView(order)
         .environmentObject(appController)
