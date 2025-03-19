@@ -43,6 +43,12 @@ class UploadController {
     }
     
     
+    public var numberForSidebarBadge: Int {
+        
+        uploadItems.count
+    }
+    
+    
     // MARK: - Upload
     
     

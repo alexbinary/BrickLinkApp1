@@ -12,8 +12,8 @@ struct Sidebar: View {
     @Environment(OrderController.self)
     var orderController
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(UploadController.self)
+    var uploadController
     
     
     var body: some View {
@@ -24,11 +24,11 @@ struct Sidebar: View {
             Section("Operations") {
                 
                 Label("Orders", systemImage: "list.bullet")
-                    .badge(orderController.ordersThatNeedAction.count)
+                    .badge(orderController.numberForSidebarBadge)
                     .tag(SidebarItem.orders)
                 
                 Label("Upload", systemImage: "tray.and.arrow.down")
-                    .badge(uploadStore.uploadItems.count)
+                    .badge(uploadController.numberForSidebarBadge)
                     .tag(SidebarItem.upload)
             }
             
@@ -58,11 +58,10 @@ struct Sidebar: View {
     
     let controllers = AppController.createControllers()
     let orderController = controllers.orderController
-    
-    let uploadStore = controllers.uploadStore
+    let uploadController = controllers.uploadController
     
     Sidebar()
         .environment(navigationController)
         .environment(orderController)
-        .environment(uploadStore)
+        .environment(uploadController)
 }

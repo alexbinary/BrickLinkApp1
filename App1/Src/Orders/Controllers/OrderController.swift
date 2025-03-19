@@ -272,12 +272,12 @@ class OrderController {
     }
     
     
-    public var ordersThatNeedAction: [OrderSummary] {
+    public var numberForSidebarBadge: Int {
         
         orderSummaries.filter {
             macroStatus(forOrderWithId: $0.id).isOneOf(
                 .ship, .pickAndPack, .validatePayment, .giveFeedback, .inTransitFor30PlusDays
             )
-        }
+        }.count
     }
 }
