@@ -169,9 +169,9 @@ struct OrderIncomeTransactionView: View {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
-    let transactionStore = appController.transactionStore
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
+    let transactionStore = controllers.transactionStore
     
     let order = orderStore.orderDetails.first!
     

@@ -170,11 +170,11 @@ extension View {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
-    let pickingController = appController.pickingController
-    let trackingController = appController.trackingController
-    let orderChecklistController = appController.orderChecklistController
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
+    let pickingController = controllers.pickingController
+    let trackingController = controllers.trackingController
+    let orderChecklistController = controllers.orderChecklistController
     
     let order = orderStore.orderDetails.first!
     

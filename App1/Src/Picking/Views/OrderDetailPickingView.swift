@@ -100,10 +100,10 @@ struct OrderDetailPickingView: View {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
-    let inventoryStore = appController.inventoryStore
-    let pickingController = appController.pickingController
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
+    let inventoryStore = controllers.inventoryStore
+    let pickingController = controllers.pickingController
     
     let order = orderStore.orderDetails.first!
     

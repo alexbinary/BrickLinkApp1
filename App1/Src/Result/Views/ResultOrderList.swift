@@ -113,10 +113,10 @@ struct ResultOrderList: View {
 
 #Preview {
     
-    let appController = AppController()
-    let shippingStore = appController.shippingStore
-    let refundStore = appController.refundStore
-    let resultController = appController.resultController
+    let controllers = AppController.createControllers()
+    let shippingStore = controllers.shippingStore
+    let refundStore = controllers.refundStore
+    let resultController = controllers.resultController
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
         .environment(shippingStore)

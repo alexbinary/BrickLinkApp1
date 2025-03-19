@@ -1,73 +1,105 @@
 
-import SwiftUI
+import Foundation
 
 
-class AppController: ObservableObject {
+
+enum AppController {
+
     
-    
-    private let dataStore: DataStore = {
+    static func createControllers() -> (
         
-        let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")
-        return DataStore(dataFileUrl: URL(fileURLWithPath: path))
-    }()
-    
-    private let blCredentials = Secrets.brickLinkAPICredentials
-    
-    let uploadStore: UploadStore
-    let catalogStore: CatalogStore
-    let inventoryStore: InventoryStore
-    
-    let transactionStore: TransactionStore
-    let refundStore: RefundStore
-    
-    let orderStore: OrderStore
-    let pickingStore: PickingStore
-    let shippingStore: ShippingStore
-    let trackingStore: TrackingStore
-    let feedbackStore: FeedbackStore
-    
-    let uploadController: UploadController
-    let pickingController: PickingController
-    let shippingController: ShippingController
-    let trackingController: TrackingController
-    let feedbackController: FeedbackController
-    
-    let orderChecklistController: OrderChecklistController
-    let resultController: ResultController
-    
-    let orderController: OrderController
-    let stockController: StockController
-    let reloadController: ReloadController
-    let orderActionController: OrderActionController
-    
-    
-    init() {
+        uploadStore: UploadStore,
+        catalogStore: CatalogStore,
+        inventoryStore: InventoryStore,
+
+        transactionStore: TransactionStore,
+        refundStore: RefundStore,
+
+        orderStore: OrderStore,
+        pickingStore: PickingStore,
+        shippingStore: ShippingStore,
+        trackingStore: TrackingStore,
+        feedbackStore: FeedbackStore,
+
+        uploadController: UploadController,
+        pickingController: PickingController,
+        shippingController: ShippingController,
+        trackingController: TrackingController,
+        feedbackController: FeedbackController,
+
+        orderChecklistController: OrderChecklistController,
+        resultController: ResultController,
+
+        orderController: OrderController,
+        stockController: StockController,
+        reloadController: ReloadController,
+        orderActionController: OrderActionController
         
-        uploadStore = UploadStore(dataStore)
-        catalogStore = CatalogStore(dataStore, blCredentials)
-        inventoryStore = InventoryStore(dataStore, blCredentials)
+    ) {
         
-        transactionStore = TransactionStore(dataStore)
-        refundStore = RefundStore(dataStore)
+        let dataStore: DataStore = {
+            
+            let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")
+            return DataStore(dataFileUrl: URL(fileURLWithPath: path))
+        }()
         
-        orderStore = OrderStore(dataStore, blCredentials)
-        pickingStore = PickingStore(dataStore)
-        shippingStore = ShippingStore(dataStore)
-        trackingStore = TrackingStore(dataStore)
-        feedbackStore = FeedbackStore(dataStore, blCredentials)
+        let blCredentials = Secrets.brickLinkAPICredentials
         
-        uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
-        pickingController = PickingController(orderStore, pickingStore)
-        shippingController = ShippingController(orderStore)
-        trackingController = TrackingController(orderStore, trackingStore)
-        feedbackController = FeedbackController(orderStore, feedbackStore)
+        let uploadStore = UploadStore(dataStore)
+        let catalogStore = CatalogStore(dataStore, blCredentials)
+        let inventoryStore = InventoryStore(dataStore, blCredentials)
         
-        orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore)
-        resultController = ResultController(orderStore, shippingStore, refundStore, transactionStore)
+        let transactionStore = TransactionStore(dataStore)
+        let refundStore = RefundStore(dataStore)
         
-        orderController = OrderController(orderStore, orderChecklistController)
-        stockController = StockController(orderStore, pickingStore, inventoryStore, orderController)
-        reloadController = ReloadController(orderStore, feedbackStore, orderController, trackingController)
-        orderActionController = OrderActionController(orderStore, orderController, orderChecklistController, feedbackController)
+        let orderStore = OrderStore(dataStore, blCredentials)
+        let pickingStore = PickingStore(dataStore)
+        let shippingStore = ShippingStore(dataStore)
+        let trackingStore = TrackingStore(dataStore)
+        let feedbackStore = FeedbackStore(dataStore, blCredentials)
+        
+        let uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
+        let pickingController = PickingController(orderStore, pickingStore)
+        let shippingController = ShippingController(orderStore)
+        let trackingController = TrackingController(orderStore, trackingStore)
+        let feedbackController = FeedbackController(orderStore, feedbackStore)
+        
+        let orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore)
+        let resultController = ResultController(orderStore, shippingStore, refundStore, transactionStore)
+        
+        let orderController = OrderController(orderStore, orderChecklistController)
+        let stockController = StockController(orderStore, pickingStore, inventoryStore, orderController)
+        let reloadController = ReloadController(orderStore, feedbackStore, orderController, trackingController)
+        let orderActionController = OrderActionController(orderStore, orderController, orderChecklistController, feedbackController)
+        
+        return (
+            
+            uploadStore: uploadStore,
+            catalogStore: catalogStore,
+            inventoryStore: inventoryStore,
+
+            transactionStore: transactionStore,
+            refundStore: refundStore,
+
+            orderStore: orderStore,
+            pickingStore: pickingStore,
+            shippingStore: shippingStore,
+            trackingStore: trackingStore,
+            feedbackStore: feedbackStore,
+
+            uploadController: uploadController,
+            pickingController: pickingController,
+            shippingController: shippingController,
+            trackingController: trackingController,
+            feedbackController: feedbackController,
+
+            orderChecklistController: orderChecklistController,
+            resultController: resultController,
+
+            orderController: orderController,
+            stockController: stockController,
+            reloadController: reloadController,
+            orderActionController: orderActionController
+        )
     }
 }

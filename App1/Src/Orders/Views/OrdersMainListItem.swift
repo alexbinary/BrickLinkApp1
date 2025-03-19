@@ -297,13 +297,13 @@ struct OrdersMainListItem: View {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
-    let pickingStore = appController.pickingStore
-    let feedbackStore = appController.feedbackStore
-    let feedbackController = appController.feedbackController
-    let orderChecklistController = appController.orderChecklistController
-    let orderController = appController.orderController
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
+    let pickingStore = controllers.pickingStore
+    let feedbackStore = controllers.feedbackStore
+    let feedbackController = controllers.feedbackController
+    let orderChecklistController = controllers.orderChecklistController
+    let orderController = controllers.orderController
     
     let order = orderStore.orderSummaries.first!
     

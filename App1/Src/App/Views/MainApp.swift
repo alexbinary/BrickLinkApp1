@@ -6,47 +6,45 @@ import SwiftUI
 struct MainApp: App {
     
     
-    @StateObject
-    private var appController = AppController()
-    
-    
     var body: some Scene {
+        
+        let controllers = AppController.createControllers()
         
         WindowGroup {
             
             WindowRootView()
                 
-                .environment(appController.catalogStore)
-                .environment(appController.uploadStore)
-                .environment(appController.inventoryStore)
-                
-                .environment(appController.transactionStore)
-                .environment(appController.refundStore)
-            
-                .environment(appController.orderStore)
-                .environment(appController.pickingStore)
-                .environment(appController.shippingStore)
-                .environment(appController.trackingStore)
-                .environment(appController.feedbackStore)
-                
-                .environment(appController.uploadController)
-                .environment(appController.pickingController)
-                .environment(appController.shippingController)
-                .environment(appController.trackingController)
-                .environment(appController.feedbackController)
-            
-                .environment(appController.orderChecklistController)
-                .environment(appController.resultController)
-            
-                .environment(appController.orderController)
-                .environment(appController.stockController)
-                .environment(appController.reloadController)
-                .environment(appController.orderActionController)
-            
+                .environment(controllers.catalogStore)
+                .environment(controllers.uploadStore)
+                .environment(controllers.inventoryStore)
+
+                .environment(controllers.transactionStore)
+                .environment(controllers.refundStore)
+
+                .environment(controllers.orderStore)
+                .environment(controllers.pickingStore)
+                .environment(controllers.shippingStore)
+                .environment(controllers.trackingStore)
+                .environment(controllers.feedbackStore)
+
+                .environment(controllers.uploadController)
+                .environment(controllers.pickingController)
+                .environment(controllers.shippingController)
+                .environment(controllers.trackingController)
+                .environment(controllers.feedbackController)
+
+                .environment(controllers.orderChecklistController)
+                .environment(controllers.resultController)
+
+                .environment(controllers.orderController)
+                .environment(controllers.stockController)
+                .environment(controllers.reloadController)
+                .environment(controllers.orderActionController)
+
                 .task { await parallel([
-                    { await appController.catalogStore.loadColors() },
-                    { await appController.inventoryStore.loadInventories() },
-                    { await appController.orderStore.loadOrderSummaries() },
+                    { await controllers.catalogStore.loadColors() },
+                    { await controllers.inventoryStore.loadInventories() },
+                    { await controllers.orderStore.loadOrderSummaries() },
                 ])}
         }
     }

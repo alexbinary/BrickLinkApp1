@@ -506,11 +506,11 @@ extension VerticalAlignment {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
-    let shippingStore = appController.shippingStore
-    let refundStore = appController.refundStore
-    let resultController = appController.resultController
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
+    let shippingStore = controllers.shippingStore
+    let refundStore = controllers.refundStore
+    let resultController = controllers.resultController
     
     let navigationController = NavigationController()
     

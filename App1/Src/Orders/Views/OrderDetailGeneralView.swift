@@ -62,8 +62,8 @@ struct OrderDetailGeneralView: View {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
     let order = orderStore.orderDetails.first!
     
     OrderDetailGeneralView(order)

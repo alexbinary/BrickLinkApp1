@@ -103,10 +103,10 @@ struct OrdersMainList: View {
 
 #Preview {
     
-    let appController = AppController()
-    let orderStore = appController.orderStore
-    let orderController = appController.orderController
-    let reloadController = appController.reloadController
+    let controllers = AppController.createControllers()
+    let orderStore = controllers.orderStore
+    let orderController = controllers.orderController
+    let reloadController = controllers.reloadController
     let navigationController = NavigationController()
     
     OrdersMainList()

@@ -54,8 +54,8 @@ struct LegoColorView: View {
 
 #Preview {
     
-    let appController = AppController()
-    let catalogStore = appController.catalogStore
+    let controllers = AppController.createControllers()
+    let catalogStore = controllers.catalogStore
     
     LegoColorView(colorId: "11")
         .environment(catalogStore)
