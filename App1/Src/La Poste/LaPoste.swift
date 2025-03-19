@@ -19,8 +19,11 @@ struct LaPosteTrackingClient {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
+        Debug.printRequest(request)
+        
+        let (data, response) = try! await URLSession(configuration: .default).data(for: request)
+        
+        Debug.printResponse(data, response)
         
         let decoder = JSONDecoder()
         

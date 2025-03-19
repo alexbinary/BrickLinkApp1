@@ -6,181 +6,176 @@ import Foundation
 struct BrickLinkAPIClient {
     
     
+    
+    // MARK: - Infra
+    
+    
+    private static let credentials = Secrets.brickLinkAPICredentials
+    
+    
+    enum Method: String {
+        
+        case PUT="PUT"
+        case POST="POST"
+    }
+    
+    
+    @discardableResult
+    private static func send(withMethod method: Method? = nil, to url: URL, body: ()->String? = {nil}) async throws -> (Data, URLResponse) {
+        
+        var request = URLRequest(url: url)
+        request.addAuthentication(using: credentials)
+        
+        if let method = method {
+            request.httpMethod = method.rawValue
+        }
+        if let body = body() {
+            request.httpBody = body.data(using: .utf8)
+            request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        }
+        
+        Debug.printRequest(request)
+        
+        let (data, response) = try! await URLSession(configuration: .default).data(for: request)
+        
+        Debug.printResponse(data, response)
+        
+        return (data, response)
+    }
+    
+    
+    private static let decoder = {
+        
+        var decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .custom({ (decoder) in
+            
+            let stringValue = try! decoder.singleValueContainer().decode(String.self)
+            
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions = [.withFullDate, .withTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
+            
+            return dateFormatter.date(from: stringValue)!
+        })
+        return decoder
+    }()
+    
+    
+    private static func fetchAndDecodeData<T: Decodable>(from url: URL, withMethod method: Method? = nil, body: ()->String? = {nil}) async throws -> T {
+        
+        let (data, _) = try! await send(withMethod: method, to: url, body: body)
+        
+        let decoded = try! decoder.decode(BrickLinkAPIResponse<T>.self, from: data)
+        return decoded.data!
+    }
+    
+    
+    
     // MARK: - Catalog
         
         
-    static func fetchColors(using credentials: BrickLinkAPICredentials) async -> [BrickLinkColor] {
+    static func fetchColors() async -> [BrickLinkColor] {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[BrickLinkColor]> = data.decode()
-        let colors = decoded.data!
-        
-        return colors
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
     }
     
     
-    static func fetchCatalogEntry(forItemType type: BrickLinkItemType, ref: String, using credentials: BrickLinkAPICredentials) async -> BrickLinkCatalogItem? {
+    static func fetchCatalogEntry(forItemType type: BrickLinkItemType, ref: String) async -> BrickLinkCatalogItem? {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/items/\(type.rawValue)/\(ref)")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<BrickLinkCatalogItem> = data.decode()
-        let catalogItem = decoded.data
-        
-        return catalogItem
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/items/\(type.rawValue)/\(ref)")!)
     }
+    
     
     
     // MARK: - Orders
     
     
-    static func fetchOrderSummaries(using credentials: BrickLinkAPICredentials) async -> [BrickLinkOrder] {
+    static func fetchOrderSummaries() async -> [BrickLinkOrder] {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[BrickLinkOrder]> = data.decode()
-        let orders = decoded.data!
-        
-        return orders
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
     }
     
     
-    static func fetchDetails(forOrderWithId orderId: OrderSummary.ID, using credentials: BrickLinkAPICredentials) async -> BrickLinkOrder {
+    static func fetchDetails(forOrderWithId orderId: OrderSummary.ID) async -> BrickLinkOrder {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<BrickLinkOrder> = data.decode()
-        let order = decoded.data!
-        
-        return order
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
     }
     
     
-    static func updateStatus(ofOrderWithId orderId: OrderSummary.ID, to status: OrderStatus, using credentials: BrickLinkAPICredentials) async {
+    static func updateStatus(ofOrderWithId orderId: OrderSummary.ID, to status: OrderStatus) async {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!)
-        request.httpMethod = "PUT"
-        request.httpBody = """
-        {
-            "field" : "status",
-            "value" : "\(status.rawValue)"
-        }
-        """.data(using: .utf8)
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-    }
-    
-    
-    static func updateTrackingNo(ofOrderWithId orderId: OrderSummary.ID, to trackingNo: String, using credentials: BrickLinkAPICredentials) async {
-        
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
-        request.httpMethod = "PUT"
-        request.httpBody = """
-        {
-            "shipping": {
-                "tracking_no": "\(trackingNo)"
+        try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!) {
+            """
+            {
+                "field" : "status",
+                "value" : "\(status.rawValue)"
             }
+            """
         }
-        """.data(using: .utf8)
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
     }
     
     
-    static func sendDriveThru(forOrderWithId orderId: OrderSummary.ID, using credentials: BrickLinkAPICredentials, mailMe: Bool) async {
+    static func updateTrackingNo(ofOrderWithId orderId: OrderSummary.ID, to trackingNo: String) async {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru?mail_me=\(mailMe ? "true" : "false")")!)
-        request.httpMethod = "POST"
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
+        try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!) {
+            """
+            {
+                "shipping": {
+                    "tracking_no": "\(trackingNo)"
+                }
+            }
+            """
+        }
     }
+    
+    
+    static func sendDriveThru(forOrderWithId orderId: OrderSummary.ID, mailMe: Bool) async {
+        
+        let url = URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru?mail_me=\(mailMe ? "true" : "false")")!
+        
+        try! await send(withMethod: .POST, to: url)
+    }
+    
     
     
     // MARK: - Order items
     
     
-    static func fetchItems(forOrderWithId orderId: OrderSummary.ID, using credentials: BrickLinkAPICredentials) async -> [[BrickLinkOrderItem]] {
+    static func fetchItems(forOrderWithId orderId: OrderSummary.ID) async -> [[BrickLinkOrderItem]] {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[[BrickLinkOrderItem]]> = data.decode()
-        let batches = decoded.data!
-        
-        return batches
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
     }
+    
     
     
     // MARK: - Order feedbacks
     
     
-    static func fetchFeedbacks(forOrderWithId orderId: OrderSummary.ID, using credentials: BrickLinkAPICredentials) async -> [BrickLinkOrderFeedback] {
+    static func fetchFeedbacks(forOrderWithId orderId: OrderSummary.ID) async -> [BrickLinkOrderFeedback] {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[BrickLinkOrderFeedback]> = data.decode()
-        let feedbacks = decoded.data!
-        
-        return feedbacks
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
     }
     
     
-    static func postFeedback(forOrderWithId orderId: OrderSummary.ID, rating: Int, comment: String, using credentials: BrickLinkAPICredentials) async {
+    static func postFeedback(forOrderWithId orderId: OrderSummary.ID, rating: Int, comment: String) async {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!)
-        request.httpMethod = "POST"
-        request.httpBody = """
+        try! await send(withMethod: .POST, to: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!) {
+            """
             {
                 "order_id": \(orderId),
                 "rating": \(rating),
                 "comment": "\(comment)"
             }
-            """.data(using: .utf8)
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        request.addAuthentication(using: credentials)
-        
-        print(String(data: request.httpBody!, encoding: .utf8)!)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
+            """
+        }
     }
+    
     
     
     // MARK: - Inventory
         
         
-    static func fetchInventories(matchingItemType itemType: BrickLinkItemType? = nil, matchingColorId colorId: String? = nil, using credentials: BrickLinkAPICredentials) async -> [BrickLinkInventoryItem] {
+    static func fetchInventories(matchingItemType itemType: BrickLinkItemType? = nil, matchingColorId colorId: String? = nil) async -> [BrickLinkInventoryItem] {
         
         var url = URL(string: "https://api.bricklink.com/api/store/v1/inventories")!
         if let itemType = itemType {
@@ -190,31 +185,13 @@ struct BrickLinkAPIClient {
             url.append(queryItems: [.init(name: "color_id", value: colorId)])
         }
         
-        var request = URLRequest(url: url)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<[BrickLinkInventoryItem]> = data.decode()
-        let inventories = decoded.data!
-        
-        return inventories
+        return try! await fetchAndDecodeData(from: url)
     }
     
     
-    static func fetchInventory(withId id: InventoryItem.ID, using credentials: BrickLinkAPICredentials) async -> BrickLinkInventoryItem {
+    static func fetchInventory(withId id: InventoryItem.ID) async -> BrickLinkInventoryItem {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!)
-        request.addAuthentication(using: credentials)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<BrickLinkInventoryItem> = data.decode()
-        let inventory = decoded.data!
-        
-        return inventory
+        try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!)
     }
     
     
@@ -227,44 +204,28 @@ struct BrickLinkAPIClient {
         unitPrice: Float,
         condition: String,
         description: String?,
-        remarks: String,
-        
-        using credentials: BrickLinkAPICredentials
+        remarks: String
         
     ) async -> BrickLinkInventoryItem {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!)
-        request.httpMethod = "POST"
-        let body = """
-        {
-            "item": {
-                "no": "\(ref)",
-                "type": "\(type.rawValue)"
-            },
-            "color_id": \(colorId),
-            "quantity": \(quantity),
-            "unit_price": "\(unitPrice)",
-            "new_or_used": "\(condition)",
-            "is_retain": false,
-            "is_stock_room": false,
-            "description": "\(description ?? "")",
-            "remarks": "\(remarks)"
+        return try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/inventories")!, withMethod: .POST) {
+            """
+            {
+                "item": {
+                    "no": "\(ref)",
+                    "type": "\(type.rawValue)"
+                },
+                "color_id": \(colorId),
+                "quantity": \(quantity),
+                "unit_price": "\(unitPrice)",
+                "new_or_used": "\(condition)",
+                "is_retain": false,
+                "is_stock_room": false,
+                "description": "\(description ?? "")",
+                "remarks": "\(remarks)"
+            }
+            """
         }
-        """
-        request.httpBody = body.data(using: .utf8)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        request.addAuthentication(using: credentials)
-        
-        print(String(data: request.httpBody!, encoding: .utf8)!)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-        
-        let decoded: BrickLinkAPIResponse<BrickLinkInventoryItem> = data.decode()
-        let inventory = decoded.data!
-        
-        return inventory
     }
     
     
@@ -274,70 +235,35 @@ struct BrickLinkAPIClient {
         
         addQuantity: Int,
         unitPrice: Float? = nil,
-        remarks: String? = nil,
-        
-        using credentials: BrickLinkAPICredentials
+        remarks: String? = nil
         
     ) async {
         
-        var request = URLRequest(url: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!)
-        request.httpMethod = "PUT"
-        var body = """
-        {
-            "quantity": "+\(addQuantity)"
-        """
-        
-        if let price = unitPrice {
+        try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!) {
+            
+            var body = """
+            {
+                "quantity": "+\(addQuantity)"
+            """
+            
+            if let price = unitPrice {
+                
+                body += """
+                    ,"unit_price": "\(price)"
+                """
+            }
+            if let remarks = remarks {
+                
+                body += """
+                    ,"remarks": "\(remarks)"
+                """
+            }
             
             body += """
-                ,"unit_price": "\(price)"
-        """
+            }
+            """
+            
+            return body
         }
-        if let remarks = remarks {
-            
-            body += """
-                ,"remarks": "\(remarks)"
-        """
-        }
-        
-        body += """
-        }
-        """
-        request.httpBody = body.data(using: .utf8)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        request.addAuthentication(using: credentials)
-        
-        print(String(data: request.httpBody!, encoding: .utf8)!)
-        
-        let (data, _) = try! await URLSession(configuration: .default).data(for: request)
-        print(String(data: data, encoding: .utf8)!)
-    }
-}
-
-
-
-extension Data {
-    
-    
-    func decode<T>() -> T where T: Decodable {
-        
-        let decoder = JSONDecoder()
-        
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
-        decoder.dateDecodingStrategy = .custom({ (decoder) in
-            
-            let stringValue = try! decoder.singleValueContainer().decode(String.self)
-            
-            let dateFormatter = ISO8601DateFormatter()
-            dateFormatter.formatOptions = [.withFullDate, .withTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
-            
-            return dateFormatter.date(from: stringValue)!
-        })
-        
-        let decoded = try! decoder.decode(T.self, from: self)
-        
-        return decoded
     }
 }

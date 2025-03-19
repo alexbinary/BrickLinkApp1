@@ -8,12 +8,10 @@ class OrderStore {
     
     
     private let dataStore: DataStore
-    private let blCredentials: BrickLinkAPICredentials
     
     
-    init(_ dataStore: DataStore, _ blCredentials: BrickLinkAPICredentials) {
+    init(_ dataStore: DataStore) {
         self.dataStore = dataStore
-        self.blCredentials = blCredentials
     }
     
     
@@ -36,7 +34,7 @@ class OrderStore {
         
         print("Loading orders")
         
-        let blOrders = await BrickLinkAPIClient.fetchOrderSummaries(using: blCredentials)
+        let blOrders = await BrickLinkAPIClient.fetchOrderSummaries()
         let orderSummaries = blOrders.map { OrderSummary(fromBl: $0) }.sorted { $0.date > $1.date }
         
         print("loaded \(orderSummaries.count) orders")
@@ -83,7 +81,7 @@ class OrderStore {
         
         print("Loading order details \(orderId)")
         
-        let blOrder = await BrickLinkAPIClient.fetchDetails(forOrderWithId: orderId, using: blCredentials)
+        let blOrder = await BrickLinkAPIClient.fetchDetails(forOrderWithId: orderId)
         let order = OrderDetails(fromBl: blOrder)
         
         try! dataStore.setOrderDetail(order)
@@ -116,7 +114,7 @@ class OrderStore {
         
         print("Update status \(status) for order \(orderId)")
         
-        await BrickLinkAPIClient.updateStatus(ofOrderWithId: orderId, to: status, using: blCredentials)
+        await BrickLinkAPIClient.updateStatus(ofOrderWithId: orderId, to: status)
         
         await parallel([
             { await self.reloadOrderSummaries() },
@@ -129,7 +127,7 @@ class OrderStore {
         
         print("Update tracking no \(trackingNo) for order \(orderId)")
         
-        await BrickLinkAPIClient.updateTrackingNo(ofOrderWithId: orderId, to: trackingNo, using: blCredentials)
+        await BrickLinkAPIClient.updateTrackingNo(ofOrderWithId: orderId, to: trackingNo)
         
         await parallel([
             { await self.reloadOrderSummaries() },
@@ -142,7 +140,7 @@ class OrderStore {
         
         print("Send drive thru for order \(orderId)")
         
-        await BrickLinkAPIClient.sendDriveThru(forOrderWithId: orderId, using: blCredentials, mailMe: true)
+        await BrickLinkAPIClient.sendDriveThru(forOrderWithId: orderId, mailMe: true)
         
         await parallel([
             { await self.reloadOrderSummaries() },
@@ -172,7 +170,7 @@ class OrderStore {
         
         print("Loading order items \(orderId)")
         
-        let blBatches = await BrickLinkAPIClient.fetchItems(forOrderWithId: orderId, using: blCredentials)
+        let blBatches = await BrickLinkAPIClient.fetchItems(forOrderWithId: orderId)
         
         let batches = blBatches.map { blItems in
             blItems.map { OrderItem(fromBl: $0, orderId: orderId) }

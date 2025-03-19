@@ -9,12 +9,10 @@ class CatalogStore {
     
     
     private let dataStore: DataStore
-    private let blCredentials: BrickLinkAPICredentials
     
     
-    init(_ dataStore: DataStore, _ blCredentials: BrickLinkAPICredentials) {
+    init(_ dataStore: DataStore) {
         self.dataStore = dataStore
-        self.blCredentials = blCredentials
     }
     
     
@@ -47,7 +45,7 @@ class CatalogStore {
         
         print("Loading colors")
         
-        let blColors = await BrickLinkAPIClient.fetchColors(using: blCredentials)
+        let blColors = await BrickLinkAPIClient.fetchColors()
         let colors = blColors.map { LegoColor(fromBl: $0) }
         
         print("Loaded \(colors.count) colors")
@@ -62,7 +60,7 @@ class CatalogStore {
     
     public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
         
-        if let catalogItem = await BrickLinkAPIClient.fetchCatalogEntry(forItemType: type, ref: ref, using: blCredentials) {
+        if let catalogItem = await BrickLinkAPIClient.fetchCatalogEntry(forItemType: type, ref: ref) {
             
             return CatalogItem(fromBl: catalogItem)
         }

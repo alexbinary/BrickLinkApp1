@@ -38,25 +38,22 @@ enum AppController {
     ) {
         
         let dataStore: DataStore = {
-            
             let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")
             return DataStore(dataFileUrl: URL(fileURLWithPath: path))
         }()
         
-        let blCredentials = Secrets.brickLinkAPICredentials
-        
         let uploadStore = UploadStore(dataStore)
-        let catalogStore = CatalogStore(dataStore, blCredentials)
-        let inventoryStore = InventoryStore(dataStore, blCredentials)
+        let catalogStore = CatalogStore(dataStore)
+        let inventoryStore = InventoryStore(dataStore)
         
         let transactionStore = TransactionStore(dataStore)
         let refundStore = RefundStore(dataStore)
         
-        let orderStore = OrderStore(dataStore, blCredentials)
+        let orderStore = OrderStore(dataStore)
         let pickingStore = PickingStore(dataStore)
         let shippingStore = ShippingStore(dataStore)
         let trackingStore = TrackingStore(dataStore)
-        let feedbackStore = FeedbackStore(dataStore, blCredentials)
+        let feedbackStore = FeedbackStore(dataStore)
         
         let uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
         let pickingController = PickingController(orderStore, pickingStore)

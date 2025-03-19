@@ -9,12 +9,10 @@ class InventoryStore {
     
     
     private let dataStore: DataStore
-    private let blCredentials: BrickLinkAPICredentials
     
     
-    init(_ dataStore: DataStore, _ blCredentials: BrickLinkAPICredentials) {
+    init(_ dataStore: DataStore) {
         self.dataStore = dataStore
-        self.blCredentials = blCredentials
     }
     
     
@@ -83,7 +81,7 @@ class InventoryStore {
         
         print("Loading inventories")
         
-        let blInventories = await BrickLinkAPIClient.fetchInventories(using: blCredentials)
+        let blInventories = await BrickLinkAPIClient.fetchInventories()
         
         let inventories = blInventories.map { InventoryItem(fromBl: $0) }
         
@@ -98,7 +96,7 @@ class InventoryStore {
         
         print("Loading inventory \(id)")
         
-        let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id, using: blCredentials)
+        let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id)
         let inventory = InventoryItem(fromBl: blInventory)
         
         try! dataStore.setInventory(inventory)
@@ -126,7 +124,7 @@ class InventoryStore {
     
     public func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
-        let inventories = await BrickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type, matchingColorId: uploadItem.colorId, using: blCredentials)
+        let inventories = await BrickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type, matchingColorId: uploadItem.colorId)
             
         if let inv = inventories.first(where: { inv in
             
@@ -165,9 +163,7 @@ class InventoryStore {
             unitPrice: unitPrice,
             condition: condition,
             description: description,
-            remarks: remarks,
-            
-            using: blCredentials
+            remarks: remarks
         )
         
         let inventory = InventoryItem(fromBl: blInventory)
@@ -194,9 +190,7 @@ class InventoryStore {
         
             addQuantity: addQuantity,
             unitPrice: unitPrice,
-            remarks: remarks,
-            
-            using: blCredentials
+            remarks: remarks
         )
         
         await self.reloadInventory(withId: id)
