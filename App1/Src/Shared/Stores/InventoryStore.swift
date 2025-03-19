@@ -200,3 +200,23 @@ class InventoryStore {
         await self.reloadInventory(withId: id)
     }
 }
+
+
+
+extension InventoryItem {
+    
+    
+    init(fromBl bl: BrickLinkInventoryItem) {
+        
+        self.id = "\(bl.inventoryId)"
+        self.condition = bl.newOrUsed
+        self.colorId = "\(bl.colorId)"
+        self.ref = bl.item.no
+        self.name = bl.item.name
+        self.type = bl.item.type
+        self.description = bl.description ?? ""
+        self.remarks = bl.remarks ?? ""
+        self.quantity = bl.quantity
+        self.unitPrice = bl.unitPrice.floatValue
+    }
+}

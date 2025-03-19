@@ -194,3 +194,92 @@ class OrderStore {
         }
     }
 }
+
+
+
+extension OrderSummary {
+    
+    
+    init(fromBl bl: BrickLinkOrder) {
+        
+        self.id = "\(bl.orderId)"
+        self.date = bl.dateOrdered
+        self.buyer = bl.buyerName
+        self.items = bl.totalCount
+        self.lots = bl.uniqueCount
+        
+        self.subTotal = bl.cost.subtotal.floatValue
+        self.grandTotal = bl.cost.grandTotal.floatValue
+        self.costCurrencyCode = bl.cost.currencyCode
+        
+        self.dispSubTotal = bl.dispCost.subtotal.floatValue
+        self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
+        self.dispCostCurrencyCode = bl.dispCost.currencyCode
+        
+        self.status = OrderStatus(rawValue: bl.status)!
+        self.dateStatusChanged = bl.dateStatusChanged
+        
+        self.paymentStatus = PaymentStatus(rawValue: bl.payment.status)!
+    }
+}
+
+
+
+extension OrderDetails {
+    
+    
+    init(fromBl bl: BrickLinkOrder) {
+        
+        self.id = "\(bl.orderId)"
+        self.date = bl.dateOrdered
+        self.buyer = bl.buyerName
+        self.items = bl.totalCount
+        self.lots = bl.uniqueCount
+        
+        self.subTotal = bl.cost.subtotal.floatValue
+        self.grandTotal = bl.cost.grandTotal.floatValue
+        self.shippingCost = bl.cost.shipping!.floatValue
+        self.costCurrencyCode = bl.cost.currencyCode
+        
+        self.dispSubTotal = bl.dispCost.subtotal.floatValue
+        self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
+        self.dispShippingCost = bl.dispCost.shipping!.floatValue
+        self.dispCostCurrencyCode = bl.dispCost.currencyCode
+        
+        self.status = OrderStatus(rawValue: bl.status)!
+        self.driveThruSent = bl.driveThruSent!
+        self.trackingNo = bl.shipping!.trackingNo
+        self.totalWeight = bl.totalWeight!.floatValue
+        
+        self.shippingMethodId = bl.shipping!.methodId
+        self.shippingMethodName = bl.shipping!.method
+        self.shippingAddress = bl.shipping!.address.full.htmlUnescape()
+        self.shippingAddressCountryCode = bl.shipping!.address.countryCode
+        self.shippingAddressName = bl.shipping!.address.name.full
+        
+        self.remarks = bl.remarks
+    }
+}
+
+
+
+extension OrderItem {
+    
+    
+    init(fromBl bl: BrickLinkOrderItem, orderId: String) {
+        
+        self.inventoryId = "\(bl.inventoryId)"
+        self.orderId = orderId
+        self.condition = bl.newOrUsed
+        self.colorId = "\(bl.colorId)"
+        self.colorName = bl.colorName
+        self.ref = bl.item.no
+        self.name = bl.item.name.htmlUnescape()
+        self.type = bl.item.type
+        self.location = bl.remarks ?? ""
+        self.comment = (bl.description ?? "").htmlUnescape()
+        self.quantity = "\(bl.quantity)"
+        self.unitPrice = bl.unitPrice.floatValue
+        self.unitPriceFinal = bl.unitPriceFinal.floatValue
+    }
+}

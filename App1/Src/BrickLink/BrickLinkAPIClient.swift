@@ -314,3 +314,30 @@ struct BrickLinkAPIClient {
         print(String(data: data, encoding: .utf8)!)
     }
 }
+
+
+
+extension Data {
+    
+    
+    func decode<T>() -> T where T: Decodable {
+        
+        let decoder = JSONDecoder()
+        
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        decoder.dateDecodingStrategy = .custom({ (decoder) in
+            
+            let stringValue = try! decoder.singleValueContainer().decode(String.self)
+            
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions = [.withFullDate, .withTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
+            
+            return dateFormatter.date(from: stringValue)!
+        })
+        
+        let decoded = try! decoder.decode(T.self, from: self)
+        
+        return decoded
+    }
+}

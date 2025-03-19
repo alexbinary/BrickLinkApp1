@@ -97,3 +97,38 @@ class FeedbackStore {
         return dateValidatedWithoutFeedbackByOrderId[orderId] != nil
     }
 }
+
+
+
+extension Feedback {
+    
+    
+    init(fromBl bl: BrickLinkOrderFeedback) {
+        
+        self.id = bl.feedbackId
+        self.orderId = "\(bl.orderId)"
+        self.from = bl.from
+        self.to = bl.to
+        self.dateRated = bl.dateRated
+        self.rating = bl.rating
+        self.author = FeedbackAuthor(fromBl: bl.ratingOfBs)!
+        self.comment = bl.comment
+    }
+}
+
+
+
+extension FeedbackAuthor {
+    
+    
+    init?(fromBl ratingOfBs: String) {
+        
+        switch ratingOfBs {
+          
+        case "B": self = .seller
+        case "S": self = .buyer
+            
+        default: return nil
+        }
+    }
+}

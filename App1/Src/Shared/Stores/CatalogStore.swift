@@ -68,3 +68,27 @@ class CatalogStore {
         return nil
     }
 }
+
+
+
+extension LegoColor {
+    
+    
+    init(fromBl bl: BrickLinkColor) {
+        
+        self.id = "\(bl.colorId)"
+        self.name = bl.colorName
+        self.colorCode = bl.colorCode
+    }
+}
+
+
+
+extension CatalogItem {
+    
+    
+    init(fromBl bl: BrickLinkCatalogItem) {
+        
+        self.name = bl.name.htmlUnescape()
+    }
+}
