@@ -24,7 +24,7 @@ struct DynamicCatalogName: View {
 
 
     @State
-    var catalogResult: Result<CatalogItem>? = nil
+    var catalogResult: Result<CatalogEntry>? = nil
     
     
     var body: some View {

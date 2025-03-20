@@ -7,7 +7,7 @@ struct UploadItemView: View {
     
     
     @Environment(Catalog.self)
-    var catalogStore
+    var catalog
     
     @Environment(UploadStore.self)
     var uploadStore
@@ -26,7 +26,7 @@ struct UploadItemView: View {
     
     
     @State var hover = false
-    @State var catalogResult: Result<CatalogItem>? = nil
+    @State var catalogResult: Result<CatalogEntry>? = nil
     
     @State var editModeRef = false
     @State var editModeColor = false
@@ -85,8 +85,8 @@ struct UploadItemView: View {
                                 case .loading:
                                     Text("Loading name from catalog...").foregroundStyle(.secondary)
                                     
-                                case .found(let catalogItem):
-                                    Text(catalogItem.name).lineLimit(nil)
+                                case .found(let catalogEntry):
+                                    Text(catalogEntry.name).lineLimit(nil)
                                     
                                 case .notFound:
                                     Text("no catalog entry").foregroundStyle(.secondary)
@@ -151,7 +151,7 @@ struct UploadItemView: View {
                         
                         ZStack(alignment: .leading) {
                             
-                            Text(catalogStore.colorName(forLegoColorId: uploadItem.colorId))
+                            Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
                                 .onTapGesture { editModeColor = true }
                                 .opacity(editModeColor ? 0 : 1)
                             
@@ -636,10 +636,10 @@ struct UploadItemView: View {
         
         self.catalogResult = .loading
         
-        if let catalog = await catalogStore.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
+        if let catalogEntry = await catalog.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
-            self.catalogResult = .found(catalog)
-            updateItem(name: catalog.name)
+            self.catalogResult = .found(catalogEntry)
+            updateItem(name: catalogEntry.name)
         } else {
             self.catalogResult = .notFound
         }

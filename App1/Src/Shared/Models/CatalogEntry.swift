@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct CatalogItem {
+struct CatalogEntry {
     
     let name: String
 }

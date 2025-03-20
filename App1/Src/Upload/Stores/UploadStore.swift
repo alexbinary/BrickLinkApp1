@@ -7,14 +7,14 @@ import Foundation
 class UploadStore {
     
     
-    private let catalogDataAccess: CatalogDataAccess
+    private let catalog: Catalog
     private let uploadDataAccess: UploadDataAccess
     private let inventoryDataAccess: InventoryDataAccess
     
     
-    init(_ uploadDataAccess: UploadDataAccess, _ catalogDataAccess: CatalogDataAccess, _ inventoryDataAccess: InventoryDataAccess) {
+    init(_ uploadDataAccess: UploadDataAccess, _ catalog: Catalog, _ inventoryDataAccess: InventoryDataAccess) {
         self.uploadDataAccess = uploadDataAccess
-        self.catalogDataAccess = catalogDataAccess
+        self.catalog = catalog
         self.inventoryDataAccess = inventoryDataAccess
     }
     
@@ -113,7 +113,7 @@ class UploadStore {
     public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
         
         uploadedItems
-            .filter { $0.matches(searchText, catalogDataAccess) }
+            .filter { $0.matches(searchText, catalog) }
             .sorted { $0.uploadDate > $1.uploadDate }
     }
 }

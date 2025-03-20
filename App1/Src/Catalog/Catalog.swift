@@ -8,11 +8,11 @@ import SwiftUI
 class Catalog {
     
     
-    private let catalogDataAccess: CatalogDataAccess
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ catalogDataAccess: CatalogDataAccess) {
-        self.catalogDataAccess = catalogDataAccess
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
@@ -21,19 +21,23 @@ class Catalog {
     
     public var allColors: [LegoColor] {
         
-        catalogDataAccess.allColors
+        fileDataAccess.colors
     }
     
     
     public func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
         
-        catalogDataAccess.color(forLegoColorId: colorId)
+        if let c = fileDataAccess.colors.first(where: { $0.id == colorId }) {
+            return Color(fromBLCode: c.colorCode)
+        } else {
+            return nil
+        }
     }
     
     
     public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
         
-        catalogDataAccess.colorName(forLegoColorId: colorId)
+        fileDataAccess.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
     }
     
     
@@ -45,16 +49,29 @@ class Catalog {
     
     public func loadColors() async {
         
-        await catalogDataAccess.loadColors()
+        print("Loading colors")
+        
+        let blColors = await BrickLinkAPIClient.fetchColors()
+        let colors = blColors.map { LegoColor(fromBl: $0) }
+        
+        print("Loaded \(colors.count) colors")
+        
+        try! fileDataAccess.setColors(colors)
+        try! fileDataAccess.save()
     }
     
     
     // MARK: - Items
     
     
-    public func fetchEntry(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
+    public func fetchEntry(forItemType type: BrickLinkItemType, ref: String) async -> CatalogEntry? {
         
-        await catalogDataAccess.getCatalogItem(forItemType: type, ref: ref)
+        if let entry = await BrickLinkAPIClient.fetchCatalogEntry(forItemType: type, ref: ref) {
+            
+            return CatalogEntry(fromBl: entry)
+        }
+        
+        return nil
     }
     
     
@@ -63,3 +80,28 @@ class Catalog {
         BrickLinkUtility.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId)
     }
 }
+
+
+
+extension LegoColor {
+    
+    
+    init(fromBl bl: BrickLinkColor) {
+        
+        self.id = "\(bl.colorId)"
+        self.name = bl.colorName
+        self.colorCode = bl.colorCode
+    }
+}
+
+
+
+extension CatalogEntry {
+    
+    
+    init(fromBl bl: BrickLinkCatalogItem) {
+        
+        self.name = bl.name.htmlUnescape()
+    }
+}
+

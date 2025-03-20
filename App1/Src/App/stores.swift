@@ -34,7 +34,6 @@ func createStores() -> (
     
     // Data accesss
     
-    let catalogDataAccess = CatalogDataAccess(fileDataAccess)
     let inventoryDataAccess = InventoryDataAccess(fileDataAccess)
     let uploadDataAccess = UploadDataAccess(fileDataAccess)
     
@@ -49,9 +48,9 @@ func createStores() -> (
     
     // Stores
     
-    let catalogStore = Catalog(catalogDataAccess)
+    let catalog = Catalog(fileDataAccess)
     let inventoryStore = InventoryStore(inventoryDataAccess)
-    let uploadStore = UploadStore(uploadDataAccess, catalogDataAccess, inventoryDataAccess)
+    let uploadStore = UploadStore(uploadDataAccess, catalog, inventoryDataAccess)
     
     let pickingStore = PickingStore(orderDataAccess, pickingDataAccess)
     let shippingStore = ShippingStore(orderDataAccess, shippingDataAccess)
@@ -73,7 +72,7 @@ func createStores() -> (
     
     return (
         
-        catalog: catalogStore,
+        catalog: catalog,
         inventory: inventoryStore,
         upload: uploadStore,
         stock: stockStore,
