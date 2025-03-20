@@ -6,14 +6,14 @@ import SwiftUI
 struct ResultOrderList: View {
     
     
-    @Environment(ShippingController.self)
-    var shippingController
+    @Environment(ShippingStore.self)
+    var shippingStore
     
-    @Environment(RefundController.self)
-    var refundController
+    @Environment(RefundStore.self)
+    var refundStore
     
-    @Environment(ResultController.self)
-    var resultController
+    @Environment(ResultStore.self)
+    var resultStore
     
     
     let orders: [OrderDetails]
@@ -45,7 +45,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Profit") { order in
                     
-                    if let profitMargin = resultController.profitMargin(for: order) {
+                    if let profitMargin = resultStore.profitMargin(for: order) {
                         
                         Text(
                             abs(profitMargin),
@@ -77,14 +77,14 @@ struct ResultOrderList: View {
                 
                 TableColumn("Shipping cost") { order in
                     Text(
-                        abs(shippingController.confirmedShippingCost(forOrderWithId: order.id) ?? 0),
+                        abs(shippingStore.confirmedShippingCost(forOrderWithId: order.id) ?? 0),
                         format: .currency(code: "EUR").presentation(.isoCode)
                     ).amountColor(.bad)
                 }
                 
                 TableColumn("Fees") { order in
                     
-                    if let fees = resultController.fees(for: order) {
+                    if let fees = resultStore.fees(for: order) {
                         
                         Text(
                             abs(fees),
@@ -95,7 +95,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Refund") { order in
                     
-                    let totalRefund = refundController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                    let totalRefund = refundStore.refunds(for: order).reduce(0, { $0 + $1.amount })
                     if totalRefund > 0 {
                         
                         Text(
@@ -113,14 +113,14 @@ struct ResultOrderList: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let shippingController = controllers.shipping
-    let refundController = controllers.refund
-    let resultController = controllers.result
+    let shippingStore = stores.shipping
+    let refundStore = stores.refund
+    let resultStore = stores.result
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
-        .environment(shippingController)
-        .environment(resultController)
-        .environment(refundController)
+        .environment(shippingStore)
+        .environment(resultStore)
+        .environment(refundStore)
 }

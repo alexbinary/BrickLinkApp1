@@ -6,11 +6,11 @@ import SwiftUI
 struct PickingItemView: View {
     
     
-    @Environment(PickingController.self)
-    var pickingController
+    @Environment(PickingStore.self)
+    var pickingStore
     
-    @Environment(StockController.self)
-    var stockController
+    @Environment(StockStore.self)
+    var stockStore
     
     
     let item: OrderItem
@@ -57,7 +57,7 @@ struct PickingItemView: View {
                     Text(item.quantity).font(.title2)
                     
                     HStack(spacing: 0) {
-                        let (before, after) = stockController.inStockQuantityBeforeAfter(for: item)
+                        let (before, after) = stockStore.inStockQuantityBeforeAfter(for: item)
                         Text("(\(before) 􁉂 ")
                         Text("\(after)").foregroundStyle(after == 0 ? .red.opacity(0.7) : .secondary)
                         Text(")")
@@ -69,10 +69,10 @@ struct PickingItemView: View {
             Spacer()
             
             switch button {
-            case .pick: Button("Pick") { pickingController.pick(item) }
-            case .unpick: Button("Unpick") { pickingController.unpick(item) }
-            case .verify: Button("Verify") { pickingController.verify(item) }
-            case .unverify: Button("Unverify") { pickingController.unverify(item) }
+            case .pick: Button("Pick") { pickingStore.pick(item) }
+            case .unpick: Button("Unpick") { pickingStore.unpick(item) }
+            case .verify: Button("Verify") { pickingStore.verify(item) }
+            case .unverify: Button("Unverify") { pickingStore.unverify(item) }
             }
         }
         .padding()
@@ -94,16 +94,16 @@ enum ButtonType {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let pickingController = controllers.picking
-    let stockController = controllers.stock
+    let pickingStore = stores.picking
+    let stockStore = stores.stock
     
-    let orderController = controllers.order
-    let order = orderController.orderSummaries.first!
-    let item = orderController.orderItems(forOrderWithId: order.id).first!
+    let orderStore = stores.order
+    let order = orderStore.orderSummaries.first!
+    let item = orderStore.orderItems(forOrderWithId: order.id).first!
     
     PickingItemView(item, button: .pick)
-        .environment(pickingController)
-        .environment(stockController)
+        .environment(pickingStore)
+        .environment(stockStore)
 }

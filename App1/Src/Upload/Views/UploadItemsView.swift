@@ -6,13 +6,13 @@ import SwiftUI
 struct UploadItemsView: View {
     
     
-    @Environment(UploadController.self)
-    var uploadController
+    @Environment(UploadStore.self)
+    var uploadStore
     
 
     var body: some View {
 
-        let items = uploadController.uploadItemsForList
+        let items = uploadStore.uploadItemsForList
         
         LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
             Section {
@@ -29,9 +29,9 @@ struct UploadItemsView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
-    let uploadController = controllers.upload
+    let stores = AppController.createStores()
+    let uploadStore = stores.upload
     
     UploadItemsView()
-        .environment(uploadController)
+        .environment(uploadStore)
 }

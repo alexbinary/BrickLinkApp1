@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-class InventoryController {
+class InventoryStore {
     
     
     private let inventoryDataAccess: InventoryDataAccess

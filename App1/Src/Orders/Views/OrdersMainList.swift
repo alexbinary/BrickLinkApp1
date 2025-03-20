@@ -5,8 +5,8 @@ import SwiftUI
 struct OrdersMainList: View {
     
     
-    @Environment(OrderController.self)
-    var orderController
+    @Environment(OrderStore.self)
+    var orderStore
     
     @Environment(ReloadController.self)
     var reloadController
@@ -22,7 +22,7 @@ struct OrdersMainList: View {
     
     var body: some View {
         
-        let sections = orderController.ordersMainListSections(restrictingToOrdersMatching: searchText)
+        let sections = orderStore.ordersMainListSections(restrictingToOrdersMatching: searchText)
         let orders = sections.allOrders
         
         ScrollView {
@@ -38,7 +38,7 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: OrderSummary.ID.self) { orderId in
-            OrderDetailView(orderSummary: orderController.orderSummary(forOrderWithId: orderId)!)
+            OrderDetailView(orderSummary: orderStore.orderSummary(forOrderWithId: orderId)!)
         }
         .toolbar {
             
@@ -58,7 +58,7 @@ struct OrdersMainList: View {
             }
             .disabled(refreshing)
         }
-        .onChange(of: orderController.orderSummaries, initial: true) {
+        .onChange(of: orderStore.orderSummaries, initial: true) {
             Task { await refresh() }
         }
     }
@@ -100,14 +100,14 @@ struct OrdersMainList: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
 
-    let orderController = controllers.order
-    let reloadController = controllers.reload
+    let orderStore = stores.order
+    let reloadController = stores.reload
     let navigationController = NavigationController()
     
     OrdersMainList()
-        .environment(orderController)
+        .environment(orderStore)
         .environment(reloadController)
         .environment(navigationController)
 }

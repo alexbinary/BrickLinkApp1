@@ -25,11 +25,11 @@ struct InventoryLink<Label>: View where Label: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let inventoryController = controllers.inventory
+    let inventoryStore = stores.inventory
     
-    let inventory = inventoryController.allInventories.first!
+    let inventory = inventoryStore.allInventories.first!
     
     InventoryLink(inventory) { Text(inventory.id) }
 }

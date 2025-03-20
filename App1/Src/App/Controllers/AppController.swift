@@ -6,27 +6,27 @@ import Foundation
 enum AppController {
 
     
-    static func createControllers() -> (
+    static func createStores() -> (
         
-        catalog: CatalogController,
-        inventory: InventoryController,
-        upload: UploadController,
-        stock: StockController,
+        catalog: CatalogStore,
+        inventory: InventoryStore,
+        upload: UploadStore,
+        stock: StockStore,
 
-        order: OrderController,
-        picking: PickingController,
-        shipping: ShippingController,
-        tracking: TrackingController,
-        feedback: FeedbackController,
-        refund: RefundController,
+        order: OrderStore,
+        picking: PickingStore,
+        shipping: ShippingStore,
+        tracking: TrackingStore,
+        feedback: FeedbackStore,
+        refund: RefundStore,
 
-        transaction: TransactionController,
-        result: ResultController,
+        transaction: TransactionStore,
+        result: ResultStore,
 
-        reload: ReloadController,
-
-        orderChecklist: OrderChecklistController,
-        orderAction: OrderActionController
+        orderChecklist: OrderChecklistStore,
+        orderAction: OrderActionStore,
+        
+        reload: ReloadController
         
     ) {
         
@@ -50,50 +50,51 @@ enum AppController {
         
         let transactionDataAccess = TransactionDataAccess(fileDataAccess)
         
-        // Controllers
+        // Stores
         
-        let catalogController = CatalogController(catalogDataAccess)
-        let inventoryController = InventoryController(inventoryDataAccess)
-        let uploadController = UploadController(uploadDataAccess, catalogDataAccess, inventoryDataAccess)
+        let catalogStore = CatalogStore(catalogDataAccess)
+        let inventoryStore = InventoryStore(inventoryDataAccess)
+        let uploadStore = UploadStore(uploadDataAccess, catalogDataAccess, inventoryDataAccess)
         
-        let pickingController = PickingController(orderDataAccess, pickingDataAccess)
-        let shippingController = ShippingController(orderDataAccess, shippingDataAccess)
-        let trackingController = TrackingController(orderDataAccess, trackingDataAccess)
-        let feedbackController = FeedbackController(orderDataAccess, feedbackDataAccess)
-        let refundController = RefundController(refundDataAccess)
+        let pickingStore = PickingStore(orderDataAccess, pickingDataAccess)
+        let shippingStore = ShippingStore(orderDataAccess, shippingDataAccess)
+        let trackingStore = TrackingStore(orderDataAccess, trackingDataAccess)
+        let feedbackStore = FeedbackStore(orderDataAccess, feedbackDataAccess)
+        let refundStore = RefundStore(refundDataAccess)
         
-        let transactionController = TransactionController(transactionDataAccess)
-        let resultController = ResultController(orderDataAccess, shippingDataAccess, refundDataAccess, transactionDataAccess)
+        let transactionStore = TransactionStore(transactionDataAccess)
+        let resultStore = ResultStore(orderDataAccess, shippingDataAccess, refundDataAccess, transactionDataAccess)
         
-        let orderChecklistController = OrderChecklistController(orderDataAccess, pickingDataAccess, shippingDataAccess, feedbackDataAccess, transactionDataAccess, trackingController, pickingController)
+        let orderChecklistStore = OrderChecklistStore(orderDataAccess, pickingDataAccess, shippingDataAccess, feedbackDataAccess, transactionDataAccess, trackingStore, pickingStore)
         
-        let orderController = OrderController(orderDataAccess, orderChecklistController)
+        let orderStore = OrderStore(orderDataAccess, orderChecklistStore)
         
-        let stockController = StockController(orderDataAccess, pickingDataAccess, inventoryDataAccess, orderController)
-        let reloadController = ReloadController(orderDataAccess, feedbackDataAccess, orderController, trackingController)
-        let orderActionController = OrderActionController(orderDataAccess, orderController, orderChecklistController, feedbackController)
+        let stockStore = StockStore(orderDataAccess, pickingDataAccess, inventoryDataAccess, orderStore)
+        let orderActionStore = OrderActionStore(orderDataAccess, orderStore, orderChecklistStore, feedbackStore)
+        
+        let reloadController = ReloadController(orderDataAccess, feedbackDataAccess, orderStore, trackingStore)
         
         return (
             
-            catalog: catalogController,
-            inventory: inventoryController,
-            upload: uploadController,
-            stock: stockController,
+            catalog: catalogStore,
+            inventory: inventoryStore,
+            upload: uploadStore,
+            stock: stockStore,
 
-            order: orderController,
-            picking: pickingController,
-            shipping: shippingController,
-            tracking: trackingController,
-            feedback: feedbackController,
-            refund: refundController,
+            order: orderStore,
+            picking: pickingStore,
+            shipping: shippingStore,
+            tracking: trackingStore,
+            feedback: feedbackStore,
+            refund: refundStore,
 
-            transaction: transactionController,
-            result: resultController,
+            transaction: transactionStore,
+            result: resultStore,
 
-            reload: reloadController,
-
-            orderChecklist: orderChecklistController,
-            orderAction: orderActionController
+            orderChecklist: orderChecklistStore,
+            orderAction: orderActionStore,
+            
+            reload: reloadController
         )
     }
 }

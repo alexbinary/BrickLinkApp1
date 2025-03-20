@@ -9,15 +9,15 @@ class ReloadController {
     
     private let orderDataAccess: OrderDataAccess
     private let feedbackDataAccess: FeedbackDataAccess
-    private let orderController: OrderController
-    private let trackingController: TrackingController
+    private let orderStore: OrderStore
+    private let trackingStore: TrackingStore
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ orderController: OrderController, _ trackingController: TrackingController) {
+    init(_ orderDataAccess: OrderDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ orderStore: OrderStore, _ trackingStore: TrackingStore) {
         self.orderDataAccess = orderDataAccess
         self.feedbackDataAccess = feedbackDataAccess
-        self.orderController = orderController
-        self.trackingController = trackingController
+        self.orderStore = orderStore
+        self.trackingStore = trackingStore
     }
     
     
@@ -101,13 +101,13 @@ class ReloadController {
     
     public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
-        orderController.macroStatus(forOrderWithId: orderId)
+        orderStore.macroStatus(forOrderWithId: orderId)
     }
     
     
     public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
+        await trackingStore.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     

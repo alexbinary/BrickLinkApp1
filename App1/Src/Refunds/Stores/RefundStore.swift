@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class RefundController {
+class RefundStore {
     
     
     let refundDataAccess: RefundDataAccess

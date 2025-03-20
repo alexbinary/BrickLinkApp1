@@ -7,8 +7,8 @@ import Charts
 struct ResultDashboard: View {
     
     
-    @Environment(ResultController.self)
-    var resultController
+    @Environment(ResultStore.self)
+    var resultStore
     
     
     @State var selectedMostProfitableOrder: OrderDetails.ID? = nil
@@ -19,7 +19,7 @@ struct ResultDashboard: View {
         
         VSplitView {
             
-            let model = resultController.resultDashboardModel
+            let model = resultStore.resultDashboardModel
             
             let periodNLastDays = model.periodNLastDays
             let orders = model.orders

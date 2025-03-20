@@ -6,8 +6,8 @@ import SwiftUI
 struct PickingProgressView: View {
     
     
-    @Environment(PickingController.self)
-    var pickingController
+    @Environment(PickingStore.self)
+    var pickingStore
     
     
     let order: OrderDetails
@@ -24,12 +24,12 @@ struct PickingProgressView: View {
             GridRow {
                 Text("Picking")
                 
-                let progress = pickingController.pickingProgress(forOrderWithId: order.id)
+                let progress = pickingStore.pickingProgress(forOrderWithId: order.id)
                 Text("\(progress) complete")
                 
                 if progress < 100% {
-                    let parts = pickingController.totalPartsLeftToPick(forOrderWithId: order.id)
-                    let lots = pickingController.totalLotsLeftToPick(forOrderWithId: order.id)
+                    let parts = pickingStore.totalPartsLeftToPick(forOrderWithId: order.id)
+                    let lots = pickingStore.totalLotsLeftToPick(forOrderWithId: order.id)
                     Text("\(parts) parts in \(lots) lots left to pick")
                         .foregroundStyle(.secondary)
                         .font(.body)
@@ -39,12 +39,12 @@ struct PickingProgressView: View {
             GridRow {
                 Text("Verify")
                 
-                let progress = pickingController.pickingVerificationProgress(forOrderWithId: order.id)
+                let progress = pickingStore.pickingVerificationProgress(forOrderWithId: order.id)
                 Text("\(progress) verified")
                 
                 if progress < 100% {
-                    let parts = pickingController.totalPartsLeftToVerify(forOrderWithId: order.id)
-                    let lots = pickingController.totalLotsLeftToVerify(forOrderWithId: order.id)
+                    let parts = pickingStore.totalPartsLeftToVerify(forOrderWithId: order.id)
+                    let lots = pickingStore.totalLotsLeftToVerify(forOrderWithId: order.id)
                     Text("\(parts) parts in \(lots) lots left to verify")
                         .foregroundStyle(.secondary)
                         .font(.body)
@@ -59,13 +59,13 @@ struct PickingProgressView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let pickingController = controllers.picking
+    let pickingStore = stores.picking
     
-    let orderController = controllers.order
-    let order = orderController.orderDetails.first!
+    let orderStore = stores.order
+    let order = orderStore.orderDetails.first!
     
     PickingProgressView(order)
-        .environment(pickingController)
+        .environment(pickingStore)
 }

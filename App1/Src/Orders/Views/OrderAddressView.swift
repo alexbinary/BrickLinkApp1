@@ -28,11 +28,11 @@ struct OrderAddressView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderController = controllers.order
+    let orderStore = stores.order
     
-    let order = orderController.orderDetails.first!
+    let order = orderStore.orderDetails.first!
     
     OrderAddressView(order)
 }

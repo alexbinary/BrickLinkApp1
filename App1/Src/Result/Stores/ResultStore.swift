@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class ResultController {
+class ResultStore {
     
     
     private let orderDataAccess: OrderDataAccess

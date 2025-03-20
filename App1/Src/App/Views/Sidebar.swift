@@ -9,11 +9,11 @@ struct Sidebar: View {
     @Environment(NavigationController.self)
     var nav
     
-    @Environment(OrderController.self)
-    var orderController
+    @Environment(OrderStore.self)
+    var orderStore
     
-    @Environment(UploadController.self)
-    var uploadController
+    @Environment(UploadStore.self)
+    var uploadStore
     
     
     var body: some View {
@@ -24,11 +24,11 @@ struct Sidebar: View {
             Section("Operations") {
                 
                 Label("Orders", systemImage: "list.bullet")
-                    .badge(orderController.numberForSidebarBadge)
+                    .badge(orderStore.numberForSidebarBadge)
                     .tag(SidebarItem.orders)
                 
                 Label("Upload", systemImage: "tray.and.arrow.down")
-                    .badge(uploadController.numberForSidebarBadge)
+                    .badge(uploadStore.numberForSidebarBadge)
                     .tag(SidebarItem.upload)
             }
             
@@ -56,12 +56,12 @@ struct Sidebar: View {
     
     let navigationController = NavigationController()
     
-    let controllers = AppController.createControllers()
-    let orderController = controllers.order
-    let uploadController = controllers.upload
+    let stores = AppController.createStores()
+    let orderStore = stores.order
+    let uploadStore = stores.upload
     
     Sidebar()
         .environment(navigationController)
-        .environment(orderController)
-        .environment(uploadController)
+        .environment(orderStore)
+        .environment(uploadStore)
 }

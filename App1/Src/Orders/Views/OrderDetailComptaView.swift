@@ -6,14 +6,14 @@ import SwiftUI
 struct OrderDetailComptaView: View {
     
     
-    @Environment(TransactionController.self)
-    var transactionController
+    @Environment(TransactionStore.self)
+    var transactionStore
     
-    @Environment(ShippingController.self)
-    var shippingController
+    @Environment(ShippingStore.self)
+    var shippingStore
     
-    @Environment(RefundController.self)
-    var refundController
+    @Environment(RefundStore.self)
+    var refundStore
     
     
     let order: OrderDetails
@@ -71,9 +71,9 @@ struct OrderDetailComptaView: View {
                         self.submitIncomeTransaction()
                     }
                     Button("Validate without transaction") {
-                        transactionController.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                        transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
                     }
-                    if let date = transactionController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                    if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -81,7 +81,7 @@ struct OrderDetailComptaView: View {
             }
 
             TransactionListView(
-                transactions: transactionController.incomeTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.incomeTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -93,7 +93,7 @@ struct OrderDetailComptaView: View {
                
             HStack {
                 Text("Confirmed stamping:")
-                if let stamping = shippingController.confirmedStamping(forOrderWithId: order.id) {
+                if let stamping = shippingStore.confirmedStamping(forOrderWithId: order.id) {
                     Text(stamping)
                 }
             }
@@ -116,9 +116,9 @@ struct OrderDetailComptaView: View {
                         self.submitShippingTransaction()
                     }
                     Button("Validate without transaction") {
-                        transactionController.validateOrderWithoutShippingTransaction(orderId: order.id)
+                        transactionStore.validateOrderWithoutShippingTransaction(orderId: order.id)
                     }
-                    if let date = transactionController.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
+                    if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -126,7 +126,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: transactionController.shippingTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.shippingTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -138,7 +138,7 @@ struct OrderDetailComptaView: View {
             
             HStack {
                 Text("Latest refund:")
-                if let refund = refundController.refunds(for: order).last {
+                if let refund = refundStore.refunds(for: order).last {
                     Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
                 }
             }
@@ -168,7 +168,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: transactionController.refundTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.refundTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -182,12 +182,12 @@ struct OrderDetailComptaView: View {
             self.incomeComment = ""
 
             self.shippingDate = Date()
-            self.shippingAmount = shippingController.confirmedShippingCost(forOrderWithId: order.id) ?? 0
+            self.shippingAmount = shippingStore.confirmedShippingCost(forOrderWithId: order.id) ?? 0
             self.shippingPaymentMethod = .cb_iban
             self.shippingComment = ""
             
             self.refundDate = Date()
-            self.refundAmount = refundController.refunds(for: order).last?.amount ?? 0
+            self.refundAmount = refundStore.refunds(for: order).last?.amount ?? 0
             self.refundPaymentMethod = .paypal
             self.refundComment = ""
         }
@@ -196,7 +196,7 @@ struct OrderDetailComptaView: View {
 
     func submitIncomeTransaction() {
         
-        transactionController.register(Transaction(
+        transactionStore.register(Transaction(
             date: incomeDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -211,7 +211,7 @@ struct OrderDetailComptaView: View {
     
     func submitShippingTransaction() {
      
-        transactionController.register(Transaction(
+        transactionStore.register(Transaction(
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
@@ -226,7 +226,7 @@ struct OrderDetailComptaView: View {
     
     func submitRefundTransaction() {
      
-        transactionController.register(Transaction(
+        transactionStore.register(Transaction(
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,
@@ -243,17 +243,17 @@ struct OrderDetailComptaView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let transactionController = controllers.transaction
-    let shippingController = controllers.shipping
-    let refundController = controllers.refund
+    let transactionStore = stores.transaction
+    let shippingStore = stores.shipping
+    let refundStore = stores.refund
 
-    let orderController = controllers.order
-    let order = orderController.orderDetails.first!
+    let orderStore = stores.order
+    let order = orderStore.orderDetails.first!
     
     OrderDetailComptaView(order)
-        .environment(transactionController)
-        .environment(shippingController)
-        .environment(refundController)
+        .environment(transactionStore)
+        .environment(shippingStore)
+        .environment(refundStore)
 }

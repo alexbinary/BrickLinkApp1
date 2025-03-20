@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class FeedbackController {
+class FeedbackStore {
     
     
     private let orderDataAccess: OrderDataAccess

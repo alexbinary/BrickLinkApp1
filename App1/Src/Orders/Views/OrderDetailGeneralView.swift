@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderDetailGeneralView: View {
     
     
-    @Environment(OrderController.self)
-    var orderController
+    @Environment(OrderStore.self)
+    var orderStore
     
     
     let order: OrderDetails
@@ -48,7 +48,7 @@ struct OrderDetailGeneralView: View {
             HStack {
                 ForEach(statuses, id: \.self) { status in
                     Button {
-                        Task { await orderController.updateOrderStatus(orderId: order.id, status: status) }
+                        Task { await orderStore.updateOrderStatus(orderId: order.id, status: status) }
                     } label: {
                         Text(status.rawValue).fontWeight(order.status == status ? .bold : .regular)
                     }
@@ -62,12 +62,12 @@ struct OrderDetailGeneralView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderController = controllers.order
+    let orderStore = stores.order
     
-    let order = orderController.orderDetails.first!
+    let order = orderStore.orderDetails.first!
     
     OrderDetailGeneralView(order)
-        .environment(orderController)
+        .environment(orderStore)
 }

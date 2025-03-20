@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadedItemView: View {
     
     
-    @Environment(UploadController.self)
-    var uploadController
+    @Environment(UploadStore.self)
+    var uploadStore
     
     
     let uploadedItem: UploadedItem
@@ -122,7 +122,7 @@ struct UploadedItemView: View {
             Spacer()
             
             Button {
-                uploadController.add(UploadItem(
+                uploadStore.add(UploadItem(
                     type: uploadedItem.type,
                     ref: uploadedItem.ref,
                     name: uploadedItem.name,

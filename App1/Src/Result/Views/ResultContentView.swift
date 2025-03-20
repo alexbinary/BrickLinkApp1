@@ -6,17 +6,17 @@ import SwiftUI
 struct ResultContentView: View {
     
     
-    @Environment(OrderController.self)
-    var orderController
+    @Environment(OrderStore.self)
+    var orderStore
     
-    @Environment(ShippingController.self)
-    var shippingController
+    @Environment(ShippingStore.self)
+    var shippingStore
     
-    @Environment(RefundController.self)
-    var refundController
+    @Environment(RefundStore.self)
+    var refundStore
     
-    @Environment(ResultController.self)
-    var resultController
+    @Environment(ResultStore.self)
+    var resultStore
     
     @Environment(NavigationController.self)
     var nav
@@ -38,7 +38,7 @@ struct ResultContentView: View {
             
             TableColumn("Profit") { order in
                 
-                if let profitMargin = resultController.profitMargin(for: order) {
+                if let profitMargin = resultStore.profitMargin(for: order) {
                     
                     Text(
                         abs(profitMargin),
@@ -70,7 +70,7 @@ struct ResultContentView: View {
             
             TableColumn("Shipping cost") { order in
                 
-                if let cost = shippingController.confirmedShippingCost(forOrderWithId: order.id) {
+                if let cost = shippingStore.confirmedShippingCost(forOrderWithId: order.id) {
                     
                     Text(
                         abs(cost),
@@ -80,7 +80,7 @@ struct ResultContentView: View {
             
             TableColumn("Fees") { order in
                 
-                if let fees = resultController.fees(for: order) {
+                if let fees = resultStore.fees(for: order) {
                     
                     Text(
                         abs(fees),
@@ -91,7 +91,7 @@ struct ResultContentView: View {
             
             TableColumn("Refund") { order in
                 
-                let totalRefund = refundController.refunds(for: order).reduce(0, { $0 + $1.amount })
+                let totalRefund = refundStore.refunds(for: order).reduce(0, { $0 + $1.amount })
                 if totalRefund > 0 {
                     
                     Text(
@@ -103,7 +103,7 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = orderController.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
+            let ordersByMonth = orderStore.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
             
             ForEach(ordersByMonth, id: \.month) { (month, elements) in
                 Section(month.name) {
@@ -119,19 +119,19 @@ struct ResultContentView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderController = controllers.order
-    let shippingController = controllers.shipping
-    let refundController = controllers.refund
-    let resultController = controllers.result
+    let orderStore = stores.order
+    let shippingStore = stores.shipping
+    let refundStore = stores.refund
+    let resultStore = stores.result
     
     let navigationController = NavigationController()
     
     ResultContentView()
-        .environment(orderController)
-        .environment(shippingController)
-        .environment(refundController)
-        .environment(resultController)
+        .environment(orderStore)
+        .environment(shippingStore)
+        .environment(refundStore)
+        .environment(resultStore)
         .environment(navigationController)
 }

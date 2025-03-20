@@ -5,11 +5,11 @@ import SwiftUI
 struct OrdersActionsSheet: View {
     
     
-    @Environment(OrderChecklistController.self)
-    var orderChecklistController
+    @Environment(OrderChecklistStore.self)
+    var orderChecklistStore
     
-    @Environment(OrderActionController.self)
-    var orderActionController
+    @Environment(OrderActionStore.self)
+    var orderActionStore
     
     
     let orders: [OrderSummary]
@@ -19,7 +19,7 @@ struct OrdersActionsSheet: View {
         
         Group {
             
-            if orderActionController.ordersThatNeedAction.isEmpty {
+            if orderActionStore.ordersThatNeedAction.isEmpty {
                 
                 Text("All orders ok")
                 
@@ -27,37 +27,37 @@ struct OrdersActionsSheet: View {
                 
                 Grid(alignment: .leading, verticalSpacing: 12) {
                     
-                    sectionView(orders: orderActionController.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
+                    sectionView(orders: orderActionStore.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderChecklistController.orderChecklistCompleted(order.id))
+                            CheckView(checked: orderChecklistStore.orderChecklistCompleted(order.id))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckView(checked: orderChecklistController.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderChecklistStore.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
-                    sectionView(orders: orderActionController.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
+                    sectionView(orders: orderActionStore.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderChecklistController.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderChecklistStore.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
-                    sectionView(orders: orderActionController.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
+                    sectionView(orders: orderActionStore.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckView(checked: orderChecklistController.orderChecklistShipped(order.id))
+                            CheckView(checked: orderChecklistStore.orderChecklistShipped(order.id))
                             Text("Mark shipped")
                         }
                         HStack {
-                            CheckView(checked: orderChecklistController.orderChecklistDriveThru(order.id))
+                            CheckView(checked: orderChecklistStore.orderChecklistDriveThru(order.id))
                             Text("Send drive thru")
                         }
                     }
                     
                     Button {
-                        Task { await orderActionController.performActionForAllOrders() }
+                        Task { await orderActionStore.performActionForAllOrders() }
                     } label: {
                         Text("Do all").padding(.horizontal)
                     }
@@ -96,15 +96,15 @@ struct OrdersActionsSheet: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderChecklistController = controllers.orderChecklist
-    let orderActionController = controllers.orderAction
+    let orderChecklistStore = stores.orderChecklist
+    let orderActionStore = stores.orderAction
     
-    let orderController = controllers.order
-    let orders = orderController.orderSummaries
+    let orderStore = stores.order
+    let orders = orderStore.orderSummaries
     
     OrdersActionsSheet(orders: orders)
-        .environment(orderChecklistController)
-        .environment(orderActionController)
+        .environment(orderChecklistStore)
+        .environment(orderActionStore)
 }

@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-class CatalogController {
+class CatalogStore {
     
     
     private let catalogDataAccess: CatalogDataAccess

@@ -4,20 +4,20 @@ import Foundation
 
 
 @Observable
-class OrderActionController {
+class OrderActionStore {
     
     
     private let orderDataAccess: OrderDataAccess
-    private let orderController: OrderController
-    private let orderChecklistController: OrderChecklistController
-    private let feedbackController: FeedbackController
+    private let orderStore: OrderStore
+    private let orderChecklistStore: OrderChecklistStore
+    private let feedbackStore: FeedbackStore
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ orderController: OrderController, _ orderChecklistController: OrderChecklistController, _ feedbackController: FeedbackController) {
+    init(_ orderDataAccess: OrderDataAccess, _ orderStore: OrderStore, _ orderChecklistStore: OrderChecklistStore, _ feedbackStore: FeedbackStore) {
         self.orderDataAccess = orderDataAccess
-        self.orderController = orderController
-        self.orderChecklistController = orderChecklistController
-        self.feedbackController = feedbackController
+        self.orderStore = orderStore
+        self.orderChecklistStore = orderChecklistStore
+        self.feedbackStore = feedbackStore
     }
     
     
@@ -41,31 +41,31 @@ class OrderActionController {
     
     public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
-        orderController.macroStatus(forOrderWithId: orderId)
+        orderStore.macroStatus(forOrderWithId: orderId)
     }
     
     
     public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
         
-        orderChecklistController.orderChecklistStamping(orderId)
+        orderChecklistStore.orderChecklistStamping(orderId)
     }
     
     
     public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
-        orderChecklistController.orderChecklistShippingTransaction(orderId)
+        orderChecklistStore.orderChecklistShippingTransaction(orderId)
     }
     
     
     public func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
         
-        orderChecklistController.orderChecklistTrackingNo(orderId)
+        orderChecklistStore.orderChecklistTrackingNo(orderId)
     }
     
     
     public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
         
-        await feedbackController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackStore.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     

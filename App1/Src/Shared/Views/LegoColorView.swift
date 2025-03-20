@@ -6,8 +6,8 @@ import SwiftUI
 struct LegoColorView: View {
     
     
-    @Environment(CatalogController.self)
-    var catalogController
+    @Environment(CatalogStore.self)
+    var catalogStore
     
     
     let colorId: String
@@ -37,8 +37,8 @@ struct LegoColorView: View {
     var body: some View {
         
         HStack {
-            catalogController.color(forLegoColorId: colorId).frame(width: 18, height: 18)
-            if style == .full { Text(catalogController.colorName(forLegoColorId: colorId)) }
+            catalogStore.color(forLegoColorId: colorId).frame(width: 18, height: 18)
+            if style == .full { Text(catalogStore.colorName(forLegoColorId: colorId)) }
         }
     }
     
@@ -54,9 +54,9 @@ struct LegoColorView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
-    let catalogController = controllers.catalog
+    let stores = AppController.createStores()
+    let catalogStore = stores.catalog
     
     LegoColorView(colorId: "11")
-        .environment(catalogController)
+        .environment(catalogStore)
 }

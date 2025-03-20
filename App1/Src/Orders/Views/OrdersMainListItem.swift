@@ -6,21 +6,21 @@ import SwiftUI
 struct OrdersMainListItem: View {
     
     
-    @Environment(OrderController.self)
-    var orderController
+    @Environment(OrderStore.self)
+    var orderStore
     
-    @Environment(PickingController.self)
-    var pickingController
+    @Environment(PickingStore.self)
+    var pickingStore
     
-    @Environment(FeedbackController.self)
-    var feedbackController
+    @Environment(FeedbackStore.self)
+    var feedbackStore
     
-    @Environment(OrderChecklistController.self)
-    var orderChecklistController
+    @Environment(OrderChecklistStore.self)
+    var orderChecklistStore
     
     
     let order: OrderSummary
-    var macroStatus: OrderMacroStatus { orderController.macroStatus(forOrderWithId: order.id) }
+    var macroStatus: OrderMacroStatus { orderStore.macroStatus(forOrderWithId: order.id) }
     
     
     @State var hover: Bool = false
@@ -92,14 +92,14 @@ struct OrdersMainListItem: View {
                                 
                                 HStack {
                                     Text("Seller:")
-                                    if let feedback = feedbackController.sellerFeedback(forOrderWithId: order.id) {
+                                    if let feedback = feedbackStore.sellerFeedback(forOrderWithId: order.id) {
                                         FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                                 
                                 HStack {
                                     Text("Buyer:")
-                                    if let feedback = feedbackController.buyerFeedback(forOrderWithId: order.id) {
+                                    if let feedback = feedbackStore.buyerFeedback(forOrderWithId: order.id) {
                                         FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
@@ -110,7 +110,7 @@ struct OrdersMainListItem: View {
                             
                             ForEach(tags) { tagView($0) }
                             
-                            if macroStatus == .inTransit, orderController.orderDetails(forOrderWithId: order.id)!.isShippedWithLaPoste {
+                            if macroStatus == .inTransit, orderStore.orderDetails(forOrderWithId: order.id)!.isShippedWithLaPoste {
                                 LaPosteTrackingStatusIndicator(order: order)
                             }
                         }
@@ -184,53 +184,53 @@ struct OrdersMainListItem: View {
         
         case .validatePayment:
             
-            if !orderChecklistController.orderChecklistPayment(order.id) {
+            if !orderChecklistStore.orderChecklistPayment(order.id) {
                 items.append(OrderStatusTag(text: "Payment pending", status: .waitingOnExternalAction))
                 
-            } else if !orderChecklistController.orderChecklistIncomeTransaction(order.id) {
+            } else if !orderChecklistStore.orderChecklistIncomeTransaction(order.id) {
                 items.append(OrderStatusTag(text: "Register payment transaction", status: .actionRequired))
             }
             
         case .pickAndPack:
             
-            if !orderChecklistController.orderChecklistPicking(order.id) {
+            if !orderChecklistStore.orderChecklistPicking(order.id) {
                 
-                let progress = pickingController.pickingProgress(forOrderWithId: order.id)
+                let progress = pickingStore.pickingProgress(forOrderWithId: order.id)
                 items.append(OrderStatusTag(text: "\(progress) picked", status: .actionRequired))
                 
-            } else if !orderChecklistController.orderChecklistVerification(order.id) {
+            } else if !orderChecklistStore.orderChecklistVerification(order.id) {
                 
-                let progress = pickingController.pickingVerificationProgress(forOrderWithId: order.id)
+                let progress = pickingStore.pickingVerificationProgress(forOrderWithId: order.id)
                 items.append(OrderStatusTag(text: "\(progress) verified", status: .actionRequired))
                 
-            } else if !orderChecklistController.orderChecklistPacked(order.id) {
+            } else if !orderChecklistStore.orderChecklistPacked(order.id) {
                 items.append(OrderStatusTag(text: "Not packed yet", status: .actionRequired))
             }
             
         case .ship:
             
-            if !orderChecklistController.orderChecklistStamping(order.id) {
+            if !orderChecklistStore.orderChecklistStamping(order.id) {
                 items.append(OrderStatusTag(text: "Stamping not validated", status: .actionRequired))
             }
-            if !orderChecklistController.orderChecklistShippingTransaction(order.id) {
+            if !orderChecklistStore.orderChecklistShippingTransaction(order.id) {
                 items.append(OrderStatusTag(text: "No shipping transaction", status: .actionRequired))
             }
-            if !orderChecklistController.orderChecklistTrackingNo(order.id) {
+            if !orderChecklistStore.orderChecklistTrackingNo(order.id) {
                 items.append(OrderStatusTag(text: "Missing tracking no", status: .actionRequired))
             }
             
-            if !orderChecklistController.orderChecklistShipped(order.id) && !orderChecklistController.orderChecklistDriveThru(order.id) {
+            if !orderChecklistStore.orderChecklistShipped(order.id) && !orderChecklistStore.orderChecklistDriveThru(order.id) {
                 items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
-                        await orderController.updateOrderStatus(orderId: order.id, status: .shipped)
-                        await orderController.sendDriveThru(orderId: order.id)
+                        await orderStore.updateOrderStatus(orderId: order.id, status: .shipped)
+                        await orderStore.sendDriveThru(orderId: order.id)
                     }
                 }))
             } else {
-                if !orderChecklistController.orderChecklistShipped(order.id) {
+                if !orderChecklistStore.orderChecklistShipped(order.id) {
                     items.append(OrderStatusTag(text: "Mark Shipped", status: .actionRequired))
                 }
-                if !orderChecklistController.orderChecklistDriveThru(order.id) {
+                if !orderChecklistStore.orderChecklistDriveThru(order.id) {
                     items.append(OrderStatusTag(text: "Send Drive thru", status: .actionRequired))
                 }
             }
@@ -240,11 +240,11 @@ struct OrdersMainListItem: View {
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(OrderStatusTag(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
             
-            if orderChecklistController.orderChecklistUnchangedFor30Days(order.id) {
+            if orderChecklistStore.orderChecklistUnchangedFor30Days(order.id) {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
-                        await orderController.updateOrderStatus(orderId: order.id, status: .completed)
-                        await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
+                        await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
+                        await feedbackStore.postPraiseFeedback(forOrderWithId: order.id)
                     }
                 }))
             }
@@ -267,7 +267,7 @@ struct OrdersMainListItem: View {
             
             items.append(OrderStatusTag(text: "Give feedback", status: .actionRequired, action: {
                 Task {
-                    await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
+                    await feedbackStore.postPraiseFeedback(forOrderWithId: order.id)
                 }
             }))
             
@@ -285,18 +285,18 @@ struct OrdersMainListItem: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderController = controllers.order
-    let pickingController = controllers.picking
-    let feedbackController = controllers.feedback
-    let orderChecklistController = controllers.orderChecklist
+    let orderStore = stores.order
+    let pickingStore = stores.picking
+    let feedbackStore = stores.feedback
+    let orderChecklistStore = stores.orderChecklist
     
-    let order = orderController.orderSummaries.first!
+    let order = orderStore.orderSummaries.first!
     
     OrdersMainListItem(order: order)
-        .environment(orderController)
-        .environment(pickingController)
-        .environment(feedbackController)
-        .environment(orderChecklistController)
+        .environment(orderStore)
+        .environment(pickingStore)
+        .environment(feedbackStore)
+        .environment(orderChecklistStore)
 }

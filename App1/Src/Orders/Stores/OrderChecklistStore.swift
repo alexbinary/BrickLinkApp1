@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class OrderChecklistController {
+class OrderChecklistStore {
     
     
     private let orderDataAccess: OrderDataAccess
@@ -12,18 +12,18 @@ class OrderChecklistController {
     private let shippingDataAccess: ShippingDataAccess
     private let feedbackDataAccess: FeedbackDataAccess
     private let transactionDataAccess: TransactionDataAccess
-    private let trackingController: TrackingController
-    private let pickingController: PickingController
+    private let trackingStore: TrackingStore
+    private let pickingStore: PickingStore
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingController: TrackingController, _ pickingController: PickingController) {
+    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingStore: PickingStore) {
         self.orderDataAccess = orderDataAccess
         self.pickingDataAccess = pickingDataAccess
         self.shippingDataAccess = shippingDataAccess
         self.feedbackDataAccess = feedbackDataAccess
         self.transactionDataAccess = transactionDataAccess
-        self.trackingController = trackingController
-        self.pickingController = pickingController
+        self.trackingStore = trackingStore
+        self.pickingStore = pickingStore
     }
     
     
@@ -284,7 +284,7 @@ class OrderChecklistController {
                 items: [
                     .init(
                         label: {
-                            let progress = pickingController.pickingProgress(forOrderWithId: orderId)
+                            let progress = pickingStore.pickingProgress(forOrderWithId: orderId)
                             if progress == 100% {
                                 return  "Pick items"
                             } else {
@@ -295,7 +295,7 @@ class OrderChecklistController {
                     ),
                     .init(
                         label: {
-                            let progress = pickingController.pickingVerificationProgress(forOrderWithId: orderId)
+                            let progress = pickingStore.pickingVerificationProgress(forOrderWithId: orderId)
                             if progress == 100% {
                                 return "Verify items"
                             } else {
@@ -340,7 +340,7 @@ class OrderChecklistController {
                 items: [
                     .init(
                         label: "Picked up by transporter",
-                        checked: trackingController.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
+                        checked: trackingStore.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
                         mandatory: false
                     ),
                 ]

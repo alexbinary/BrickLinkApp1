@@ -26,10 +26,10 @@ struct OrderLink<Label>: View where Label: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderController = controllers.order
-    let order = orderController.orderSummaries.first!
+    let orderStore = stores.order
+    let order = orderStore.orderSummaries.first!
     
     OrderLink(order) { Text(order.id) }
 }

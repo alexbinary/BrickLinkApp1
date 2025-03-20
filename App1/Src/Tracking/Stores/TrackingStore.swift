@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class TrackingController {
+class TrackingStore {
     
     
     private let orderDataAccess: OrderDataAccess

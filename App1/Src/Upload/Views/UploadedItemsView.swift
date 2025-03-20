@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadedItemsView: View {
     
     
-    @Environment(UploadController.self)
-    var uploadController
+    @Environment(UploadStore.self)
+    var uploadStore
     
     
     @State var searchText = ""
@@ -15,7 +15,7 @@ struct UploadedItemsView: View {
     
     var body: some View {
      
-        let items = uploadController.uploadedItemsForList(matching: searchText)
+        let items = uploadStore.uploadedItemsForList(matching: searchText)
         
         LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
             ForEach(items.grouppedByDay, id: \.day) { (day, items) in
@@ -35,9 +35,9 @@ struct UploadedItemsView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
-    let uploadController = controllers.upload
+    let stores = AppController.createStores()
+    let uploadStore = stores.upload
     
     UploadedItemsView()
-        .environment(uploadController)
+        .environment(uploadStore)
 }

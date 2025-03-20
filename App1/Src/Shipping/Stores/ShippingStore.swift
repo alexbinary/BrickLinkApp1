@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class ShippingController {
+class ShippingStore {
     
     
     private let orderDataAccess: OrderDataAccess

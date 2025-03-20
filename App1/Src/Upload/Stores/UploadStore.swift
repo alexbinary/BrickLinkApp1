@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class UploadController {
+class UploadStore {
     
     
     private let catalogDataAccess: CatalogDataAccess

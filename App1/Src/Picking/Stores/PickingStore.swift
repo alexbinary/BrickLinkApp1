@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-class PickingController {
+class PickingStore {
     
     
     private let orderDataAccess: OrderDataAccess

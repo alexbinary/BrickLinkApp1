@@ -8,35 +8,35 @@ struct MainApp: App {
     
     var body: some Scene {
         
-        let controllers = AppController.createControllers()
+        let stores = AppController.createStores()
         
         WindowGroup {
             
             WindowRootView()
                 
-                .environment(controllers.catalog)
-                .environment(controllers.inventory)
-                .environment(controllers.upload)
-                .environment(controllers.stock)
+                .environment(stores.catalog)
+                .environment(stores.inventory)
+                .environment(stores.upload)
+                .environment(stores.stock)
             
-                .environment(controllers.order)
-                .environment(controllers.picking)
-                .environment(controllers.shipping)
-                .environment(controllers.tracking)
-                .environment(controllers.feedback)
-                .environment(controllers.refund)
+                .environment(stores.order)
+                .environment(stores.picking)
+                .environment(stores.shipping)
+                .environment(stores.tracking)
+                .environment(stores.feedback)
+                .environment(stores.refund)
             
-                .environment(controllers.transaction)
-                .environment(controllers.result)
+                .environment(stores.transaction)
+                .environment(stores.result)
 
-                .environment(controllers.reload)
-                .environment(controllers.orderChecklist)
-                .environment(controllers.orderAction)
+                .environment(stores.reload)
+                .environment(stores.orderChecklist)
+                .environment(stores.orderAction)
 
                 .task { await parallel([
-                    { await controllers.catalog.loadColors() },
-                    { await controllers.inventory.loadInventories() },
-                    { await controllers.order.loadOrderSummaries() },
+                    { await stores.catalog.loadColors() },
+                    { await stores.inventory.loadInventories() },
+                    { await stores.order.loadOrderSummaries() },
                 ])}
         }
     }

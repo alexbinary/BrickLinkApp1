@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-class TransactionController {
+class TransactionStore {
     
     
     private let transactionDataAccess: TransactionDataAccess

@@ -6,14 +6,14 @@ import SwiftUI
 struct UploadItemView: View {
     
     
-    @Environment(CatalogController.self)
-    var catalogController
+    @Environment(CatalogStore.self)
+    var catalogStore
     
-    @Environment(UploadController.self)
-    var uploadController
+    @Environment(UploadStore.self)
+    var uploadStore
     
-    @Environment(InventoryController.self)
-    var inventoryController
+    @Environment(InventoryStore.self)
+    var inventoryStore
     
     
     let uploadItem: UploadItem
@@ -151,7 +151,7 @@ struct UploadItemView: View {
                         
                         ZStack(alignment: .leading) {
                             
-                            Text(catalogController.colorName(forLegoColorId: uploadItem.colorId))
+                            Text(catalogStore.colorName(forLegoColorId: uploadItem.colorId))
                                 .onTapGesture { editModeColor = true }
                                 .opacity(editModeColor ? 0 : 1)
                             
@@ -399,7 +399,7 @@ struct UploadItemView: View {
                                         
                                         if let inventoryItem = inventoryItem {
                                             
-                                            await inventoryController.updateInventory(
+                                            await inventoryStore.updateInventory(
                                                 
                                                 id: inventoryItem.id,
                                                 addQuantity: submitQty!,
@@ -411,7 +411,7 @@ struct UploadItemView: View {
                                             
                                         } else {
                                             
-                                            let inventoryItem = await inventoryController.createInventory(
+                                            let inventoryItem = await inventoryStore.createInventory(
                                                 
                                                 ref: submitRef!,
                                                 type: submitType,
@@ -427,7 +427,7 @@ struct UploadItemView: View {
                                         }
                                     }()
 
-                                    uploadController.add(UploadedItem(
+                                    uploadStore.add(UploadedItem(
                                         type: submitType,
                                         ref: submitRef!,
                                         name: submitName,
@@ -445,7 +445,7 @@ struct UploadItemView: View {
                                         inventoryStatus: inventoryStatus
                                     ))
                                     
-                                    uploadController.delete(uploadItem)
+                                    uploadStore.delete(uploadItem)
                                     
                                     submitting = false
                                 }
@@ -461,7 +461,7 @@ struct UploadItemView: View {
                             .fixedSize()
                             
                             Button {
-                                uploadController.delete(uploadItem)
+                                uploadStore.delete(uploadItem)
                             } label: {
                                 Text("􀈑 Delete")
                             }
@@ -564,7 +564,7 @@ struct UploadItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            uploadController.update(UploadItem(
+            uploadStore.update(UploadItem(
                 
                 id: uploadItem.id,
                 type: uploadItem.type,
@@ -593,7 +593,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return nil
         }
-        return inventoryController.inventory(for: uploadItem)
+        return inventoryStore.inventory(for: uploadItem)
     }
     
     var relatedInventories: [InventoryItem] {
@@ -601,7 +601,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return []
         }
-        return inventoryController.inventories(forAllColorsOf: uploadItem)
+        return inventoryStore.inventories(forAllColorsOf: uploadItem)
     }
     
     
@@ -617,7 +617,7 @@ struct UploadItemView: View {
     
     ) {
         
-        uploadController.update(UploadItem(
+        uploadStore.update(UploadItem(
             
             id: uploadItem.id,
             type: uploadItem.type,
@@ -636,7 +636,7 @@ struct UploadItemView: View {
         
         self.catalogResult = .loading
         
-        if let catalog = await catalogController.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
+        if let catalog = await catalogStore.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalog)
             updateItem(name: catalog.name)

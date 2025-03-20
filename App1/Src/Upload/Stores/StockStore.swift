@@ -4,20 +4,20 @@ import Foundation
 
 
 @Observable
-class StockController {
+class StockStore {
     
     
     private let orderDataAccess: OrderDataAccess
     private let pickingDataAccess: PickingDataAccess
     private let inventoryDataAccess: InventoryDataAccess
-    private let orderController: OrderController
+    private let orderStore: OrderStore
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ inventoryDataAccess: InventoryDataAccess, _ orderController: OrderController) {
+    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ inventoryDataAccess: InventoryDataAccess, _ orderStore: OrderStore) {
         self.orderDataAccess = orderDataAccess
         self.pickingDataAccess = pickingDataAccess
         self.inventoryDataAccess = inventoryDataAccess
-        self.orderController = orderController
+        self.orderStore = orderStore
     }
     
     
@@ -55,7 +55,7 @@ class StockController {
     
     public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
-        orderController.macroStatus(forOrderWithId: orderId)
+        orderStore.macroStatus(forOrderWithId: orderId)
     }
     
     

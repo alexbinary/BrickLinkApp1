@@ -5,12 +5,12 @@ import SwiftUI
 struct LaPosteTrackingStatusIndicator: View {
     
     
-    @Environment(TrackingController.self)
-    var trackingController
+    @Environment(TrackingStore.self)
+    var trackingStore
     
     
     let order: OrderSummary
-    var status: LaPosteTrackingStatus? { trackingController.laPosteTrackingStatus(forOrderWithId: order.id) }
+    var status: LaPosteTrackingStatus? { trackingStore.laPosteTrackingStatus(forOrderWithId: order.id) }
     
     
     var body: some View {
@@ -20,7 +20,7 @@ struct LaPosteTrackingStatusIndicator: View {
             .padding(.vertical, 2)
             .roundedContainer(style: .tag(baseColor: color))
             .onChange(of: order, initial: true) { Task {
-                await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
+                await trackingStore.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
             }}
     }
     
@@ -38,12 +38,12 @@ struct LaPosteTrackingStatusIndicator: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
     
-    let orderController = controllers.order
-    let trackingController = controllers.tracking
+    let orderStore = stores.order
+    let trackingStore = stores.tracking
     
-    let order = orderController.orderSummaries.first!
+    let order = orderStore.orderSummaries.first!
     
     VStack {
         Group {
@@ -53,5 +53,5 @@ struct LaPosteTrackingStatusIndicator: View {
             LaPosteTrackingStatusIndicator(order: order)
         }.padding()
     }
-    .environment(trackingController)
+    .environment(trackingStore)
 }

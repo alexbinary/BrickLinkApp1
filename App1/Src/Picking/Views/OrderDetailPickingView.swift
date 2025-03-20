@@ -7,14 +7,14 @@ import HTMLEntities
 struct OrderDetailPickingView: View {
     
     
-    @Environment(OrderController.self)
-    var orderController
+    @Environment(OrderStore.self)
+    var orderStore
     
-    @Environment(InventoryController.self)
-    var inventoryController
+    @Environment(InventoryStore.self)
+    var inventoryStore
     
-    @Environment(PickingController.self)
-    var pickingController
+    @Environment(PickingStore.self)
+    var pickingStore
     
     
     let order: OrderDetails
@@ -24,10 +24,10 @@ struct OrderDetailPickingView: View {
     }
     
     
-    var pickedOrderItems: [OrderItem] { pickingController.pickedOrderItems(forOrderWithId: order.id) }
-    var verifiedOrderItems: [OrderItem] { pickingController.verifiedOrderItems(forOrderWithId: order.id) }
-    var nextOrderItemsToPick: [OrderItem] { pickingController.nextOrderItemsToPick(forOrderWithId: order.id) }
-    var nextOrderItemsToVerify: [OrderItem] { pickingController.nextOrderItemsToVerify(forOrderWithId: order.id) }
+    var pickedOrderItems: [OrderItem] { pickingStore.pickedOrderItems(forOrderWithId: order.id) }
+    var verifiedOrderItems: [OrderItem] { pickingStore.verifiedOrderItems(forOrderWithId: order.id) }
+    var nextOrderItemsToPick: [OrderItem] { pickingStore.nextOrderItemsToPick(forOrderWithId: order.id) }
+    var nextOrderItemsToVerify: [OrderItem] { pickingStore.nextOrderItemsToVerify(forOrderWithId: order.id) }
     
     
     var body: some View {
@@ -88,10 +88,10 @@ struct OrderDetailPickingView: View {
         }
         .padding()
         .onChange(of: order, initial: true) {
-            Task { await orderController.loadOrderItemsIfMissing(forOrderWithId: order.id) }
+            Task { await orderStore.loadOrderItemsIfMissing(forOrderWithId: order.id) }
         }
         .onAppear {
-            Task { await inventoryController.reloadInventories() }
+            Task { await inventoryStore.reloadInventories() }
         }
     }
 }
@@ -100,16 +100,16 @@ struct OrderDetailPickingView: View {
 
 #Preview {
     
-    let controllers = AppController.createControllers()
+    let stores = AppController.createStores()
 
-    let orderController = controllers.order
-    let inventoryController = controllers.inventory
-    let pickingController = controllers.picking
+    let orderStore = stores.order
+    let inventoryStore = stores.inventory
+    let pickingStore = stores.picking
     
-    let order = orderController.orderDetails.first!
+    let order = orderStore.orderDetails.first!
     
     OrderDetailPickingView(order)
-        .environment(orderController)
-        .environment(inventoryController)
-        .environment(pickingController)
+        .environment(orderStore)
+        .environment(inventoryStore)
+        .environment(pickingStore)
 }
