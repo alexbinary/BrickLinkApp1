@@ -96,7 +96,7 @@ struct OrdersActionsSheet: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let orderChecklistStore = stores.orderChecklist
     let orderActionStore = stores.orderAction

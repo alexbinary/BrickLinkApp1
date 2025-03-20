@@ -113,7 +113,7 @@ struct ResultOrderList: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let shippingStore = stores.shipping
     let refundStore = stores.refund

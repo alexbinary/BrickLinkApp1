@@ -100,7 +100,7 @@ struct OrdersMainList: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
 
     let orderStore = stores.order
     let reloadController = stores.reload

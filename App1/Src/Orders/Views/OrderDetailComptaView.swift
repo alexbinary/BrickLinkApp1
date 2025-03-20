@@ -243,7 +243,7 @@ struct OrderDetailComptaView: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let transactionStore = stores.transaction
     let shippingStore = stores.shipping

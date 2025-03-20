@@ -29,7 +29,7 @@ struct UploadItemsView: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     let uploadStore = stores.upload
     
     UploadItemsView()

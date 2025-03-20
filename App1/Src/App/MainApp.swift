@@ -8,7 +8,7 @@ struct MainApp: App {
     
     var body: some Scene {
         
-        let stores = AppController.createStores()
+        let stores = createStores()
         
         WindowGroup {
             

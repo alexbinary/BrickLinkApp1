@@ -65,7 +65,7 @@ extension View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let orderChecklistStore = stores.orderChecklist
     

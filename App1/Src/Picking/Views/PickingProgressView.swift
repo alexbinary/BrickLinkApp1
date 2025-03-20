@@ -59,7 +59,7 @@ struct PickingProgressView: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let pickingStore = stores.picking
     

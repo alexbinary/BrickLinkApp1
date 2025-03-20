@@ -66,7 +66,7 @@ struct DynamicCatalogName: View {
 #Preview {
     @Previewable @State var name: String? = ""
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     let catalogStore = stores.catalog
     
     DynamicCatalogName(forItemType: .part, ref: "3001", name: $name)

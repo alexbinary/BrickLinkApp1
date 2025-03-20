@@ -94,7 +94,7 @@ enum ButtonType {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let pickingStore = stores.picking
     let stockStore = stores.stock

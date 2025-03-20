@@ -26,7 +26,7 @@ struct OrderLink<Label>: View where Label: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let orderStore = stores.order
     let order = orderStore.orderSummaries.first!

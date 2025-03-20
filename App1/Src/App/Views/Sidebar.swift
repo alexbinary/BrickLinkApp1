@@ -56,7 +56,7 @@ struct Sidebar: View {
     
     let navigationController = NavigationController()
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     let orderStore = stores.order
     let uploadStore = stores.upload
     

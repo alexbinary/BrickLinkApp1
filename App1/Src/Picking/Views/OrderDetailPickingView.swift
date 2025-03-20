@@ -100,7 +100,7 @@ struct OrderDetailPickingView: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
 
     let orderStore = stores.order
     let inventoryStore = stores.inventory

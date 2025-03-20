@@ -285,7 +285,7 @@ struct OrdersMainListItem: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let orderStore = stores.order
     let pickingStore = stores.picking

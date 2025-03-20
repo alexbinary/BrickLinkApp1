@@ -169,7 +169,7 @@ struct OrderIncomeTransactionView: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let transactionStore = stores.transaction
     

@@ -251,7 +251,7 @@ struct OrderDetailShippingView: View {
 
 #Preview {
     
-    let stores = AppController.createStores()
+    let stores = createStores()
     
     let orderStore = stores.order
     let shippingStore = stores.shipping
