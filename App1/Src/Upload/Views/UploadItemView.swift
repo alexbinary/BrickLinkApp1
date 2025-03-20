@@ -12,8 +12,8 @@ struct UploadItemView: View {
     @Environment(UploadController.self)
     var uploadController
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(InventoryController.self)
+    var inventoryController
     
     
     let uploadItem: UploadItem
@@ -399,7 +399,7 @@ struct UploadItemView: View {
                                         
                                         if let inventoryItem = inventoryItem {
                                             
-                                            await inventoryStore.updateInventory(
+                                            await inventoryController.updateInventory(
                                                 
                                                 id: inventoryItem.id,
                                                 addQuantity: submitQty!,
@@ -411,7 +411,7 @@ struct UploadItemView: View {
                                             
                                         } else {
                                             
-                                            let inventoryItem = await inventoryStore.createInventory(
+                                            let inventoryItem = await inventoryController.createInventory(
                                                 
                                                 ref: submitRef!,
                                                 type: submitType,
@@ -593,7 +593,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return nil
         }
-        return inventoryStore.inventory(for: uploadItem)
+        return inventoryController.inventory(for: uploadItem)
     }
     
     var relatedInventories: [InventoryItem] {
@@ -601,7 +601,7 @@ struct UploadItemView: View {
         if uploadItem.condition == nil {
             return []
         }
-        return inventoryStore.inventories(forAllColorsOf: uploadItem)
+        return inventoryController.inventories(forAllColorsOf: uploadItem)
     }
     
     

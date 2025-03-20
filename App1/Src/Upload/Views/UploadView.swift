@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadView: View {
     
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(InventoryController.self)
+    var inventoryController
 
     
     @State var addViewVisible: Bool = false
@@ -31,7 +31,7 @@ struct UploadView: View {
         }
         .navigationTitle("Upload")
         .onAppear {
-            Task { await inventoryStore.reloadInventories() }
+            Task { await inventoryController.reloadInventories() }
         }
     }
 }

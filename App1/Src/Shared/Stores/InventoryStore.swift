@@ -4,7 +4,6 @@ import SwiftUI
 
 
 
-@Observable
 class InventoryStore {
     
     
@@ -19,7 +18,7 @@ class InventoryStore {
     // MARK: - Inventory
     
     
-    public var inventories: [InventoryItem] {
+    public var allInventories: [InventoryItem] {
         
         dataStore.inventories
     }
@@ -41,7 +40,7 @@ class InventoryStore {
     
     ) -> InventoryItem? {
         
-        return inventories.first {
+        return allInventories.first {
             
             $0.type == type
             && $0.ref == ref
@@ -54,7 +53,7 @@ class InventoryStore {
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        return inventories.first {
+        return allInventories.first {
             
             $0.type == uploadItem.type
             && $0.ref == uploadItem.ref
@@ -67,7 +66,7 @@ class InventoryStore {
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        return inventories.filter {
+        return allInventories.filter {
             
             $0.type == uploadItem.type
             && $0.ref == uploadItem.ref

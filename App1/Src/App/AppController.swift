@@ -9,7 +9,7 @@ enum AppController {
     static func createControllers() -> (
         
         catalogController: CatalogController,
-        inventoryStore: InventoryStore,
+        inventoryController: InventoryController,
 
         transactionController: TransactionController,
         refundController: RefundController,
@@ -43,6 +43,7 @@ enum AppController {
         let catalogStore = CatalogStore(dataStore)
         let catalogController = CatalogController(catalogStore)
         let inventoryStore = InventoryStore(dataStore)
+        let inventoryController = InventoryController(inventoryStore)
         
         let transactionStore = TransactionStore(dataStore)
         let transactionController = TransactionController(transactionStore)
@@ -72,7 +73,7 @@ enum AppController {
         return (
             
             catalogController: catalogController,
-            inventoryStore: inventoryStore,
+            inventoryController: inventoryController,
 
             transactionController: transactionController,
             refundController: refundController,

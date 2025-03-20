@@ -10,8 +10,8 @@ struct OrderDetailPickingView: View {
     @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(InventoryController.self)
+    var inventoryController
     
     @Environment(PickingController.self)
     var pickingController
@@ -91,7 +91,7 @@ struct OrderDetailPickingView: View {
             Task { await orderStore.loadOrderItemsIfMissing(forOrderWithId: order.id) }
         }
         .onAppear {
-            Task { await inventoryStore.reloadInventories() }
+            Task { await inventoryController.reloadInventories() }
         }
     }
 }
@@ -102,13 +102,13 @@ struct OrderDetailPickingView: View {
     
     let controllers = AppController.createControllers()
     let orderStore = controllers.orderStore
-    let inventoryStore = controllers.inventoryStore
+    let inventoryController = controllers.inventoryController
     let pickingController = controllers.pickingController
     
     let order = orderStore.orderDetails.first!
     
     OrderDetailPickingView(order)
         .environment(orderStore)
-        .environment(inventoryStore)
+        .environment(inventoryController)
         .environment(pickingController)
 }
