@@ -38,10 +38,10 @@ struct LaPosteTrackingStatusIndicator: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let orderStore = stores.order
-    let trackingStore = stores.tracking
+    let orderStore = env.stores.order
+    let trackingStore = env.stores.tracking
     
     let order = orderStore.orderSummaries.first!
     

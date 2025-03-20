@@ -3,9 +3,12 @@ import Foundation
 
 
 
-func createStores() -> (
+func createEnv() -> (
+    
+    catalog: Catalog,
+    
+    stores: (
         
-        catalog: Catalog,
         inventory: InventoryStore,
         upload: UploadStore,
         stock: StockStore,
@@ -15,16 +18,19 @@ func createStores() -> (
         shipping: ShippingStore,
         tracking: TrackingStore,
         feedback: FeedbackStore,
-        feedbackController: FeedbackController,
         refund: RefundStore,
 
         transaction: TransactionStore,
         result: ResultStore,
 
         orderChecklist: OrderChecklistStore,
-        orderAction: OrderActionStore,
-        
+        orderAction: OrderActionStore
+    ),
+    
+    controllers: (
+        feedbackController: FeedbackController,
         reload: ReloadController
+    )
         
 ) {
     
@@ -75,24 +81,30 @@ func createStores() -> (
     return (
         
         catalog: catalog,
-        inventory: inventoryStore,
-        upload: uploadStore,
-        stock: stockStore,
         
-        order: orderStore,
-        picking: pickingStore,
-        shipping: shippingStore,
-        tracking: trackingStore,
-        feedback: feedbackStore,
-        feedbackController: feedbackController,
-        refund: refundStore,
+        stores: (
+            inventory: inventoryStore,
+            upload: uploadStore,
+            stock: stockStore,
+            
+            order: orderStore,
+            picking: pickingStore,
+            shipping: shippingStore,
+            tracking: trackingStore,
+            feedback: feedbackStore,
+            refund: refundStore,
+            
+            transaction: transactionStore,
+            result: resultStore,
+            
+            orderChecklist: orderChecklistStore,
+            orderAction: orderActionStore
+        ),
         
-        transaction: transactionStore,
-        result: resultStore,
-        
-        orderChecklist: orderChecklistStore,
-        orderAction: orderActionStore,
-        
-        reload: reloadController
+        controllers: (
+            
+            feedbackController: feedbackController,
+            reload: reloadController
+        )
     )
 }

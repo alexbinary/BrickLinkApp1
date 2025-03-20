@@ -51,8 +51,8 @@ struct CatalogImage: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
     CatalogImage(itemType: .part, ref: "3001", colorId: "11")
-        .environment(stores.catalog)
+        .environment(env.catalog)
 }

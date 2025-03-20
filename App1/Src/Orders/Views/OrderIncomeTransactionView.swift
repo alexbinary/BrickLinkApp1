@@ -169,11 +169,11 @@ struct OrderIncomeTransactionView: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let transactionStore = stores.transaction
+    let transactionStore = env.stores.transaction
     
-    let orderStore = stores.order
+    let orderStore = env.stores.order
     let order = orderStore.orderDetails.first!
     
     OrderIncomeTransactionView(order)

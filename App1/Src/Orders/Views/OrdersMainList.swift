@@ -100,10 +100,10 @@ struct OrdersMainList: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
 
-    let orderStore = stores.order
-    let reloadController = stores.reload
+    let orderStore = env.stores.order
+    let reloadController = env.controllers.reload
     let navigationController = NavigationController()
     
     OrdersMainList()

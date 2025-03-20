@@ -35,8 +35,8 @@ struct UploadedItemsView: View {
 
 #Preview {
     
-    let stores = createStores()
-    let uploadStore = stores.upload
+    let env = createEnv()
+    let uploadStore = env.stores.upload
     
     UploadedItemsView()
         .environment(uploadStore)

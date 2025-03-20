@@ -66,8 +66,8 @@ struct DynamicCatalogName: View {
 #Preview {
     @Previewable @State var name: String? = ""
     
-    let stores = createStores()
+    let env = createEnv()
     
     DynamicCatalogName(forItemType: .part, ref: "3001", name: $name)
-        .environment(stores.catalog)
+        .environment(env.catalog)
 }

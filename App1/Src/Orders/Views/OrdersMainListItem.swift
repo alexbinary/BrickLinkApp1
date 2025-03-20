@@ -288,12 +288,12 @@ struct OrdersMainListItem: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let orderStore = stores.order
-    let pickingStore = stores.picking
-    let feedbackStore = stores.feedback
-    let orderChecklistStore = stores.orderChecklist
+    let orderStore = env.stores.order
+    let pickingStore = env.stores.picking
+    let feedbackStore = env.stores.feedback
+    let orderChecklistStore = env.stores.orderChecklist
     
     let order = orderStore.orderSummaries.first!
     

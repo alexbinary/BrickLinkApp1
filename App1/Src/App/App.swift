@@ -8,36 +8,39 @@ struct MainApp: App {
     
     var body: some Scene {
         
-        let stores = createStores()
+        let env = createEnv()
         
         WindowGroup {
             
             WindowRootView()
                 
-                .environment(stores.catalog)
-                .environment(stores.inventory)
-                .environment(stores.upload)
-                .environment(stores.stock)
+                .environment(env.catalog)
             
-                .environment(stores.order)
-                .environment(stores.picking)
-                .environment(stores.shipping)
-                .environment(stores.tracking)
-                .environment(stores.feedback)
-                .environment(stores.feedbackController)
-                .environment(stores.refund)
+                .environment(env.stores.inventory)
+                .environment(env.stores.upload)
+                .environment(env.stores.stock)
             
-                .environment(stores.transaction)
-                .environment(stores.result)
+                .environment(env.stores.order)
+                .environment(env.stores.picking)
+                .environment(env.stores.shipping)
+                .environment(env.stores.tracking)
+                .environment(env.stores.feedback)
+                
+                .environment(env.stores.refund)
+            
+                .environment(env.stores.transaction)
+                .environment(env.stores.result)
 
-                .environment(stores.reload)
-                .environment(stores.orderChecklist)
-                .environment(stores.orderAction)
+                .environment(env.stores.orderChecklist)
+                .environment(env.stores.orderAction)
+                
+                .environment(env.controllers.feedbackController)
+                .environment(env.controllers.reload)
 
                 .task { await parallel([
-                    { await stores.catalog.loadColors() },
-                    { await stores.inventory.loadInventories() },
-                    { await stores.order.loadOrderSummaries() },
+                    { await env.catalog.loadColors() },
+                    { await env.stores.inventory.loadInventories() },
+                    { await env.stores.order.loadOrderSummaries() },
                 ])}
         }
     }

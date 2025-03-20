@@ -56,9 +56,9 @@ struct Sidebar: View {
     
     let navigationController = NavigationController()
     
-    let stores = createStores()
-    let orderStore = stores.order
-    let uploadStore = stores.upload
+    let env = createEnv()
+    let orderStore = env.stores.order
+    let uploadStore = env.stores.upload
     
     Sidebar()
         .environment(navigationController)

@@ -25,9 +25,9 @@ struct InventoryLink<Label>: View where Label: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let inventoryStore = stores.inventory
+    let inventoryStore = env.stores.inventory
     
     let inventory = inventoryStore.allInventories.first!
     

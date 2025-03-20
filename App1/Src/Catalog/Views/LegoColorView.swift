@@ -57,8 +57,8 @@ struct LegoColorView: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
     LegoColorView(colorId: "11")
-        .environment(stores.catalog)
+        .environment(env.catalog)
 }

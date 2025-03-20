@@ -94,12 +94,12 @@ enum ButtonType {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let pickingStore = stores.picking
-    let stockStore = stores.stock
+    let pickingStore = env.stores.picking
+    let stockStore = env.stores.stock
     
-    let orderStore = stores.order
+    let orderStore = env.stores.order
     let order = orderStore.orderSummaries.first!
     let item = orderStore.orderItems(forOrderWithId: order.id).first!
     

@@ -65,13 +65,10 @@ extension View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let orderChecklistStore = stores.orderChecklist
-    
-    let orderStore = stores.order
-    let order = orderStore.orderDetails.first!
+    let order = env.stores.order.orderDetails.first!
     
     OrderChecklistView(order)
-        .environment(orderChecklistStore)
+        .environment(env.stores.orderChecklist)
 }

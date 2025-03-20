@@ -119,12 +119,12 @@ struct ResultContentView: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let orderStore = stores.order
-    let shippingStore = stores.shipping
-    let refundStore = stores.refund
-    let resultStore = stores.result
+    let orderStore = env.stores.order
+    let shippingStore = env.stores.shipping
+    let refundStore = env.stores.refund
+    let resultStore = env.stores.result
     
     let navigationController = NavigationController()
     

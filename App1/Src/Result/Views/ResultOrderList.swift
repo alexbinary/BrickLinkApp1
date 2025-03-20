@@ -113,11 +113,11 @@ struct ResultOrderList: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let shippingStore = stores.shipping
-    let refundStore = stores.refund
-    let resultStore = stores.result
+    let shippingStore = env.stores.shipping
+    let refundStore = env.stores.refund
+    let resultStore = env.stores.result
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
         .environment(shippingStore)

@@ -64,11 +64,8 @@ struct OrderCostView: View {
 
 #Preview {
     
-    let stores = createStores()
-    
-    let orderStore = stores.order
-    
-    let order = orderStore.orderDetails.first!
+    let env = createEnv()
+    let order = env.stores.order.orderDetails.first!
     
     OrderCostView(order)
 }

@@ -38,8 +38,8 @@ struct LegoColorPicker: View {
 #Preview {
     @Previewable @State var selection: LegoColor.ID = "11"
     
-    let stores = createStores()
+    let env = createEnv()
     
     LegoColorPicker("Color", selection: $selection)
-        .environment(stores.catalog)
+        .environment(env.catalog)
 }

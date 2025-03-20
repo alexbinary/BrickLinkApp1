@@ -96,12 +96,12 @@ struct OrdersActionsSheet: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let orderChecklistStore = stores.orderChecklist
-    let orderActionStore = stores.orderAction
+    let orderChecklistStore = env.stores.orderChecklist
+    let orderActionStore = env.stores.orderAction
     
-    let orderStore = stores.order
+    let orderStore = env.stores.order
     let orders = orderStore.orderSummaries
     
     OrdersActionsSheet(orders: orders)

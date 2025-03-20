@@ -71,9 +71,9 @@ struct OrderIdentityView: View {
 
 #Preview {
     
-    let stores = createStores()
+    let env = createEnv()
     
-    let orderStore = stores.order
+    let orderStore = env.stores.order
     
     let order = orderStore.orderDetails.first!
     
