@@ -97,14 +97,8 @@ struct OrdersActionsSheet: View {
 #Preview {
     
     let env = createEnv()
-    
-    let orderChecklistStore = env.stores.orderChecklist
-    let orderActionStore = env.stores.orderAction
-    
-    let orderStore = env.stores.order
-    let orders = orderStore.orderSummaries
+    let orders = env.stores.order.orderSummaries
     
     OrdersActionsSheet(orders: orders)
-        .environment(orderChecklistStore)
-        .environment(orderActionStore)
+        .inject(env)
 }

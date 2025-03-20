@@ -101,15 +101,8 @@ struct OrderDetailPickingView: View {
 #Preview {
     
     let env = createEnv()
-
-    let orderStore = env.stores.order
-    let inventoryStore = env.stores.inventory
-    let pickingStore = env.stores.picking
-    
-    let order = orderStore.orderDetails.first!
+    let order = env.stores.order.orderDetails.first!
     
     OrderDetailPickingView(order)
-        .environment(orderStore)
-        .environment(inventoryStore)
-        .environment(pickingStore)
+        .inject(env)
 }

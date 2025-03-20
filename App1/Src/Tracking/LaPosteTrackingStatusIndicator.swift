@@ -39,11 +39,7 @@ struct LaPosteTrackingStatusIndicator: View {
 #Preview {
     
     let env = createEnv()
-    
-    let orderStore = env.stores.order
-    let trackingStore = env.stores.tracking
-    
-    let order = orderStore.orderSummaries.first!
+    let order = env.stores.order.orderSummaries.first!
     
     VStack {
         Group {
@@ -53,5 +49,5 @@ struct LaPosteTrackingStatusIndicator: View {
             LaPosteTrackingStatusIndicator(order: order)
         }.padding()
     }
-    .environment(trackingStore)
+    .inject(env)
 }

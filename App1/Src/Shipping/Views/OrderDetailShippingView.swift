@@ -252,13 +252,8 @@ struct OrderDetailShippingView: View {
 #Preview {
     
     let env = createEnv()
-    
-    let orderStore = env.stores.order
-    let shippingStore = env.stores.shipping
-    
-    let order = orderStore.orderDetails.first!
+    let order = env.stores.order.orderDetails.first!
     
     OrderDetailShippingView(order)
-        .environment(orderStore)
-        .environment(shippingStore)
+        .inject(env)
 }

@@ -27,9 +27,7 @@ struct OrderLink<Label>: View where Label: View {
 #Preview {
     
     let env = createEnv()
-    
-    let orderStore = env.stores.order
-    let order = orderStore.orderSummaries.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderLink(order) { Text(order.id) }
 }

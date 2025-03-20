@@ -115,12 +115,6 @@ struct ResultOrderList: View {
     
     let env = createEnv()
     
-    let shippingStore = env.stores.shipping
-    let refundStore = env.stores.refund
-    let resultStore = env.stores.result
-    
     ResultOrderList([], title: "Title", selection: .constant(nil))
-        .environment(shippingStore)
-        .environment(resultStore)
-        .environment(refundStore)
+        .inject(env)
 }

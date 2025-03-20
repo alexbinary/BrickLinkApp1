@@ -54,14 +54,10 @@ struct Sidebar: View {
 
 #Preview {
     
+    let env = createEnv()
     let navigationController = NavigationController()
     
-    let env = createEnv()
-    let orderStore = env.stores.order
-    let uploadStore = env.stores.upload
-    
     Sidebar()
+        .inject(env)
         .environment(navigationController)
-        .environment(orderStore)
-        .environment(uploadStore)
 }

@@ -95,15 +95,9 @@ enum ButtonType {
 #Preview {
     
     let env = createEnv()
-    
-    let pickingStore = env.stores.picking
-    let stockStore = env.stores.stock
-    
-    let orderStore = env.stores.order
-    let order = orderStore.orderSummaries.first!
-    let item = orderStore.orderItems(forOrderWithId: order.id).first!
+    let order = env.stores.order.orderSummaries.first!
+    let item = env.stores.order.orderItems(forOrderWithId: order.id).first!
     
     PickingItemView(item, button: .pick)
-        .environment(pickingStore)
-        .environment(stockStore)
+        .inject(env)
 }

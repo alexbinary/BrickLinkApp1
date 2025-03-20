@@ -60,5 +60,5 @@ struct LegoColorView: View {
     let env = createEnv()
     
     LegoColorView(colorId: "11")
-        .environment(env.catalog)
+        .inject(env)
 }

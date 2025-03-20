@@ -30,8 +30,7 @@ struct UploadItemsView: View {
 #Preview {
     
     let env = createEnv()
-    let uploadStore = env.stores.upload
     
     UploadItemsView()
-        .environment(uploadStore)
+        .inject(env)
 }

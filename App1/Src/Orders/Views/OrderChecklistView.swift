@@ -66,9 +66,8 @@ extension View {
 #Preview {
     
     let env = createEnv()
-    
     let order = env.stores.order.orderDetails.first!
     
     OrderChecklistView(order)
-        .environment(env.stores.orderChecklist)
+        .inject(env)
 }

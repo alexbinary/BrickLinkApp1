@@ -54,5 +54,5 @@ struct CatalogImage: View {
     let env = createEnv()
     
     CatalogImage(itemType: .part, ref: "3001", colorId: "11")
-        .environment(env.catalog)
+        .inject(env)
 }

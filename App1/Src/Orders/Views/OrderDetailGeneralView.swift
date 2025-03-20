@@ -63,11 +63,8 @@ struct OrderDetailGeneralView: View {
 #Preview {
     
     let env = createEnv()
-    
-    let orderStore = env.stores.order
-    
-    let order = orderStore.orderDetails.first!
+    let order = env.stores.order.orderDetails.first!
     
     OrderDetailGeneralView(order)
-        .environment(orderStore)
+        .inject(env)
 }

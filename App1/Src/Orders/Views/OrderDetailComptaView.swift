@@ -244,11 +244,8 @@ struct OrderDetailComptaView: View {
 #Preview {
     
     let env = createEnv()
-    
     let order = env.stores.order.orderDetails.first!
     
     OrderDetailComptaView(order)
-        .environment(env.stores.transaction)
-        .environment(env.stores.shipping)
-        .environment(env.stores.refund)
+        .inject(env)
 }

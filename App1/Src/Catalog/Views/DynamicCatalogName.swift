@@ -69,5 +69,5 @@ struct DynamicCatalogName: View {
     let env = createEnv()
     
     DynamicCatalogName(forItemType: .part, ref: "3001", name: $name)
-        .environment(env.catalog)
+        .inject(env)
 }

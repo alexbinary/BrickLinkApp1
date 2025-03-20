@@ -68,4 +68,5 @@ struct OrderCostView: View {
     let order = env.stores.order.orderDetails.first!
     
     OrderCostView(order)
+        .inject(env)
 }

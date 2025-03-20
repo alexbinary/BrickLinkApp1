@@ -101,13 +101,7 @@ struct OrdersMainList: View {
 #Preview {
     
     let env = createEnv()
-
-    let orderStore = env.stores.order
-    let reloadController = env.controllers.reload
-    let navigationController = NavigationController()
     
     OrdersMainList()
-        .environment(orderStore)
-        .environment(reloadController)
-        .environment(navigationController)
+        .inject(env)
 }

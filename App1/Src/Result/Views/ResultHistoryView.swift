@@ -507,18 +507,9 @@ extension VerticalAlignment {
 #Preview {
     
     let env = createEnv()
-    
-    let orderStore = env.stores.order
-    let shippingStore = env.stores.shipping
-    let refundStore = env.stores.refund
-    let resultStore = env.stores.result
-    
     let navigationController = NavigationController()
     
     ResultHistoryView()
-        .environment(orderStore)
-        .environment(shippingStore)
-        .environment(refundStore)
-        .environment(resultStore)
+        .inject(env)
         .environment(navigationController)
 }

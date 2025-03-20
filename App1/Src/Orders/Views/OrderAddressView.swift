@@ -32,4 +32,5 @@ struct OrderAddressView: View {
     let order = env.stores.order.orderDetails.first!
     
     OrderAddressView(order)
+        .inject(env)
 }

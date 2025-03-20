@@ -41,5 +41,5 @@ struct LegoColorPicker: View {
     let env = createEnv()
     
     LegoColorPicker("Color", selection: $selection)
-        .environment(env.catalog)
+        .inject(env)
 }

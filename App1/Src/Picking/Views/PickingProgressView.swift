@@ -60,12 +60,8 @@ struct PickingProgressView: View {
 #Preview {
     
     let env = createEnv()
-    
-    let pickingStore = env.stores.picking
-    
-    let orderStore = env.stores.order
-    let order = orderStore.orderDetails.first!
+    let order = env.stores.order.orderDetails.first!
     
     PickingProgressView(order)
-        .environment(pickingStore)
+        .inject(env)
 }

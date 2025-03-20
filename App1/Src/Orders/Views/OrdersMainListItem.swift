@@ -289,17 +289,8 @@ struct OrdersMainListItem: View {
 #Preview {
     
     let env = createEnv()
-    
-    let orderStore = env.stores.order
-    let pickingStore = env.stores.picking
-    let feedbackStore = env.stores.feedback
-    let orderChecklistStore = env.stores.orderChecklist
-    
-    let order = orderStore.orderSummaries.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrdersMainListItem(order: order)
-        .environment(orderStore)
-        .environment(pickingStore)
-        .environment(feedbackStore)
-        .environment(orderChecklistStore)
+        .inject(env)
 }

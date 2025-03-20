@@ -3,7 +3,7 @@ import Foundation
 
 
 
-func createEnv() -> (
+typealias Env = (
     
     catalog: Catalog,
     
@@ -28,11 +28,16 @@ func createEnv() -> (
     ),
     
     controllers: (
-        feedbackController: FeedbackController,
+        
+        feedback: FeedbackController,
         reload: ReloadController
     )
         
-) {
+)
+
+
+
+func createEnv() -> Env {
     
     let fileDataAccess: FileDataAccess = {
         let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")
@@ -83,6 +88,7 @@ func createEnv() -> (
         catalog: catalog,
         
         stores: (
+            
             inventory: inventoryStore,
             upload: uploadStore,
             stock: stockStore,
@@ -103,7 +109,7 @@ func createEnv() -> (
         
         controllers: (
             
-            feedbackController: feedbackController,
+            feedback: feedbackController,
             reload: reloadController
         )
     )
