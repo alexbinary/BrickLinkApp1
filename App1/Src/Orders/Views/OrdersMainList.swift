@@ -5,9 +5,6 @@ import SwiftUI
 struct OrdersMainList: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
-    
     @Environment(OrderController.self)
     var orderController
     
@@ -41,7 +38,7 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: OrderSummary.ID.self) { orderId in
-            OrderDetailView(orderSummary: orderStore.orderSummary(forOrderWithId: orderId)!)
+            OrderDetailView(orderSummary: orderController.orderSummary(forOrderWithId: orderId)!)
         }
         .toolbar {
             
@@ -61,7 +58,7 @@ struct OrdersMainList: View {
             }
             .disabled(refreshing)
         }
-        .onChange(of: orderStore.orderSummaries, initial: true) {
+        .onChange(of: orderController.orderSummaries, initial: true) {
             Task { await refresh() }
         }
     }
@@ -104,13 +101,12 @@ struct OrdersMainList: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
+
     let orderController = controllers.orderController
     let reloadController = controllers.reloadController
     let navigationController = NavigationController()
     
     OrdersMainList()
-        .environment(orderStore)
         .environment(orderController)
         .environment(reloadController)
         .environment(navigationController)

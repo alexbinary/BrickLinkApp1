@@ -6,8 +6,8 @@ import SwiftUI
 struct ResultContentView: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(OrderController.self)
+    var orderController
     
     @Environment(ShippingController.self)
     var shippingController
@@ -103,7 +103,7 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = orderStore.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
+            let ordersByMonth = orderController.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
             
             ForEach(ordersByMonth, id: \.month) { (month, elements) in
                 Section(month.name) {
@@ -121,7 +121,7 @@ struct ResultContentView: View {
     
     let controllers = AppController.createControllers()
     
-    let orderStore = controllers.orderStore
+    let orderController = controllers.orderController
     let shippingController = controllers.shippingController
     let refundController = controllers.refundController
     let resultController = controllers.resultController
@@ -129,7 +129,7 @@ struct ResultContentView: View {
     let navigationController = NavigationController()
     
     ResultContentView()
-        .environment(orderStore)
+        .environment(orderController)
         .environment(shippingController)
         .environment(refundController)
         .environment(resultController)

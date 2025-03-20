@@ -17,18 +17,6 @@ class OrderController {
     }
     
     
-    public var orderSummaries: [OrderSummary] {
-        
-        orderStore.orderSummaries
-    }
-    
-    
-    public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
-        
-        orderStore.orderSummary(forOrderWithId: orderId)
-    }
-    
-    
     public func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistController.orderChecklistIncomeTransaction(orderId)
@@ -110,6 +98,78 @@ class OrderController {
     public func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistController.orderChecklistUnchangedFor30Days(orderId)
+    }
+    
+    
+    // MARK: - Order summaries
+    
+    
+    public var orderSummaries: [OrderSummary] {
+        
+        orderStore.orderSummaries
+    }
+    
+    
+    public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+        
+        orderStore.orderSummary(forOrderWithId: orderId)
+    }
+    
+    
+    public func loadOrderSummaries() async {
+        
+        await orderStore.loadOrderSummaries()
+    }
+    
+    
+    // MARK: - Orders details
+    
+    
+    public var orderDetails: [OrderDetails] {
+        
+        orderStore.orderDetails
+    }
+    
+    
+    public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+        
+        orderStore.orderDetails(forOrderWithId: orderId)
+    }
+    
+    
+    // MARK: - Order status, Tracking no, Drive thru
+    
+    
+    public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
+        
+        await orderStore.updateOrderStatus(orderId: orderId, status: status)
+    }
+    
+    
+    public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
+        
+        await orderStore.updateTrackingNo(forOrderWithId: orderId, trackingNo: trackingNo)
+    }
+    
+    
+    public func sendDriveThru(orderId: OrderSummary.ID) async {
+        
+        await orderStore.sendDriveThru(orderId: orderId)
+    }
+    
+    
+    // MARK: - Order items
+    
+    
+    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+        
+        orderStore.orderItems(forOrderWithId: orderId)
+    }
+    
+    
+    public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
+        
+        await orderStore.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     

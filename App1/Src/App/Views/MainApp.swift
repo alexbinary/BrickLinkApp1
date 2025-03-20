@@ -20,7 +20,6 @@ struct MainApp: App {
                 .environment(controllers.transactionController)
                 .environment(controllers.refundController)
 
-                .environment(controllers.orderStore)
                 .environment(controllers.pickingStore)
                 .environment(controllers.trackingStore)
 
@@ -41,7 +40,7 @@ struct MainApp: App {
                 .task { await parallel([
                     { await controllers.catalogController.loadColors() },
                     { await controllers.inventoryController.loadInventories() },
-                    { await controllers.orderStore.loadOrderSummaries() },
+                    { await controllers.orderController.loadOrderSummaries() },
                 ])}
         }
     }

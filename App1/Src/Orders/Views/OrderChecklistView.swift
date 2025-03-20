@@ -66,16 +66,12 @@ extension View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
-    let pickingController = controllers.pickingController
-    let trackingController = controllers.trackingController
+    
     let orderChecklistController = controllers.orderChecklistController
     
-    let order = orderStore.orderDetails.first!
+    let orderController = controllers.orderController
+    let order = orderController.orderDetails.first!
     
     OrderChecklistView(order)
-        .environment(orderStore)
-        .environment(pickingController)
-        .environment(trackingController)
         .environment(orderChecklistController)
 }

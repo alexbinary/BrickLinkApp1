@@ -6,15 +6,15 @@ import SwiftUI
 struct OrderDetailView: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(OrderController.self)
+    var orderController
     
     @Environment(ReloadController.self)
     var reloadController
     
     
     let orderSummary: OrderSummary
-    var order: OrderDetails? { orderStore.orderDetails(forOrderWithId: orderSummary.id) }
+    var order: OrderDetails? { orderController.orderDetails(forOrderWithId: orderSummary.id) }
     
     
     @State private var columnWidth: CGFloat?

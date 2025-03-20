@@ -7,8 +7,8 @@ import Charts
 struct ResultHistoryView: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(OrderController.self)
+    var orderController
     
     @Environment(ShippingController.self)
     var shippingController
@@ -41,8 +41,8 @@ struct ResultHistoryView: View {
     var orders: [OrderDetails] {
         (
             !selectedOrderIds.isEmpty
-                ? orderStore.orderDetails.filter { selectedOrderIds.contains($0.id) }
-                : orderStore.orderDetails
+                ? orderController.orderDetails.filter { selectedOrderIds.contains($0.id) }
+                : orderController.orderDetails
         )
         .filter { resultController.profitMargin(for: $0) != nil }
     }
@@ -508,7 +508,7 @@ extension VerticalAlignment {
     
     let controllers = AppController.createControllers()
     
-    let orderStore = controllers.orderStore
+    let orderController = controllers.orderController
     let shippingController = controllers.shippingController
     let refundController = controllers.refundController
     let resultController = controllers.resultController
@@ -516,7 +516,7 @@ extension VerticalAlignment {
     let navigationController = NavigationController()
     
     ResultHistoryView()
-        .environment(orderStore)
+        .environment(orderController)
         .environment(shippingController)
         .environment(refundController)
         .environment(resultController)

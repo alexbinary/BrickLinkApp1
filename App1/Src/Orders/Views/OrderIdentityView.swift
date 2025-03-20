@@ -6,12 +6,12 @@ import SwiftUI
 struct OrderIdentityView: View {
 
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(OrderController.self)
+    var orderController
     
     
     let order: OrderDetails
-    var orderSummary: OrderSummary { orderStore.orderSummary(forOrderWithId: order.id)! }
+    var orderSummary: OrderSummary { orderController.orderSummary(forOrderWithId: order.id)! }
     
     init(_ order: OrderDetails) {
         self.order = order
@@ -72,10 +72,11 @@ struct OrderIdentityView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
     
-    let order = orderStore.orderDetails.first!
+    let orderController = controllers.orderController
+    
+    let order = orderController.orderDetails.first!
     
     OrderIdentityView(order)
-        .environment(orderStore)
+        .environment(orderController)
 }

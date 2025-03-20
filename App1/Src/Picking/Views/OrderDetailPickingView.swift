@@ -7,8 +7,8 @@ import HTMLEntities
 struct OrderDetailPickingView: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(OrderController.self)
+    var orderController
     
     @Environment(InventoryController.self)
     var inventoryController
@@ -88,7 +88,7 @@ struct OrderDetailPickingView: View {
         }
         .padding()
         .onChange(of: order, initial: true) {
-            Task { await orderStore.loadOrderItemsIfMissing(forOrderWithId: order.id) }
+            Task { await orderController.loadOrderItemsIfMissing(forOrderWithId: order.id) }
         }
         .onAppear {
             Task { await inventoryController.reloadInventories() }
@@ -101,14 +101,15 @@ struct OrderDetailPickingView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
+
+    let orderController = controllers.orderController
     let inventoryController = controllers.inventoryController
     let pickingController = controllers.pickingController
     
-    let order = orderStore.orderDetails.first!
+    let order = orderController.orderDetails.first!
     
     OrderDetailPickingView(order)
-        .environment(orderStore)
+        .environment(orderController)
         .environment(inventoryController)
         .environment(pickingController)
 }

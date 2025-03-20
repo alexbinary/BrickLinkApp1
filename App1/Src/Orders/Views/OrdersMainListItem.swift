@@ -6,8 +6,8 @@ import SwiftUI
 struct OrdersMainListItem: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(OrderController.self)
+    var orderController
     
     @Environment(PickingStore.self)
     var pickingStore
@@ -17,9 +17,6 @@ struct OrdersMainListItem: View {
     
     @Environment(OrderChecklistController.self)
     var orderChecklistController
-    
-    @Environment(OrderController.self)
-    var orderController
     
     
     let order: OrderSummary
@@ -113,7 +110,7 @@ struct OrdersMainListItem: View {
                             
                             ForEach(tags) { tagView($0) }
                             
-                            if macroStatus == .inTransit, orderStore.orderDetails(forOrderWithId: order.id)!.isShippedWithLaPoste {
+                            if macroStatus == .inTransit, orderController.orderDetails(forOrderWithId: order.id)!.isShippedWithLaPoste {
                                 LaPosteTrackingStatusIndicator(order: order)
                             }
                         }
@@ -199,7 +196,7 @@ struct OrdersMainListItem: View {
             if !orderChecklistController.orderChecklistPicking(order.id) {
                 
                 let picked = pickingStore.pickedItemIds(forOrderWithId: order.id).count
-                let total = orderStore.orderItems(forOrderWithId: order.id).count
+                let total = orderController.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(picked)/Double(total)*100)
                 items.append(OrderStatusTag(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
@@ -207,7 +204,7 @@ struct OrdersMainListItem: View {
             } else if !orderChecklistController.orderChecklistVerification(order.id) {
                 
                 let verified = pickingStore.verifiedItemIds(forOrderWithId: order.id).count
-                let total = orderStore.orderItems(forOrderWithId: order.id).count
+                let total = orderController.orderItems(forOrderWithId: order.id).count
                 
                 let percent = floor(Double(verified)/Double(total)*100)
                 items.append(OrderStatusTag(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
@@ -231,8 +228,8 @@ struct OrdersMainListItem: View {
             if !orderChecklistController.orderChecklistShipped(order.id) && !orderChecklistController.orderChecklistDriveThru(order.id) {
                 items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
-                        await orderStore.updateOrderStatus(orderId: order.id, status: .shipped)
-                        await orderStore.sendDriveThru(orderId: order.id)
+                        await orderController.updateOrderStatus(orderId: order.id, status: .shipped)
+                        await orderController.sendDriveThru(orderId: order.id)
                     }
                 }))
             } else {
@@ -252,7 +249,7 @@ struct OrdersMainListItem: View {
             if orderChecklistController.orderChecklistUnchangedFor30Days(order.id) {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
-                        await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
+                        await orderController.updateOrderStatus(orderId: order.id, status: .completed)
                         await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
                     }
                 }))
@@ -295,18 +292,17 @@ struct OrdersMainListItem: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
+    
+    let orderController = controllers.orderController
     let pickingStore = controllers.pickingStore
     let feedbackController = controllers.feedbackController
     let orderChecklistController = controllers.orderChecklistController
-    let orderController = controllers.orderController
     
-    let order = orderStore.orderSummaries.first!
+    let order = orderController.orderSummaries.first!
     
     OrdersMainListItem(order: order)
-        .environment(orderStore)
+        .environment(orderController)
         .environment(pickingStore)
         .environment(feedbackController)
         .environment(orderChecklistController)
-        .environment(orderController)
 }

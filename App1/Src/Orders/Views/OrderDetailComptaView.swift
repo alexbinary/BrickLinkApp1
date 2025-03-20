@@ -249,8 +249,8 @@ struct OrderDetailComptaView: View {
     let shippingController = controllers.shippingController
     let refundController = controllers.refundController
 
-    let orderStore = controllers.orderStore
-    let order = orderStore.orderDetails.first!
+    let orderController = controllers.orderController
+    let order = orderController.orderDetails.first!
     
     OrderDetailComptaView(order)
         .environment(transactionController)
