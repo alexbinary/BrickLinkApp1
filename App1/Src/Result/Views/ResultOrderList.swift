@@ -6,8 +6,8 @@ import SwiftUI
 struct ResultOrderList: View {
     
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(ShippingController.self)
+    var shippingController
     
     @Environment(RefundStore.self)
     var refundStore
@@ -77,7 +77,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Shipping cost") { order in
                     Text(
-                        abs(shippingStore.shippingCost(forOrderWithId: order.id) ?? 0),
+                        abs(shippingController.confirmedShippingCost(forOrderWithId: order.id) ?? 0),
                         format: .currency(code: "EUR").presentation(.isoCode)
                     ).amountColor(.bad)
                 }
@@ -114,12 +114,12 @@ struct ResultOrderList: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let shippingStore = controllers.shippingStore
+    let shippingController = controllers.shippingController
     let refundStore = controllers.refundStore
     let resultController = controllers.resultController
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
-        .environment(shippingStore)
+        .environment(shippingController)
         .environment(resultController)
         .environment(refundStore)
 }

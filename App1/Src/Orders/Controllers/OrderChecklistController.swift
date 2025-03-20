@@ -65,7 +65,7 @@ class OrderChecklistController {
     
     public func stamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        shippingStore.stamping(forOrderWithId: orderId)
+        shippingStore.confirmedStamping(forOrderWithId: orderId)
     }
     
     

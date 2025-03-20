@@ -17,7 +17,6 @@ enum AppController {
 
         orderStore: OrderStore,
         pickingStore: PickingStore,
-        shippingStore: ShippingStore,
         trackingStore: TrackingStore,
 
         uploadController: UploadController,
@@ -57,7 +56,7 @@ enum AppController {
         
         let uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
         let pickingController = PickingController(orderStore, pickingStore)
-        let shippingController = ShippingController(orderStore)
+        let shippingController = ShippingController(orderStore, shippingStore)
         let trackingController = TrackingController(orderStore, trackingStore)
         let feedbackController = FeedbackController(orderStore, feedbackStore)
         
@@ -80,7 +79,6 @@ enum AppController {
 
             orderStore: orderStore,
             pickingStore: pickingStore,
-            shippingStore: shippingStore,
             trackingStore: trackingStore,
 
             uploadController: uploadController,

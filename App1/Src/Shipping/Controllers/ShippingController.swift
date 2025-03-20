@@ -8,16 +8,33 @@ class ShippingController {
     
     
     private let orderStore: OrderStore
+    private let shippingStore: ShippingStore
     
     
-    init(_ orderStore: OrderStore) {
+    init(_ orderStore: OrderStore, _ shippingStore: ShippingStore) {
         self.orderStore = orderStore
+        self.shippingStore = shippingStore
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
         orderStore.orderDetails(forOrderWithId: orderId)
+    }
+    
+    
+    // MARK: - Shipping cost
+    
+    
+    public func confirmedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
+        
+        shippingStore.confirmedShippingCost(forOrderWithId: orderId)
+    }
+    
+    
+    public func confirmShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
+        
+        shippingStore.confirmShippingCost(forOrderWithId: orderId, cost: cost)
     }
     
     
@@ -166,6 +183,33 @@ class ShippingController {
         }
         
         return nil
+    }
+    
+    
+    // MARK: - Stamping
+    
+    
+    public func confirmedStamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
+        
+        shippingStore.confirmedStamping(forOrderWithId: orderId)
+    }
+    
+    
+    public func confirmStamping(forOrderWithId orderId: OrderSummary.ID, stamping: String) {
+        
+        shippingStore.confirmStamping(forOrderWithId: orderId, stamping: stamping)
+    }
+    
+    
+    public func dateOrderValidatedWithoutStamping(orderId: OrderDetails.ID) -> Date? {
+        
+        shippingStore.dateOrderValidatedWithoutStamping(orderId: orderId)
+    }
+    
+    
+    public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
+        
+        shippingStore.validateOrderWithoutStamping(orderId: orderId)
     }
     
     

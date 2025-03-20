@@ -9,8 +9,8 @@ struct OrderDetailComptaView: View {
     @Environment(TransactionController.self)
     var transactionController
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(ShippingController.self)
+    var shippingController
     
     @Environment(RefundStore.self)
     var refundStore
@@ -93,7 +93,7 @@ struct OrderDetailComptaView: View {
                
             HStack {
                 Text("Confirmed stamping:")
-                if let stamping = shippingStore.stamping(forOrderWithId: order.id) {
+                if let stamping = shippingController.confirmedStamping(forOrderWithId: order.id) {
                     Text(stamping)
                 }
             }
@@ -182,7 +182,7 @@ struct OrderDetailComptaView: View {
             self.incomeComment = ""
 
             self.shippingDate = Date()
-            self.shippingAmount = shippingStore.shippingCost(forOrderWithId: order.id) ?? 0
+            self.shippingAmount = shippingController.confirmedShippingCost(forOrderWithId: order.id) ?? 0
             self.shippingPaymentMethod = .cb_iban
             self.shippingComment = ""
             
@@ -245,7 +245,7 @@ struct OrderDetailComptaView: View {
     
     let controllers = AppController.createControllers()
     let transactionController = controllers.transactionController
-    let shippingStore = controllers.shippingStore
+    let shippingController = controllers.shippingController
     let refundStore = controllers.refundStore
 
     let orderStore = controllers.orderStore
@@ -253,6 +253,6 @@ struct OrderDetailComptaView: View {
     
     OrderDetailComptaView(order)
         .environment(transactionController)
-        .environment(shippingStore)
+        .environment(shippingController)
         .environment(refundStore)
 }

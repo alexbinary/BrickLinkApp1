@@ -3,7 +3,6 @@ import Foundation
 
 
 
-@Observable
 class ShippingStore {
     
     
@@ -18,13 +17,13 @@ class ShippingStore {
     // MARK: - Shipping cost
     
     
-    public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
+    public func confirmedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
         return dataStore.shippingCostsByOrderId[orderId]
     }
     
     
-    public func updateShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
+    public func confirmShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
         
         try! dataStore.setShippingCost(cost, forOrderId: orderId)
         try! dataStore.save()
@@ -34,15 +33,15 @@ class ShippingStore {
     // MARK: - Stamping
     
     
-    public func stamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
+    public func confirmedStamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
         return dataStore.stampingMethodByOrderId[orderId]
     }
     
     
-    public func updateStamping(forOrderWithId orderId: OrderSummary.ID, method: String) {
+    public func confirmStamping(forOrderWithId orderId: OrderSummary.ID, stamping: String) {
         
-        try! dataStore.setStampingMethod(method, forOrderId: orderId)
+        try! dataStore.setStampingMethod(stamping, forOrderId: orderId)
         try! dataStore.save()
     }
     

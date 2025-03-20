@@ -9,8 +9,8 @@ struct ResultContentView: View {
     @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(ShippingController.self)
+    var shippingController
     
     @Environment(RefundStore.self)
     var refundStore
@@ -70,7 +70,7 @@ struct ResultContentView: View {
             
             TableColumn("Shipping cost") { order in
                 
-                if let cost = shippingStore.shippingCost(forOrderWithId: order.id) {
+                if let cost = shippingController.confirmedShippingCost(forOrderWithId: order.id) {
                     
                     Text(
                         abs(cost),
@@ -121,7 +121,7 @@ struct ResultContentView: View {
     
     let controllers = AppController.createControllers()
     let orderStore = controllers.orderStore
-    let shippingStore = controllers.shippingStore
+    let shippingController = controllers.shippingController
     let refundStore = controllers.refundStore
     let resultController = controllers.resultController
     
@@ -129,7 +129,7 @@ struct ResultContentView: View {
     
     ResultContentView()
         .environment(orderStore)
-        .environment(shippingStore)
+        .environment(shippingController)
         .environment(refundStore)
         .environment(resultController)
         .environment(navigationController)

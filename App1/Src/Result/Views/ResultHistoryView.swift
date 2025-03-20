@@ -10,8 +10,8 @@ struct ResultHistoryView: View {
     @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(ShippingController.self)
+    var shippingController
     
     @Environment(RefundStore.self)
     var refundStore
@@ -163,7 +163,7 @@ struct ResultHistoryView: View {
                         
                         let totalItemCost: Float = 0
                         
-                        let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                        let totalShippingCost = orders.reduce(0) { $0 + (shippingController.confirmedShippingCost(forOrderWithId: $1.id) ?? 0) }
                         
                         let totalFees = orders.reduce(0) { $0 + (resultController.fees(for: $1) ?? 0) }
                         let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
@@ -274,7 +274,7 @@ struct ResultHistoryView: View {
                             
                             let totalItemCost: Float = 0
                             
-                            let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                            let totalShippingCost = orders.reduce(0) { $0 + (shippingController.confirmedShippingCost(forOrderWithId: $1.id) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (resultController.fees(for: $1) ?? 0) }
                             let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
@@ -326,7 +326,7 @@ struct ResultHistoryView: View {
                             
                             let totalItemCost: Float = 0
                             
-                            let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.shippingCost(forOrderWithId: $1.id) ?? 0) }
+                            let totalShippingCost = orders.reduce(0) { $0 + (shippingController.confirmedShippingCost(forOrderWithId: $1.id) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (resultController.fees(for: $1) ?? 0) }
                             let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
@@ -508,7 +508,7 @@ extension VerticalAlignment {
     
     let controllers = AppController.createControllers()
     let orderStore = controllers.orderStore
-    let shippingStore = controllers.shippingStore
+    let shippingController = controllers.shippingController
     let refundStore = controllers.refundStore
     let resultController = controllers.resultController
     
@@ -516,7 +516,7 @@ extension VerticalAlignment {
     
     ResultHistoryView()
         .environment(orderStore)
-        .environment(shippingStore)
+        .environment(shippingController)
         .environment(refundStore)
         .environment(resultController)
         .environment(navigationController)

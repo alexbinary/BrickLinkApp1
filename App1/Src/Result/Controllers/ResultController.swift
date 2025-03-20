@@ -29,7 +29,7 @@ class ResultController {
     
     public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
-        shippingStore.shippingCost(forOrderWithId: orderId)
+        shippingStore.confirmedShippingCost(forOrderWithId: orderId)
     }
     
     
