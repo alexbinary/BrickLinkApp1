@@ -6,8 +6,8 @@ import SwiftUI
 struct DynamicCatalogName: View {
 
     
-    @Environment(CatalogStore.self)
-    var catalogStore
+    @Environment(CatalogController.self)
+    var catalogController
     
     
     var type: BrickLinkItemType
@@ -50,7 +50,7 @@ struct DynamicCatalogName: View {
             catalogResult = .loading
             name = nil
             
-            if let catalogItem = await catalogStore.getCatalogItem(forItemType: type, ref: ref) {
+            if let catalogItem = await catalogController.getCatalogItem(forItemType: type, ref: ref) {
                 
                 catalogResult = .found(catalogItem)
                 name = catalogItem.name
@@ -67,8 +67,8 @@ struct DynamicCatalogName: View {
     @Previewable @State var name: String? = ""
     
     let controllers = AppController.createControllers()
-    let catalogStore = controllers.catalogStore
+    let catalogController = controllers.catalogController
     
     DynamicCatalogName(forItemType: .part, ref: "3001", name: $name)
-        .environment(catalogStore)
+        .environment(catalogController)
 }

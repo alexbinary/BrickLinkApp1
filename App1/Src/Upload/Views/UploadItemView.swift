@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadItemView: View {
     
     
-    @Environment(CatalogStore.self)
-    var catalogStore
+    @Environment(CatalogController.self)
+    var catalogController
     
     @Environment(UploadController.self)
     var uploadController
@@ -151,7 +151,7 @@ struct UploadItemView: View {
                         
                         ZStack(alignment: .leading) {
                             
-                            Text(catalogStore.colorName(forLegoColorId: uploadItem.colorId))
+                            Text(catalogController.colorName(forLegoColorId: uploadItem.colorId))
                                 .onTapGesture { editModeColor = true }
                                 .opacity(editModeColor ? 0 : 1)
                             
@@ -636,7 +636,7 @@ struct UploadItemView: View {
         
         self.catalogResult = .loading
         
-        if let catalog = await catalogStore.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
+        if let catalog = await catalogController.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalog)
             updateItem(name: catalog.name)

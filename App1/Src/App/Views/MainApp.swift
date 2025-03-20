@@ -14,7 +14,7 @@ struct MainApp: App {
             
             WindowRootView()
                 
-                .environment(controllers.catalogStore)
+                .environment(controllers.catalogController)
                 .environment(controllers.inventoryStore)
 
                 .environment(controllers.transactionController)
@@ -39,7 +39,7 @@ struct MainApp: App {
                 .environment(controllers.orderActionController)
 
                 .task { await parallel([
-                    { await controllers.catalogStore.loadColors() },
+                    { await controllers.catalogController.loadColors() },
                     { await controllers.inventoryStore.loadInventories() },
                     { await controllers.orderStore.loadOrderSummaries() },
                 ])}
