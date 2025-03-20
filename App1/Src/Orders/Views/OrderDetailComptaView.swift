@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderDetailComptaView: View {
     
     
-    @Environment(TransactionStore.self)
-    var transactionStore
+    @Environment(TransactionController.self)
+    var transactionController
     
     @Environment(ShippingStore.self)
     var shippingStore
@@ -71,9 +71,9 @@ struct OrderDetailComptaView: View {
                         self.submitIncomeTransaction()
                     }
                     Button("Validate without transaction") {
-                        transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                        transactionController.validateOrderWithoutIncomeTransaction(orderId: order.id)
                     }
-                    if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                    if let date = transactionController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -81,7 +81,7 @@ struct OrderDetailComptaView: View {
             }
 
             TransactionListView(
-                transactions: transactionStore.incomeTransactions(forOrderWithId: order.id),
+                transactions: transactionController.incomeTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -116,9 +116,9 @@ struct OrderDetailComptaView: View {
                         self.submitShippingTransaction()
                     }
                     Button("Validate without transaction") {
-                        transactionStore.validateOrderWithoutShippingTransaction(orderId: order.id)
+                        transactionController.validateOrderWithoutShippingTransaction(orderId: order.id)
                     }
-                    if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
+                    if let date = transactionController.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -126,7 +126,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: transactionStore.shippingTransactions(forOrderWithId: order.id),
+                transactions: transactionController.shippingTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -168,7 +168,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: transactionStore.refundTransactions(forOrderWithId: order.id),
+                transactions: transactionController.refundTransactions(forOrderWithId: order.id),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -196,7 +196,7 @@ struct OrderDetailComptaView: View {
 
     func submitIncomeTransaction() {
         
-        transactionStore.registerTransaction(Transaction(
+        transactionController.register(Transaction(
             date: incomeDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -211,7 +211,7 @@ struct OrderDetailComptaView: View {
     
     func submitShippingTransaction() {
      
-        transactionStore.registerTransaction(Transaction(
+        transactionController.register(Transaction(
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
@@ -226,7 +226,7 @@ struct OrderDetailComptaView: View {
     
     func submitRefundTransaction() {
      
-        transactionStore.registerTransaction(Transaction(
+        transactionController.register(Transaction(
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,
@@ -244,15 +244,15 @@ struct OrderDetailComptaView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
+    let transactionController = controllers.transactionController
     let shippingStore = controllers.shippingStore
-    let transactionStore = controllers.transactionStore
     let refundStore = controllers.refundStore
 
+    let orderStore = controllers.orderStore
     let order = orderStore.orderDetails.first!
     
     OrderDetailComptaView(order)
+        .environment(transactionController)
         .environment(shippingStore)
         .environment(refundStore)
-        .environment(transactionStore)
 }

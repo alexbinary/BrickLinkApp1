@@ -6,8 +6,8 @@ import SwiftUI
 struct CashFlowContentView: View {
     
     
-    @Environment(TransactionStore.self)
-    var transactionStore
+    @Environment(TransactionController.self)
+    var transactionController
     
     @Environment(NavigationController.self)
     var nav
@@ -18,7 +18,7 @@ struct CashFlowContentView: View {
         @Bindable var nav = nav
         
         TransactionListView(
-            transactions: transactionStore.transactions,
+            transactions: transactionController.allTransactions,
             selectedTransactions: $nav.selectedTransactions
         )
         .navigationTitle("Cash Flow")

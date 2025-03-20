@@ -4,7 +4,6 @@ import SwiftUI
 
 
 
-@Observable
 class TransactionStore {
     
     
@@ -16,13 +15,13 @@ class TransactionStore {
     }
     
     
-    public var transactions: [Transaction] {
+    public var allTransactions: [Transaction] {
         
         dataStore.transactions
     }
     
     
-    public func registerTransaction(_ transaction: Transaction) {
+    public func register(_ transaction: Transaction) {
         
         try! dataStore.addTransaction(transaction)
         try! dataStore.save()
@@ -31,19 +30,19 @@ class TransactionStore {
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        return transactions.filter { $0.type == .orderIncome && $0.orderRefIn == orderId }
+        return allTransactions.filter { $0.type == .orderIncome && $0.orderRefIn == orderId }
     }
     
     
     public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        return transactions.filter { $0.type == .orderShipping && $0.orderRefIn == orderId }
+        return allTransactions.filter { $0.type == .orderShipping && $0.orderRefIn == orderId }
     }
     
     
     public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        return transactions.filter { $0.type == .orderRefund && $0.orderRefIn == orderId }
+        return allTransactions.filter { $0.type == .orderRefund && $0.orderRefIn == orderId }
     }
     
     

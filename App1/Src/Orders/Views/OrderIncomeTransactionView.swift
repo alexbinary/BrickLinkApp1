@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderIncomeTransactionView: View {
 
     
-    @Environment(TransactionStore.self)
-    var transactionStore
+    @Environment(TransactionController.self)
+    var transactionController
     
     
     let order: OrderDetails
@@ -27,9 +27,9 @@ struct OrderIncomeTransactionView: View {
 
         Group {
             
-            let transactions = transactionStore.incomeTransactions(forOrderWithId: order.id)
+            let transactions = transactionController.incomeTransactions(forOrderWithId: order.id)
             
-            if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+            if let date = transactionController.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
                 
                 HStack {
                     Text("Validated without transaction on")
@@ -135,7 +135,7 @@ struct OrderIncomeTransactionView: View {
                             self.submitIncomeTransaction()
                         }
                         Button("Validate without transaction") {
-                            transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                            transactionController.validateOrderWithoutIncomeTransaction(orderId: order.id)
                         }
                     }
                 }
@@ -152,7 +152,7 @@ struct OrderIncomeTransactionView: View {
     
     func submitIncomeTransaction() {
         
-        transactionStore.registerTransaction(Transaction(
+        transactionController.register(Transaction(
             date: incomeTransactionDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -170,11 +170,11 @@ struct OrderIncomeTransactionView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let orderStore = controllers.orderStore
-    let transactionStore = controllers.transactionStore
+    let transactionController = controllers.transactionController
     
+    let orderStore = controllers.orderStore
     let order = orderStore.orderDetails.first!
     
     OrderIncomeTransactionView(order)
-        .environment(transactionStore)
+        .environment(transactionController)
 }

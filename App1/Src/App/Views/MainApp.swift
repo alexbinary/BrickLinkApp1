@@ -18,7 +18,7 @@ struct MainApp: App {
                 .environment(controllers.uploadStore)
                 .environment(controllers.inventoryStore)
 
-                .environment(controllers.transactionStore)
+                .environment(controllers.transactionController)
                 .environment(controllers.refundStore)
 
                 .environment(controllers.orderStore)
