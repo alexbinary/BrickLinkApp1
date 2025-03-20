@@ -12,8 +12,8 @@ struct OrderDetailComptaView: View {
     @Environment(ShippingController.self)
     var shippingController
     
-    @Environment(RefundStore.self)
-    var refundStore
+    @Environment(RefundController.self)
+    var refundController
     
     
     let order: OrderDetails
@@ -138,7 +138,7 @@ struct OrderDetailComptaView: View {
             
             HStack {
                 Text("Latest refund:")
-                if let refund = refundStore.refunds(for: order).last {
+                if let refund = refundController.refunds(for: order).last {
                     Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
                 }
             }
@@ -187,7 +187,7 @@ struct OrderDetailComptaView: View {
             self.shippingComment = ""
             
             self.refundDate = Date()
-            self.refundAmount = refundStore.refunds(for: order).last?.amount ?? 0
+            self.refundAmount = refundController.refunds(for: order).last?.amount ?? 0
             self.refundPaymentMethod = .paypal
             self.refundComment = ""
         }
@@ -244,9 +244,10 @@ struct OrderDetailComptaView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
+    
     let transactionController = controllers.transactionController
     let shippingController = controllers.shippingController
-    let refundStore = controllers.refundStore
+    let refundController = controllers.refundController
 
     let orderStore = controllers.orderStore
     let order = orderStore.orderDetails.first!
@@ -254,5 +255,5 @@ struct OrderDetailComptaView: View {
     OrderDetailComptaView(order)
         .environment(transactionController)
         .environment(shippingController)
-        .environment(refundStore)
+        .environment(refundController)
 }

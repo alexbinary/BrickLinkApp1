@@ -13,7 +13,7 @@ enum AppController {
         inventoryStore: InventoryStore,
 
         transactionController: TransactionController,
-        refundStore: RefundStore,
+        refundController: RefundController,
 
         orderStore: OrderStore,
         pickingStore: PickingStore,
@@ -47,6 +47,7 @@ enum AppController {
         let transactionStore = TransactionStore(dataStore)
         let transactionController = TransactionController(transactionStore)
         let refundStore = RefundStore(dataStore)
+        let refundController = RefundController(refundStore)
         
         let orderStore = OrderStore(dataStore)
         let pickingStore = PickingStore(dataStore)
@@ -75,7 +76,7 @@ enum AppController {
             inventoryStore: inventoryStore,
 
             transactionController: transactionController,
-            refundStore: refundStore,
+            refundController: refundController,
 
             orderStore: orderStore,
             pickingStore: pickingStore,

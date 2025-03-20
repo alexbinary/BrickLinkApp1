@@ -12,8 +12,8 @@ struct ResultContentView: View {
     @Environment(ShippingController.self)
     var shippingController
     
-    @Environment(RefundStore.self)
-    var refundStore
+    @Environment(RefundController.self)
+    var refundController
     
     @Environment(ResultController.self)
     var resultController
@@ -91,7 +91,7 @@ struct ResultContentView: View {
             
             TableColumn("Refund") { order in
                 
-                let totalRefund = refundStore.refunds(for: order).reduce(0, { $0 + $1.amount })
+                let totalRefund = refundController.refunds(for: order).reduce(0, { $0 + $1.amount })
                 if totalRefund > 0 {
                     
                     Text(
@@ -120,9 +120,10 @@ struct ResultContentView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
+    
     let orderStore = controllers.orderStore
     let shippingController = controllers.shippingController
-    let refundStore = controllers.refundStore
+    let refundController = controllers.refundController
     let resultController = controllers.resultController
     
     let navigationController = NavigationController()
@@ -130,7 +131,7 @@ struct ResultContentView: View {
     ResultContentView()
         .environment(orderStore)
         .environment(shippingController)
-        .environment(refundStore)
+        .environment(refundController)
         .environment(resultController)
         .environment(navigationController)
 }

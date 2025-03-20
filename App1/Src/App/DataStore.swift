@@ -529,7 +529,7 @@ class DataStore {
     }
     
     
-    public var orderRefunds: [OrderRefund] {
+    public var allRefunds: [OrderRefund] {
         
         data?.orderRefunds ?? []
     }
@@ -545,7 +545,7 @@ class DataStore {
     
     public func addOrderRefund(_ refund: OrderRefund) throws {
         
-        var orderRefunds = self.orderRefunds
+        var orderRefunds = self.allRefunds
         
         orderRefunds.append(refund)
         

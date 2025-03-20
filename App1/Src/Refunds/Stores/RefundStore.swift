@@ -3,7 +3,6 @@ import Foundation
 
 
 
-@Observable
 class RefundStore {
     
     
@@ -15,19 +14,19 @@ class RefundStore {
     }
     
     
-    public var orderRefunds: [OrderRefund] {
+    public var allRefunds: [OrderRefund] {
         
-        dataStore.orderRefunds
+        dataStore.allRefunds
     }
     
     
     public func refunds(for order: OrderDetails) -> [OrderRefund] {
         
-        orderRefunds.filter { $0.orderId == order.id }
+        allRefunds.filter { $0.orderId == order.id }
     }
     
     
-    public func createRefund(_ refund: OrderRefund) {
+    public func create(_ refund: OrderRefund) {
         
         try! dataStore.addOrderRefund(refund)
         try! dataStore.save()
