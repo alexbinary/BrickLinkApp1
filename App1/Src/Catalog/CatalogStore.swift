@@ -37,6 +37,12 @@ class CatalogStore {
     }
     
     
+    public func colorAndName(forLegoColorId colorId: LegoColor.ID) -> (color: Color?, name: String) {
+        
+        (color: color(forLegoColorId: colorId), name: colorName(forLegoColorId: colorId))
+    }
+    
+    
     public func loadColors() async {
         
         await catalogDataAccess.loadColors()
@@ -49,5 +55,11 @@ class CatalogStore {
     public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
         
         await catalogDataAccess.getCatalogItem(forItemType: type, ref: ref)
+    }
+    
+    
+    public func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+        
+        BrickLinkUtility.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId)
     }
 }

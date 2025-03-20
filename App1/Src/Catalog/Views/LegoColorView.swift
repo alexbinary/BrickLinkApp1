@@ -36,9 +36,12 @@ struct LegoColorView: View {
     
     var body: some View {
         
+        let (color, name) = catalogStore.colorAndName(forLegoColorId: colorId)
+        
         HStack {
-            catalogStore.color(forLegoColorId: colorId).frame(width: 18, height: 18)
-            if style == .full { Text(catalogStore.colorName(forLegoColorId: colorId)) }
+            
+            color.frame(width: 18, height: 18)
+            if style == .full { Text(name) }
         }
     }
     
@@ -55,8 +58,7 @@ struct LegoColorView: View {
 #Preview {
     
     let stores = createStores()
-    let catalogStore = stores.catalog
     
     LegoColorView(colorId: "11")
-        .environment(catalogStore)
+        .environment(stores.catalog)
 }
