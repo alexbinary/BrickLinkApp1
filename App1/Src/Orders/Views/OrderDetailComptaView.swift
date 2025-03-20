@@ -6,11 +6,11 @@ import SwiftUI
 struct OrderDetailComptaView: View {
     
     
-    @Environment(ShippingStore.self)
-    var shippingStore
-    
     @Environment(TransactionStore.self)
     var transactionStore
+    
+    @Environment(ShippingStore.self)
+    var shippingStore
     
     @Environment(RefundStore.self)
     var refundStore
@@ -92,9 +92,9 @@ struct OrderDetailComptaView: View {
             HeaderTitleView(label: "􀐚 Shipping")
                
             HStack {
-                Text("Confirmed affranchissment:")
-                if let confirmedMethod = shippingStore.stamping(forOrderWithId: order.id) {
-                    Text(confirmedMethod)
+                Text("Confirmed stamping:")
+                if let stamping = shippingStore.stamping(forOrderWithId: order.id) {
+                    Text(stamping)
                 }
             }
             
