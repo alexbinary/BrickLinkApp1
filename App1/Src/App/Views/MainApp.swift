@@ -20,8 +20,6 @@ struct MainApp: App {
                 .environment(controllers.transactionController)
                 .environment(controllers.refundController)
 
-                .environment(controllers.trackingStore)
-
                 .environment(controllers.uploadController)
                 .environment(controllers.pickingController)
                 .environment(controllers.shippingController)

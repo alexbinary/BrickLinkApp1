@@ -3,7 +3,6 @@ import Foundation
 
 
 
-@Observable
 class TrackingStore {
     
     

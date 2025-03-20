@@ -14,8 +14,6 @@ enum AppController {
         transactionController: TransactionController,
         refundController: RefundController,
 
-        trackingStore: TrackingStore,
-
         uploadController: UploadController,
         pickingController: PickingController,
         shippingController: ShippingController,
@@ -75,8 +73,6 @@ enum AppController {
 
             transactionController: transactionController,
             refundController: refundController,
-
-            trackingStore: trackingStore,
 
             uploadController: uploadController,
             pickingController: pickingController,
