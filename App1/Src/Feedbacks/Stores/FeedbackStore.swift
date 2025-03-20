@@ -6,17 +6,17 @@ import Foundation
 class FeedbackStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
     public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        dataStore.orderFeedbacksByOrderId[orderId] ?? []
+        fileDataAccess.orderFeedbacksByOrderId[orderId] ?? []
     }
     
     
@@ -41,14 +41,14 @@ class FeedbackStore {
         
         print("loaded \(feedbacks.count) feedbacks")
         
-        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.setOrderFeedbacks(feedbacks, forOrderId: orderId)
+        try! fileDataAccess.save()
     }
     
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if !dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
+        if !fileDataAccess.orderFeedbacksByOrderId.keys.contains(orderId) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -57,7 +57,7 @@ class FeedbackStore {
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
+        if fileDataAccess.orderFeedbacksByOrderId.keys.contains(orderId) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -74,14 +74,14 @@ class FeedbackStore {
     
     public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
         
-        dataStore.dateValidatedWithoutFeedbackByOrderId
+        fileDataAccess.dateValidatedWithoutFeedbackByOrderId
     }
     
     
     public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
         
-        try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
+        try! fileDataAccess.save()
     }
     
     

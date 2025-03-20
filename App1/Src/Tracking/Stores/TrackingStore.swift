@@ -6,17 +6,17 @@ import Foundation
 class TrackingStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
     public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
-        dataStore.laPosteTrackingStatusByTrackingNo[trackingNo]
+        fileDataAccess.laPosteTrackingStatusByTrackingNo[trackingNo]
     }
     
     
@@ -24,7 +24,7 @@ class TrackingStore {
         
         let status = await LaPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
     
-        try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
-        try! dataStore.save()
+        try! fileDataAccess.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
+        try! fileDataAccess.save()
     }
 }

@@ -7,24 +7,24 @@ import SwiftUI
 class TransactionStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
     public var allTransactions: [Transaction] {
         
-        dataStore.transactions
+        fileDataAccess.transactions
     }
     
     
     public func register(_ transaction: Transaction) {
         
-        try! dataStore.addTransaction(transaction)
-        try! dataStore.save()
+        try! fileDataAccess.addTransaction(transaction)
+        try! fileDataAccess.save()
     }
     
     
@@ -48,14 +48,14 @@ class TransactionStore {
     
     public var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
         
-        dataStore.dateValidatedWithoutIncomeTransactionByOrderId
+        fileDataAccess.dateValidatedWithoutIncomeTransactionByOrderId
     }
     
     
     public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
         
-        try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
+        try! fileDataAccess.save()
     }
     
     
@@ -73,14 +73,14 @@ class TransactionStore {
     
     public var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
         
-        dataStore.dateValidatedWithoutShippingTransactionByOrderId
+        fileDataAccess.dateValidatedWithoutShippingTransactionByOrderId
     }
     
     
     public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
         
-        try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
+        try! fileDataAccess.save()
     }
     
     

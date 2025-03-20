@@ -6,17 +6,17 @@ import Foundation
 class RefundStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
     public var allRefunds: [OrderRefund] {
         
-        dataStore.allRefunds
+        fileDataAccess.allRefunds
     }
     
     
@@ -28,7 +28,7 @@ class RefundStore {
     
     public func create(_ refund: OrderRefund) {
         
-        try! dataStore.addOrderRefund(refund)
-        try! dataStore.save()
+        try! fileDataAccess.addOrderRefund(refund)
+        try! fileDataAccess.save()
     }
 }

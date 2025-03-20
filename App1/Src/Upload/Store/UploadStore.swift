@@ -6,11 +6,11 @@ import Foundation
 class UploadStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
@@ -19,28 +19,28 @@ class UploadStore {
     
     public var uploadItems: [UploadItem] {
         
-        dataStore.uploadItems
+        fileDataAccess.uploadItems
     }
     
     
     public func add(_ uploadItem: UploadItem) {
         
-        try! dataStore.addUploadItem(uploadItem)
-        try! dataStore.save()
+        try! fileDataAccess.addUploadItem(uploadItem)
+        try! fileDataAccess.save()
     }
     
     
     public func delete(_ uploadItem: UploadItem) {
         
-        try! dataStore.deleteUploadItem(uploadItem)
-        try! dataStore.save()
+        try! fileDataAccess.deleteUploadItem(uploadItem)
+        try! fileDataAccess.save()
     }
     
     
     public func update(_ updatedItem: UploadItem) {
         
-        try! dataStore.updateUploadItem(updatedItem)
-        try! dataStore.save()
+        try! fileDataAccess.updateUploadItem(updatedItem)
+        try! fileDataAccess.save()
     }
     
     
@@ -55,8 +55,8 @@ class UploadStore {
             return
         }
         
-        try! dataStore.addUploadItems(parserDelegate.decodedUploadItems)
-        try! dataStore.save()
+        try! fileDataAccess.addUploadItems(parserDelegate.decodedUploadItems)
+        try! fileDataAccess.save()
     }
     
     
@@ -65,13 +65,13 @@ class UploadStore {
     
     public var uploadedItems: [UploadedItem] {
         
-        dataStore.uploadedItems
+        fileDataAccess.uploadedItems
     }
     
     
     public func add(_ uploadedItem: UploadedItem) {
         
-        try! dataStore.addUploadedItem(uploadedItem)
-        try! dataStore.save()
+        try! fileDataAccess.addUploadedItem(uploadedItem)
+        try! fileDataAccess.save()
     }
 }

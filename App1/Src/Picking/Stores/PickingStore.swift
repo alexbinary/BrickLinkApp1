@@ -6,11 +6,11 @@ import Foundation
 class PickingStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
@@ -19,14 +19,14 @@ class PickingStore {
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        return dataStore.pickedItemIdsByOrderId[orderId] ?? []
+        return fileDataAccess.pickedItemIdsByOrderId[orderId] ?? []
     }
     
     
     public func pickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.addPickedItemId(itemId, toOrderWithId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.addPickedItemId(itemId, toOrderWithId: orderId)
+        try! fileDataAccess.save()
     }
     
     
@@ -38,8 +38,8 @@ class PickingStore {
     
     public func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.removePickedItemId(itemId, fromOrderWithId: orderId)
+        try! fileDataAccess.save()
     }
     
     
@@ -54,14 +54,14 @@ class PickingStore {
     
     public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        return dataStore.verifiedItemIdsByOrderId[orderId] ?? []
+        return fileDataAccess.verifiedItemIdsByOrderId[orderId] ?? []
     }
     
     
     public func verifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.addVerifiedItemId(itemId, toOrderWithId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.addVerifiedItemId(itemId, toOrderWithId: orderId)
+        try! fileDataAccess.save()
     }
     
     
@@ -73,8 +73,8 @@ class PickingStore {
     
     public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
-        try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
-        try! dataStore.save()
+        try! fileDataAccess.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
+        try! fileDataAccess.save()
     }
     
     

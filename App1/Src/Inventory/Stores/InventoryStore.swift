@@ -7,11 +7,11 @@ import SwiftUI
 class InventoryStore {
     
     
-    private let dataStore: DataStore
+    private let fileDataAccess: FileDataAccess
     
     
-    init(_ dataStore: DataStore) {
-        self.dataStore = dataStore
+    init(_ fileDataAccess: FileDataAccess) {
+        self.fileDataAccess = fileDataAccess
     }
     
     
@@ -20,13 +20,13 @@ class InventoryStore {
     
     public var allInventories: [InventoryItem] {
         
-        dataStore.inventories
+        fileDataAccess.inventories
     }
     
     
     public func inventory(withId id: InventoryItem.ID) -> InventoryItem? {
         
-        dataStore.inventories.first { $0.id == id }
+        fileDataAccess.inventories.first { $0.id == id }
     }
     
     
@@ -86,8 +86,8 @@ class InventoryStore {
         
         print("loaded \(inventories.count) inventories")
         
-        try! dataStore.setInventories(inventories)
-        try! dataStore.save()
+        try! fileDataAccess.setInventories(inventories)
+        try! fileDataAccess.save()
     }
     
     
@@ -98,14 +98,14 @@ class InventoryStore {
         let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id)
         let inventory = InventoryItem(fromBl: blInventory)
         
-        try! dataStore.setInventory(inventory)
-        try! dataStore.save()
+        try! fileDataAccess.setInventory(inventory)
+        try! fileDataAccess.save()
     }
     
     
     public func reloadInventories() async {
         
-        if !dataStore.inventories.isEmpty {
+        if !fileDataAccess.inventories.isEmpty {
         
             await loadInventories()
         }
@@ -114,7 +114,7 @@ class InventoryStore {
     
     public func reloadInventory(withId id: InventoryItem.ID) async {
         
-        if dataStore.inventories.contains(where: { $0.id == id }) {
+        if fileDataAccess.inventories.contains(where: { $0.id == id }) {
             
             await loadInventory(withId: id)
         }
