@@ -9,8 +9,8 @@ struct OrdersMainListItem: View {
     @Environment(OrderController.self)
     var orderController
     
-    @Environment(PickingStore.self)
-    var pickingStore
+    @Environment(PickingController.self)
+    var pickingController
     
     @Environment(FeedbackController.self)
     var feedbackController
@@ -195,19 +195,13 @@ struct OrdersMainListItem: View {
             
             if !orderChecklistController.orderChecklistPicking(order.id) {
                 
-                let picked = pickingStore.pickedItemIds(forOrderWithId: order.id).count
-                let total = orderController.orderItems(forOrderWithId: order.id).count
-                
-                let percent = floor(Double(picked)/Double(total)*100)
-                items.append(OrderStatusTag(text: String(format: "%3.0f%% picked", percent), status: .actionRequired))
+                let progress = pickingController.pickingProgress(forOrderWithId: order.id)
+                items.append(OrderStatusTag(text: "\(progress) picked", status: .actionRequired))
                 
             } else if !orderChecklistController.orderChecklistVerification(order.id) {
                 
-                let verified = pickingStore.verifiedItemIds(forOrderWithId: order.id).count
-                let total = orderController.orderItems(forOrderWithId: order.id).count
-                
-                let percent = floor(Double(verified)/Double(total)*100)
-                items.append(OrderStatusTag(text: String(format: "%3.0f%% verified", percent), status: .actionRequired))
+                let progress = pickingController.pickingVerificationProgress(forOrderWithId: order.id)
+                items.append(OrderStatusTag(text: "\(progress) verified", status: .actionRequired))
                 
             } else if !orderChecklistController.orderChecklistPacked(order.id) {
                 items.append(OrderStatusTag(text: "Not packed yet", status: .actionRequired))
@@ -294,7 +288,7 @@ struct OrdersMainListItem: View {
     let controllers = AppController.createControllers()
     
     let orderController = controllers.orderController
-    let pickingStore = controllers.pickingStore
+    let pickingController = controllers.pickingController
     let feedbackController = controllers.feedbackController
     let orderChecklistController = controllers.orderChecklistController
     
@@ -302,7 +296,7 @@ struct OrdersMainListItem: View {
     
     OrdersMainListItem(order: order)
         .environment(orderController)
-        .environment(pickingStore)
+        .environment(pickingController)
         .environment(feedbackController)
         .environment(orderChecklistController)
 }
