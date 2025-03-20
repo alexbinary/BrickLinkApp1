@@ -34,4 +34,5 @@ struct FeedbackRating: View {
 
 #Preview {
     FeedbackRating(Feedback(id: 1, orderId: "", from: "", to: "", dateRated: .now, rating: .praise, author: .buyer, comment: ""))
+        .padding()
 }

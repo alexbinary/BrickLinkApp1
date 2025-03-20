@@ -95,7 +95,7 @@ class OrderChecklistController {
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackStore.orderFeedbacks(forOrderWithId: orderId)
+        feedbackStore.feedbacks(forOrderWithId: orderId)
     }
     
     

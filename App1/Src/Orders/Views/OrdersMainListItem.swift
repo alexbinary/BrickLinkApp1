@@ -12,9 +12,6 @@ struct OrdersMainListItem: View {
     @Environment(PickingStore.self)
     var pickingStore
     
-    @Environment(FeedbackStore.self)
-    var feedbackStore
-    
     @Environment(FeedbackController.self)
     var feedbackController
     
@@ -98,14 +95,14 @@ struct OrdersMainListItem: View {
                                 
                                 HStack {
                                     Text("Seller:")
-                                    if let feedback = feedbackStore.sellerFeedback(forOrderWithId: order.id) {
+                                    if let feedback = feedbackController.sellerFeedback(forOrderWithId: order.id) {
                                         FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                                 
                                 HStack {
                                     Text("Buyer:")
-                                    if let feedback = feedbackStore.buyerFeedback(forOrderWithId: order.id) {
+                                    if let feedback = feedbackController.buyerFeedback(forOrderWithId: order.id) {
                                         FeedbackRating(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
@@ -256,7 +253,7 @@ struct OrdersMainListItem: View {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
-                        await feedbackController.postPraiseOrderFeedback(orderId: order.id)
+                        await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
                     }
                 }))
             }
@@ -279,7 +276,7 @@ struct OrdersMainListItem: View {
             
             items.append(OrderStatusTag(text: "Give feedback", status: .actionRequired, action: {
                 Task {
-                    await feedbackController.postPraiseOrderFeedback(orderId: order.id)
+                    await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
                 }
             }))
             
@@ -300,7 +297,6 @@ struct OrdersMainListItem: View {
     let controllers = AppController.createControllers()
     let orderStore = controllers.orderStore
     let pickingStore = controllers.pickingStore
-    let feedbackStore = controllers.feedbackStore
     let feedbackController = controllers.feedbackController
     let orderChecklistController = controllers.orderChecklistController
     let orderController = controllers.orderController
@@ -310,7 +306,6 @@ struct OrdersMainListItem: View {
     OrdersMainListItem(order: order)
         .environment(orderStore)
         .environment(pickingStore)
-        .environment(feedbackStore)
         .environment(feedbackController)
         .environment(orderChecklistController)
         .environment(orderController)

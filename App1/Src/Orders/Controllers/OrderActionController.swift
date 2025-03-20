@@ -65,7 +65,7 @@ class OrderActionController {
     
     public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
         
-        await feedbackController.postPraiseOrderFeedback(orderId: orderId)
+        await feedbackController.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     

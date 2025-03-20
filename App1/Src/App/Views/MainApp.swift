@@ -25,7 +25,6 @@ struct MainApp: App {
                 .environment(controllers.pickingStore)
                 .environment(controllers.shippingStore)
                 .environment(controllers.trackingStore)
-                .environment(controllers.feedbackStore)
 
                 .environment(controllers.uploadController)
                 .environment(controllers.pickingController)

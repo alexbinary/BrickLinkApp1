@@ -19,7 +19,6 @@ enum AppController {
         pickingStore: PickingStore,
         shippingStore: ShippingStore,
         trackingStore: TrackingStore,
-        feedbackStore: FeedbackStore,
 
         uploadController: UploadController,
         pickingController: PickingController,
@@ -82,7 +81,6 @@ enum AppController {
             pickingStore: pickingStore,
             shippingStore: shippingStore,
             trackingStore: trackingStore,
-            feedbackStore: feedbackStore,
 
             uploadController: uploadController,
             pickingController: pickingController,

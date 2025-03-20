@@ -23,18 +23,48 @@ class FeedbackController {
     }
     
     
-    public func postOrderFeedback(orderId: OrderSummary.ID, rating: Int, comment: String) async {
+    public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        await feedbackStore.postOrderFeedback(orderId: orderId, rating: rating, comment: comment)
+        feedbackStore.feedbacks(forOrderWithId: orderId)
     }
     
     
-    public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
+    public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+        
+        feedbackStore.buyerFeedback(forOrderWithId: orderId)
+    }
+    
+    
+    public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+        
+        feedbackStore.sellerFeedback(forOrderWithId: orderId)
+    }
+    
+    
+    public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
+        
+        feedbackStore.dateOrderValidatedWithoutFeedback(orderId: orderId)
+    }
+    
+    
+    public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
+        
+        feedbackStore.validateOrderWithoutFeedback(orderId: orderId)
+    }
+    
+    
+    public func postFeedback(forOrderWithId orderId: OrderSummary.ID, rating: Int, comment: String) async {
+        
+        await feedbackStore.postFeedback(forOrderWithId: orderId, rating: rating, comment: comment)
+    }
+    
+    
+    public func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
         
         guard let order = orderDetails(forOrderWithId: orderId) else { return }
         
-        await postOrderFeedback(
-            orderId: orderId, rating: 0,
+        await postFeedback(
+            forOrderWithId: orderId, rating: 0,
             comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
         )
     }

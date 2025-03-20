@@ -3,7 +3,6 @@ import Foundation
 
 
 
-@Observable
 class FeedbackStore {
     
     
@@ -15,7 +14,7 @@ class FeedbackStore {
     }
     
     
-    public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
+    public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
         dataStore.orderFeedbacksByOrderId[orderId] ?? []
     }
@@ -23,13 +22,13 @@ class FeedbackStore {
     
     public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
-        orderFeedbacks(forOrderWithId: orderId).buyerFeedback()
+        feedbacks(forOrderWithId: orderId).buyerFeedback()
     }
     
     
     public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
-        orderFeedbacks(forOrderWithId: orderId).sellerFeedback()
+        feedbacks(forOrderWithId: orderId).sellerFeedback()
     }
     
     
@@ -65,11 +64,11 @@ class FeedbackStore {
     }
     
     
-    public func postOrderFeedback(orderId: OrderSummary.ID, rating: Int, comment: String) async {
+    public func postFeedback(forOrderWithId: OrderSummary.ID, rating: Int, comment: String) async {
         
-        await BrickLinkAPIClient.postFeedback(forOrderWithId: orderId, rating: rating, comment: comment)
+        await BrickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating, comment: comment)
         
-        await reloadOrderFeedbacks(forOrderWithId: orderId)
+        await reloadOrderFeedbacks(forOrderWithId: forOrderWithId)
     }
     
     
