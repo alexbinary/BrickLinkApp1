@@ -121,14 +121,11 @@ extension Feedback {
 extension FeedbackAuthor {
     
     
-    init?(fromBl ratingOfBs: String) {
+    init?(fromBl bl: BrickLinkFeedbackRatingOfBS) {
         
-        switch ratingOfBs {
-          
-        case "B": self = .seller
-        case "S": self = .buyer
-            
-        default: return nil
+        switch bl {
+        case .forBuyer: self = .seller
+        case .forSeller: self = .buyer
         }
     }
 }
