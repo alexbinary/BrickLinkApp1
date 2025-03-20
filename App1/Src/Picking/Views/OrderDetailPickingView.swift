@@ -87,12 +87,12 @@ struct OrderDetailPickingView: View {
             }
         }
         .padding()
-        .onChange(of: order, initial: true) {
-            Task { await orderStore.loadOrderItemsIfMissing(forOrderWithId: order.id) }
-        }
-        .onAppear {
-            Task { await inventoryStore.reloadInventories() }
-        }
+        .onChange(of: order, initial: true) { Task {
+            await orderStore.loadOrderItemsIfMissing(forOrderWithId: order.id)
+        }}
+        .onAppear { Task {
+            await inventoryStore.reloadInventories()
+        }}
     }
 }
 

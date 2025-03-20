@@ -54,6 +54,7 @@ extension View {
             .environment(env.stores.orderChecklist)
             .environment(env.stores.orderAction)
             
+            .environment(env.controllers.inventory)
             .environment(env.controllers.feedback)
             .environment(env.controllers.reload)
     }
