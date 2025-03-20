@@ -10,14 +10,14 @@ class OrderActionStore {
     private let orderDataAccess: OrderDataAccess
     private let orderStore: OrderStore
     private let orderChecklistStore: OrderChecklistStore
-    private let feedbackStore: FeedbackStore
+    private let feedbackController: FeedbackController
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ orderStore: OrderStore, _ orderChecklistStore: OrderChecklistStore, _ feedbackStore: FeedbackStore) {
+    init(_ orderDataAccess: OrderDataAccess, _ orderStore: OrderStore, _ orderChecklistStore: OrderChecklistStore, _ feedbackController: FeedbackController) {
         self.orderDataAccess = orderDataAccess
         self.orderStore = orderStore
         self.orderChecklistStore = orderChecklistStore
-        self.feedbackStore = feedbackStore
+        self.feedbackController = feedbackController
     }
     
     
@@ -65,7 +65,7 @@ class OrderActionStore {
     
     public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
         
-        await feedbackStore.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackController.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     

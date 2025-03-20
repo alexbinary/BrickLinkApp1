@@ -14,6 +14,9 @@ class FeedbackDataAccess {
     }
     
     
+    // MARK: - Read feedbacks
+    
+    
     public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
         fileDataAccess.orderFeedbacksByOrderId[orderId] ?? []
@@ -64,12 +67,18 @@ class FeedbackDataAccess {
     }
     
     
-    public func postFeedback(forOrderWithId: OrderSummary.ID, rating: Int, comment: String) async {
+    // MARK: - Post feedback
+    
+    
+    public func postFeedback(forOrderWithId: OrderSummary.ID, rating: BrickLinkFeedbackRating, comment: String) async {
         
-        await BrickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating, comment: comment)
+        await BrickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating.rawValue, comment: comment)
         
         await reloadOrderFeedbacks(forOrderWithId: forOrderWithId)
     }
+    
+    
+    // MARK: - Validation without feedback
     
     
     public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {

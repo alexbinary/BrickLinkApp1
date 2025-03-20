@@ -15,6 +15,7 @@ func createStores() -> (
         shipping: ShippingStore,
         tracking: TrackingStore,
         feedback: FeedbackStore,
+        feedbackController: FeedbackController,
         refund: RefundStore,
 
         transaction: TransactionStore,
@@ -55,7 +56,8 @@ func createStores() -> (
     let pickingStore = PickingStore(orderDataAccess, pickingDataAccess)
     let shippingStore = ShippingStore(orderDataAccess, shippingDataAccess)
     let trackingStore = TrackingStore(orderDataAccess, trackingDataAccess)
-    let feedbackStore = FeedbackStore(orderDataAccess, feedbackDataAccess)
+    let feedbackStore = FeedbackStore(feedbackDataAccess)
+    let feedbackController = FeedbackController(orderDataAccess, feedbackDataAccess)
     let refundStore = RefundStore(refundDataAccess)
     
     let transactionStore = TransactionStore(transactionDataAccess)
@@ -66,7 +68,7 @@ func createStores() -> (
     let orderStore = OrderStore(orderDataAccess, orderChecklistStore)
     
     let stockStore = StockStore(orderDataAccess, pickingDataAccess, inventoryDataAccess, orderStore)
-    let orderActionStore = OrderActionStore(orderDataAccess, orderStore, orderChecklistStore, feedbackStore)
+    let orderActionStore = OrderActionStore(orderDataAccess, orderStore, orderChecklistStore, feedbackController)
     
     let reloadController = ReloadController(orderDataAccess, feedbackDataAccess, orderStore, trackingStore)
     
@@ -82,6 +84,7 @@ func createStores() -> (
         shipping: shippingStore,
         tracking: trackingStore,
         feedback: feedbackStore,
+        feedbackController: feedbackController,
         refund: refundStore,
         
         transaction: transactionStore,

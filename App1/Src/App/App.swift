@@ -24,6 +24,7 @@ struct MainApp: App {
                 .environment(stores.shipping)
                 .environment(stores.tracking)
                 .environment(stores.feedback)
+                .environment(stores.feedbackController)
                 .environment(stores.refund)
             
                 .environment(stores.transaction)
