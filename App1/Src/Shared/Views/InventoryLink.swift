@@ -27,7 +27,7 @@ struct InventoryLink<Label>: View where Label: View {
     
     let controllers = AppController.createControllers()
     
-    let inventoryController = controllers.inventoryController
+    let inventoryController = controllers.inventory
     
     let inventory = inventoryController.allInventories.first!
     

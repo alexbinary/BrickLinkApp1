@@ -30,7 +30,7 @@ struct UploadItemsView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let uploadController = controllers.uploadController
+    let uploadController = controllers.upload
     
     UploadItemsView()
         .environment(uploadController)

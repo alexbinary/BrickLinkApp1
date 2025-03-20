@@ -67,9 +67,9 @@ extension View {
     
     let controllers = AppController.createControllers()
     
-    let orderChecklistController = controllers.orderChecklistController
+    let orderChecklistController = controllers.orderChecklist
     
-    let orderController = controllers.orderController
+    let orderController = controllers.order
     let order = orderController.orderDetails.first!
     
     OrderChecklistView(order)

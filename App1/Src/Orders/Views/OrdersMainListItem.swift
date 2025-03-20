@@ -287,10 +287,10 @@ struct OrdersMainListItem: View {
     
     let controllers = AppController.createControllers()
     
-    let orderController = controllers.orderController
-    let pickingController = controllers.pickingController
-    let feedbackController = controllers.feedbackController
-    let orderChecklistController = controllers.orderChecklistController
+    let orderController = controllers.order
+    let pickingController = controllers.picking
+    let feedbackController = controllers.feedback
+    let orderChecklistController = controllers.orderChecklist
     
     let order = orderController.orderSummaries.first!
     

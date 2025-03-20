@@ -115,9 +115,9 @@ struct ResultOrderList: View {
     
     let controllers = AppController.createControllers()
     
-    let shippingController = controllers.shippingController
-    let refundController = controllers.refundController
-    let resultController = controllers.resultController
+    let shippingController = controllers.shipping
+    let refundController = controllers.refund
+    let resultController = controllers.result
     
     ResultOrderList([], title: "Title", selection: .constant(nil))
         .environment(shippingController)

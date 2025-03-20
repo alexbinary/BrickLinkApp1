@@ -8,25 +8,25 @@ enum AppController {
     
     static func createControllers() -> (
         
-        catalogController: CatalogController,
-        inventoryController: InventoryController,
+        catalog: CatalogController,
+        inventory: InventoryController,
+        upload: UploadController,
+        stock: StockController,
 
-        transactionController: TransactionController,
-        refundController: RefundController,
+        order: OrderController,
+        picking: PickingController,
+        shipping: ShippingController,
+        tracking: TrackingController,
+        feedback: FeedbackController,
+        refund: RefundController,
 
-        uploadController: UploadController,
-        pickingController: PickingController,
-        shippingController: ShippingController,
-        trackingController: TrackingController,
-        feedbackController: FeedbackController,
+        transaction: TransactionController,
+        result: ResultController,
 
-        orderChecklistController: OrderChecklistController,
-        resultController: ResultController,
+        reload: ReloadController,
 
-        orderController: OrderController,
-        stockController: StockController,
-        reloadController: ReloadController,
-        orderActionController: OrderActionController
+        orderChecklist: OrderChecklistController,
+        orderAction: OrderActionController
         
     ) {
         
@@ -35,58 +35,65 @@ enum AppController {
             return DataStore(dataFileUrl: URL(fileURLWithPath: path))
         }()
         
-        let uploadStore = UploadStore(dataStore)
-        let catalogStore = CatalogStore(dataStore)
-        let catalogController = CatalogController(catalogStore)
-        let inventoryStore = InventoryStore(dataStore)
-        let inventoryController = InventoryController(inventoryStore)
+        // Stores
         
-        let transactionStore = TransactionStore(dataStore)
-        let transactionController = TransactionController(transactionStore)
-        let refundStore = RefundStore(dataStore)
-        let refundController = RefundController(refundStore)
+        let catalogStore = CatalogStore(dataStore)
+        let inventoryStore = InventoryStore(dataStore)
+        let uploadStore = UploadStore(dataStore)
         
         let orderStore = OrderStore(dataStore)
         let pickingStore = PickingStore(dataStore)
         let shippingStore = ShippingStore(dataStore)
         let trackingStore = TrackingStore(dataStore)
         let feedbackStore = FeedbackStore(dataStore)
+        let refundStore = RefundStore(dataStore)
         
+        let transactionStore = TransactionStore(dataStore)
+        
+        // Controllers
+        
+        let catalogController = CatalogController(catalogStore)
+        let inventoryController = InventoryController(inventoryStore)
         let uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
+        
         let pickingController = PickingController(orderStore, pickingStore)
         let shippingController = ShippingController(orderStore, shippingStore)
         let trackingController = TrackingController(orderStore, trackingStore)
         let feedbackController = FeedbackController(orderStore, feedbackStore)
+        let refundController = RefundController(refundStore)
         
-        let orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore, trackingController, pickingController)
+        let transactionController = TransactionController(transactionStore)
         let resultController = ResultController(orderStore, shippingStore, refundStore, transactionStore)
         
+        let orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore, trackingController, pickingController)
+        
         let orderController = OrderController(orderStore, orderChecklistController)
+        
         let stockController = StockController(orderStore, pickingStore, inventoryStore, orderController)
         let reloadController = ReloadController(orderStore, feedbackStore, orderController, trackingController)
         let orderActionController = OrderActionController(orderStore, orderController, orderChecklistController, feedbackController)
         
         return (
             
-            catalogController: catalogController,
-            inventoryController: inventoryController,
+            catalog: catalogController,
+            inventory: inventoryController,
+            upload: uploadController,
+            stock: stockController,
 
-            transactionController: transactionController,
-            refundController: refundController,
+            order: orderController,
+            picking: pickingController,
+            shipping: shippingController,
+            tracking: trackingController,
+            feedback: feedbackController,
+            refund: refundController,
 
-            uploadController: uploadController,
-            pickingController: pickingController,
-            shippingController: shippingController,
-            trackingController: trackingController,
-            feedbackController: feedbackController,
+            transaction: transactionController,
+            result: resultController,
 
-            orderChecklistController: orderChecklistController,
-            resultController: resultController,
+            reload: reloadController,
 
-            orderController: orderController,
-            stockController: stockController,
-            reloadController: reloadController,
-            orderActionController: orderActionController
+            orderChecklist: orderChecklistController,
+            orderAction: orderActionController
         )
     }
 }

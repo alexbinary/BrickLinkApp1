@@ -40,8 +40,8 @@ struct LaPosteTrackingStatusIndicator: View {
     
     let controllers = AppController.createControllers()
     
-    let orderController = controllers.orderController
-    let trackingController = controllers.trackingController
+    let orderController = controllers.order
+    let trackingController = controllers.tracking
     
     let order = orderController.orderSummaries.first!
     

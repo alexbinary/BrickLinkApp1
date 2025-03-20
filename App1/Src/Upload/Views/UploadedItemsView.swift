@@ -36,7 +36,7 @@ struct UploadedItemsView: View {
 #Preview {
     
     let controllers = AppController.createControllers()
-    let uploadController = controllers.uploadController
+    let uploadController = controllers.upload
     
     UploadedItemsView()
         .environment(uploadController)

@@ -96,10 +96,10 @@ enum ButtonType {
     
     let controllers = AppController.createControllers()
     
-    let pickingController = controllers.pickingController
-    let stockController = controllers.stockController
+    let pickingController = controllers.picking
+    let stockController = controllers.stock
     
-    let orderController = controllers.orderController
+    let orderController = controllers.order
     let order = orderController.orderSummaries.first!
     let item = orderController.orderItems(forOrderWithId: order.id).first!
     

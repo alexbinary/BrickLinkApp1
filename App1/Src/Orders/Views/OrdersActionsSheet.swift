@@ -98,10 +98,10 @@ struct OrdersActionsSheet: View {
     
     let controllers = AppController.createControllers()
     
-    let orderChecklistController = controllers.orderChecklistController
-    let orderActionController = controllers.orderActionController
+    let orderChecklistController = controllers.orderChecklist
+    let orderActionController = controllers.orderAction
     
-    let orderController = controllers.orderController
+    let orderController = controllers.order
     let orders = orderController.orderSummaries
     
     OrdersActionsSheet(orders: orders)

@@ -102,9 +102,9 @@ struct OrderDetailPickingView: View {
     
     let controllers = AppController.createControllers()
 
-    let orderController = controllers.orderController
-    let inventoryController = controllers.inventoryController
-    let pickingController = controllers.pickingController
+    let orderController = controllers.order
+    let inventoryController = controllers.inventory
+    let pickingController = controllers.picking
     
     let order = orderController.orderDetails.first!
     

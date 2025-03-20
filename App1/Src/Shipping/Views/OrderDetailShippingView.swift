@@ -253,8 +253,8 @@ struct OrderDetailShippingView: View {
     
     let controllers = AppController.createControllers()
     
-    let orderController = controllers.orderController
-    let shippingController = controllers.shippingController
+    let orderController = controllers.order
+    let shippingController = controllers.shipping
     
     let order = orderController.orderDetails.first!
     

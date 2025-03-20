@@ -14,30 +14,29 @@ struct MainApp: App {
             
             WindowRootView()
                 
-                .environment(controllers.catalogController)
-                .environment(controllers.inventoryController)
+                .environment(controllers.catalog)
+                .environment(controllers.inventory)
+                .environment(controllers.upload)
+                .environment(controllers.stock)
+            
+                .environment(controllers.order)
+                .environment(controllers.picking)
+                .environment(controllers.shipping)
+                .environment(controllers.tracking)
+                .environment(controllers.feedback)
+                .environment(controllers.refund)
+            
+                .environment(controllers.transaction)
+                .environment(controllers.result)
 
-                .environment(controllers.transactionController)
-                .environment(controllers.refundController)
-
-                .environment(controllers.uploadController)
-                .environment(controllers.pickingController)
-                .environment(controllers.shippingController)
-                .environment(controllers.trackingController)
-                .environment(controllers.feedbackController)
-
-                .environment(controllers.orderChecklistController)
-                .environment(controllers.resultController)
-
-                .environment(controllers.orderController)
-                .environment(controllers.stockController)
-                .environment(controllers.reloadController)
-                .environment(controllers.orderActionController)
+                .environment(controllers.reload)
+                .environment(controllers.orderChecklist)
+                .environment(controllers.orderAction)
 
                 .task { await parallel([
-                    { await controllers.catalogController.loadColors() },
-                    { await controllers.inventoryController.loadInventories() },
-                    { await controllers.orderController.loadOrderSummaries() },
+                    { await controllers.catalog.loadColors() },
+                    { await controllers.inventory.loadInventories() },
+                    { await controllers.order.loadOrderSummaries() },
                 ])}
         }
     }

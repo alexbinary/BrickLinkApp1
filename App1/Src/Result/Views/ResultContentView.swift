@@ -121,10 +121,10 @@ struct ResultContentView: View {
     
     let controllers = AppController.createControllers()
     
-    let orderController = controllers.orderController
-    let shippingController = controllers.shippingController
-    let refundController = controllers.refundController
-    let resultController = controllers.resultController
+    let orderController = controllers.order
+    let shippingController = controllers.shipping
+    let refundController = controllers.refund
+    let resultController = controllers.result
     
     let navigationController = NavigationController()
     

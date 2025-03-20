@@ -61,9 +61,9 @@ struct PickingProgressView: View {
     
     let controllers = AppController.createControllers()
     
-    let pickingController = controllers.pickingController
+    let pickingController = controllers.picking
     
-    let orderController = controllers.orderController
+    let orderController = controllers.order
     let order = orderController.orderDetails.first!
     
     PickingProgressView(order)

@@ -245,11 +245,11 @@ struct OrderDetailComptaView: View {
     
     let controllers = AppController.createControllers()
     
-    let transactionController = controllers.transactionController
-    let shippingController = controllers.shippingController
-    let refundController = controllers.refundController
+    let transactionController = controllers.transaction
+    let shippingController = controllers.shipping
+    let refundController = controllers.refund
 
-    let orderController = controllers.orderController
+    let orderController = controllers.order
     let order = orderController.orderDetails.first!
     
     OrderDetailComptaView(order)

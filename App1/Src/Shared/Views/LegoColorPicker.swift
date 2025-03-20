@@ -39,7 +39,7 @@ struct LegoColorPicker: View {
     @Previewable @State var selection: LegoColor.ID = "11"
     
     let controllers = AppController.createControllers()
-    let catalogController = controllers.catalogController
+    let catalogController = controllers.catalog
     
     LegoColorPicker("Color", selection: $selection)
         .environment(catalogController)

@@ -102,8 +102,8 @@ struct OrdersMainList: View {
     
     let controllers = AppController.createControllers()
 
-    let orderController = controllers.orderController
-    let reloadController = controllers.reloadController
+    let orderController = controllers.order
+    let reloadController = controllers.reload
     let navigationController = NavigationController()
     
     OrdersMainList()

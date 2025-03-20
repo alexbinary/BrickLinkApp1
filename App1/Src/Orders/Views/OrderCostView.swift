@@ -66,7 +66,7 @@ struct OrderCostView: View {
     
     let controllers = AppController.createControllers()
     
-    let orderController = controllers.orderController
+    let orderController = controllers.order
     
     let order = orderController.orderDetails.first!
     

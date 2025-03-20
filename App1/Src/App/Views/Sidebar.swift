@@ -57,8 +57,8 @@ struct Sidebar: View {
     let navigationController = NavigationController()
     
     let controllers = AppController.createControllers()
-    let orderController = controllers.orderController
-    let uploadController = controllers.uploadController
+    let orderController = controllers.order
+    let uploadController = controllers.upload
     
     Sidebar()
         .environment(navigationController)
