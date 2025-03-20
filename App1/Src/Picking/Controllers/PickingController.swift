@@ -7,37 +7,37 @@ import Foundation
 class PickingController {
     
     
-    private let orderStore: OrderStore
-    private let pickingStore: PickingStore
+    private let orderDataAccess: OrderDataAccess
+    private let pickingDataAccess: PickingDataAccess
     
     
-    init(_ orderStore: OrderStore, _ pickingStore: PickingStore) {
-        self.orderStore = orderStore
-        self.pickingStore = pickingStore
+    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess) {
+        self.orderDataAccess = orderDataAccess
+        self.pickingDataAccess = pickingDataAccess
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderStore.orderItems(forOrderWithId: orderId)
+        orderDataAccess.orderItems(forOrderWithId: orderId)
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        orderStore.orderItems(forOrderWithId: orderId, fromItemIds: itemsIds)
+        orderDataAccess.orderItems(forOrderWithId: orderId, fromItemIds: itemsIds)
     }
     
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingStore.pickedItemIds(forOrderWithId: orderId)
+        pickingDataAccess.pickedItemIds(forOrderWithId: orderId)
     }
     
     
     public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingStore.verifiedItemIds(forOrderWithId: orderId)
+        pickingDataAccess.verifiedItemIds(forOrderWithId: orderId)
     }
     
     
@@ -46,13 +46,13 @@ class PickingController {
     
     public func pick(_ item: OrderItem) {
         
-        pickingStore.pick(item)
+        pickingDataAccess.pick(item)
     }
     
     
     public func unpick(_ item: OrderItem) {
         
-        pickingStore.unpick(item)
+        pickingDataAccess.unpick(item)
     }
     
     
@@ -108,13 +108,13 @@ class PickingController {
     
     public func verify(_ item: OrderItem) {
         
-        pickingStore.verify(item)
+        pickingDataAccess.verify(item)
     }
     
     
     public func unverify(_ item: OrderItem) {
         
-        pickingStore.unverify(item)
+        pickingDataAccess.unverify(item)
     }
     
 

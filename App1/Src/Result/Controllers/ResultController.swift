@@ -7,47 +7,47 @@ import Foundation
 class ResultController {
     
     
-    private let orderStore: OrderStore
-    private let shippingStore: ShippingStore
-    private let refundStore: RefundStore
-    private let transactionStore: TransactionStore
+    private let orderDataAccess: OrderDataAccess
+    private let shippingDataAccess: ShippingDataAccess
+    private let refundDataAccess: RefundDataAccess
+    private let transactionDataAccess: TransactionDataAccess
     
     
-    init(_ orderStore: OrderStore, _ shippingStore: ShippingStore, _ refundStore: RefundStore, _ transactionStore: TransactionStore) {
-        self.orderStore = orderStore
-        self.shippingStore = shippingStore
-        self.refundStore = refundStore
-        self.transactionStore = transactionStore
+    init(_ orderDataAccess: OrderDataAccess, _ shippingDataAccess: ShippingDataAccess, _ refundDataAccess: RefundDataAccess, _ transactionDataAccess: TransactionDataAccess) {
+        self.orderDataAccess = orderDataAccess
+        self.shippingDataAccess = shippingDataAccess
+        self.refundDataAccess = refundDataAccess
+        self.transactionDataAccess = transactionDataAccess
     }
     
     
     public var orderDetails: [OrderDetails] {
         
-        orderStore.orderDetails
+        orderDataAccess.orderDetails
     }
     
     
     public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
-        shippingStore.confirmedShippingCost(forOrderWithId: orderId)
+        shippingDataAccess.confirmedShippingCost(forOrderWithId: orderId)
     }
     
     
     public func refunds(for order: OrderDetails) -> [OrderRefund] {
         
-        refundStore.refunds(for: order)
+        refundDataAccess.refunds(for: order)
     }
     
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.incomeTransactions(forOrderWithId: orderId)
+        transactionDataAccess.incomeTransactions(forOrderWithId: orderId)
     }
     
     
     public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.refundTransactions(forOrderWithId: orderId)
+        transactionDataAccess.refundTransactions(forOrderWithId: orderId)
     }
     
     

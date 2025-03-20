@@ -8,11 +8,11 @@ import SwiftUI
 class CatalogController {
     
     
-    private let catalogStore: CatalogStore
+    private let catalogDataAccess: CatalogDataAccess
     
     
-    init(_ catalogStore: CatalogStore) {
-        self.catalogStore = catalogStore
+    init(_ catalogDataAccess: CatalogDataAccess) {
+        self.catalogDataAccess = catalogDataAccess
     }
     
     
@@ -21,25 +21,25 @@ class CatalogController {
     
     public var allColors: [LegoColor] {
         
-        catalogStore.allColors
+        catalogDataAccess.allColors
     }
     
     
     public func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
         
-        catalogStore.color(forLegoColorId: colorId)
+        catalogDataAccess.color(forLegoColorId: colorId)
     }
     
     
     public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
         
-        catalogStore.colorName(forLegoColorId: colorId)
+        catalogDataAccess.colorName(forLegoColorId: colorId)
     }
     
     
     public func loadColors() async {
         
-        await catalogStore.loadColors()
+        await catalogDataAccess.loadColors()
     }
     
     
@@ -48,6 +48,6 @@ class CatalogController {
     
     public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
         
-        await catalogStore.getCatalogItem(forItemType: type, ref: ref)
+        await catalogDataAccess.getCatalogItem(forItemType: type, ref: ref)
     }
 }

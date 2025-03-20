@@ -7,15 +7,15 @@ import Foundation
 class ReloadController {
     
     
-    private let orderStore: OrderStore
-    private let feedbackStore: FeedbackStore
+    private let orderDataAccess: OrderDataAccess
+    private let feedbackDataAccess: FeedbackDataAccess
     private let orderController: OrderController
     private let trackingController: TrackingController
     
     
-    init(_ orderStore: OrderStore, _ feedbackStore: FeedbackStore, _ orderController: OrderController, _ trackingController: TrackingController) {
-        self.orderStore = orderStore
-        self.feedbackStore = feedbackStore
+    init(_ orderDataAccess: OrderDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ orderController: OrderController, _ trackingController: TrackingController) {
+        self.orderDataAccess = orderDataAccess
+        self.feedbackDataAccess = feedbackDataAccess
         self.orderController = orderController
         self.trackingController = trackingController
     }
@@ -23,79 +23,79 @@ class ReloadController {
     
     public var orderSummaries: [OrderSummary] {
         
-        orderStore.orderSummaries
+        orderDataAccess.orderSummaries
     }
     
     
     public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
-        orderStore.orderSummary(forOrderWithId: orderId)
+        orderDataAccess.orderSummary(forOrderWithId: orderId)
     }
     
     
     public func reloadOrderSummaries() async {
         
-        await orderStore.reloadOrderSummaries()
+        await orderDataAccess.reloadOrderSummaries()
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderStore.orderDetails(forOrderWithId: orderId)
+        orderDataAccess.orderDetails(forOrderWithId: orderId)
     }
     
     
     public func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await orderStore.loadOrderDetails(forOrderWithId: orderId)
+        await orderDataAccess.loadOrderDetails(forOrderWithId: orderId)
     }
     
     
     public func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
         
-        await orderStore.loadOrderDetailsIfMissing(forOrderWithId: orderId)
+        await orderDataAccess.loadOrderDetailsIfMissing(forOrderWithId: orderId)
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderStore.orderItems(forOrderWithId: orderId)
+        orderDataAccess.orderItems(forOrderWithId: orderId)
     }
     
     
     public func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await orderStore.loadOrderItems(forOrderWithId: orderId)
+        await orderDataAccess.loadOrderItems(forOrderWithId: orderId)
     }
     
     
     public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
         
-        await orderStore.loadOrderItemsIfMissing(forOrderWithId: orderId)
+        await orderDataAccess.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackStore.feedbacks(forOrderWithId: orderId)
+        feedbackDataAccess.feedbacks(forOrderWithId: orderId)
     }
     
     
     public func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackStore.loadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackDataAccess.loadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackStore.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
+        await feedbackDataAccess.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
     }
     
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackStore.reloadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackDataAccess.reloadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     

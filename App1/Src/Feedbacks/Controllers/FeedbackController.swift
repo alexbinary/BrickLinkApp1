@@ -7,55 +7,55 @@ import Foundation
 class FeedbackController {
     
     
-    private let orderStore: OrderStore
-    private let feedbackStore: FeedbackStore
+    private let orderDataAccess: OrderDataAccess
+    private let feedbackDataAccess: FeedbackDataAccess
     
     
-    init(_ orderStore: OrderStore, _ feedbackStore: FeedbackStore) {
-        self.orderStore = orderStore
-        self.feedbackStore = feedbackStore
+    init(_ orderDataAccess: OrderDataAccess, _ feedbackDataAccess: FeedbackDataAccess) {
+        self.orderDataAccess = orderDataAccess
+        self.feedbackDataAccess = feedbackDataAccess
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderStore.orderDetails(forOrderWithId: orderId)
+        orderDataAccess.orderDetails(forOrderWithId: orderId)
     }
     
     
     public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackStore.feedbacks(forOrderWithId: orderId)
+        feedbackDataAccess.feedbacks(forOrderWithId: orderId)
     }
     
     
     public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
-        feedbackStore.buyerFeedback(forOrderWithId: orderId)
+        feedbackDataAccess.buyerFeedback(forOrderWithId: orderId)
     }
     
     
     public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
-        feedbackStore.sellerFeedback(forOrderWithId: orderId)
+        feedbackDataAccess.sellerFeedback(forOrderWithId: orderId)
     }
     
     
     public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
         
-        feedbackStore.dateOrderValidatedWithoutFeedback(orderId: orderId)
+        feedbackDataAccess.dateOrderValidatedWithoutFeedback(orderId: orderId)
     }
     
     
     public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
         
-        feedbackStore.validateOrderWithoutFeedback(orderId: orderId)
+        feedbackDataAccess.validateOrderWithoutFeedback(orderId: orderId)
     }
     
     
     public func postFeedback(forOrderWithId orderId: OrderSummary.ID, rating: Int, comment: String) async {
         
-        await feedbackStore.postFeedback(forOrderWithId: orderId, rating: rating, comment: comment)
+        await feedbackDataAccess.postFeedback(forOrderWithId: orderId, rating: rating, comment: comment)
     }
     
     

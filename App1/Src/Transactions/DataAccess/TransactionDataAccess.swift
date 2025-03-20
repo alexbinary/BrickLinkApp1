@@ -1,10 +1,9 @@
 
 import Foundation
-import SwiftUI
 
 
 
-class TransactionStore {
+class TransactionDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

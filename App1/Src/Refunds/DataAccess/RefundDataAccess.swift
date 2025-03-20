@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class RefundStore {
+class RefundDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

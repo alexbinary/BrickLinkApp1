@@ -35,43 +35,43 @@ enum AppController {
             return FileDataAccess(dataFileUrl: URL(fileURLWithPath: path))
         }()
         
-        // Stores
+        // Data accesss
         
-        let catalogStore = CatalogStore(fileDataAccess)
-        let inventoryStore = InventoryStore(fileDataAccess)
-        let uploadStore = UploadStore(fileDataAccess)
+        let catalogDataAccess = CatalogDataAccess(fileDataAccess)
+        let inventoryDataAccess = InventoryDataAccess(fileDataAccess)
+        let uploadDataAccess = UploadDataAccess(fileDataAccess)
         
-        let orderStore = OrderStore(fileDataAccess)
-        let pickingStore = PickingStore(fileDataAccess)
-        let shippingStore = ShippingStore(fileDataAccess)
-        let trackingStore = TrackingStore(fileDataAccess)
-        let feedbackStore = FeedbackStore(fileDataAccess)
-        let refundStore = RefundStore(fileDataAccess)
+        let orderDataAccess = OrderDataAccess(fileDataAccess)
+        let pickingDataAccess = PickingDataAccess(fileDataAccess)
+        let shippingDataAccess = ShippingDataAccess(fileDataAccess)
+        let trackingDataAccess = TrackingDataAccess(fileDataAccess)
+        let feedbackDataAccess = FeedbackDataAccess(fileDataAccess)
+        let refundDataAccess = RefundDataAccess(fileDataAccess)
         
-        let transactionStore = TransactionStore(fileDataAccess)
+        let transactionDataAccess = TransactionDataAccess(fileDataAccess)
         
         // Controllers
         
-        let catalogController = CatalogController(catalogStore)
-        let inventoryController = InventoryController(inventoryStore)
-        let uploadController = UploadController(uploadStore, catalogStore, inventoryStore)
+        let catalogController = CatalogController(catalogDataAccess)
+        let inventoryController = InventoryController(inventoryDataAccess)
+        let uploadController = UploadController(uploadDataAccess, catalogDataAccess, inventoryDataAccess)
         
-        let pickingController = PickingController(orderStore, pickingStore)
-        let shippingController = ShippingController(orderStore, shippingStore)
-        let trackingController = TrackingController(orderStore, trackingStore)
-        let feedbackController = FeedbackController(orderStore, feedbackStore)
-        let refundController = RefundController(refundStore)
+        let pickingController = PickingController(orderDataAccess, pickingDataAccess)
+        let shippingController = ShippingController(orderDataAccess, shippingDataAccess)
+        let trackingController = TrackingController(orderDataAccess, trackingDataAccess)
+        let feedbackController = FeedbackController(orderDataAccess, feedbackDataAccess)
+        let refundController = RefundController(refundDataAccess)
         
-        let transactionController = TransactionController(transactionStore)
-        let resultController = ResultController(orderStore, shippingStore, refundStore, transactionStore)
+        let transactionController = TransactionController(transactionDataAccess)
+        let resultController = ResultController(orderDataAccess, shippingDataAccess, refundDataAccess, transactionDataAccess)
         
-        let orderChecklistController = OrderChecklistController(orderStore, pickingStore, shippingStore, feedbackStore, transactionStore, trackingController, pickingController)
+        let orderChecklistController = OrderChecklistController(orderDataAccess, pickingDataAccess, shippingDataAccess, feedbackDataAccess, transactionDataAccess, trackingController, pickingController)
         
-        let orderController = OrderController(orderStore, orderChecklistController)
+        let orderController = OrderController(orderDataAccess, orderChecklistController)
         
-        let stockController = StockController(orderStore, pickingStore, inventoryStore, orderController)
-        let reloadController = ReloadController(orderStore, feedbackStore, orderController, trackingController)
-        let orderActionController = OrderActionController(orderStore, orderController, orderChecklistController, feedbackController)
+        let stockController = StockController(orderDataAccess, pickingDataAccess, inventoryDataAccess, orderController)
+        let reloadController = ReloadController(orderDataAccess, feedbackDataAccess, orderController, trackingController)
+        let orderActionController = OrderActionController(orderDataAccess, orderController, orderChecklistController, feedbackController)
         
         return (
             

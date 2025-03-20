@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class PickingStore {
+class PickingDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

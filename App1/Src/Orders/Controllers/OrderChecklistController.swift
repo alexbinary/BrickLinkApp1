@@ -7,21 +7,21 @@ import Foundation
 class OrderChecklistController {
     
     
-    private let orderStore: OrderStore
-    private let pickingStore: PickingStore
-    private let shippingStore: ShippingStore
-    private let feedbackStore: FeedbackStore
-    private let transactionStore: TransactionStore
+    private let orderDataAccess: OrderDataAccess
+    private let pickingDataAccess: PickingDataAccess
+    private let shippingDataAccess: ShippingDataAccess
+    private let feedbackDataAccess: FeedbackDataAccess
+    private let transactionDataAccess: TransactionDataAccess
     private let trackingController: TrackingController
     private let pickingController: PickingController
     
     
-    init(_ orderStore: OrderStore, _ pickingStore: PickingStore, _ shippingStore: ShippingStore, _ feedbackStore: FeedbackStore, _ transactionStore: TransactionStore, _ trackingController: TrackingController, _ pickingController: PickingController) {
-        self.orderStore = orderStore
-        self.pickingStore = pickingStore
-        self.shippingStore = shippingStore
-        self.feedbackStore = feedbackStore
-        self.transactionStore = transactionStore
+    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingController: TrackingController, _ pickingController: PickingController) {
+        self.orderDataAccess = orderDataAccess
+        self.pickingDataAccess = pickingDataAccess
+        self.shippingDataAccess = shippingDataAccess
+        self.feedbackDataAccess = feedbackDataAccess
+        self.transactionDataAccess = transactionDataAccess
         self.trackingController = trackingController
         self.pickingController = pickingController
     }
@@ -29,79 +29,79 @@ class OrderChecklistController {
     
     public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
-        orderStore.orderSummary(forOrderWithId: orderId)
+        orderDataAccess.orderSummary(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Bool {
         
-        transactionStore.orderIsValidatedWithoutIncomeTransaction(orderId: orderId)
+        transactionDataAccess.orderIsValidatedWithoutIncomeTransaction(orderId: orderId)
     }
     
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.incomeTransactions(forOrderWithId: orderId)
+        transactionDataAccess.incomeTransactions(forOrderWithId: orderId)
     }
     
     
     public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.shippingTransactions(forOrderWithId: orderId)
+        transactionDataAccess.shippingTransactions(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Bool {
         
-        transactionStore.orderIsValidatedWithoutShippingTransaction(orderId: orderId)
+        transactionDataAccess.orderIsValidatedWithoutShippingTransaction(orderId: orderId)
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderStore.orderDetails(forOrderWithId: orderId)
+        orderDataAccess.orderDetails(forOrderWithId: orderId)
     }
     
     
     public func stamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        shippingStore.confirmedStamping(forOrderWithId: orderId)
+        shippingDataAccess.confirmedStamping(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutStamping(orderId: OrderDetails.ID) -> Bool {
         
-        shippingStore.orderIsValidatedWithoutStamping(orderId: orderId)
+        shippingDataAccess.orderIsValidatedWithoutStamping(orderId: orderId)
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderStore.orderItems(forOrderWithId: orderId)
+        orderDataAccess.orderItems(forOrderWithId: orderId)
     }
     
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingStore.pickedItemIds(forOrderWithId: orderId)
+        pickingDataAccess.pickedItemIds(forOrderWithId: orderId)
     }
     
     
     public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingStore.verifiedItemIds(forOrderWithId: orderId)
+        pickingDataAccess.verifiedItemIds(forOrderWithId: orderId)
     }
     
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackStore.feedbacks(forOrderWithId: orderId)
+        feedbackDataAccess.feedbacks(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
         
-        feedbackStore.orderIsValidatedWithoutFeedback(orderId: orderId)
+        feedbackDataAccess.orderIsValidatedWithoutFeedback(orderId: orderId)
     }
     
     

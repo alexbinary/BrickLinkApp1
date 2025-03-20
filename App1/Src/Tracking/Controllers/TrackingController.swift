@@ -7,31 +7,31 @@ import Foundation
 class TrackingController {
     
     
-    private let orderStore: OrderStore
-    private let trackingStore: TrackingStore
+    private let orderDataAccess: OrderDataAccess
+    private let trackingDataAccess: TrackingDataAccess
     
     
-    init(_ orderStore: OrderStore, _ trackingStore: TrackingStore) {
-        self.orderStore = orderStore
-        self.trackingStore = trackingStore
+    init(_ orderDataAccess: OrderDataAccess, _ trackingDataAccess: TrackingDataAccess) {
+        self.orderDataAccess = orderDataAccess
+        self.trackingDataAccess = trackingDataAccess
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderStore.orderDetails(forOrderWithId: orderId)
+        orderDataAccess.orderDetails(forOrderWithId: orderId)
     }
     
     
     public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
-        trackingStore.laPosteTrackingStatus(forTrackingNo: trackingNo)
+        trackingDataAccess.laPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     
     public func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
-        await trackingStore.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+        await trackingDataAccess.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     

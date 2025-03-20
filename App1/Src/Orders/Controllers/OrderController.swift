@@ -7,12 +7,12 @@ import Foundation
 class OrderController {
     
     
-    private let orderStore: OrderStore
+    private let orderDataAccess: OrderDataAccess
     private let orderChecklistController: OrderChecklistController
     
     
-    init(_ orderStore: OrderStore, _ orderChecklistController: OrderChecklistController) {
-        self.orderStore = orderStore
+    init(_ orderDataAccess: OrderDataAccess, _ orderChecklistController: OrderChecklistController) {
+        self.orderDataAccess = orderDataAccess
         self.orderChecklistController = orderChecklistController
     }
     
@@ -106,19 +106,19 @@ class OrderController {
     
     public var orderSummaries: [OrderSummary] {
         
-        orderStore.orderSummaries
+        orderDataAccess.orderSummaries
     }
     
     
     public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
-        orderStore.orderSummary(forOrderWithId: orderId)
+        orderDataAccess.orderSummary(forOrderWithId: orderId)
     }
     
     
     public func loadOrderSummaries() async {
         
-        await orderStore.loadOrderSummaries()
+        await orderDataAccess.loadOrderSummaries()
     }
     
     
@@ -127,13 +127,13 @@ class OrderController {
     
     public var orderDetails: [OrderDetails] {
         
-        orderStore.orderDetails
+        orderDataAccess.orderDetails
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderStore.orderDetails(forOrderWithId: orderId)
+        orderDataAccess.orderDetails(forOrderWithId: orderId)
     }
     
     
@@ -142,19 +142,19 @@ class OrderController {
     
     public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
         
-        await orderStore.updateOrderStatus(orderId: orderId, status: status)
+        await orderDataAccess.updateOrderStatus(orderId: orderId, status: status)
     }
     
     
     public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
         
-        await orderStore.updateTrackingNo(forOrderWithId: orderId, trackingNo: trackingNo)
+        await orderDataAccess.updateTrackingNo(forOrderWithId: orderId, trackingNo: trackingNo)
     }
     
     
     public func sendDriveThru(orderId: OrderSummary.ID) async {
         
-        await orderStore.sendDriveThru(orderId: orderId)
+        await orderDataAccess.sendDriveThru(orderId: orderId)
     }
     
     
@@ -163,13 +163,13 @@ class OrderController {
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderStore.orderItems(forOrderWithId: orderId)
+        orderDataAccess.orderItems(forOrderWithId: orderId)
     }
     
     
     public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
         
-        await orderStore.loadOrderItemsIfMissing(forOrderWithId: orderId)
+        await orderDataAccess.loadOrderItemsIfMissing(forOrderWithId: orderId)
     }
     
     

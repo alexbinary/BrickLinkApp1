@@ -7,39 +7,39 @@ import Foundation
 class UploadController {
     
     
-    private let catalogStore: CatalogStore
-    private let uploadStore: UploadStore
-    private let inventoryStore: InventoryStore
+    private let catalogDataAccess: CatalogDataAccess
+    private let uploadDataAccess: UploadDataAccess
+    private let inventoryDataAccess: InventoryDataAccess
     
     
-    init(_ uploadStore: UploadStore, _ catalogStore: CatalogStore, _ inventoryStore: InventoryStore) {
-        self.uploadStore = uploadStore
-        self.catalogStore = catalogStore
-        self.inventoryStore = inventoryStore
+    init(_ uploadDataAccess: UploadDataAccess, _ catalogDataAccess: CatalogDataAccess, _ inventoryDataAccess: InventoryDataAccess) {
+        self.uploadDataAccess = uploadDataAccess
+        self.catalogDataAccess = catalogDataAccess
+        self.inventoryDataAccess = inventoryDataAccess
     }
     
     
     public var uploadItems: [UploadItem] {
         
-        uploadStore.uploadItems
+        uploadDataAccess.uploadItems
     }
     
     
     public var uploadedItems: [UploadedItem] {
         
-        uploadStore.uploadedItems
+        uploadDataAccess.uploadedItems
     }
     
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        inventoryStore.inventory(for: uploadItem)
+        inventoryDataAccess.inventory(for: uploadItem)
     }
     
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        inventoryStore.inventories(forAllColorsOf: uploadItem)
+        inventoryDataAccess.inventories(forAllColorsOf: uploadItem)
     }
     
     
@@ -54,25 +54,25 @@ class UploadController {
     
     public func add(_ uploadItem: UploadItem) {
         
-        uploadStore.add(uploadItem)
+        uploadDataAccess.add(uploadItem)
     }
     
     
     public func delete(_ uploadItem: UploadItem) {
         
-        uploadStore.delete(uploadItem)
+        uploadDataAccess.delete(uploadItem)
     }
     
     
     public func update(_ uploadItem: UploadItem) {
         
-        uploadStore.update(uploadItem)
+        uploadDataAccess.update(uploadItem)
     }
     
     
     public func importUploadList(fromXml xml: String) {
         
-        uploadStore.importUploadList(fromXml: xml)
+        uploadDataAccess.importUploadList(fromXml: xml)
     }
     
     
@@ -106,14 +106,14 @@ class UploadController {
     
     public func add(_ uploadedItem: UploadedItem) {
         
-        uploadStore.add(uploadedItem)
+        uploadDataAccess.add(uploadedItem)
     }
     
     
     public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
         
         uploadedItems
-            .filter { $0.matches(searchText, catalogStore) }
+            .filter { $0.matches(searchText, catalogDataAccess) }
             .sorted { $0.uploadDate > $1.uploadDate }
     }
 }

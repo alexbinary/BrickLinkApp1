@@ -4,7 +4,7 @@ import SwiftUI
 
 
 
-class CatalogStore {
+class CatalogDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

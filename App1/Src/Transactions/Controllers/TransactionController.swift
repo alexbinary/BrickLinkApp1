@@ -8,11 +8,11 @@ import SwiftUI
 class TransactionController {
     
     
-    private let transactionStore: TransactionStore
+    private let transactionDataAccess: TransactionDataAccess
     
     
-    init(_ transactionStore: TransactionStore) {
-        self.transactionStore = transactionStore
+    init(_ transactionDataAccess: TransactionDataAccess) {
+        self.transactionDataAccess = transactionDataAccess
     }
     
     
@@ -21,13 +21,13 @@ class TransactionController {
     
     public var allTransactions: [Transaction] {
         
-        transactionStore.allTransactions
+        transactionDataAccess.allTransactions
     }
     
     
     public func register(_ transaction: Transaction) {
         
-        transactionStore.register(transaction)
+        transactionDataAccess.register(transaction)
     }
     
     
@@ -36,19 +36,19 @@ class TransactionController {
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.incomeTransactions(forOrderWithId: orderId)
+        transactionDataAccess.incomeTransactions(forOrderWithId: orderId)
     }
     
     
     public func dateOrderValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Date? {
         
-        transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: orderId)
+        transactionDataAccess.dateOrderValidatedWithoutIncomeTransaction(orderId: orderId)
     }
     
     
     public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
         
-        transactionStore.validateOrderWithoutIncomeTransaction(orderId: orderId)
+        transactionDataAccess.validateOrderWithoutIncomeTransaction(orderId: orderId)
     }
     
     
@@ -57,19 +57,19 @@ class TransactionController {
     
     public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.shippingTransactions(forOrderWithId: orderId)
+        transactionDataAccess.shippingTransactions(forOrderWithId: orderId)
     }
     
     
     public func dateOrderValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Date? {
         
-        transactionStore.dateOrderValidatedWithoutShippingTransaction(orderId: orderId)
+        transactionDataAccess.dateOrderValidatedWithoutShippingTransaction(orderId: orderId)
     }
     
     
     public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
         
-        transactionStore.validateOrderWithoutShippingTransaction(orderId: orderId)
+        transactionDataAccess.validateOrderWithoutShippingTransaction(orderId: orderId)
     }
     
     
@@ -78,6 +78,6 @@ class TransactionController {
     
     public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.refundTransactions(forOrderWithId: orderId)
+        transactionDataAccess.refundTransactions(forOrderWithId: orderId)
     }
 }

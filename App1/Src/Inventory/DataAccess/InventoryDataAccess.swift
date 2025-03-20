@@ -4,7 +4,7 @@ import SwiftUI
 
 
 
-class InventoryStore {
+class InventoryDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class TrackingStore {
+class TrackingDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

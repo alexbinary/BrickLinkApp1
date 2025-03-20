@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class ShippingStore {
+class ShippingDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

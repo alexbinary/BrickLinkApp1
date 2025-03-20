@@ -7,14 +7,14 @@ import Foundation
 class OrderActionController {
     
     
-    private let orderStore: OrderStore
+    private let orderDataAccess: OrderDataAccess
     private let orderController: OrderController
     private let orderChecklistController: OrderChecklistController
     private let feedbackController: FeedbackController
     
     
-    init(_ orderStore: OrderStore, _ orderController: OrderController, _ orderChecklistController: OrderChecklistController, _ feedbackController: FeedbackController) {
-        self.orderStore = orderStore
+    init(_ orderDataAccess: OrderDataAccess, _ orderController: OrderController, _ orderChecklistController: OrderChecklistController, _ feedbackController: FeedbackController) {
+        self.orderDataAccess = orderDataAccess
         self.orderController = orderController
         self.orderChecklistController = orderChecklistController
         self.feedbackController = feedbackController
@@ -23,19 +23,19 @@ class OrderActionController {
     
     public var orderSummaries: [OrderSummary] {
         
-        orderStore.orderSummaries
+        orderDataAccess.orderSummaries
     }
     
     
     public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
         
-        await orderStore.updateOrderStatus(orderId: orderId, status: status)
+        await orderDataAccess.updateOrderStatus(orderId: orderId, status: status)
     }
     
     
     public func sendDriveThru(orderId: OrderSummary.ID) async {
         
-        await orderStore.sendDriveThru(orderId: orderId)
+        await orderDataAccess.sendDriveThru(orderId: orderId)
     }
     
     

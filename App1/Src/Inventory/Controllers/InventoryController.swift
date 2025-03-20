@@ -8,41 +8,41 @@ import SwiftUI
 class InventoryController {
     
     
-    private let inventoryStore: InventoryStore
+    private let inventoryDataAccess: InventoryDataAccess
     
     
-    init(_ inventoryStore: InventoryStore) {
-        self.inventoryStore = inventoryStore
+    init(_ inventoryDataAccess: InventoryDataAccess) {
+        self.inventoryDataAccess = inventoryDataAccess
     }
     
     
     public var allInventories: [InventoryItem] {
         
-        inventoryStore.allInventories
+        inventoryDataAccess.allInventories
     }
     
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        inventoryStore.inventory(for: uploadItem)
+        inventoryDataAccess.inventory(for: uploadItem)
     }
     
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        inventoryStore.inventories(forAllColorsOf: uploadItem)
+        inventoryDataAccess.inventories(forAllColorsOf: uploadItem)
     }
     
     
     public func loadInventories() async {
         
-        await inventoryStore.loadInventories()
+        await inventoryDataAccess.loadInventories()
     }
     
     
     public func reloadInventories() async {
         
-        await inventoryStore.reloadInventories()
+        await inventoryDataAccess.reloadInventories()
     }
     
     
@@ -59,7 +59,7 @@ class InventoryController {
         
     ) async -> InventoryItem? {
         
-        await inventoryStore.createInventory(
+        await inventoryDataAccess.createInventory(
             
             ref: ref,
             type: type,
@@ -75,6 +75,6 @@ class InventoryController {
     
     public func updateInventory(id: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
-        await inventoryStore.updateInventory(id: id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        await inventoryDataAccess.updateInventory(id: id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
 }

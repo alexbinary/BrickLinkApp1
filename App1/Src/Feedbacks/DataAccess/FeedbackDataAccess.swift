@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class FeedbackStore {
+class FeedbackDataAccess {
     
     
     private let fileDataAccess: FileDataAccess

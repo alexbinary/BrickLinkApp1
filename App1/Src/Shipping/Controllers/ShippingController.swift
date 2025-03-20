@@ -7,19 +7,19 @@ import Foundation
 class ShippingController {
     
     
-    private let orderStore: OrderStore
-    private let shippingStore: ShippingStore
+    private let orderDataAccess: OrderDataAccess
+    private let shippingDataAccess: ShippingDataAccess
     
     
-    init(_ orderStore: OrderStore, _ shippingStore: ShippingStore) {
-        self.orderStore = orderStore
-        self.shippingStore = shippingStore
+    init(_ orderDataAccess: OrderDataAccess, _ shippingDataAccess: ShippingDataAccess) {
+        self.orderDataAccess = orderDataAccess
+        self.shippingDataAccess = shippingDataAccess
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderStore.orderDetails(forOrderWithId: orderId)
+        orderDataAccess.orderDetails(forOrderWithId: orderId)
     }
     
     
@@ -28,13 +28,13 @@ class ShippingController {
     
     public func confirmedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
-        shippingStore.confirmedShippingCost(forOrderWithId: orderId)
+        shippingDataAccess.confirmedShippingCost(forOrderWithId: orderId)
     }
     
     
     public func confirmShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
         
-        shippingStore.confirmShippingCost(forOrderWithId: orderId, cost: cost)
+        shippingDataAccess.confirmShippingCost(forOrderWithId: orderId, cost: cost)
     }
     
     
@@ -191,25 +191,25 @@ class ShippingController {
     
     public func confirmedStamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        shippingStore.confirmedStamping(forOrderWithId: orderId)
+        shippingDataAccess.confirmedStamping(forOrderWithId: orderId)
     }
     
     
     public func confirmStamping(forOrderWithId orderId: OrderSummary.ID, stamping: String) {
         
-        shippingStore.confirmStamping(forOrderWithId: orderId, stamping: stamping)
+        shippingDataAccess.confirmStamping(forOrderWithId: orderId, stamping: stamping)
     }
     
     
     public func dateOrderValidatedWithoutStamping(orderId: OrderDetails.ID) -> Date? {
         
-        shippingStore.dateOrderValidatedWithoutStamping(orderId: orderId)
+        shippingDataAccess.dateOrderValidatedWithoutStamping(orderId: orderId)
     }
     
     
     public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
         
-        shippingStore.validateOrderWithoutStamping(orderId: orderId)
+        shippingDataAccess.validateOrderWithoutStamping(orderId: orderId)
     }
     
     

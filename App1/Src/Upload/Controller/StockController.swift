@@ -7,35 +7,35 @@ import Foundation
 class StockController {
     
     
-    private let orderStore: OrderStore
-    private let pickingStore: PickingStore
-    private let inventoryStore: InventoryStore
+    private let orderDataAccess: OrderDataAccess
+    private let pickingDataAccess: PickingDataAccess
+    private let inventoryDataAccess: InventoryDataAccess
     private let orderController: OrderController
     
     
-    init(_ orderStore: OrderStore, _ pickingStore: PickingStore, _ inventoryStore: InventoryStore, _ orderController: OrderController) {
-        self.orderStore = orderStore
-        self.pickingStore = pickingStore
-        self.inventoryStore = inventoryStore
+    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ inventoryDataAccess: InventoryDataAccess, _ orderController: OrderController) {
+        self.orderDataAccess = orderDataAccess
+        self.pickingDataAccess = pickingDataAccess
+        self.inventoryDataAccess = inventoryDataAccess
         self.orderController = orderController
     }
     
     
     public var orderSummaries: [OrderSummary] {
         
-        orderStore.orderSummaries
+        orderDataAccess.orderSummaries
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderStore.orderItems(forOrderWithId: orderId)
+        orderDataAccess.orderItems(forOrderWithId: orderId)
     }
     
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingStore.pickedItemIds(forOrderWithId: orderId)
+        pickingDataAccess.pickedItemIds(forOrderWithId: orderId)
     }
     
     
@@ -49,7 +49,7 @@ class StockController {
     
     ) -> InventoryItem? {
         
-        inventoryStore.inventory(forType: type, ref: ref, comment: comment, colorId: colorId, condition: condition)
+        inventoryDataAccess.inventory(forType: type, ref: ref, comment: comment, colorId: colorId, condition: condition)
     }
     
     

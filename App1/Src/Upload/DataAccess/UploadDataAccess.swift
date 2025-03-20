@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class UploadStore {
+class UploadDataAccess {
     
     
     private let fileDataAccess: FileDataAccess
