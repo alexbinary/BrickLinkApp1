@@ -9,8 +9,8 @@ struct UploadItemView: View {
     @Environment(CatalogStore.self)
     var catalogStore
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(UploadController.self)
+    var uploadController
     
     @Environment(InventoryStore.self)
     var inventoryStore
@@ -427,7 +427,7 @@ struct UploadItemView: View {
                                         }
                                     }()
 
-                                    uploadStore.addUploadedItem(UploadedItem(
+                                    uploadController.add(UploadedItem(
                                         type: submitType,
                                         ref: submitRef!,
                                         name: submitName,
@@ -445,7 +445,7 @@ struct UploadItemView: View {
                                         inventoryStatus: inventoryStatus
                                     ))
                                     
-                                    uploadStore.deleteUploadItem(uploadItem)
+                                    uploadController.delete(uploadItem)
                                     
                                     submitting = false
                                 }
@@ -461,7 +461,7 @@ struct UploadItemView: View {
                             .fixedSize()
                             
                             Button {
-                                uploadStore.deleteUploadItem(uploadItem)
+                                uploadController.delete(uploadItem)
                             } label: {
                                 Text("􀈑 Delete")
                             }
@@ -564,7 +564,7 @@ struct UploadItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            uploadStore.updateUploadItem(UploadItem(
+            uploadController.update(UploadItem(
                 
                 id: uploadItem.id,
                 type: uploadItem.type,
@@ -617,7 +617,7 @@ struct UploadItemView: View {
     
     ) {
         
-        uploadStore.updateUploadItem(UploadItem(
+        uploadController.update(UploadItem(
             
             id: uploadItem.id,
             type: uploadItem.type,

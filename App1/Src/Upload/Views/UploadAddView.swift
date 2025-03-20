@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadAddView: View {
     
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(UploadController.self)
+    var uploadController
 
     
     @State var type: BrickLinkItemType = .part
@@ -52,7 +52,7 @@ struct UploadAddView: View {
                             TextField("Comment", text: $comment)
                             
                             Button("Add") {
-                                uploadStore.addUploadItem(UploadItem(
+                                uploadController.add(UploadItem(
                                     type: type,
                                     ref: ref,
                                     name: name,
@@ -80,7 +80,7 @@ struct UploadAddView: View {
                             .lineLimit(10, reservesSpace: true)
                         
                         Button("Import") {
-                            uploadStore.importUploadList(fromXml: self.importText)
+                            uploadController.importUploadList(fromXml: self.importText)
                             self.importText = ""
                         }
                     }

@@ -8,7 +8,6 @@ enum AppController {
     
     static func createControllers() -> (
         
-        uploadStore: UploadStore,
         catalogStore: CatalogStore,
         inventoryStore: InventoryStore,
 
@@ -71,7 +70,6 @@ enum AppController {
         
         return (
             
-            uploadStore: uploadStore,
             catalogStore: catalogStore,
             inventoryStore: inventoryStore,
 

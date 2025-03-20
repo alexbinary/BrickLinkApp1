@@ -3,7 +3,6 @@ import Foundation
 
 
 
-@Observable
 class UploadStore {
     
     
@@ -24,21 +23,21 @@ class UploadStore {
     }
     
     
-    public func addUploadItem(_ uploadItem: UploadItem) {
+    public func add(_ uploadItem: UploadItem) {
         
         try! dataStore.addUploadItem(uploadItem)
         try! dataStore.save()
     }
     
     
-    public func deleteUploadItem(_ uploadItem: UploadItem) {
+    public func delete(_ uploadItem: UploadItem) {
         
         try! dataStore.deleteUploadItem(uploadItem)
         try! dataStore.save()
     }
     
     
-    public func updateUploadItem(_ updatedItem: UploadItem) {
+    public func update(_ updatedItem: UploadItem) {
         
         try! dataStore.updateUploadItem(updatedItem)
         try! dataStore.save()
@@ -70,7 +69,7 @@ class UploadStore {
     }
     
     
-    public func addUploadedItem(_ uploadedItem: UploadedItem) {
+    public func add(_ uploadedItem: UploadedItem) {
         
         try! dataStore.addUploadedItem(uploadedItem)
         try! dataStore.save()
