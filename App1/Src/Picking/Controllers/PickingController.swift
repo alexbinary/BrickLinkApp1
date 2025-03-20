@@ -44,6 +44,18 @@ class PickingController {
     // MARK: - Pick
     
     
+    public func pick(_ item: OrderItem) {
+        
+        pickingStore.pick(item)
+    }
+    
+    
+    public func unpick(_ item: OrderItem) {
+        
+        pickingStore.unpick(item)
+    }
+    
+    
     public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
         
         let total = orderItems(forOrderWithId: orderId).count
@@ -92,6 +104,18 @@ class PickingController {
     
     
     // MARK: - Verify
+    
+    
+    public func verify(_ item: OrderItem) {
+        
+        pickingStore.verify(item)
+    }
+    
+    
+    public func unverify(_ item: OrderItem) {
+        
+        pickingStore.unverify(item)
+    }
     
 
     public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {

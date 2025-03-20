@@ -6,8 +6,8 @@ import SwiftUI
 struct PickingItemView: View {
     
     
-    @Environment(PickingStore.self)
-    var pickingStore
+    @Environment(PickingController.self)
+    var pickingController
     
     @Environment(StockController.self)
     var stockController
@@ -69,10 +69,10 @@ struct PickingItemView: View {
             Spacer()
             
             switch button {
-            case .pick: Button("Pick") { pickingStore.pick(item) }
-            case .unpick: Button("Unpick") { pickingStore.unpick(item) }
-            case .verify: Button("Verify") { pickingStore.verify(item) }
-            case .unverify: Button("Unverify") { pickingStore.unverify(item) }
+            case .pick: Button("Pick") { pickingController.pick(item) }
+            case .unpick: Button("Unpick") { pickingController.unpick(item) }
+            case .verify: Button("Verify") { pickingController.verify(item) }
+            case .unverify: Button("Unverify") { pickingController.unverify(item) }
             }
         }
         .padding()
@@ -96,7 +96,7 @@ enum ButtonType {
     
     let controllers = AppController.createControllers()
     
-    let pickingStore = controllers.pickingStore
+    let pickingController = controllers.pickingController
     let stockController = controllers.stockController
     
     let orderController = controllers.orderController
@@ -104,6 +104,6 @@ enum ButtonType {
     let item = orderController.orderItems(forOrderWithId: order.id).first!
     
     PickingItemView(item, button: .pick)
-        .environment(pickingStore)
+        .environment(pickingController)
         .environment(stockController)
 }
