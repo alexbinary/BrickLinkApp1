@@ -6,8 +6,8 @@ import SwiftUI
 struct LegoColorPicker: View {
 
     
-    @Environment(CatalogStore.self)
-    var catalogStore
+    @Environment(Catalog.self)
+    var catalog
     
     
     let label: String
@@ -24,10 +24,10 @@ struct LegoColorPicker: View {
     
     var body: some View {
 
+        let colors = catalog.allColors
+        
         Picker(label, selection: $selection) {
-            ForEach(catalogStore.allColors) { color in
-                Text(color.name).foregroundStyle(Color(fromBLCode: color.colorCode)).tag(color.id)
-            }
+            ForEach(colors) { Text($0.name).foregroundStyle($0.color).tag($0.id) }
         }
         .pickerStyle(.menu)
     }

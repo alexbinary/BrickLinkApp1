@@ -5,7 +5,7 @@ import Foundation
 
 func createStores() -> (
         
-        catalog: CatalogStore,
+        catalog: Catalog,
         inventory: InventoryStore,
         upload: UploadStore,
         stock: StockStore,
@@ -49,7 +49,7 @@ func createStores() -> (
     
     // Stores
     
-    let catalogStore = CatalogStore(catalogDataAccess)
+    let catalogStore = Catalog(catalogDataAccess)
     let inventoryStore = InventoryStore(inventoryDataAccess)
     let uploadStore = UploadStore(uploadDataAccess, catalogDataAccess, inventoryDataAccess)
     

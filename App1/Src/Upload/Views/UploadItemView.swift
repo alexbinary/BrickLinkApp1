@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadItemView: View {
     
     
-    @Environment(CatalogStore.self)
+    @Environment(Catalog.self)
     var catalogStore
     
     @Environment(UploadStore.self)
@@ -636,7 +636,7 @@ struct UploadItemView: View {
         
         self.catalogResult = .loading
         
-        if let catalog = await catalogStore.getCatalogItem(forItemType: uploadItem.type, ref: uploadItem.ref) {
+        if let catalog = await catalogStore.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalog)
             updateItem(name: catalog.name)

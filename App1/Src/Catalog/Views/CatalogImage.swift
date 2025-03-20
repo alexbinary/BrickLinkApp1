@@ -6,8 +6,8 @@ import SwiftUI
 struct CatalogImage: View {
     
     
-    @Environment(CatalogStore.self)
-    var catalogStore
+    @Environment(Catalog.self)
+    var catalog
     
     
     let type: BrickLinkItemType
@@ -41,7 +41,7 @@ struct CatalogImage: View {
 
     var body: some View {
 
-        AsyncImage(url: catalogStore.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId))
+        AsyncImage(url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId))
             .frame(minHeight: 70, maxHeight: 70, alignment: .top)
             .frame(minWidth: 90, maxWidth: 90, alignment: .top)
     }

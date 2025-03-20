@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-class CatalogStore {
+class Catalog {
     
     
     private let catalogDataAccess: CatalogDataAccess
@@ -52,13 +52,13 @@ class CatalogStore {
     // MARK: - Items
     
     
-    public func getCatalogItem(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
+    public func fetchEntry(forItemType type: BrickLinkItemType, ref: String) async -> CatalogItem? {
         
         await catalogDataAccess.getCatalogItem(forItemType: type, ref: ref)
     }
     
     
-    public func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+    public func url(forImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
         
         BrickLinkUtility.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId)
     }

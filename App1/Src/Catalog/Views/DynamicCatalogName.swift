@@ -6,8 +6,8 @@ import SwiftUI
 struct DynamicCatalogName: View {
 
     
-    @Environment(CatalogStore.self)
-    var catalogStore
+    @Environment(Catalog.self)
+    var catalog
     
     
     var type: BrickLinkItemType
@@ -37,8 +37,8 @@ struct DynamicCatalogName: View {
                 case .loading:
                     Text("Loading name from catalog...").foregroundStyle(.secondary)
                     
-                case .found(let catalogItem):
-                    Text(catalogItem.name).lineLimit(nil)
+                case .found(let catalogEntry):
+                    Text(catalogEntry.name).lineLimit(nil)
                     
                 case .notFound:
                     Text("no catalog entry").foregroundStyle(.secondary)
@@ -50,10 +50,10 @@ struct DynamicCatalogName: View {
             catalogResult = .loading
             name = nil
             
-            if let catalogItem = await catalogStore.getCatalogItem(forItemType: type, ref: ref) {
+            if let catalogEntry = await catalog.fetchEntry(forItemType: type, ref: ref) {
                 
-                catalogResult = .found(catalogItem)
-                name = catalogItem.name
+                catalogResult = .found(catalogEntry)
+                name = catalogEntry.name
             } else {
                 catalogResult = .notFound
             }
