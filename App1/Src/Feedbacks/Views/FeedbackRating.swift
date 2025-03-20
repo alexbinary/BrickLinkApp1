@@ -18,11 +18,11 @@ struct FeedbackRating: View {
         
         Group {
             switch feedback.rating {
-            case 0:
+            case .praise:
                 Text("􀉿")
-            case 2:
+            case .complaint:
                 Text("􀊁")
-            default:
+            case .neutral:
                 Text("Neutral")
             }
         }
@@ -33,5 +33,5 @@ struct FeedbackRating: View {
 
 
 #Preview {
-    FeedbackRating(Feedback(id: 1, orderId: "", from: "", to: "", dateRated: .now, rating: 0, author: .buyer, comment: ""))
+    FeedbackRating(Feedback(id: 1, orderId: "", from: "", to: "", dateRated: .now, rating: .praise, author: .buyer, comment: ""))
 }

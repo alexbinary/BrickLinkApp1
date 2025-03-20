@@ -10,7 +10,7 @@ struct Feedback: Identifiable, Codable {
     let from: String
     let to: String
     let dateRated: Date
-    let rating: Int
+    let rating: BrickLinkFeedbackRating
     let author: FeedbackAuthor
     let comment: String
 }

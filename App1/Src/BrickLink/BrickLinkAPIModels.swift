@@ -91,9 +91,18 @@ struct BrickLinkOrderFeedback: Decodable {
     let from: String
     let to: String
     let dateRated: Date
-    let rating: Int
+    let rating: BrickLinkFeedbackRating
     let ratingOfBs: BrickLinkFeedbackRatingOfBS
     let comment: String
+}
+
+
+
+enum BrickLinkFeedbackRating: Int, Decodable, Encodable {
+    
+    case praise = 0
+    case neutral = 1
+    case complaint = 2
 }
 
 
