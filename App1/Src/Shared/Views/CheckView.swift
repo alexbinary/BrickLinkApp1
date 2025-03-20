@@ -3,22 +3,22 @@ import SwiftUI
 
 
 
-struct CheckStatusView: View {
+struct CheckView: View {
     
     
-    let status: Bool
+    let checked: Bool
     let mandatory: Bool
     
     
-    init(status: Bool, mandatory: Bool = true) {
-        self.status = status
+    init(checked: Bool, mandatory: Bool = true) {
+        self.checked = checked
         self.mandatory = mandatory
     }
     
 
     var body: some View {
 
-        if status {
+        if checked {
             Text("􀁣").foregroundStyle(green)
         } else {
             Text("􀀀").foregroundStyle(mandatory ? red : .gray)
@@ -31,8 +31,8 @@ struct CheckStatusView: View {
 #Preview {
     VStack {
         Group {
-            CheckStatusView(status: true)
-            CheckStatusView(status: false)
+            CheckView(checked: true)
+            CheckView(checked: false)
         }.padding()
     }
 }

@@ -29,29 +29,29 @@ struct OrdersActionsSheet: View {
                     
                     sectionView(orders: orderActionController.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckStatusView(status: orderChecklistController.orderChecklistCompleted(order.id))
+                            CheckView(checked: orderChecklistController.orderChecklistCompleted(order.id))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckStatusView(status: orderChecklistController.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderChecklistController.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: orderActionController.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckStatusView(status: orderChecklistController.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderChecklistController.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: orderActionController.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckStatusView(status: orderChecklistController.orderChecklistShipped(order.id))
+                            CheckView(checked: orderChecklistController.orderChecklistShipped(order.id))
                             Text("Mark shipped")
                         }
                         HStack {
-                            CheckStatusView(status: orderChecklistController.orderChecklistDriveThru(order.id))
+                            CheckView(checked: orderChecklistController.orderChecklistDriveThru(order.id))
                             Text("Send drive thru")
                         }
                     }

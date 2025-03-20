@@ -263,7 +263,7 @@ class OrderChecklistController {
     // -
     
     
-    public func checklistData(forOrderWithId orderId: OrderSummary.ID) -> Checklist {
+    public func checklist(forOrderWithId orderId: OrderSummary.ID) -> Checklist {
         
         Checklist(sections: [
             .init(
@@ -390,14 +390,16 @@ struct Checklist {
     
     let sections: [Section]
     
-    struct Section {
+    struct Section: Identifiable {
         
+        var id: String { title }
         let title: String
         let items: [Item]
     }
     
-    struct Item {
+    struct Item: Identifiable {
         
+        var id: String { label }
         let label: String
         let checked: Bool
         let mandatory: Bool

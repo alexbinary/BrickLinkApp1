@@ -19,7 +19,7 @@ struct OrderChecklistView: View {
     
     var body: some View {
 
-        let checklistData = orderChecklistController.checklistData(forOrderWithId: order.id)
+        let checklist = orderChecklistController.checklist(forOrderWithId: order.id)
         
         VStack(alignment: .leading, spacing: 12) {
             
@@ -29,15 +29,14 @@ struct OrderChecklistView: View {
                 
                 Grid(alignment: .leading) {
                     
-                    ForEach(checklistData.sections, id: \.title) { section in
+                    ForEach(checklist.sections) { section in
                         
-                        Text(section.title).checklistTitle()
-                            .padding(.vertical, 6)
+                        Text(section.title).checklistTitle().padding(.vertical, 6)
                         
-                        ForEach(section.items, id: \.label) { item in
+                        ForEach(section.items) { item in
                             
                             GridRow {
-                                CheckStatusView(status: item.checked, mandatory: item.mandatory)
+                                CheckView(checked: item.checked, mandatory: item.mandatory)
                                 Text(item.label)
                             }
                         }
