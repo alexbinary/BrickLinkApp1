@@ -19,9 +19,9 @@ struct LaPosteTrackingStatusIndicator: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
             .roundedContainer(style: .tag(baseColor: color))
-            .onChange(of: order, initial: true) {
-                Task { await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: order.id) }
-            }
+            .onChange(of: order, initial: true) { Task {
+                await trackingController.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
+            }}
     }
     
     
