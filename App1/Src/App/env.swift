@@ -17,7 +17,7 @@ typealias Env = (
         picking: PickingStore,
         shipping: ShippingStore,
         tracking: TrackingStore,
-        feedback: FeedbackStore,
+        feedback: FeedbackUserStore,
         refund: RefundStore,
 
         transaction: TransactionUserStore,
@@ -91,6 +91,7 @@ func createEnv() -> Env {
     
     // User Stores
     
+    let feedbackUserStore = FeedbackUserStore(feedbackStore)
     let transactionUserStore = TransactionUserStore(transactionStore)
     
     return (
@@ -107,7 +108,7 @@ func createEnv() -> Env {
             picking: pickingStore,
             shipping: shippingStore,
             tracking: trackingStore,
-            feedback: feedbackStore,
+            feedback: feedbackUserStore,
             refund: refundStore,
             
             transaction: transactionUserStore,
