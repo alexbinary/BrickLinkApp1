@@ -3,13 +3,14 @@ import Foundation
 
 
 
-class RefundDataAccess {
+class RefundCoreController {
     
     
     private let fileDataAccess: FileDataAccess
     
     
     init(_ fileDataAccess: FileDataAccess) {
+        
         self.fileDataAccess = fileDataAccess
     }
     
