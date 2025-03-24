@@ -9,8 +9,8 @@ struct PickingItemView: View {
     @Environment(PickingUserStore.self)
     var pickingStore
     
-    @Environment(StockStore.self)
-    var stockStore
+    @Environment(InventoryUserStore.self)
+    var inventoryStore
     
     
     let item: OrderItem
@@ -57,7 +57,7 @@ struct PickingItemView: View {
                     Text(item.quantity).font(.title2)
                     
                     HStack(spacing: 0) {
-                        let (before, after) = stockStore.inStockQuantityBeforeAfter(for: item)
+                        let (before, after) = inventoryStore.inStockQuantityBeforeAfter(for: item)
                         Text("(\(before) 􁉂 ")
                         Text("\(after)").foregroundStyle(after == 0 ? .red.opacity(0.7) : .secondary)
                         Text(")")

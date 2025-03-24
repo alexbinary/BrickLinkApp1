@@ -38,7 +38,6 @@ extension View {
         
             .environment(env.stores.inventory)
             .environment(env.stores.upload)
-            .environment(env.stores.stock)
         
             .environment(env.stores.order)
             .environment(env.stores.picking)
