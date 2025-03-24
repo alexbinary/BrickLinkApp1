@@ -5,7 +5,7 @@ import SwiftUI
 struct LaPosteTrackingStatusIndicator: View {
     
     
-    @Environment(TrackingStore.self)
+    @Environment(TrackingUserStore.self)
     var trackingStore
     
     
