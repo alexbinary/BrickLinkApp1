@@ -216,7 +216,7 @@ class ReloadController {
         }
         
         let ordersThatNeedRefreshFeedback = allOrders
-            .filter { macroStatus(forOrderWithId: $0.id).isOneOf(.received, .giveFeedback) }
+            .filter { macroStatus(forOrderWithId: $0.id).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback) }
         
         for order in ordersThatNeedRefreshFeedback {
             await reloadOrderFeedbacks(forOrderWithId: order.id)
