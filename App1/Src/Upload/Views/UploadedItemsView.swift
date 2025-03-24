@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadedItemsView: View {
     
     
-    @Environment(UploadStore.self)
+    @Environment(UploadUserStore.self)
     var uploadStore
     
     

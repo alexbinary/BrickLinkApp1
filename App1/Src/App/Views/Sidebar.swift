@@ -12,7 +12,7 @@ struct Sidebar: View {
     @Environment(OrderUserStore.self)
     var orderStore
     
-    @Environment(UploadStore.self)
+    @Environment(UploadUserStore.self)
     var uploadStore
     
     
