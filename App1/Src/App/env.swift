@@ -48,17 +48,13 @@ func createEnv() -> Env {
     let refundCoreController = RefundCoreController(fileDataAccess)
     let transactionCoreController = TransactionCoreController(fileDataAccess)
     
-    let pickingProgressCoreController = PickingProgressCoreController(orderCoreController, pickingCoreController)
-    
     let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
-    
-    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionCoreController, trackingMiddleController, pickingProgressCoreController)
-    
-    let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
-    
-    let stockCoreController = StockCoreController(orderCoreController, pickingCoreController, inventoryCoreController, orderMacroStatusCoreController)
-    
     let feedbackMiddleController = FeedbackMiddleController(orderCoreController, feedbackCoreController)
+    
+    let pickingProgressCoreController = PickingProgressCoreController(orderCoreController, pickingCoreController)
+    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionCoreController, trackingMiddleController, pickingProgressCoreController)
+    let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
+    let stockCoreController = StockCoreController(orderCoreController, pickingCoreController, inventoryCoreController, orderMacroStatusCoreController)
     
     // User Stores
     
