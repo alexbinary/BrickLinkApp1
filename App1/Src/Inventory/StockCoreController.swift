@@ -8,14 +8,14 @@ class StockCoreController {
     
     
     private let orderCoreController: OrderCoreController
-    private let pickingDataAccess: PickingDataAccess
+    private let pickingCoreController: PickingCoreController
     private let inventoryCoreController: InventoryCoreController
     private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingDataAccess: PickingDataAccess, _ inventoryCoreController: InventoryCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController) {
+    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ inventoryCoreController: InventoryCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController) {
         self.orderCoreController = orderCoreController
-        self.pickingDataAccess = pickingDataAccess
+        self.pickingCoreController = pickingCoreController
         self.inventoryCoreController = inventoryCoreController
         self.orderMacroStatusCoreController = orderMacroStatusCoreController
     }
@@ -35,7 +35,7 @@ class StockCoreController {
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingDataAccess.pickedItemIds(forOrderWithId: orderId)
+        pickingCoreController.pickedItemIds(forOrderWithId: orderId)
     }
     
     

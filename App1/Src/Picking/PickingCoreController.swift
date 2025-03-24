@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class PickingDataAccess {
+class PickingCoreController {
     
     
     private let fileDataAccess: FileDataAccess

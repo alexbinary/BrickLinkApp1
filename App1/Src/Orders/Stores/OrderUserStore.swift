@@ -11,17 +11,17 @@ class OrderUserStore {
     private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     private let orderChecklistCoreController: OrderChecklistCoreController
     
-    private let pickingStore: PickingStore
+    private let pickingProgressCoreController: PickingProgressCoreController
     private let trackingStore: TrackingStore
     private let feedbackController: FeedbackController
     private let feedbackDataAccess: FeedbackDataAccess
     
     
-    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingStore: PickingStore, _ trackingStore: TrackingStore, _ feedbackController: FeedbackController, _ feedbackDataAccess: FeedbackDataAccess) {
+    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingProgressCoreController: PickingProgressCoreController, _ trackingStore: TrackingStore, _ feedbackController: FeedbackController, _ feedbackDataAccess: FeedbackDataAccess) {
         self.orderCoreController = orderCoreController
         self.orderMacroStatusCoreController = orderMacroStatusCoreController
         self.orderChecklistCoreController = orderChecklistCoreController
-        self.pickingStore = pickingStore
+        self.pickingProgressCoreController = pickingProgressCoreController
         self.trackingStore = trackingStore
         self.feedbackController = feedbackController
         self.feedbackDataAccess = feedbackDataAccess
@@ -451,13 +451,13 @@ class OrderUserStore {
     
     public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
         
-        pickingStore.pickingProgress(forOrderWithId: orderId)
+        pickingProgressCoreController.pickingProgress(forOrderWithId: orderId)
     }
     
     
     public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
         
-        pickingStore.pickingVerificationProgress(forOrderWithId: orderId)
+        pickingProgressCoreController.pickingVerificationProgress(forOrderWithId: orderId)
     }
     
     
@@ -499,7 +499,7 @@ class OrderUserStore {
                     ),
                     .init(
                         label: {
-                            let progress = pickingStore.pickingVerificationProgress(forOrderWithId: orderId)
+                            let progress = pickingProgressCoreController.pickingVerificationProgress(forOrderWithId: orderId)
                             if progress == 0% || progress == 100% {
                                 return "Verify items"
                             } else {

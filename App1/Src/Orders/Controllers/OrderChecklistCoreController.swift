@@ -8,22 +8,22 @@ class OrderChecklistCoreController {
     
     
     private let orderCoreController: OrderCoreController
-    private let pickingDataAccess: PickingDataAccess
+    private let pickingCoreController: PickingCoreController
     private let shippingDataAccess: ShippingDataAccess
     private let feedbackDataAccess: FeedbackDataAccess
     private let transactionDataAccess: TransactionDataAccess
     private let trackingStore: TrackingStore
-    private let pickingStore: PickingStore
+    private let pickingProgressCoreController: PickingProgressCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingDataAccess: PickingDataAccess, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingStore: PickingStore) {
+    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingProgressCoreController: PickingProgressCoreController) {
         self.orderCoreController = orderCoreController
-        self.pickingDataAccess = pickingDataAccess
+        self.pickingCoreController = pickingCoreController
         self.shippingDataAccess = shippingDataAccess
         self.feedbackDataAccess = feedbackDataAccess
         self.transactionDataAccess = transactionDataAccess
         self.trackingStore = trackingStore
-        self.pickingStore = pickingStore
+        self.pickingProgressCoreController = pickingProgressCoreController
     }
     
     
@@ -83,13 +83,13 @@ class OrderChecklistCoreController {
     
     public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingDataAccess.pickedItemIds(forOrderWithId: orderId)
+        pickingCoreController.pickedItemIds(forOrderWithId: orderId)
     }
     
     
     public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
-        pickingDataAccess.verifiedItemIds(forOrderWithId: orderId)
+        pickingCoreController.verifiedItemIds(forOrderWithId: orderId)
     }
     
     
