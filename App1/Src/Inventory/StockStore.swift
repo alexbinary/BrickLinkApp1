@@ -9,14 +9,14 @@ class StockStore {
     
     private let orderDataAccess: OrderDataAccess
     private let pickingDataAccess: PickingDataAccess
-    private let inventoryDataAccess: InventoryDataAccess
+    private let inventoryCoreController: InventoryCoreController
     private let orderStore: OrderStore
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ inventoryDataAccess: InventoryDataAccess, _ orderStore: OrderStore) {
+    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ inventoryCoreController: InventoryCoreController, _ orderStore: OrderStore) {
         self.orderDataAccess = orderDataAccess
         self.pickingDataAccess = pickingDataAccess
-        self.inventoryDataAccess = inventoryDataAccess
+        self.inventoryCoreController = inventoryCoreController
         self.orderStore = orderStore
     }
     
@@ -49,7 +49,7 @@ class StockStore {
     
     ) -> InventoryItem? {
         
-        inventoryDataAccess.inventory(forType: type, ref: ref, comment: comment, colorId: colorId, condition: condition)
+        inventoryCoreController.inventory(forType: type, ref: ref, comment: comment, colorId: colorId, condition: condition)
     }
     
     

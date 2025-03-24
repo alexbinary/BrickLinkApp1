@@ -33,9 +33,12 @@ func createEnv() -> Env {
         return FileDataAccess(dataFileUrl: URL(fileURLWithPath: path))
     }()
     
+    // Core controllers
+    
+    let inventoryCoreController = InventoryCoreController(fileDataAccess)
+    
     // Data accesss
     
-    let inventoryDataAccess = InventoryDataAccess(fileDataAccess)
     let uploadDataAccess = UploadDataAccess(fileDataAccess)
     
     let orderDataAccess = OrderDataAccess(fileDataAccess)
@@ -50,8 +53,7 @@ func createEnv() -> Env {
     // Stores & Controllers
     
     let catalog = Catalog(fileDataAccess)
-    let inventoryStore = InventoryStore(inventoryDataAccess)
-    let uploadStore = UploadStore(uploadDataAccess, catalog, inventoryDataAccess)
+    let uploadStore = UploadStore(uploadDataAccess, catalog, inventoryCoreController)
     
     let pickingStore = PickingStore(orderDataAccess, pickingDataAccess)
     let shippingStore = ShippingStore(orderDataAccess, shippingDataAccess)
@@ -67,19 +69,18 @@ func createEnv() -> Env {
     
     let orderStore = OrderStore(orderDataAccess, orderChecklistStore)
     
-    let stockStore = StockStore(orderDataAccess, pickingDataAccess, inventoryDataAccess, orderStore)
+    let stockStore = StockStore(orderDataAccess, pickingDataAccess, inventoryCoreController, orderStore)
     
     let feedbackController = FeedbackController(orderDataAccess, feedbackDataAccess)
     let orderActionStore = OrderActionStore(orderDataAccess, orderStore, orderChecklistStore, feedbackController)
     
     //
     
-    let inventoryController = InventoryController(inventoryDataAccess)
     let reloadController = ReloadController(orderDataAccess, feedbackDataAccess, orderStore, trackingStore)
     
     // User Stores
     
-    let inventoryUserStore = InventoryUserStore(inventoryStore, inventoryController, stockStore)
+    let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockStore)
     let uploadUserStore = UploadUserStore(uploadStore)
     
     let orderUserStore = OrderUserStore(orderDataAccess, orderStore, orderChecklistStore, orderActionStore, reloadController)

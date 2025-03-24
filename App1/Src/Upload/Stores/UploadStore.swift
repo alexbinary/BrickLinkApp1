@@ -9,13 +9,13 @@ class UploadStore {
     
     private let catalog: Catalog
     private let uploadDataAccess: UploadDataAccess
-    private let inventoryDataAccess: InventoryDataAccess
+    private let inventoryCoreController: InventoryCoreController
     
     
-    init(_ uploadDataAccess: UploadDataAccess, _ catalog: Catalog, _ inventoryDataAccess: InventoryDataAccess) {
+    init(_ uploadDataAccess: UploadDataAccess, _ catalog: Catalog, _ inventoryCoreController: InventoryCoreController) {
         self.uploadDataAccess = uploadDataAccess
         self.catalog = catalog
-        self.inventoryDataAccess = inventoryDataAccess
+        self.inventoryCoreController = inventoryCoreController
     }
     
     
@@ -33,13 +33,13 @@ class UploadStore {
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        inventoryDataAccess.inventory(for: uploadItem)
+        inventoryCoreController.inventory(for: uploadItem)
     }
     
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        inventoryDataAccess.inventories(forAllColorsOf: uploadItem)
+        inventoryCoreController.inventories(forAllColorsOf: uploadItem)
     }
     
     

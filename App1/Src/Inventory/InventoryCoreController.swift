@@ -4,7 +4,8 @@ import SwiftUI
 
 
 
-class InventoryDataAccess {
+@Observable
+class InventoryCoreController {
     
     
     private let fileDataAccess: FileDataAccess

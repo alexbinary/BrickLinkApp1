@@ -8,14 +8,13 @@ import SwiftUI
 class InventoryUserStore {
     
     
-    private let inventoryStore: InventoryStore
-    private let inventoryController: InventoryController
+    private let inventoryCoreController: InventoryCoreController
     private let stockStore: StockStore
     
     
-    init(_ inventoryStore: InventoryStore, _ inventoryController: InventoryController, _ stockStore: StockStore) {
-        self.inventoryStore = inventoryStore
-        self.inventoryController = inventoryController
+    init(_ inventoryCoreController: InventoryCoreController, _ stockStore: StockStore) {
+        
+        self.inventoryCoreController = inventoryCoreController
         self.stockStore = stockStore
     }
     
@@ -25,31 +24,31 @@ class InventoryUserStore {
     
     public var allInventories: [InventoryItem] {
         
-        inventoryStore.allInventories
+        inventoryCoreController.allInventories
     }
     
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        inventoryStore.inventory(for: uploadItem)
+        inventoryCoreController.inventory(for: uploadItem)
     }
     
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        inventoryStore.inventories(forAllColorsOf: uploadItem)
+        inventoryCoreController.inventories(forAllColorsOf: uploadItem)
     }
     
     
     public func loadInventories() async {
         
-        await inventoryStore.loadInventories()
+        await inventoryCoreController.loadInventories()
     }
     
     
     public func reloadInventories() async {
         
-        await inventoryStore.reloadInventories()
+        await inventoryCoreController.reloadInventories()
     }
     
     
@@ -58,13 +57,13 @@ class InventoryUserStore {
     
     public func createInventory(ref: String, type: BrickLinkItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem? {
         
-        await inventoryController.createInventory(ref: ref, type: type, colorId: colorId, quantity: quantity, unitPrice: unitPrice, condition: condition, description: description, remarks: remarks)
+        await inventoryCoreController.createInventory(ref: ref, type: type, colorId: colorId, quantity: quantity, unitPrice: unitPrice, condition: condition, description: description, remarks: remarks)
     }
     
     
     public func updateInventory(id: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
-        await inventoryController.updateInventory(id: id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        await inventoryCoreController.updateInventory(id: id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
     
     
