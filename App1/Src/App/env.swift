@@ -30,7 +30,7 @@ typealias Env = (
     controllers: (
         
         inventory: InventoryController,
-        feedback: FeedbackController,
+        feedback: FeedbackUserController,
         reload: ReloadController
     )
         
@@ -94,6 +94,10 @@ func createEnv() -> Env {
     let feedbackUserStore = FeedbackUserStore(feedbackStore)
     let transactionUserStore = TransactionUserStore(transactionStore)
     
+    // User Controllers
+    
+    let feedbackUserController = FeedbackUserController(orderDataAccess, feedbackDataAccess)
+    
     return (
         
         catalog: catalog,
@@ -121,7 +125,7 @@ func createEnv() -> Env {
         controllers: (
             
             inventory: inventoryController,
-            feedback: feedbackController,
+            feedback: feedbackUserController,
             reload: reloadController
         )
     )

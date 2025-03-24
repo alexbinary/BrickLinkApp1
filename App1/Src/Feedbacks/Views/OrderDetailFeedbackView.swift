@@ -9,7 +9,7 @@ struct OrderDetailFeedbackView: View {
     @Environment(FeedbackUserStore.self)
     var feedbackStore
     
-    @Environment(FeedbackController.self)
+    @Environment(FeedbackUserController.self)
     var feedbackController
     
     
