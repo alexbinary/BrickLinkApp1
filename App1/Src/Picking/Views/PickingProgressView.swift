@@ -6,7 +6,7 @@ import SwiftUI
 struct PickingProgressView: View {
     
     
-    @Environment(PickingStore.self)
+    @Environment(PickingUserStore.self)
     var pickingStore
     
     

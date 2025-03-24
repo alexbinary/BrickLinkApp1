@@ -6,7 +6,7 @@ import SwiftUI
 struct PickingItemView: View {
     
     
-    @Environment(PickingStore.self)
+    @Environment(PickingUserStore.self)
     var pickingStore
     
     @Environment(StockStore.self)

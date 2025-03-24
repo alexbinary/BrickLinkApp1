@@ -9,7 +9,7 @@ struct OrdersMainListItem: View {
     @Environment(OrderUserStore.self)
     var orderStore
     
-    @Environment(PickingStore.self)
+    @Environment(PickingUserStore.self)
     var pickingStore
     
     @Environment(FeedbackUserStore.self)
