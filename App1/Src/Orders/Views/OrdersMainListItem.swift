@@ -15,9 +15,6 @@ struct OrdersMainListItem: View {
     @Environment(FeedbackUserStore.self)
     var feedbackStore
     
-    @Environment(FeedbackUserController.self)
-    var feedbackController
-    
     
     let order: OrderSummary
     var macroStatus: OrderMacroStatus { orderStore.macroStatus(forOrderWithId: order.id) }
@@ -246,7 +243,7 @@ struct OrdersMainListItem: View {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateOrderStatus(orderId: order.id, status: .completed)
-                        await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
+                        await feedbackStore.postPraiseFeedback(forOrderWithId: order.id)
                     }
                 }))
             }
@@ -269,7 +266,7 @@ struct OrdersMainListItem: View {
             
             items.append(OrderStatusTag(text: "Give feedback", status: .actionRequired, action: {
                 Task {
-                    await feedbackController.postPraiseFeedback(forOrderWithId: order.id)
+                    await feedbackStore.postPraiseFeedback(forOrderWithId: order.id)
                 }
             }))
             

@@ -50,8 +50,5 @@ extension View {
         
             .environment(env.stores.transaction)
             .environment(env.stores.result)
-            
-            .environment(env.controllers.inventory)
-            .environment(env.controllers.feedback)
     }
 }
