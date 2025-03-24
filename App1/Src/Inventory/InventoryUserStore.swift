@@ -9,13 +9,13 @@ class InventoryUserStore {
     
     
     private let inventoryCoreController: InventoryCoreController
-    private let stockStore: StockStore
+    private let stockCoreController: StockCoreController
     
     
-    init(_ inventoryCoreController: InventoryCoreController, _ stockStore: StockStore) {
+    init(_ inventoryCoreController: InventoryCoreController, _ stockCoreController: StockCoreController) {
         
         self.inventoryCoreController = inventoryCoreController
-        self.stockStore = stockStore
+        self.stockCoreController = stockCoreController
     }
     
     
@@ -72,6 +72,6 @@ class InventoryUserStore {
     
     public func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
         
-        stockStore.inStockQuantityBeforeAfter(for: orderItem)
+        stockCoreController.inStockQuantityBeforeAfter(for: orderItem)
     }
 }

@@ -69,7 +69,7 @@ func createEnv() -> Env {
     
     let orderStore = OrderStore(orderDataAccess, orderChecklistStore)
     
-    let stockStore = StockStore(orderDataAccess, pickingDataAccess, inventoryCoreController, orderStore)
+    let stockCoreController = StockCoreController(orderDataAccess, pickingDataAccess, inventoryCoreController, orderStore)
     
     let feedbackController = FeedbackController(orderDataAccess, feedbackDataAccess)
     let orderActionStore = OrderActionStore(orderDataAccess, orderStore, orderChecklistStore, feedbackController)
@@ -80,7 +80,7 @@ func createEnv() -> Env {
     
     // User Stores
     
-    let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockStore)
+    let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockCoreController)
     let uploadUserStore = UploadUserStore(uploadStore)
     
     let orderUserStore = OrderUserStore(orderDataAccess, orderStore, orderChecklistStore, orderActionStore, reloadController)
