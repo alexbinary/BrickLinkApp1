@@ -6,7 +6,7 @@ import SwiftUI
 struct ResultOrderList: View {
     
     
-    @Environment(ShippingStore.self)
+    @Environment(ShippingUserStore.self)
     var shippingStore
     
     @Environment(RefundUserStore.self)

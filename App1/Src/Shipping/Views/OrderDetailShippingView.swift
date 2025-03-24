@@ -9,7 +9,7 @@ struct OrderDetailShippingView: View {
     @Environment(OrderUserStore.self)
     var orderStore
     
-    @Environment(ShippingStore.self)
+    @Environment(ShippingUserStore.self)
     var shippingStore
     
     

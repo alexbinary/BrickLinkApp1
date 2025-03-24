@@ -9,7 +9,7 @@ struct OrderDetailComptaView: View {
     @Environment(TransactionUserStore.self)
     var transactionStore
     
-    @Environment(ShippingStore.self)
+    @Environment(ShippingUserStore.self)
     var shippingStore
     
     @Environment(RefundUserStore.self)
