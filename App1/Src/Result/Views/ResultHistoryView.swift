@@ -13,7 +13,7 @@ struct ResultHistoryView: View {
     @Environment(ShippingStore.self)
     var shippingStore
     
-    @Environment(RefundStore.self)
+    @Environment(RefundUserStore.self)
     var refundStore
     
     @Environment(ResultStore.self)

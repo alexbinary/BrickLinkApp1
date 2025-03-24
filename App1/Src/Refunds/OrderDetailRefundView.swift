@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderDetailRefundView: View {
     
     
-    @Environment(RefundStore.self)
+    @Environment(RefundUserStore.self)
     var refundStore
     
     
