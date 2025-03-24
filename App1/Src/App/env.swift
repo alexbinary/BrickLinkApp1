@@ -9,7 +9,7 @@ typealias Env = (
     
     stores: (
         
-        inventory: InventoryStore,
+        inventory: InventoryUserStore,
         upload: UploadUserStore,
         stock: StockStore,
 
@@ -86,6 +86,7 @@ func createEnv() -> Env {
     
     // User Stores
     
+    let inventoryUserStore = InventoryUserStore(inventoryStore, inventoryController)
     let uploadUserStore = UploadUserStore(uploadStore)
     
     let orderUserStore = OrderUserStore(orderDataAccess, orderStore, orderChecklistStore, orderActionStore, reloadController)
@@ -108,7 +109,7 @@ func createEnv() -> Env {
         
         stores: (
             
-            inventory: inventoryStore,
+            inventory: inventoryUserStore,
             upload: uploadUserStore,
             stock: stockStore,
             

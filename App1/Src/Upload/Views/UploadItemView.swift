@@ -12,11 +12,8 @@ struct UploadItemView: View {
     @Environment(UploadUserStore.self)
     var uploadStore
     
-    @Environment(InventoryStore.self)
+    @Environment(InventoryUserStore.self)
     var inventoryStore
-    
-    @Environment(InventoryController.self)
-    var inventoryController
     
     
     let uploadItem: UploadItem
@@ -402,7 +399,7 @@ struct UploadItemView: View {
                                         
                                         if let inventoryItem = inventoryItem {
                                             
-                                            await inventoryController.updateInventory(
+                                            await inventoryStore.updateInventory(
                                                 
                                                 id: inventoryItem.id,
                                                 addQuantity: submitQty!,
@@ -414,7 +411,7 @@ struct UploadItemView: View {
                                             
                                         } else {
                                             
-                                            let inventoryItem = await inventoryController.createInventory(
+                                            let inventoryItem = await inventoryStore.createInventory(
                                                 
                                                 ref: submitRef!,
                                                 type: submitType,

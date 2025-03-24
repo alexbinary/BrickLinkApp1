@@ -10,7 +10,7 @@ struct OrderDetailPickingView: View {
     @Environment(OrderUserStore.self)
     var orderStore
     
-    @Environment(InventoryStore.self)
+    @Environment(InventoryUserStore.self)
     var inventoryStore
     
     @Environment(PickingUserStore.self)

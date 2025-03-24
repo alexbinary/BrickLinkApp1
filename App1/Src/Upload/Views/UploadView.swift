@@ -6,7 +6,7 @@ import SwiftUI
 struct UploadView: View {
     
     
-    @Environment(InventoryStore.self)
+    @Environment(InventoryUserStore.self)
     var inventoryStore
 
     
