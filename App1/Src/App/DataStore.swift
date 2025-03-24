@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class FileDataAccess {
+class DataStore {
     
     
     private let dataFileUrl: URL

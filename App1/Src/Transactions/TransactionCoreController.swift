@@ -6,24 +6,24 @@ import Foundation
 class TransactionCoreController {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
-        self.fileDataAccess = fileDataAccess
+    init(_ dataStore: DataStore) {
+        self.dataStore = dataStore
     }
     
     
     public var allTransactions: [Transaction] {
         
-        fileDataAccess.transactions
+        dataStore.transactions
     }
     
     
     public func register(_ transaction: Transaction) {
         
-        try! fileDataAccess.addTransaction(transaction)
-        try! fileDataAccess.save()
+        try! dataStore.addTransaction(transaction)
+        try! dataStore.save()
     }
     
     
@@ -47,14 +47,14 @@ class TransactionCoreController {
     
     public var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
         
-        fileDataAccess.dateValidatedWithoutIncomeTransactionByOrderId
+        dataStore.dateValidatedWithoutIncomeTransactionByOrderId
     }
     
     
     public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
         
-        try! fileDataAccess.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
+        try! dataStore.save()
     }
     
     
@@ -72,14 +72,14 @@ class TransactionCoreController {
     
     public var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
         
-        fileDataAccess.dateValidatedWithoutShippingTransactionByOrderId
+        dataStore.dateValidatedWithoutShippingTransactionByOrderId
     }
     
     
     public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
         
-        try! fileDataAccess.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
+        try! dataStore.save()
     }
     
     

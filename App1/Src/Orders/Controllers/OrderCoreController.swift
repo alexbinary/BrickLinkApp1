@@ -6,12 +6,12 @@ import Foundation
 class OrderCoreController {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
+    init(_ dataStore: DataStore) {
      
-        self.fileDataAccess = fileDataAccess
+        self.dataStore = dataStore
     }
     
     
@@ -20,7 +20,7 @@ class OrderCoreController {
     
     public var orderSummaries: [OrderSummary] {
         
-        fileDataAccess.orderSummaries
+        dataStore.orderSummaries
     }
     
     
@@ -39,8 +39,8 @@ class OrderCoreController {
         
         print("loaded \(orderSummaries.count) orders")
         
-        try! fileDataAccess.setOrderSummaries(orderSummaries)
-        try! fileDataAccess.save()
+        try! dataStore.setOrderSummaries(orderSummaries)
+        try! dataStore.save()
     }
     
     
@@ -67,7 +67,7 @@ class OrderCoreController {
     
     public var orderDetails: [OrderDetails] {
         
-        fileDataAccess.orderDetails
+        dataStore.orderDetails
     }
     
     
@@ -84,8 +84,8 @@ class OrderCoreController {
         let blOrder = await BrickLinkAPIClient.fetchDetails(forOrderWithId: orderId)
         let order = OrderDetails(fromBl: blOrder)
         
-        try! fileDataAccess.setOrderDetail(order)
-        try! fileDataAccess.save()
+        try! dataStore.setOrderDetail(order)
+        try! dataStore.save()
     }
     
     
@@ -154,7 +154,7 @@ class OrderCoreController {
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        (fileDataAccess.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
+        (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
     }
     
     
@@ -178,14 +178,14 @@ class OrderCoreController {
         
         print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items")
         
-        try! fileDataAccess.setOrderItems(batches, forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setOrderItems(batches, forOrderId: orderId)
+        try! dataStore.save()
     }
     
     
     public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
         
-        if !fileDataAccess.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
+        if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
             
             await loadOrderItems(forOrderWithId: orderId)
         }

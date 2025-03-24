@@ -6,12 +6,12 @@ import Foundation
 class FeedbackCoreController {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
+    init(_ dataStore: DataStore) {
         
-        self.fileDataAccess = fileDataAccess
+        self.dataStore = dataStore
     }
     
     
@@ -20,7 +20,7 @@ class FeedbackCoreController {
     
     public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        fileDataAccess.orderFeedbacksByOrderId[orderId] ?? []
+        dataStore.orderFeedbacksByOrderId[orderId] ?? []
     }
     
     
@@ -45,14 +45,14 @@ class FeedbackCoreController {
         
         print("loaded \(feedbacks.count) feedbacks")
         
-        try! fileDataAccess.setOrderFeedbacks(feedbacks, forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
+        try! dataStore.save()
     }
     
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if !fileDataAccess.orderFeedbacksByOrderId.keys.contains(orderId) {
+        if !dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -61,7 +61,7 @@ class FeedbackCoreController {
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        if fileDataAccess.orderFeedbacksByOrderId.keys.contains(orderId) {
+        if dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
             
             await loadOrderFeedbacks(forOrderWithId: orderId)
         }
@@ -84,14 +84,14 @@ class FeedbackCoreController {
     
     public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
         
-        fileDataAccess.dateValidatedWithoutFeedbackByOrderId
+        dataStore.dateValidatedWithoutFeedbackByOrderId
     }
     
     
     public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
         
-        try! fileDataAccess.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
+        try! dataStore.save()
     }
     
     

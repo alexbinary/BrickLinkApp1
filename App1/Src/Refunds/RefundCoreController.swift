@@ -6,18 +6,18 @@ import Foundation
 class RefundCoreController {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
+    init(_ dataStore: DataStore) {
         
-        self.fileDataAccess = fileDataAccess
+        self.dataStore = dataStore
     }
     
     
     public var allRefunds: [OrderRefund] {
         
-        fileDataAccess.allRefunds
+        dataStore.allRefunds
     }
     
     
@@ -29,7 +29,7 @@ class RefundCoreController {
     
     public func create(_ refund: OrderRefund) {
         
-        try! fileDataAccess.addOrderRefund(refund)
-        try! fileDataAccess.save()
+        try! dataStore.addOrderRefund(refund)
+        try! dataStore.save()
     }
 }

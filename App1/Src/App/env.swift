@@ -28,25 +28,25 @@ typealias Env = (
 
 func createEnv() -> Env {
     
-    let fileDataAccess: FileDataAccess = {
+    let dataStore: DataStore = {
         let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")
-        return FileDataAccess(dataFileUrl: URL(fileURLWithPath: path))
+        return DataStore(dataFileUrl: URL(fileURLWithPath: path))
     }()
     
     // Core controllers
     
-    let catalog = Catalog(fileDataAccess)
+    let catalog = Catalog(dataStore)
     
-    let inventoryCoreController = InventoryCoreController(fileDataAccess)
-    let uploadCoreController = UploadCoreController(fileDataAccess)
+    let inventoryCoreController = InventoryCoreController(dataStore)
+    let uploadCoreController = UploadCoreController(dataStore)
     
-    let orderCoreController = OrderCoreController(fileDataAccess)
-    let pickingCoreController = PickingCoreController(fileDataAccess)
-    let shippingCoreController = ShippingCoreController(fileDataAccess)
-    let trackingCoreController = TrackingCoreController(fileDataAccess)
-    let feedbackCoreController = FeedbackCoreController(fileDataAccess)
-    let refundCoreController = RefundCoreController(fileDataAccess)
-    let transactionCoreController = TransactionCoreController(fileDataAccess)
+    let orderCoreController = OrderCoreController(dataStore)
+    let pickingCoreController = PickingCoreController(dataStore)
+    let shippingCoreController = ShippingCoreController(dataStore)
+    let trackingCoreController = TrackingCoreController(dataStore)
+    let feedbackCoreController = FeedbackCoreController(dataStore)
+    let refundCoreController = RefundCoreController(dataStore)
+    let transactionCoreController = TransactionCoreController(dataStore)
     
     let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
     let feedbackMiddleController = FeedbackMiddleController(orderCoreController, feedbackCoreController)

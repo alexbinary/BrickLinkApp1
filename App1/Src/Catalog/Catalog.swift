@@ -8,11 +8,11 @@ import SwiftUI
 class Catalog {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
-        self.fileDataAccess = fileDataAccess
+    init(_ dataStore: DataStore) {
+        self.dataStore = dataStore
     }
     
     
@@ -21,13 +21,13 @@ class Catalog {
     
     public var allColors: [LegoColor] {
         
-        fileDataAccess.colors
+        dataStore.colors
     }
     
     
     public func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
         
-        if let c = fileDataAccess.colors.first(where: { $0.id == colorId }) {
+        if let c = dataStore.colors.first(where: { $0.id == colorId }) {
             return Color(fromBLCode: c.colorCode)
         } else {
             return nil
@@ -37,7 +37,7 @@ class Catalog {
     
     public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
         
-        fileDataAccess.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
+        dataStore.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
     }
     
     
@@ -56,8 +56,8 @@ class Catalog {
         
         print("Loaded \(colors.count) colors")
         
-        try! fileDataAccess.setColors(colors)
-        try! fileDataAccess.save()
+        try! dataStore.setColors(colors)
+        try! dataStore.save()
     }
     
     

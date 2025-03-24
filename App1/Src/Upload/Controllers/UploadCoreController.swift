@@ -6,12 +6,12 @@ import Foundation
 class UploadCoreController {
     
 
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
+    init(_ dataStore: DataStore) {
         
-        self.fileDataAccess = fileDataAccess
+        self.dataStore = dataStore
     }
     
     
@@ -20,28 +20,28 @@ class UploadCoreController {
     
     public var uploadItems: [UploadItem] {
         
-        fileDataAccess.uploadItems
+        dataStore.uploadItems
     }
     
     
     public func add(_ uploadItem: UploadItem) {
         
-        try! fileDataAccess.addUploadItem(uploadItem)
-        try! fileDataAccess.save()
+        try! dataStore.addUploadItem(uploadItem)
+        try! dataStore.save()
     }
     
     
     public func delete(_ uploadItem: UploadItem) {
         
-        try! fileDataAccess.deleteUploadItem(uploadItem)
-        try! fileDataAccess.save()
+        try! dataStore.deleteUploadItem(uploadItem)
+        try! dataStore.save()
     }
     
     
     public func update(_ updatedItem: UploadItem) {
         
-        try! fileDataAccess.updateUploadItem(updatedItem)
-        try! fileDataAccess.save()
+        try! dataStore.updateUploadItem(updatedItem)
+        try! dataStore.save()
     }
     
     
@@ -56,8 +56,8 @@ class UploadCoreController {
             return
         }
         
-        try! fileDataAccess.addUploadItems(parserDelegate.decodedUploadItems)
-        try! fileDataAccess.save()
+        try! dataStore.addUploadItems(parserDelegate.decodedUploadItems)
+        try! dataStore.save()
     }
     
     
@@ -66,13 +66,13 @@ class UploadCoreController {
     
     public var uploadedItems: [UploadedItem] {
         
-        fileDataAccess.uploadedItems
+        dataStore.uploadedItems
     }
     
     
     public func add(_ uploadedItem: UploadedItem) {
         
-        try! fileDataAccess.addUploadedItem(uploadedItem)
-        try! fileDataAccess.save()
+        try! dataStore.addUploadedItem(uploadedItem)
+        try! dataStore.save()
     }
 }

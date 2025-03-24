@@ -8,11 +8,11 @@ import SwiftUI
 class InventoryCoreController {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
-        self.fileDataAccess = fileDataAccess
+    init(_ dataStore: DataStore) {
+        self.dataStore = dataStore
     }
     
     
@@ -21,13 +21,13 @@ class InventoryCoreController {
     
     public var allInventories: [InventoryItem] {
         
-        fileDataAccess.inventories
+        dataStore.inventories
     }
     
     
     public func inventory(withId id: InventoryItem.ID) -> InventoryItem? {
         
-        fileDataAccess.inventories.first { $0.id == id }
+        dataStore.inventories.first { $0.id == id }
     }
     
     
@@ -87,8 +87,8 @@ class InventoryCoreController {
         
         print("loaded \(inventories.count) inventories")
         
-        try! fileDataAccess.setInventories(inventories)
-        try! fileDataAccess.save()
+        try! dataStore.setInventories(inventories)
+        try! dataStore.save()
     }
     
     
@@ -99,14 +99,14 @@ class InventoryCoreController {
         let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id)
         let inventory = InventoryItem(fromBl: blInventory)
         
-        try! fileDataAccess.setInventory(inventory)
-        try! fileDataAccess.save()
+        try! dataStore.setInventory(inventory)
+        try! dataStore.save()
     }
     
     
     public func reloadInventories() async {
         
-        if !fileDataAccess.inventories.isEmpty {
+        if !dataStore.inventories.isEmpty {
         
             await loadInventories()
         }
@@ -115,7 +115,7 @@ class InventoryCoreController {
     
     public func reloadInventory(withId id: InventoryItem.ID) async {
         
-        if fileDataAccess.inventories.contains(where: { $0.id == id }) {
+        if dataStore.inventories.contains(where: { $0.id == id }) {
             
             await loadInventory(withId: id)
         }

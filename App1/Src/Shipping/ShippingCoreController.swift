@@ -6,11 +6,11 @@ import Foundation
 class ShippingCoreController {
     
     
-    private let fileDataAccess: FileDataAccess
+    private let dataStore: DataStore
     
     
-    init(_ fileDataAccess: FileDataAccess) {
-        self.fileDataAccess = fileDataAccess
+    init(_ dataStore: DataStore) {
+        self.dataStore = dataStore
     }
     
     
@@ -19,14 +19,14 @@ class ShippingCoreController {
     
     public func confirmedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
-        return fileDataAccess.shippingCostsByOrderId[orderId]
+        return dataStore.shippingCostsByOrderId[orderId]
     }
     
     
     public func confirmShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
         
-        try! fileDataAccess.setShippingCost(cost, forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setShippingCost(cost, forOrderId: orderId)
+        try! dataStore.save()
     }
     
     
@@ -35,27 +35,27 @@ class ShippingCoreController {
     
     public func confirmedStamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        return fileDataAccess.stampingMethodByOrderId[orderId]
+        return dataStore.stampingMethodByOrderId[orderId]
     }
     
     
     public func confirmStamping(forOrderWithId orderId: OrderSummary.ID, stamping: String) {
         
-        try! fileDataAccess.setStampingMethod(stamping, forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setStampingMethod(stamping, forOrderId: orderId)
+        try! dataStore.save()
     }
     
     
     public var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
         
-        fileDataAccess.dateValidatedWithoutStampingByOrderId
+        dataStore.dateValidatedWithoutStampingByOrderId
     }
     
     
     public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
         
-        try! fileDataAccess.setDateValidatedWithoutStamping(Date(), forOrderId: orderId)
-        try! fileDataAccess.save()
+        try! dataStore.setDateValidatedWithoutStamping(Date(), forOrderId: orderId)
+        try! dataStore.save()
     }
     
     
