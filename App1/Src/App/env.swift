@@ -36,10 +36,9 @@ func createEnv() -> Env {
     // Core controllers
     
     let inventoryCoreController = InventoryCoreController(fileDataAccess)
+    let uploadCoreController = UploadCoreController(fileDataAccess)
     
     // Data accesss
-    
-    let uploadDataAccess = UploadDataAccess(fileDataAccess)
     
     let orderDataAccess = OrderDataAccess(fileDataAccess)
     let pickingDataAccess = PickingDataAccess(fileDataAccess)
@@ -53,7 +52,6 @@ func createEnv() -> Env {
     // Stores & Controllers
     
     let catalog = Catalog(fileDataAccess)
-    let uploadStore = UploadStore(uploadDataAccess, catalog, inventoryCoreController)
     
     let pickingStore = PickingStore(orderDataAccess, pickingDataAccess)
     let shippingStore = ShippingStore(orderDataAccess, shippingDataAccess)
@@ -81,7 +79,7 @@ func createEnv() -> Env {
     // User Stores
     
     let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockCoreController)
-    let uploadUserStore = UploadUserStore(uploadStore)
+    let uploadUserStore = UploadUserStore(uploadCoreController, inventoryCoreController, catalog)
     
     let orderUserStore = OrderUserStore(orderDataAccess, orderStore, orderChecklistStore, orderActionStore, reloadController)
     let pickingUserStore = PickingUserStore(pickingStore)

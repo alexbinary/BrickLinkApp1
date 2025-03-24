@@ -3,13 +3,14 @@ import Foundation
 
 
 
-class UploadDataAccess {
+class UploadCoreController {
     
-    
+
     private let fileDataAccess: FileDataAccess
     
     
     init(_ fileDataAccess: FileDataAccess) {
+        
         self.fileDataAccess = fileDataAccess
     }
     
