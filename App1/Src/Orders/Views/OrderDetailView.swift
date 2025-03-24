@@ -6,11 +6,8 @@ import SwiftUI
 struct OrderDetailView: View {
     
     
-    @Environment(OrderStore.self)
+    @Environment(OrderUserStore.self)
     var orderStore
-    
-    @Environment(ReloadController.self)
-    var reloadController
     
     
     let orderSummary: OrderSummary
@@ -77,7 +74,7 @@ struct OrderDetailView: View {
         }
         .padding()
         .onChange(of: orderSummary.id, initial: true) {
-            Task { await reloadController.forceRefreshOrder(orderId: orderSummary.id)}
+            Task { await orderStore.forceRefreshOrder(orderId: orderSummary.id)}
         }
         .navigationTitle("Order \(orderSummary.id)")
     }

@@ -5,11 +5,8 @@ import SwiftUI
 struct OrdersMainList: View {
     
     
-    @Environment(OrderStore.self)
+    @Environment(OrderUserStore.self)
     var orderStore
-    
-    @Environment(ReloadController.self)
-    var reloadController
     
     @Environment(NavigationController.self)
     var nav
@@ -67,7 +64,7 @@ struct OrdersMainList: View {
     func refresh() async {
         
         refreshing = true
-        await reloadController.refreshOrdersMainList()
+        await orderStore.refreshOrdersMainList()
         refreshing = false
     }
     

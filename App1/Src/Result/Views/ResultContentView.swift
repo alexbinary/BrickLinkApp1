@@ -6,7 +6,7 @@ import SwiftUI
 struct ResultContentView: View {
     
     
-    @Environment(OrderStore.self)
+    @Environment(OrderUserStore.self)
     var orderStore
     
     @Environment(ShippingStore.self)

@@ -13,7 +13,7 @@ typealias Env = (
         upload: UploadStore,
         stock: StockStore,
 
-        order: OrderStore,
+        order: OrderUserStore,
         picking: PickingStore,
         shipping: ShippingStore,
         tracking: TrackingStore,
@@ -21,19 +21,14 @@ typealias Env = (
         refund: RefundStore,
 
         transaction: TransactionUserStore,
-        result: ResultStore,
-
-        orderChecklist: OrderChecklistStore,
-        orderAction: OrderActionStore
+        result: ResultStore
     ),
     
     controllers: (
         
         inventory: InventoryController,
-        feedback: FeedbackUserController,
-        reload: ReloadController
+        feedback: FeedbackUserController
     )
-        
 )
 
 
@@ -91,6 +86,7 @@ func createEnv() -> Env {
     
     // User Stores
     
+    let orderUserStore = OrderUserStore(orderDataAccess, orderStore, orderChecklistStore, orderActionStore, reloadController)
     let feedbackUserStore = FeedbackUserStore(feedbackStore)
     let transactionUserStore = TransactionUserStore(transactionStore)
     
@@ -108,7 +104,7 @@ func createEnv() -> Env {
             upload: uploadStore,
             stock: stockStore,
             
-            order: orderStore,
+            order: orderUserStore,
             picking: pickingStore,
             shipping: shippingStore,
             tracking: trackingStore,
@@ -116,17 +112,13 @@ func createEnv() -> Env {
             refund: refundStore,
             
             transaction: transactionUserStore,
-            result: resultStore,
-            
-            orderChecklist: orderChecklistStore,
-            orderAction: orderActionStore
+            result: resultStore
         ),
         
         controllers: (
             
             inventory: inventoryController,
-            feedback: feedbackUserController,
-            reload: reloadController
+            feedback: feedbackUserController
         )
     )
 }

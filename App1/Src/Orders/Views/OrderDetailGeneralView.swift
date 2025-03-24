@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderDetailGeneralView: View {
     
     
-    @Environment(OrderStore.self)
+    @Environment(OrderUserStore.self)
     var orderStore
     
     

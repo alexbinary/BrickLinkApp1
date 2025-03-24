@@ -7,7 +7,7 @@ import Charts
 struct ResultHistoryView: View {
     
     
-    @Environment(OrderStore.self)
+    @Environment(OrderUserStore.self)
     var orderStore
     
     @Environment(ShippingStore.self)

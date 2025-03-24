@@ -7,7 +7,7 @@ import HTMLEntities
 struct OrderDetailPickingView: View {
     
     
-    @Environment(OrderStore.self)
+    @Environment(OrderUserStore.self)
     var orderStore
     
     @Environment(InventoryStore.self)

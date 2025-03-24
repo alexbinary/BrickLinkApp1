@@ -5,11 +5,8 @@ import SwiftUI
 struct OrdersActionsSheet: View {
     
     
-    @Environment(OrderChecklistStore.self)
-    var orderChecklistStore
-    
-    @Environment(OrderActionStore.self)
-    var orderActionStore
+    @Environment(OrderUserStore.self)
+    var orderStore
     
     
     let orders: [OrderSummary]
@@ -19,7 +16,7 @@ struct OrdersActionsSheet: View {
         
         Group {
             
-            if orderActionStore.ordersThatNeedAction.isEmpty {
+            if orderStore.ordersThatNeedAction.isEmpty {
                 
                 Text("All orders ok")
                 
@@ -27,37 +24,37 @@ struct OrdersActionsSheet: View {
                 
                 Grid(alignment: .leading, verticalSpacing: 12) {
                     
-                    sectionView(orders: orderActionStore.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
+                    sectionView(orders: orderStore.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderChecklistStore.orderChecklistCompleted(order.id))
+                            CheckView(checked: orderStore.orderChecklistCompleted(order.id))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckView(checked: orderChecklistStore.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
-                    sectionView(orders: orderActionStore.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
+                    sectionView(orders: orderStore.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderChecklistStore.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order.id))
                             Text("Give feedback")
                         }
                     }
                     
-                    sectionView(orders: orderActionStore.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
+                    sectionView(orders: orderStore.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckView(checked: orderChecklistStore.orderChecklistShipped(order.id))
+                            CheckView(checked: orderStore.orderChecklistShipped(order.id))
                             Text("Mark shipped")
                         }
                         HStack {
-                            CheckView(checked: orderChecklistStore.orderChecklistDriveThru(order.id))
+                            CheckView(checked: orderStore.orderChecklistDriveThru(order.id))
                             Text("Send drive thru")
                         }
                     }
                     
                     Button {
-                        Task { await orderActionStore.performActionForAllOrders() }
+                        Task { await orderStore.performActionForAllOrders() }
                     } label: {
                         Text("Do all").padding(.horizontal)
                     }

@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderChecklistView: View {
 
     
-    @Environment(OrderChecklistStore.self)
-    var orderChecklistStore
+    @Environment(OrderUserStore.self)
+    var orderStore 
     
     
     let order: OrderDetails
@@ -19,7 +19,7 @@ struct OrderChecklistView: View {
     
     var body: some View {
 
-        let checklist = orderChecklistStore.checklist(forOrderWithId: order.id)
+        let checklist = orderStore.checklist(forOrderWithId: order.id)
         
         VStack(alignment: .leading, spacing: 12) {
             
