@@ -199,12 +199,14 @@ struct OrdersMainListItem: View {
             if !orderChecklistStore.orderChecklistPicking(order.id) {
                 
                 let progress = pickingStore.pickingProgress(forOrderWithId: order.id)
-                items.append(OrderStatusTag(text: "\(progress) picked", status: .actionRequired))
+                let text = progress == 0% ? "Start picking" : "\(progress) picked"
+                items.append(OrderStatusTag(text: text, status: .actionRequired))
                 
             } else if !orderChecklistStore.orderChecklistVerification(order.id) {
                 
                 let progress = pickingStore.pickingVerificationProgress(forOrderWithId: order.id)
-                items.append(OrderStatusTag(text: "\(progress) verified", status: .actionRequired))
+                let text = progress == 0% ? "Start verification" : "\(progress) verified"
+                items.append(OrderStatusTag(text: text, status: .actionRequired))
                 
             } else if !orderChecklistStore.orderChecklistPacked(order.id) {
                 items.append(OrderStatusTag(text: "Not packed yet", status: .actionRequired))

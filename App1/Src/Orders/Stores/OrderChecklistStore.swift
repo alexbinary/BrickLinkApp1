@@ -285,7 +285,7 @@ class OrderChecklistStore {
                     .init(
                         label: {
                             let progress = pickingStore.pickingProgress(forOrderWithId: orderId)
-                            if progress == 100% {
+                            if progress == 0% || progress == 100% {
                                 return  "Pick items"
                             } else {
                                 return "Pick items - \(progress) complete"
@@ -296,7 +296,7 @@ class OrderChecklistStore {
                     .init(
                         label: {
                             let progress = pickingStore.pickingVerificationProgress(forOrderWithId: orderId)
-                            if progress == 100% {
+                            if progress == 0% || progress == 100% {
                                 return "Verify items"
                             } else {
                                 return "Verify items - \(progress) complete"
