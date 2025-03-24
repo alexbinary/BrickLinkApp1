@@ -35,6 +35,8 @@ func createEnv() -> Env {
     
     // Core controllers
     
+    let catalog = Catalog(fileDataAccess)
+    
     let inventoryCoreController = InventoryCoreController(fileDataAccess)
     let uploadCoreController = UploadCoreController(fileDataAccess)
     
@@ -46,14 +48,9 @@ func createEnv() -> Env {
     let refundCoreController = RefundCoreController(fileDataAccess)
     let transactionCoreController = TransactionCoreController(fileDataAccess)
     
-    // Stores & Controllers
-    
-    let catalog = Catalog(fileDataAccess)
-    
     let pickingProgressCoreController = PickingProgressCoreController(orderCoreController, pickingCoreController)
-    let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
     
-    let resultStore = ResultStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
+    let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
     
     let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionCoreController, trackingMiddleController, pickingProgressCoreController)
     
@@ -76,7 +73,7 @@ func createEnv() -> Env {
     let refundUserStore = RefundUserStore(refundCoreController)
     
     let transactionUserStore = TransactionUserStore(transactionCoreController)
-    let resultUserStore = ResultUserStore(resultStore: resultStore)
+    let resultUserStore = ResultUserStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
     
     return (
         
