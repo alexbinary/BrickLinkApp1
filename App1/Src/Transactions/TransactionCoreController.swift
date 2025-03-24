@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class TransactionDataAccess {
+class TransactionCoreController {
     
     
     private let fileDataAccess: FileDataAccess

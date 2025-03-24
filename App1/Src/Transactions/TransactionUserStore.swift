@@ -8,11 +8,12 @@ import SwiftUI
 class TransactionUserStore {
     
     
-    private let transactionStore: TransactionStore
+    private let transactionCoreController: TransactionCoreController
     
     
-    init(_ transactionStore: TransactionStore) {
-        self.transactionStore = transactionStore
+    init(_ transactionStore: TransactionCoreController) {
+        
+        self.transactionCoreController = transactionStore
     }
     
     
@@ -21,13 +22,13 @@ class TransactionUserStore {
     
     public var allTransactions: [Transaction] {
         
-        transactionStore.allTransactions
+        transactionCoreController.allTransactions
     }
     
     
     public func register(_ transaction: Transaction) {
         
-        transactionStore.register(transaction)
+        transactionCoreController.register(transaction)
     }
     
     
@@ -36,19 +37,19 @@ class TransactionUserStore {
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.incomeTransactions(forOrderWithId: orderId)
+        transactionCoreController.incomeTransactions(forOrderWithId: orderId)
     }
     
     
     public func dateOrderValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Date? {
         
-        transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: orderId)
+        transactionCoreController.dateOrderValidatedWithoutIncomeTransaction(orderId: orderId)
     }
     
     
     public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
         
-        transactionStore.validateOrderWithoutIncomeTransaction(orderId: orderId)
+        transactionCoreController.validateOrderWithoutIncomeTransaction(orderId: orderId)
     }
     
     
@@ -57,19 +58,19 @@ class TransactionUserStore {
     
     public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.shippingTransactions(forOrderWithId: orderId)
+        transactionCoreController.shippingTransactions(forOrderWithId: orderId)
     }
     
     
     public func dateOrderValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Date? {
         
-        transactionStore.dateOrderValidatedWithoutShippingTransaction(orderId: orderId)
+        transactionCoreController.dateOrderValidatedWithoutShippingTransaction(orderId: orderId)
     }
     
     
     public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
         
-        transactionStore.validateOrderWithoutShippingTransaction(orderId: orderId)
+        transactionCoreController.validateOrderWithoutShippingTransaction(orderId: orderId)
     }
     
     
@@ -78,6 +79,6 @@ class TransactionUserStore {
     
     public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionStore.refundTransactions(forOrderWithId: orderId)
+        transactionCoreController.refundTransactions(forOrderWithId: orderId)
     }
 }

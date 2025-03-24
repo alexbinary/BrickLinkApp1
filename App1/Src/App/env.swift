@@ -44,7 +44,7 @@ func createEnv() -> Env {
     let trackingCoreController = TrackingCoreController(fileDataAccess)
     let feedbackCoreController = FeedbackCoreController(fileDataAccess)
     let refundCoreController = RefundCoreController(fileDataAccess)
-    let transactionDataAccess = TransactionDataAccess(fileDataAccess)
+    let transactionCoreController = TransactionCoreController(fileDataAccess)
     
     // Stores & Controllers
     
@@ -53,10 +53,9 @@ func createEnv() -> Env {
     let pickingProgressCoreController = PickingProgressCoreController(orderCoreController, pickingCoreController)
     let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
     
-    let transactionStore = TransactionStore(transactionDataAccess)
-    let resultStore = ResultStore(orderCoreController, shippingCoreController, refundCoreController, transactionDataAccess)
+    let resultStore = ResultStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
     
-    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionDataAccess, trackingMiddleController, pickingProgressCoreController)
+    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionCoreController, trackingMiddleController, pickingProgressCoreController)
     
     let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
     
@@ -76,7 +75,7 @@ func createEnv() -> Env {
     let feedbackUserStore = FeedbackUserStore(feedbackCoreController, feedbackMiddleController)
     let refundUserStore = RefundUserStore(refundCoreController)
     
-    let transactionUserStore = TransactionUserStore(transactionStore)
+    let transactionUserStore = TransactionUserStore(transactionCoreController)
     let resultUserStore = ResultUserStore(resultStore: resultStore)
     
     return (

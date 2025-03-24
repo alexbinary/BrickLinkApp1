@@ -11,17 +11,17 @@ class OrderChecklistCoreController {
     private let pickingCoreController: PickingCoreController
     private let shippingCoreController: ShippingCoreController
     private let feedbackCoreController: FeedbackCoreController
-    private let transactionDataAccess: TransactionDataAccess
+    private let transactionCoreController: TransactionCoreController
     private let trackingMiddleController: TrackingMiddleController
     private let pickingProgressCoreController: PickingProgressCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackCoreController: FeedbackCoreController, _ transactionDataAccess: TransactionDataAccess, _ trackingMiddleController: TrackingMiddleController, _ pickingProgressCoreController: PickingProgressCoreController) {
+    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackCoreController: FeedbackCoreController, _ transactionCoreController: TransactionCoreController, _ trackingMiddleController: TrackingMiddleController, _ pickingProgressCoreController: PickingProgressCoreController) {
         self.orderCoreController = orderCoreController
         self.pickingCoreController = pickingCoreController
         self.shippingCoreController = shippingCoreController
         self.feedbackCoreController = feedbackCoreController
-        self.transactionDataAccess = transactionDataAccess
+        self.transactionCoreController = transactionCoreController
         self.trackingMiddleController = trackingMiddleController
         self.pickingProgressCoreController = pickingProgressCoreController
     }
@@ -35,25 +35,25 @@ class OrderChecklistCoreController {
     
     public func orderIsValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Bool {
         
-        transactionDataAccess.orderIsValidatedWithoutIncomeTransaction(orderId: orderId)
+        transactionCoreController.orderIsValidatedWithoutIncomeTransaction(orderId: orderId)
     }
     
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionDataAccess.incomeTransactions(forOrderWithId: orderId)
+        transactionCoreController.incomeTransactions(forOrderWithId: orderId)
     }
     
     
     public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionDataAccess.shippingTransactions(forOrderWithId: orderId)
+        transactionCoreController.shippingTransactions(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Bool {
         
-        transactionDataAccess.orderIsValidatedWithoutShippingTransaction(orderId: orderId)
+        transactionCoreController.orderIsValidatedWithoutShippingTransaction(orderId: orderId)
     }
     
     

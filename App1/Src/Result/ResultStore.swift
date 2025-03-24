@@ -10,14 +10,14 @@ class ResultStore {
     private let orderCoreController: OrderCoreController
     private let shippingCoreController: ShippingCoreController
     private let refundCoreController: RefundCoreController
-    private let transactionDataAccess: TransactionDataAccess
+    private let transactionCoreController: TransactionCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ shippingCoreController: ShippingCoreController, _ refundCoreController: RefundCoreController, _ transactionDataAccess: TransactionDataAccess) {
+    init(_ orderCoreController: OrderCoreController, _ shippingCoreController: ShippingCoreController, _ refundCoreController: RefundCoreController, _ transactionCoreController: TransactionCoreController) {
         self.orderCoreController = orderCoreController
         self.shippingCoreController = shippingCoreController
         self.refundCoreController = refundCoreController
-        self.transactionDataAccess = transactionDataAccess
+        self.transactionCoreController = transactionCoreController
     }
     
     
@@ -41,13 +41,13 @@ class ResultStore {
     
     public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionDataAccess.incomeTransactions(forOrderWithId: orderId)
+        transactionCoreController.incomeTransactions(forOrderWithId: orderId)
     }
     
     
     public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
         
-        transactionDataAccess.refundTransactions(forOrderWithId: orderId)
+        transactionCoreController.refundTransactions(forOrderWithId: orderId)
     }
     
     
