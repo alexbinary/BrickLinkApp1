@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderIncomeTransactionView: View {
 
     
-    @Environment(TransactionStore.self)
+    @Environment(TransactionUserStore.self)
     var transactionStore
     
     

@@ -7,7 +7,7 @@ import Charts
 struct CashFlowDetailView: View {
     
     
-    @Environment(TransactionStore.self)
+    @Environment(TransactionUserStore.self)
     var transactionStore
     
     @Environment(NavigationController.self)

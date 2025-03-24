@@ -6,7 +6,7 @@ import SwiftUI
 struct OrderDetailComptaView: View {
     
     
-    @Environment(TransactionStore.self)
+    @Environment(TransactionUserStore.self)
     var transactionStore
     
     @Environment(ShippingStore.self)
