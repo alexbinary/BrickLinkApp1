@@ -21,7 +21,7 @@ typealias Env = (
         refund: RefundUserStore,
 
         transaction: TransactionUserStore,
-        result: ResultStore
+        result: ResultUserStore
     ),
     
     controllers: (
@@ -92,6 +92,7 @@ func createEnv() -> Env {
     let refundUserStore = RefundUserStore(refundStore)
     
     let transactionUserStore = TransactionUserStore(transactionStore)
+    let resultUserStore = ResultUserStore(resultStore: resultStore)
     
     // User Controllers
     
@@ -115,7 +116,7 @@ func createEnv() -> Env {
             refund: refundUserStore,
             
             transaction: transactionUserStore,
-            result: resultStore
+            result: resultUserStore
         ),
         
         controllers: (

@@ -12,7 +12,7 @@ struct ResultOrderList: View {
     @Environment(RefundUserStore.self)
     var refundStore
     
-    @Environment(ResultStore.self)
+    @Environment(ResultUserStore.self)
     var resultStore
     
     

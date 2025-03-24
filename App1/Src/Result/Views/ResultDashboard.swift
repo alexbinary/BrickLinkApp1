@@ -7,7 +7,7 @@ import Charts
 struct ResultDashboard: View {
     
     
-    @Environment(ResultStore.self)
+    @Environment(ResultUserStore.self)
     var resultStore
     
     
