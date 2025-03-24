@@ -10,17 +10,17 @@ class OrderChecklistCoreController {
     private let orderCoreController: OrderCoreController
     private let pickingCoreController: PickingCoreController
     private let shippingCoreController: ShippingCoreController
-    private let feedbackDataAccess: FeedbackDataAccess
+    private let feedbackCoreController: FeedbackCoreController
     private let transactionDataAccess: TransactionDataAccess
     private let trackingMiddleController: TrackingMiddleController
     private let pickingProgressCoreController: PickingProgressCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingMiddleController: TrackingMiddleController, _ pickingProgressCoreController: PickingProgressCoreController) {
+    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackCoreController: FeedbackCoreController, _ transactionDataAccess: TransactionDataAccess, _ trackingMiddleController: TrackingMiddleController, _ pickingProgressCoreController: PickingProgressCoreController) {
         self.orderCoreController = orderCoreController
         self.pickingCoreController = pickingCoreController
         self.shippingCoreController = shippingCoreController
-        self.feedbackDataAccess = feedbackDataAccess
+        self.feedbackCoreController = feedbackCoreController
         self.transactionDataAccess = transactionDataAccess
         self.trackingMiddleController = trackingMiddleController
         self.pickingProgressCoreController = pickingProgressCoreController
@@ -95,13 +95,13 @@ class OrderChecklistCoreController {
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackDataAccess.feedbacks(forOrderWithId: orderId)
+        feedbackCoreController.feedbacks(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
         
-        feedbackDataAccess.orderIsValidatedWithoutFeedback(orderId: orderId)
+        feedbackCoreController.orderIsValidatedWithoutFeedback(orderId: orderId)
     }
     
     

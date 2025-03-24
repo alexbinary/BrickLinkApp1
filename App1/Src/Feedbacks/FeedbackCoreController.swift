@@ -3,13 +3,14 @@ import Foundation
 
 
 
-class FeedbackDataAccess {
+class FeedbackCoreController {
     
     
     private let fileDataAccess: FileDataAccess
     
     
     init(_ fileDataAccess: FileDataAccess) {
+        
         self.fileDataAccess = fileDataAccess
     }
     

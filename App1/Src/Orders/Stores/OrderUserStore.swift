@@ -13,18 +13,18 @@ class OrderUserStore {
     
     private let pickingProgressCoreController: PickingProgressCoreController
     private let trackingMiddleController: TrackingMiddleController
-    private let feedbackController: FeedbackController
-    private let feedbackDataAccess: FeedbackDataAccess
+    private let feedbackMiddleController: FeedbackMiddleController
+    private let feedbackCoreController: FeedbackCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingProgressCoreController: PickingProgressCoreController, _ trackingMiddleController: TrackingMiddleController, _ feedbackController: FeedbackController, _ feedbackDataAccess: FeedbackDataAccess) {
+    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingProgressCoreController: PickingProgressCoreController, _ trackingMiddleController: TrackingMiddleController, _ feedbackMiddleController: FeedbackMiddleController, _ feedbackCoreController: FeedbackCoreController) {
         self.orderCoreController = orderCoreController
         self.orderMacroStatusCoreController = orderMacroStatusCoreController
         self.orderChecklistCoreController = orderChecklistCoreController
         self.pickingProgressCoreController = pickingProgressCoreController
         self.trackingMiddleController = trackingMiddleController
-        self.feedbackController = feedbackController
-        self.feedbackDataAccess = feedbackDataAccess
+        self.feedbackMiddleController = feedbackMiddleController
+        self.feedbackCoreController = feedbackCoreController
     }
     
     
@@ -123,19 +123,19 @@ class OrderUserStore {
     
     public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackDataAccess.feedbacks(forOrderWithId: orderId)
+        feedbackCoreController.feedbacks(forOrderWithId: orderId)
     }
     
     
     public func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackDataAccess.loadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackCoreController.loadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
     public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackDataAccess.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
+        await feedbackCoreController.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
     }
     
     
@@ -330,7 +330,7 @@ class OrderUserStore {
     
     public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackDataAccess.reloadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackCoreController.reloadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
@@ -630,7 +630,7 @@ class OrderUserStore {
     
     public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
         
-        await feedbackController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackMiddleController.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     

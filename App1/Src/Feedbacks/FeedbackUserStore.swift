@@ -7,13 +7,14 @@ import Foundation
 class FeedbackUserStore {
     
     
-    private let feedbackStore: FeedbackStore
-    private let feedbackController: FeedbackController
+    private let feedbackCoreController: FeedbackCoreController
+    private let feedbackMiddleController: FeedbackMiddleController
     
     
-    init(_ feedbackStore: FeedbackStore, _ feedbackController: FeedbackController) {
-        self.feedbackStore = feedbackStore
-        self.feedbackController = feedbackController
+    init(_ feedbackCoreController: FeedbackCoreController, _ feedbackMiddleController: FeedbackMiddleController) {
+        
+        self.feedbackCoreController = feedbackCoreController
+        self.feedbackMiddleController = feedbackMiddleController
     }
     
     
@@ -22,19 +23,19 @@ class FeedbackUserStore {
     
     public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
-        feedbackStore.feedbacks(forOrderWithId: orderId)
+        feedbackCoreController.feedbacks(forOrderWithId: orderId)
     }
     
     
     public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
-        feedbackStore.buyerFeedback(forOrderWithId: orderId)
+        feedbackCoreController.buyerFeedback(forOrderWithId: orderId)
     }
     
     
     public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
-        feedbackStore.sellerFeedback(forOrderWithId: orderId)
+        feedbackCoreController.sellerFeedback(forOrderWithId: orderId)
     }
     
     
@@ -43,7 +44,7 @@ class FeedbackUserStore {
     
     public func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackMiddleController.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     
@@ -52,18 +53,18 @@ class FeedbackUserStore {
     
     public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
         
-        feedbackController.dateOrderValidatedWithoutFeedback(orderId: orderId)
+        feedbackCoreController.dateOrderValidatedWithoutFeedback(orderId: orderId)
     }
     
     
     public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
         
-        feedbackController.orderIsValidatedWithoutFeedback(orderId: orderId)
+        feedbackCoreController.orderIsValidatedWithoutFeedback(orderId: orderId)
     }
     
     
     public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
         
-        feedbackController.validateOrderWithoutFeedback(orderId: orderId)
+        feedbackCoreController.validateOrderWithoutFeedback(orderId: orderId)
     }
 }
