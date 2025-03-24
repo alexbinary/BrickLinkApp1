@@ -12,17 +12,17 @@ class OrderUserStore {
     private let orderChecklistCoreController: OrderChecklistCoreController
     
     private let pickingProgressCoreController: PickingProgressCoreController
-    private let trackingStore: TrackingStore
+    private let trackingMiddleController: TrackingMiddleController
     private let feedbackController: FeedbackController
     private let feedbackDataAccess: FeedbackDataAccess
     
     
-    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingProgressCoreController: PickingProgressCoreController, _ trackingStore: TrackingStore, _ feedbackController: FeedbackController, _ feedbackDataAccess: FeedbackDataAccess) {
+    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingProgressCoreController: PickingProgressCoreController, _ trackingMiddleController: TrackingMiddleController, _ feedbackController: FeedbackController, _ feedbackDataAccess: FeedbackDataAccess) {
         self.orderCoreController = orderCoreController
         self.orderMacroStatusCoreController = orderMacroStatusCoreController
         self.orderChecklistCoreController = orderChecklistCoreController
         self.pickingProgressCoreController = pickingProgressCoreController
-        self.trackingStore = trackingStore
+        self.trackingMiddleController = trackingMiddleController
         self.feedbackController = feedbackController
         self.feedbackDataAccess = feedbackDataAccess
     }
@@ -324,7 +324,7 @@ class OrderUserStore {
     
     public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await trackingStore.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
+        await trackingMiddleController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     
@@ -463,7 +463,7 @@ class OrderUserStore {
     
     public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
         
-        trackingStore.laPosteTrackingStatus(forOrderWithId: orderId)
+        trackingMiddleController.laPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     

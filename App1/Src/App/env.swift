@@ -41,10 +41,10 @@ func createEnv() -> Env {
     let orderCoreController = OrderCoreController(fileDataAccess)
     let pickingCoreController = PickingCoreController(fileDataAccess)
     let shippingCoreController = ShippingCoreController(fileDataAccess)
+    let trackingCoreController = TrackingCoreController(fileDataAccess)
     
     // Data accesss
     
-    let trackingDataAccess = TrackingDataAccess(fileDataAccess)
     let feedbackDataAccess = FeedbackDataAccess(fileDataAccess)
     let refundDataAccess = RefundDataAccess(fileDataAccess)
     
@@ -55,7 +55,7 @@ func createEnv() -> Env {
     let catalog = Catalog(fileDataAccess)
     
     let pickingProgressCoreController = PickingProgressCoreController(orderCoreController, pickingCoreController)
-    let trackingStore = TrackingStore(orderCoreController, trackingDataAccess)
+    let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
     let feedbackStore = FeedbackStore(feedbackDataAccess)
     
     let refundStore = RefundStore(refundDataAccess)
@@ -63,7 +63,7 @@ func createEnv() -> Env {
     let transactionStore = TransactionStore(transactionDataAccess)
     let resultStore = ResultStore(orderCoreController, shippingCoreController, refundDataAccess, transactionDataAccess)
     
-    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackDataAccess, transactionDataAccess, trackingStore, pickingProgressCoreController)
+    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackDataAccess, transactionDataAccess, trackingMiddleController, pickingProgressCoreController)
     
     let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
     
@@ -76,10 +76,10 @@ func createEnv() -> Env {
     let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockCoreController)
     let uploadUserStore = UploadUserStore(uploadCoreController, inventoryCoreController, catalog)
     
-    let orderUserStore = OrderUserStore(orderCoreController, orderMacroStatusCoreController, orderChecklistCoreController, pickingProgressCoreController, trackingStore, feedbackController, feedbackDataAccess)
+    let orderUserStore = OrderUserStore(orderCoreController, orderMacroStatusCoreController, orderChecklistCoreController, pickingProgressCoreController, trackingMiddleController, feedbackController, feedbackDataAccess)
     let pickingUserStore = PickingUserStore(pickingCoreController, orderCoreController, pickingProgressCoreController)
     let shippingUserStore = ShippingUserStore(shippingCoreController, orderCoreController)
-    let trackingUserStore = TrackingUserStore(trackingStore)
+    let trackingUserStore = TrackingUserStore(trackingMiddleController)
     let feedbackUserStore = FeedbackUserStore(feedbackStore, feedbackController)
     let refundUserStore = RefundUserStore(refundStore)
     

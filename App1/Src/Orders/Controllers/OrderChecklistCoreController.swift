@@ -12,17 +12,17 @@ class OrderChecklistCoreController {
     private let shippingCoreController: ShippingCoreController
     private let feedbackDataAccess: FeedbackDataAccess
     private let transactionDataAccess: TransactionDataAccess
-    private let trackingStore: TrackingStore
+    private let trackingMiddleController: TrackingMiddleController
     private let pickingProgressCoreController: PickingProgressCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingProgressCoreController: PickingProgressCoreController) {
+    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingMiddleController: TrackingMiddleController, _ pickingProgressCoreController: PickingProgressCoreController) {
         self.orderCoreController = orderCoreController
         self.pickingCoreController = pickingCoreController
         self.shippingCoreController = shippingCoreController
         self.feedbackDataAccess = feedbackDataAccess
         self.transactionDataAccess = transactionDataAccess
-        self.trackingStore = trackingStore
+        self.trackingMiddleController = trackingMiddleController
         self.pickingProgressCoreController = pickingProgressCoreController
     }
     

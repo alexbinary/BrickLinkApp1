@@ -7,22 +7,23 @@ import Foundation
 class TrackingUserStore {
     
     
-    private let trackingStore: TrackingStore
+    private let trackingMiddleController: TrackingMiddleController
     
     
-    init(_ trackingStore: TrackingStore) {
-        self.trackingStore = trackingStore
+    init(_ trackingMiddleController: TrackingMiddleController) {
+        
+        self.trackingMiddleController = trackingMiddleController
     }
     
     
     public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
         
-        trackingStore.laPosteTrackingStatus(forOrderWithId: orderId)
+        trackingMiddleController.laPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     
     public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await trackingStore.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
+        await trackingMiddleController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
 }

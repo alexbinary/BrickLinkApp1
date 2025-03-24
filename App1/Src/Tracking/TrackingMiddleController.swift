@@ -4,16 +4,17 @@ import Foundation
 
 
 @Observable
-class TrackingStore {
+class TrackingMiddleController {
     
     
+    private let trackingCoreController: TrackingCoreController
     private let orderCoreController: OrderCoreController
-    private let trackingDataAccess: TrackingDataAccess
     
     
-    init(_ orderCoreController: OrderCoreController, _ trackingDataAccess: TrackingDataAccess) {
+    init(_ trackingCoreController: TrackingCoreController, _ orderCoreController: OrderCoreController) {
+        
+        self.trackingCoreController = trackingCoreController
         self.orderCoreController = orderCoreController
-        self.trackingDataAccess = trackingDataAccess
     }
     
     
@@ -25,13 +26,13 @@ class TrackingStore {
     
     public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
-        trackingDataAccess.laPosteTrackingStatus(forTrackingNo: trackingNo)
+        trackingCoreController.laPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     
     public func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
-        await trackingDataAccess.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+        await trackingCoreController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     

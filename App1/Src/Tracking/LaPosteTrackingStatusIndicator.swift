@@ -6,11 +6,11 @@ struct LaPosteTrackingStatusIndicator: View {
     
     
     @Environment(TrackingUserStore.self)
-    var trackingStore
+    var trackingMiddleController
     
     
     let order: OrderSummary
-    var status: LaPosteTrackingStatus? { trackingStore.laPosteTrackingStatus(forOrderWithId: order.id) }
+    var status: LaPosteTrackingStatus? { trackingMiddleController.laPosteTrackingStatus(forOrderWithId: order.id) }
     
     
     var body: some View {
@@ -20,7 +20,7 @@ struct LaPosteTrackingStatusIndicator: View {
             .padding(.vertical, 2)
             .roundedContainer(style: .tag(baseColor: color))
             .onChange(of: order, initial: true) { Task {
-                await trackingStore.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
+                await trackingMiddleController.reloadLaPosteTrackingStatus(forOrderWithId: order.id)
             }}
     }
     
