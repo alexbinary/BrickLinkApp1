@@ -9,17 +9,17 @@ class OrderChecklistCoreController {
     
     private let orderCoreController: OrderCoreController
     private let pickingCoreController: PickingCoreController
-    private let shippingDataAccess: ShippingDataAccess
+    private let shippingCoreController: ShippingCoreController
     private let feedbackDataAccess: FeedbackDataAccess
     private let transactionDataAccess: TransactionDataAccess
     private let trackingStore: TrackingStore
     private let pickingProgressCoreController: PickingProgressCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingProgressCoreController: PickingProgressCoreController) {
+    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ shippingCoreController: ShippingCoreController, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingProgressCoreController: PickingProgressCoreController) {
         self.orderCoreController = orderCoreController
         self.pickingCoreController = pickingCoreController
-        self.shippingDataAccess = shippingDataAccess
+        self.shippingCoreController = shippingCoreController
         self.feedbackDataAccess = feedbackDataAccess
         self.transactionDataAccess = transactionDataAccess
         self.trackingStore = trackingStore
@@ -65,13 +65,13 @@ class OrderChecklistCoreController {
     
     public func stamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
         
-        shippingDataAccess.confirmedStamping(forOrderWithId: orderId)
+        shippingCoreController.confirmedStamping(forOrderWithId: orderId)
     }
     
     
     public func orderIsValidatedWithoutStamping(orderId: OrderDetails.ID) -> Bool {
         
-        shippingDataAccess.orderIsValidatedWithoutStamping(orderId: orderId)
+        shippingCoreController.orderIsValidatedWithoutStamping(orderId: orderId)
     }
     
     

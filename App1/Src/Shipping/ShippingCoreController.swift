@@ -3,7 +3,7 @@ import Foundation
 
 
 
-class ShippingDataAccess {
+class ShippingCoreController {
     
     
     private let fileDataAccess: FileDataAccess

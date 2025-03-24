@@ -8,14 +8,14 @@ class ResultStore {
     
     
     private let orderCoreController: OrderCoreController
-    private let shippingDataAccess: ShippingDataAccess
+    private let shippingCoreController: ShippingCoreController
     private let refundDataAccess: RefundDataAccess
     private let transactionDataAccess: TransactionDataAccess
     
     
-    init(_ orderCoreController: OrderCoreController, _ shippingDataAccess: ShippingDataAccess, _ refundDataAccess: RefundDataAccess, _ transactionDataAccess: TransactionDataAccess) {
+    init(_ orderCoreController: OrderCoreController, _ shippingCoreController: ShippingCoreController, _ refundDataAccess: RefundDataAccess, _ transactionDataAccess: TransactionDataAccess) {
         self.orderCoreController = orderCoreController
-        self.shippingDataAccess = shippingDataAccess
+        self.shippingCoreController = shippingCoreController
         self.refundDataAccess = refundDataAccess
         self.transactionDataAccess = transactionDataAccess
     }
@@ -29,7 +29,7 @@ class ResultStore {
     
     public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
         
-        shippingDataAccess.confirmedShippingCost(forOrderWithId: orderId)
+        shippingCoreController.confirmedShippingCost(forOrderWithId: orderId)
     }
     
     
