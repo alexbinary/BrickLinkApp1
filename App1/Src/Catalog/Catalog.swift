@@ -12,6 +12,7 @@ class Catalog {
     
     
     init(_ dataStore: DataStore) {
+        
         self.dataStore = dataStore
     }
     
@@ -104,4 +105,3 @@ extension CatalogEntry {
         self.name = bl.name.htmlUnescape()
     }
 }
-

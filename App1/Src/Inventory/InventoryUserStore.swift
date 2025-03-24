@@ -12,8 +12,10 @@ class InventoryUserStore {
     private let stockCoreController: StockCoreController
     
     
-    init(_ inventoryCoreController: InventoryCoreController, _ stockCoreController: StockCoreController) {
-        
+    init(
+        _ inventoryCoreController: InventoryCoreController,
+        _ stockCoreController: StockCoreController
+    ) {
         self.inventoryCoreController = inventoryCoreController
         self.stockCoreController = stockCoreController
     }

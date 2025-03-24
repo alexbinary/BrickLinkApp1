@@ -7,10 +7,10 @@ import Foundation
 class UploadUserStore {
     
     
-    private let catalog: Catalog
     private let uploadCoreController: UploadCoreController
     private let inventoryCoreController: InventoryCoreController
-    
+    private let catalog: Catalog
+
     
     init(_ uploadCoreController: UploadCoreController, _ inventoryCoreController: InventoryCoreController, _ catalog: Catalog) {
         

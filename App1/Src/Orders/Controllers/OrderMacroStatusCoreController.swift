@@ -11,7 +11,10 @@ class OrderMacroStatusCoreController {
     private let orderChecklistCoreController: OrderChecklistCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ orderChecklistCoreController: OrderChecklistCoreController) {
+    init(
+        _ orderCoreController: OrderCoreController,
+        _ orderChecklistCoreController: OrderChecklistCoreController
+    ) {
         self.orderCoreController = orderCoreController
         self.orderChecklistCoreController = orderChecklistCoreController
     }

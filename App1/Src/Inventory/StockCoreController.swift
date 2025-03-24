@@ -7,16 +7,21 @@ import Foundation
 class StockCoreController {
     
     
-    private let orderCoreController: OrderCoreController
-    private let pickingCoreController: PickingCoreController
     private let inventoryCoreController: InventoryCoreController
+    private let pickingCoreController: PickingCoreController
+    private let orderCoreController: OrderCoreController
     private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController, _ inventoryCoreController: InventoryCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController) {
-        self.orderCoreController = orderCoreController
-        self.pickingCoreController = pickingCoreController
+    init(
+        _ inventoryCoreController: InventoryCoreController,
+        _ pickingCoreController: PickingCoreController,
+        _ orderCoreController: OrderCoreController,
+        _ orderMacroStatusCoreController: OrderMacroStatusCoreController
+    ) {
         self.inventoryCoreController = inventoryCoreController
+        self.pickingCoreController = pickingCoreController
+        self.orderCoreController = orderCoreController
         self.orderMacroStatusCoreController = orderMacroStatusCoreController
     }
     

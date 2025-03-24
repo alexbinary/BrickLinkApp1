@@ -8,13 +8,15 @@ class FeedbackUserStore {
     
     
     private let feedbackCoreController: FeedbackCoreController
-    private let feedbackMiddleController: FeedbackMiddleController
+    private let feedbackPostController: FeedbackPostController
     
     
-    init(_ feedbackCoreController: FeedbackCoreController, _ feedbackMiddleController: FeedbackMiddleController) {
-        
+    init(
+        _ feedbackCoreController: FeedbackCoreController,
+        _ feedbackPostController: FeedbackPostController
+    ) {
         self.feedbackCoreController = feedbackCoreController
-        self.feedbackMiddleController = feedbackMiddleController
+        self.feedbackPostController = feedbackPostController
     }
     
     
@@ -44,7 +46,7 @@ class FeedbackUserStore {
     
     public func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
         
-        await feedbackMiddleController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackPostController.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     

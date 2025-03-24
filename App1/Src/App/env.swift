@@ -49,23 +49,23 @@ func createEnv() -> Env {
     let transactionCoreController = TransactionCoreController(dataStore)
     
     let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
-    let feedbackMiddleController = FeedbackMiddleController(orderCoreController, feedbackCoreController)
+    let feedbackPostController = FeedbackPostController(feedbackCoreController, orderCoreController)
     
-    let pickingProgressCoreController = PickingProgressCoreController(orderCoreController, pickingCoreController)
+    let pickingProgressCoreController = PickingProgressCoreController(pickingCoreController, orderCoreController)
     let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionCoreController, trackingMiddleController, pickingProgressCoreController)
     let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
-    let stockCoreController = StockCoreController(orderCoreController, pickingCoreController, inventoryCoreController, orderMacroStatusCoreController)
+    let stockCoreController = StockCoreController(inventoryCoreController, pickingCoreController, orderCoreController, orderMacroStatusCoreController)
     
     // User Stores
     
     let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockCoreController)
     let uploadUserStore = UploadUserStore(uploadCoreController, inventoryCoreController, catalog)
     
-    let orderUserStore = OrderUserStore(orderCoreController, orderMacroStatusCoreController, orderChecklistCoreController, pickingProgressCoreController, trackingMiddleController, feedbackMiddleController, feedbackCoreController)
-    let pickingUserStore = PickingUserStore(pickingCoreController, orderCoreController, pickingProgressCoreController)
+    let orderUserStore = OrderUserStore(orderCoreController, orderChecklistCoreController, orderMacroStatusCoreController, pickingProgressCoreController, trackingMiddleController, feedbackCoreController, feedbackPostController)
+    let pickingUserStore = PickingUserStore(pickingCoreController, pickingProgressCoreController, orderCoreController)
     let shippingUserStore = ShippingUserStore(shippingCoreController, orderCoreController)
     let trackingUserStore = TrackingUserStore(trackingMiddleController)
-    let feedbackUserStore = FeedbackUserStore(feedbackCoreController, feedbackMiddleController)
+    let feedbackUserStore = FeedbackUserStore(feedbackCoreController, feedbackPostController)
     let refundUserStore = RefundUserStore(refundCoreController)
     
     let transactionUserStore = TransactionUserStore(transactionCoreController)

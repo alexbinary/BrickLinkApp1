@@ -7,14 +7,16 @@ import Foundation
 class PickingProgressCoreController {
     
     
-    private let orderCoreController: OrderCoreController
     private let pickingCoreController: PickingCoreController
+    private let orderCoreController: OrderCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ pickingCoreController: PickingCoreController) {
-        
-        self.orderCoreController = orderCoreController
+    init(
+        _ pickingCoreController: PickingCoreController,
+        _ orderCoreController: OrderCoreController
+    ) {
         self.pickingCoreController = pickingCoreController
+        self.orderCoreController = orderCoreController
     }
     
     

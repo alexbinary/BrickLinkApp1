@@ -8,16 +8,18 @@ class PickingUserStore {
     
     
     private let pickingCoreController: PickingCoreController
+    private let pickingProgressCoreController: PickingProgressCoreController
     private let orderCoreController: OrderCoreController
     
-    private let pickingProgressCoreController: PickingProgressCoreController
     
-    
-    init(_ pickingCoreController: PickingCoreController, _ orderCoreController: OrderCoreController, _ pickingProgressCoreController: PickingProgressCoreController) {
-        
+    init(
+        _ pickingCoreController: PickingCoreController,
+        _ pickingProgressCoreController: PickingProgressCoreController,
+        _ orderCoreController: OrderCoreController
+    ) {
         self.pickingCoreController = pickingCoreController
-        self.orderCoreController = orderCoreController
         self.pickingProgressCoreController = pickingProgressCoreController
+        self.orderCoreController = orderCoreController
     }
     
     

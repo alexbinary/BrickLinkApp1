@@ -8,23 +8,30 @@ class OrderUserStore {
     
     
     private let orderCoreController: OrderCoreController
-    private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     private let orderChecklistCoreController: OrderChecklistCoreController
-    
+    private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     private let pickingProgressCoreController: PickingProgressCoreController
     private let trackingMiddleController: TrackingMiddleController
-    private let feedbackMiddleController: FeedbackMiddleController
     private let feedbackCoreController: FeedbackCoreController
+    private let feedbackPostController: FeedbackPostController
     
     
-    init(_ orderCoreController: OrderCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController, _ orderChecklistCoreController: OrderChecklistCoreController, _ pickingProgressCoreController: PickingProgressCoreController, _ trackingMiddleController: TrackingMiddleController, _ feedbackMiddleController: FeedbackMiddleController, _ feedbackCoreController: FeedbackCoreController) {
+    init(
+        _ orderCoreController: OrderCoreController,
+        _ orderChecklistCoreController: OrderChecklistCoreController,
+        _ orderMacroStatusCoreController: OrderMacroStatusCoreController,
+        _ pickingProgressCoreController: PickingProgressCoreController,
+        _ trackingMiddleController: TrackingMiddleController,
+        _ feedbackCoreController: FeedbackCoreController,
+        _ feedbackPostController: FeedbackPostController
+    ) {
         self.orderCoreController = orderCoreController
-        self.orderMacroStatusCoreController = orderMacroStatusCoreController
         self.orderChecklistCoreController = orderChecklistCoreController
+        self.orderMacroStatusCoreController = orderMacroStatusCoreController
         self.pickingProgressCoreController = pickingProgressCoreController
         self.trackingMiddleController = trackingMiddleController
-        self.feedbackMiddleController = feedbackMiddleController
         self.feedbackCoreController = feedbackCoreController
+        self.feedbackPostController = feedbackPostController
     }
     
     
@@ -630,7 +637,7 @@ class OrderUserStore {
     
     public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
         
-        await feedbackMiddleController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackPostController.postPraiseFeedback(forOrderWithId: orderId)
     }
     
     

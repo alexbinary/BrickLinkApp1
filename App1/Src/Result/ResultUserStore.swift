@@ -13,8 +13,12 @@ class ResultUserStore {
     private let transactionCoreController: TransactionCoreController
     
     
-    init(_ orderCoreController: OrderCoreController, _ shippingCoreController: ShippingCoreController, _ refundCoreController: RefundCoreController, _ transactionCoreController: TransactionCoreController) {
-        
+    init(
+        _ orderCoreController: OrderCoreController,
+        _ shippingCoreController: ShippingCoreController,
+        _ refundCoreController: RefundCoreController,
+        _ transactionCoreController: TransactionCoreController
+    ) {
         self.orderCoreController = orderCoreController
         self.shippingCoreController = shippingCoreController
         self.refundCoreController = refundCoreController
