@@ -7,19 +7,19 @@ import Foundation
 class ShippingStore {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let shippingDataAccess: ShippingDataAccess
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ shippingDataAccess: ShippingDataAccess) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ shippingDataAccess: ShippingDataAccess) {
+        self.orderCoreController = orderCoreController
         self.shippingDataAccess = shippingDataAccess
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderDataAccess.orderDetails(forOrderWithId: orderId)
+        orderCoreController.orderDetails(forOrderWithId: orderId)
     }
     
     

@@ -7,29 +7,29 @@ import Foundation
 class StockCoreController {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let pickingDataAccess: PickingDataAccess
     private let inventoryCoreController: InventoryCoreController
-    private let orderStore: OrderStore
+    private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ inventoryCoreController: InventoryCoreController, _ orderStore: OrderStore) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ pickingDataAccess: PickingDataAccess, _ inventoryCoreController: InventoryCoreController, _ orderMacroStatusCoreController: OrderMacroStatusCoreController) {
+        self.orderCoreController = orderCoreController
         self.pickingDataAccess = pickingDataAccess
         self.inventoryCoreController = inventoryCoreController
-        self.orderStore = orderStore
+        self.orderMacroStatusCoreController = orderMacroStatusCoreController
     }
     
     
     public var orderSummaries: [OrderSummary] {
         
-        orderDataAccess.orderSummaries
+        orderCoreController.orderSummaries
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderDataAccess.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(forOrderWithId: orderId)
     }
     
     
@@ -55,7 +55,7 @@ class StockCoreController {
     
     public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
-        orderStore.macroStatus(forOrderWithId: orderId)
+        orderMacroStatusCoreController.macroStatus(forOrderWithId: orderId)
     }
     
     

@@ -7,12 +7,12 @@ import Foundation
 class FeedbackController {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let feedbackDataAccess: FeedbackDataAccess
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ feedbackDataAccess: FeedbackDataAccess) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ feedbackDataAccess: FeedbackDataAccess) {
+        self.orderCoreController = orderCoreController
         self.feedbackDataAccess = feedbackDataAccess
     }
     
@@ -28,7 +28,7 @@ class FeedbackController {
     
     public func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
         
-        guard let order = orderDataAccess.orderDetails(forOrderWithId: orderId) else { return }
+        guard let order = orderCoreController.orderDetails(forOrderWithId: orderId) else { return }
         
         await postFeedback(forOrderWithId: orderId, rating: .praise,
                            comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"

@@ -7,14 +7,14 @@ import Foundation
 class ResultStore {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let shippingDataAccess: ShippingDataAccess
     private let refundDataAccess: RefundDataAccess
     private let transactionDataAccess: TransactionDataAccess
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ shippingDataAccess: ShippingDataAccess, _ refundDataAccess: RefundDataAccess, _ transactionDataAccess: TransactionDataAccess) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ shippingDataAccess: ShippingDataAccess, _ refundDataAccess: RefundDataAccess, _ transactionDataAccess: TransactionDataAccess) {
+        self.orderCoreController = orderCoreController
         self.shippingDataAccess = shippingDataAccess
         self.refundDataAccess = refundDataAccess
         self.transactionDataAccess = transactionDataAccess
@@ -23,7 +23,7 @@ class ResultStore {
     
     public var orderDetails: [OrderDetails] {
         
-        orderDataAccess.orderDetails
+        orderCoreController.orderDetails
     }
     
     

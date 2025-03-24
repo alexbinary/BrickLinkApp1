@@ -4,10 +4,10 @@ import Foundation
 
 
 @Observable
-class OrderChecklistStore {
+class OrderChecklistCoreController {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let pickingDataAccess: PickingDataAccess
     private let shippingDataAccess: ShippingDataAccess
     private let feedbackDataAccess: FeedbackDataAccess
@@ -16,8 +16,8 @@ class OrderChecklistStore {
     private let pickingStore: PickingStore
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingStore: PickingStore) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ pickingDataAccess: PickingDataAccess, _ shippingDataAccess: ShippingDataAccess, _ feedbackDataAccess: FeedbackDataAccess, _ transactionDataAccess: TransactionDataAccess, _ trackingStore: TrackingStore, _ pickingStore: PickingStore) {
+        self.orderCoreController = orderCoreController
         self.pickingDataAccess = pickingDataAccess
         self.shippingDataAccess = shippingDataAccess
         self.feedbackDataAccess = feedbackDataAccess
@@ -29,7 +29,7 @@ class OrderChecklistStore {
     
     public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
-        orderDataAccess.orderSummary(forOrderWithId: orderId)
+        orderCoreController.orderSummary(forOrderWithId: orderId)
     }
     
     
@@ -59,7 +59,7 @@ class OrderChecklistStore {
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderDataAccess.orderDetails(forOrderWithId: orderId)
+        orderCoreController.orderDetails(forOrderWithId: orderId)
     }
     
     
@@ -77,7 +77,7 @@ class OrderChecklistStore {
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderDataAccess.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(forOrderWithId: orderId)
     }
     
     
@@ -257,157 +257,5 @@ class OrderChecklistStore {
         let order = orderSummary(forOrderWithId: orderId)!
         
         return order.dateStatusChanged.days(to: Date()) > 30
-    }
-    
-    
-    // -
-    
-    
-    public func checklist(forOrderWithId orderId: OrderSummary.ID) -> Checklist {
-        
-        Checklist(sections: [
-            .init(
-                title: OrderMacroStatus.validatePayment.descriptionWithPicto,
-                items: [
-                    .init(
-                        label: "Payment received",
-                        checked: orderChecklistPayment(orderId)
-                    ),
-                    .init(
-                        label: "Register transaction",
-                        checked: orderChecklistIncomeTransaction(orderId)
-                    ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.pickAndPack.descriptionWithPicto,
-                items: [
-                    .init(
-                        label: {
-                            let progress = pickingStore.pickingProgress(forOrderWithId: orderId)
-                            if progress == 0% || progress == 100% {
-                                return  "Pick items"
-                            } else {
-                                return "Pick items - \(progress) complete"
-                            }
-                        }(),
-                        checked: orderChecklistPicking(orderId)
-                    ),
-                    .init(
-                        label: {
-                            let progress = pickingStore.pickingVerificationProgress(forOrderWithId: orderId)
-                            if progress == 0% || progress == 100% {
-                                return "Verify items"
-                            } else {
-                                return "Verify items - \(progress) complete"
-                            }
-                        }(),
-                        checked: orderChecklistVerification(orderId)
-                    ),
-                    .init(
-                        label: "Pack order",
-                        checked: orderChecklistPacked(orderId)
-                    ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.ship.descriptionWithPicto,
-                items: [
-                    .init(
-                        label: "Validate stamping",
-                        checked: orderChecklistStamping(orderId)
-                    ),
-                    .init(
-                        label: "Register transaction",
-                        checked: orderChecklistShippingTransaction(orderId)
-                    ),
-                    .init(
-                        label: "Input tracking no",
-                        checked: orderChecklistTrackingNo(orderId)
-                    ),
-                    .init(
-                        label: "Mark Shipped",
-                        checked: orderChecklistShipped(orderId)
-                    ),
-                    .init(
-                        label: "Send drive thru",
-                        checked: orderChecklistDriveThru(orderId)
-                    ),
-                ]
-            ),
-            .init(
-                title: "􀐚 Shipped",
-                items: [
-                    .init(
-                        label: "Picked up by transporter",
-                        checked: trackingStore.laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
-                        mandatory: false
-                    ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.inTransit.descriptionWithPicto,
-                items: [
-                    .init(
-                        label: "Received",
-                        checked: orderChecklistReceived(orderId)
-                    ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.received.descriptionWithPicto,
-                items: [
-                    .init(
-                        label: "Completed",
-                        checked: orderChecklistCompleted(orderId)
-                    ),
-                    .init(
-                        label: "Buyer feedback",
-                        checked: orderChecklistBuyerFeedback(orderId)
-                    ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.giveFeedback.descriptionWithPicto,
-                items: [
-                    .init(
-                        label: "Give feedback",
-                        checked: orderChecklistSellerFeedback(orderId)
-                    ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.closed.descriptionWithPicto,
-                items: []
-            ),
-        ])
-    }
-}
-
-
-
-struct Checklist {
-    
-    let sections: [Section]
-    
-    struct Section: Identifiable {
-        
-        var id: String { title }
-        let title: String
-        let items: [Item]
-    }
-    
-    struct Item: Identifiable {
-        
-        var id: String { label }
-        let label: String
-        let checked: Bool
-        let mandatory: Bool
-        
-        init(label: String, checked: Bool, mandatory: Bool = true) {
-            self.label = label
-            self.checked = checked
-            self.mandatory = mandatory
-        }
     }
 }

@@ -38,9 +38,10 @@ func createEnv() -> Env {
     let inventoryCoreController = InventoryCoreController(fileDataAccess)
     let uploadCoreController = UploadCoreController(fileDataAccess)
     
+    let orderCoreController = OrderCoreController(fileDataAccess)
+    
     // Data accesss
     
-    let orderDataAccess = OrderDataAccess(fileDataAccess)
     let pickingDataAccess = PickingDataAccess(fileDataAccess)
     let shippingDataAccess = ShippingDataAccess(fileDataAccess)
     let trackingDataAccess = TrackingDataAccess(fileDataAccess)
@@ -53,35 +54,30 @@ func createEnv() -> Env {
     
     let catalog = Catalog(fileDataAccess)
     
-    let pickingStore = PickingStore(orderDataAccess, pickingDataAccess)
-    let shippingStore = ShippingStore(orderDataAccess, shippingDataAccess)
-    let trackingStore = TrackingStore(orderDataAccess, trackingDataAccess)
+    let pickingStore = PickingStore(orderCoreController, pickingDataAccess)
+    let shippingStore = ShippingStore(orderCoreController, shippingDataAccess)
+    let trackingStore = TrackingStore(orderCoreController, trackingDataAccess)
     let feedbackStore = FeedbackStore(feedbackDataAccess)
     
     let refundStore = RefundStore(refundDataAccess)
     
     let transactionStore = TransactionStore(transactionDataAccess)
-    let resultStore = ResultStore(orderDataAccess, shippingDataAccess, refundDataAccess, transactionDataAccess)
+    let resultStore = ResultStore(orderCoreController, shippingDataAccess, refundDataAccess, transactionDataAccess)
     
-    let orderChecklistStore = OrderChecklistStore(orderDataAccess, pickingDataAccess, shippingDataAccess, feedbackDataAccess, transactionDataAccess, trackingStore, pickingStore)
+    let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingDataAccess, shippingDataAccess, feedbackDataAccess, transactionDataAccess, trackingStore, pickingStore)
     
-    let orderStore = OrderStore(orderDataAccess, orderChecklistStore)
+    let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
     
-    let stockCoreController = StockCoreController(orderDataAccess, pickingDataAccess, inventoryCoreController, orderStore)
+    let stockCoreController = StockCoreController(orderCoreController, pickingDataAccess, inventoryCoreController, orderMacroStatusCoreController)
     
-    let feedbackController = FeedbackController(orderDataAccess, feedbackDataAccess)
-    let orderActionStore = OrderActionStore(orderDataAccess, orderStore, orderChecklistStore, feedbackController)
-    
-    //
-    
-    let reloadController = ReloadController(orderDataAccess, feedbackDataAccess, orderStore, trackingStore)
+    let feedbackController = FeedbackController(orderCoreController, feedbackDataAccess)
     
     // User Stores
     
     let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockCoreController)
     let uploadUserStore = UploadUserStore(uploadCoreController, inventoryCoreController, catalog)
     
-    let orderUserStore = OrderUserStore(orderDataAccess, orderStore, orderChecklistStore, orderActionStore, reloadController)
+    let orderUserStore = OrderUserStore(orderCoreController, orderMacroStatusCoreController, orderChecklistCoreController, pickingStore, trackingStore, feedbackController, feedbackDataAccess)
     let pickingUserStore = PickingUserStore(pickingStore)
     let shippingUserStore = ShippingUserStore(shippingStore)
     let trackingUserStore = TrackingUserStore(trackingStore)

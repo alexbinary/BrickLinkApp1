@@ -7,25 +7,25 @@ import Foundation
 class PickingStore {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let pickingDataAccess: PickingDataAccess
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ pickingDataAccess: PickingDataAccess) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ pickingDataAccess: PickingDataAccess) {
+        self.orderCoreController = orderCoreController
         self.pickingDataAccess = pickingDataAccess
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
-        orderDataAccess.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(forOrderWithId: orderId)
     }
     
     
     public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        orderDataAccess.orderItems(forOrderWithId: orderId, fromItemIds: itemsIds)
+        orderCoreController.orderItems(forOrderWithId: orderId, fromItemIds: itemsIds)
     }
     
     

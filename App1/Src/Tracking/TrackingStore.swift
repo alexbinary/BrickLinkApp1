@@ -7,19 +7,19 @@ import Foundation
 class TrackingStore {
     
     
-    private let orderDataAccess: OrderDataAccess
+    private let orderCoreController: OrderCoreController
     private let trackingDataAccess: TrackingDataAccess
     
     
-    init(_ orderDataAccess: OrderDataAccess, _ trackingDataAccess: TrackingDataAccess) {
-        self.orderDataAccess = orderDataAccess
+    init(_ orderCoreController: OrderCoreController, _ trackingDataAccess: TrackingDataAccess) {
+        self.orderCoreController = orderCoreController
         self.trackingDataAccess = trackingDataAccess
     }
     
     
     public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
-        orderDataAccess.orderDetails(forOrderWithId: orderId)
+        orderCoreController.orderDetails(forOrderWithId: orderId)
     }
     
     
