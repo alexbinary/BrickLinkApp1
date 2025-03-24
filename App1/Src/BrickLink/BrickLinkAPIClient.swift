@@ -24,7 +24,6 @@ struct BrickLinkAPIClient {
     private static func send(withMethod method: Method? = nil, to url: URL, body: ()->String? = {nil}) async throws -> (Data, URLResponse) {
         
         var request = URLRequest(url: url)
-        request.addAuthentication(using: credentials)
         
         if let method = method {
             request.httpMethod = method.rawValue
@@ -34,6 +33,8 @@ struct BrickLinkAPIClient {
             request.setValue("application/json", forHTTPHeaderField: "Content-type")
         }
         
+        request.addAuthentication(using: credentials)
+
         Debug.printRequest(request)
         
         let (data, response) = try! await URLSession(configuration: .default).data(for: request)
