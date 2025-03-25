@@ -105,7 +105,8 @@ extension CatalogEntry {
     
     
     init(fromBl bl: BrickLinkCatalogItem) {
-        
-        self.name = bl.name.htmlUnescape()
+        self.init(
+            name: bl.name.htmlUnescape()
+        )
     }
 }
