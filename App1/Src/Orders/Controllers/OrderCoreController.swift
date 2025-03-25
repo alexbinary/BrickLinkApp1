@@ -270,19 +270,20 @@ extension OrderItem {
     
     
     init(fromBl bl: BrickLinkOrderItem, orderId: String) {
-        
-        self.inventoryId = "\(bl.inventoryId)"
-        self.orderId = orderId
-        self.condition = bl.newOrUsed
-        self.colorId = "\(bl.colorId)"
-        self.colorName = bl.colorName
-        self.ref = bl.item.no
-        self.name = bl.item.name.htmlUnescape()
-        self.type = bl.item.type
-        self.location = bl.remarks ?? ""
-        self.comment = (bl.description ?? "").htmlUnescape()
-        self.quantity = "\(bl.quantity)"
-        self.unitPrice = bl.unitPrice.floatValue
-        self.unitPriceFinal = bl.unitPriceFinal.floatValue
+        self.init(
+            inventoryId: "\(bl.inventoryId)",
+            orderId: orderId,
+            condition: bl.newOrUsed,
+            colorId: "\(bl.colorId)",
+            colorName: bl.colorName,
+            ref: bl.item.no,
+            name: bl.item.name.htmlUnescape(),
+            type: bl.item.type,
+            location: bl.remarks ?? "",
+            comment: (bl.description ?? "").htmlUnescape(),
+            quantity: "\(bl.quantity)",
+            unitPrice: bl.unitPrice.floatValue,
+            unitPriceFinal: bl.unitPriceFinal.floatValue
+        )
     }
 }
