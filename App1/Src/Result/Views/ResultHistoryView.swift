@@ -1,6 +1,7 @@
 
 import SwiftUI
 import Charts
+import Core
 
 
 

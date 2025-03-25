@@ -3,14 +3,14 @@ import Foundation
 
 
 
-struct BusinessMonth: Hashable {
+public struct BusinessMonth: Hashable {
     
     
-    let year: Int
-    let monthOfYear: Int
+    public let year: Int
+    public let monthOfYear: Int
     
     
-    init(fromYear year: Int, month: Int) throws {
+    public init(fromYear year: Int, month: Int) throws {
         
         let comp = DateComponents(year: year, month: month)
         
@@ -25,7 +25,7 @@ struct BusinessMonth: Hashable {
     }
     
     
-    var yyyymm: String {
+    public var yyyymm: String {
         
         let m = monthOfYear
         let mf = "\(m)".count == 1 ? "0\(m)" : "\(m)"
@@ -34,7 +34,7 @@ struct BusinessMonth: Hashable {
     }
     
     
-    var name: String {
+    public var name: String {
         
         let calendar = Calendar.current
         let date = calendar.date(from: DateComponents(year: self.year, month: self.monthOfYear))!
@@ -45,7 +45,7 @@ struct BusinessMonth: Hashable {
     }
     
     
-    func offset(by n: Int) -> BusinessMonth {
+    public func offset(by n: Int) -> BusinessMonth {
         
         let calendar = Calendar.current
         let dateCurrent = calendar.date(from: DateComponents(year: self.year, month: self.monthOfYear))!
@@ -59,7 +59,7 @@ struct BusinessMonth: Hashable {
     }
     
     
-    var nextMonth: BusinessMonth {
+    public var nextMonth: BusinessMonth {
         
         self.offset(by: +1)
     }
@@ -70,7 +70,7 @@ struct BusinessMonth: Hashable {
 extension BusinessMonth: Identifiable {
     
     
-    var id: String { yyyymm }
+    public var id: String { yyyymm }
 }
 
 
@@ -78,7 +78,7 @@ extension BusinessMonth: Identifiable {
 extension Date {
     
     
-    var businessMonth: BusinessMonth {
+    public var businessMonth: BusinessMonth {
         
         let calendar = Calendar.current
         
@@ -94,7 +94,7 @@ extension Date {
 extension BusinessMonth: Comparable {
     
     
-    static func < (lhs: BusinessMonth, rhs: BusinessMonth) -> Bool {
+    public static func < (lhs: BusinessMonth, rhs: BusinessMonth) -> Bool {
         
         lhs.yyyymm < rhs.yyyymm
     }
@@ -105,14 +105,14 @@ extension BusinessMonth: Comparable {
 extension BusinessMonth {
     
     
-    static var current: BusinessMonth {
+    public static var current: BusinessMonth {
         
         Date().businessMonth
     }
     
     
     
-    static var firstOfYear: BusinessMonth {
+    public static var firstOfYear: BusinessMonth {
         
         let calendar = Calendar.current
         
@@ -126,7 +126,7 @@ extension BusinessMonth {
     
     
     
-    static func allMonths(
+    public static func allMonths(
         
         from monthStart: BusinessMonth,
         to monthEnd: BusinessMonth
