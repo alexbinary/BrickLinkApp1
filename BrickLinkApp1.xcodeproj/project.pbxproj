@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2967A80B2D92E5890025F16B /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 2967A80A2D92E5890025F16B /* Core */; };
 		29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 29D674572C77C7E300BAA00A /* CryptoSwift */; };
 		29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */ = {isa = PBXBuildFile; productRef = 29EDBB502CA069E900F77959 /* HTMLEntities */; };
 /* End PBXBuildFile section */
@@ -16,9 +17,19 @@
 		29D758EA2D552014001C369F /* Experimental1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Experimental1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2967A8082D92E42E0025F16B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Src/Core,
+			);
+			target = 29BB308B2C77B0CA000525CB /* App1 */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		29F915F42D7B3D4D00A6165D /* Experimental1 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Experimental1; sourceTree = "<group>"; };
-		29F916542D7B3D8B00A6165D /* App1 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App1; sourceTree = "<group>"; };
+		29F916542D7B3D8B00A6165D /* App1 */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2967A8082D92E42E0025F16B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = App1; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -28,6 +39,7 @@
 			files = (
 				29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */,
 				29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */,
+				2967A80B2D92E5890025F16B /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +93,7 @@
 			packageProductDependencies = (
 				29D674572C77C7E300BAA00A /* CryptoSwift */,
 				29EDBB502CA069E900F77959 /* HTMLEntities */,
+				2967A80A2D92E5890025F16B /* Core */,
 			);
 			productName = BrickLinkApp1;
 			productReference = 29BB308C2C77B0CA000525CB /* App1.app */;
@@ -474,6 +487,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2967A80A2D92E5890025F16B /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Core;
+		};
 		29D674572C77C7E300BAA00A /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */;
