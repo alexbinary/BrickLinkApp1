@@ -1,17 +1,16 @@
 
 import Foundation
-import Core
 
 
 
-struct BrickLinkAPIClient {
+public struct BrickLinkAPIClient {
     
     
     let credentials: BrickLinkAPICredentials
     let debug: Debug
     
     
-    init(withCredentials credentials: BrickLinkAPICredentials, debug: Debug) {
+    public init(withCredentials credentials: BrickLinkAPICredentials, debug: Debug) {
         
         self.credentials = credentials
         self.debug = debug
@@ -83,13 +82,13 @@ struct BrickLinkAPIClient {
     // MARK: - Catalog
         
         
- func fetchColors() async -> [BrickLinkColor] {
+    public func fetchColors() async -> [BrickLinkColor] {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/colors")!)
     }
     
     
- func fetchCatalogEntry(forItemType type: BrickLinkItemType, ref: String) async -> BrickLinkCatalogItem? {
+    public func fetchCatalogEntry(forItemType type: BrickLinkItemType, ref: String) async -> BrickLinkCatalogItem? {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/items/\(type.rawValue)/\(ref)")!)
     }
@@ -99,19 +98,19 @@ struct BrickLinkAPIClient {
     // MARK: - Orders
     
     
- func fetchOrderSummaries() async -> [BrickLinkOrder] {
+    public func fetchOrderSummaries() async -> [BrickLinkOrder] {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
     }
     
     
- func fetchDetails(forOrderWithId orderId: OrderSummary.ID) async -> BrickLinkOrder {
+    public func fetchDetails(forOrderWithId orderId: OrderSummary.ID) async -> BrickLinkOrder {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
     }
     
     
- func updateStatus(ofOrderWithId orderId: OrderSummary.ID, to status: OrderStatus) async {
+    public func updateStatus(ofOrderWithId orderId: OrderSummary.ID, to status: OrderStatus) async {
         
         try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/status")!) {
             """
@@ -124,7 +123,7 @@ struct BrickLinkAPIClient {
     }
     
     
- func updateTrackingNo(ofOrderWithId orderId: OrderSummary.ID, to trackingNo: String) async {
+    public func updateTrackingNo(ofOrderWithId orderId: OrderSummary.ID, to trackingNo: String) async {
         
         try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!) {
             """
@@ -138,7 +137,7 @@ struct BrickLinkAPIClient {
     }
     
     
- func sendDriveThru(forOrderWithId orderId: OrderSummary.ID, mailMe: Bool) async {
+    public func sendDriveThru(forOrderWithId orderId: OrderSummary.ID, mailMe: Bool) async {
         
         let url = URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/drive_thru?mail_me=\(mailMe ? "true" : "false")")!
         
@@ -150,7 +149,7 @@ struct BrickLinkAPIClient {
     // MARK: - Order items
     
     
- func fetchItems(forOrderWithId orderId: OrderSummary.ID) async -> [[BrickLinkOrderItem]] {
+    public func fetchItems(forOrderWithId orderId: OrderSummary.ID) async -> [[BrickLinkOrderItem]] {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/items")!)
     }
@@ -160,13 +159,13 @@ struct BrickLinkAPIClient {
     // MARK: - Order feedbacks
     
     
- func fetchFeedbacks(forOrderWithId orderId: OrderSummary.ID) async -> [BrickLinkOrderFeedback] {
+    public func fetchFeedbacks(forOrderWithId orderId: OrderSummary.ID) async -> [BrickLinkOrderFeedback] {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)/feedback")!)
     }
     
     
- func postFeedback(forOrderWithId orderId: OrderSummary.ID, rating: Int, comment: String) async {
+    public func postFeedback(forOrderWithId orderId: OrderSummary.ID, rating: Int, comment: String) async {
         
         try! await send(withMethod: .POST, to: URL(string: "https://api.bricklink.com/api/store/v1/feedback")!) {
             """
@@ -184,7 +183,7 @@ struct BrickLinkAPIClient {
     // MARK: - Inventory
         
         
- func fetchInventories(matchingItemType itemType: BrickLinkItemType? = nil, matchingColorId colorId: String? = nil) async -> [BrickLinkInventoryItem] {
+    public func fetchInventories(matchingItemType itemType: BrickLinkItemType? = nil, matchingColorId colorId: String? = nil) async -> [BrickLinkInventoryItem] {
         
         var url = URL(string: "https://api.bricklink.com/api/store/v1/inventories")!
         if let itemType = itemType {
@@ -198,13 +197,13 @@ struct BrickLinkAPIClient {
     }
     
     
- func fetchInventory(withId id: InventoryItem.ID) async -> BrickLinkInventoryItem {
+    public func fetchInventory(withId id: InventoryItem.ID) async -> BrickLinkInventoryItem {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(id)")!)
     }
     
     
- func createInventory(
+    public func createInventory(
         
         ref: String,
         type: BrickLinkItemType,
@@ -238,7 +237,7 @@ struct BrickLinkAPIClient {
     }
     
     
- func updateInventory(
+    public func updateInventory(
         
         id: InventoryItem.ID,
         
