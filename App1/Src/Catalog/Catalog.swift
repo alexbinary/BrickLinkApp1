@@ -1,6 +1,7 @@
 
 import Foundation
 import SwiftUI
+import Core
 
 
 
@@ -88,10 +89,11 @@ extension LegoColor {
     
     
     init(fromBl bl: BrickLinkColor) {
-        
-        self.id = "\(bl.colorId)"
-        self.name = bl.colorName
-        self.colorCode = bl.colorCode
+        self = .init(
+            id: "\(bl.colorId)",
+            name: bl.colorName,
+            colorCode: bl.colorCode
+        )
     }
 }
 
