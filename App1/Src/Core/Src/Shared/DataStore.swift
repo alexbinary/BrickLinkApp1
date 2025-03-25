@@ -1,10 +1,9 @@
 
 import Foundation
-import Core
 
 
 
-class DataStore {
+public class DataStore {
     
     
     private let dataFileUrl: URL
@@ -12,7 +11,7 @@ class DataStore {
     private var data: DataFile? = nil
     
     
-    init(dataFileUrl: URL) {
+    public init(dataFileUrl: URL) {
         
         print("Init data store with file \(dataFileUrl)")
         
