@@ -1,15 +1,16 @@
 
 import SwiftUI
+import Core
 
 
 struct TransactionListView: View {
     
     
-    let transactions: [Transaction]
+    let transactions: [Core.Transaction]
     var grouppedByMonth = true
     
     
-    @Binding var selectedTransactions: Set<Transaction.ID>
+    @Binding var selectedTransactions: Set<Core.Transaction.ID>
     
     
     var body: some View {

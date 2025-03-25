@@ -21,13 +21,13 @@ class TransactionUserStore {
     // MARK: - General
     
     
-    public var allTransactions: [Transaction] {
+    public var allTransactions: [Core.Transaction] {
         
         transactionCoreController.allTransactions
     }
     
     
-    public func register(_ transaction: Transaction) {
+    public func register(_ transaction: Core.Transaction) {
         
         transactionCoreController.register(transaction)
     }
@@ -36,7 +36,7 @@ class TransactionUserStore {
     // MARK: - Income
     
     
-    public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Core.Transaction] {
         
         transactionCoreController.incomeTransactions(forOrderWithId: orderId)
     }
@@ -57,7 +57,7 @@ class TransactionUserStore {
     // MARK: - Shipping
     
     
-    public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Core.Transaction] {
         
         transactionCoreController.shippingTransactions(forOrderWithId: orderId)
     }
@@ -78,7 +78,7 @@ class TransactionUserStore {
     // MARK: - Refunds
     
     
-    public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Core.Transaction] {
         
         transactionCoreController.refundTransactions(forOrderWithId: orderId)
     }

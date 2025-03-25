@@ -1,13 +1,14 @@
 
 import SwiftUI
 import Charts
+import Core
 
 
 
 struct CashFlowDetailDashboardItemView: View {
     
     
-    let transactions: [Transaction]
+    let transactions: [Core.Transaction]
     let title: String
     
     

@@ -197,7 +197,7 @@ struct OrderDetailComptaView: View {
 
     func submitIncomeTransaction() {
         
-        transactionStore.register(Transaction(
+        transactionStore.register(Core.Transaction(
             date: incomeDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -212,7 +212,7 @@ struct OrderDetailComptaView: View {
     
     func submitShippingTransaction() {
      
-        transactionStore.register(Transaction(
+        transactionStore.register(Core.Transaction(
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
@@ -227,7 +227,7 @@ struct OrderDetailComptaView: View {
     
     func submitRefundTransaction() {
      
-        transactionStore.register(Transaction(
+        transactionStore.register(Core.Transaction(
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,
