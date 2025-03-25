@@ -7,11 +7,13 @@ class TrackingCoreController {
     
     
     private let dataStore: DataStore
+    private let laPosteTrackingClient: LaPosteTrackingClient
     
     
     init(_ dataStore: DataStore) {
         
         self.dataStore = dataStore
+        self.laPosteTrackingClient = LaPosteTrackingClient()
     }
     
     
@@ -23,7 +25,7 @@ class TrackingCoreController {
     
     public func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
-        let status = await LaPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
+        let status = await laPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
     
         try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
         try! dataStore.save()

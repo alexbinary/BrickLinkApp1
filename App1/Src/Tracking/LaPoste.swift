@@ -16,7 +16,7 @@ enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
 struct LaPosteTrackingClient {
     
     
-    static func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
+    func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         
