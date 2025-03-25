@@ -1,9 +1,7 @@
 
-import Core
 
 
-
-enum OrderStatus: String, Codable, IsOneOfAble {
+public enum OrderStatus: String, Codable, IsOneOfAble, Sendable {
     
     case paid = "PAID"
     case packed = "PACKED"
