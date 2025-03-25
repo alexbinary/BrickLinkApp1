@@ -1,10 +1,9 @@
 
 import Foundation
-import Core
 
 
 
-enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
+public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
     
     case noData
     case inTransit
@@ -13,19 +12,19 @@ enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
 
 
 
-struct LaPosteTrackingClient {
+public struct LaPosteTrackingClient {
     
     
     let debug: Debug
     
     
-    init(_ debug: Debug) {
+    public init(_ debug: Debug) {
         
         self.debug = debug
     }
     
     
-    func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
+    public func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         
@@ -49,13 +48,13 @@ struct LaPosteTrackingClient {
     }
     
     
-    struct TrackingData: Decodable {
+    public struct TrackingData: Decodable {
 
-        let shipment: Shipment
+        public let shipment: Shipment
         
-        struct Shipment: Decodable {
+        public struct Shipment: Decodable {
             
-            let isFinal: Bool
+            public let isFinal: Bool
         }
     }
 }
