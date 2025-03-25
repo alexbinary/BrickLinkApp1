@@ -116,15 +116,16 @@ extension Feedback {
     
     
     init(fromBl bl: BrickLinkOrderFeedback) {
-        
-        self.id = bl.feedbackId
-        self.orderId = "\(bl.orderId)"
-        self.from = bl.from
-        self.to = bl.to
-        self.dateRated = bl.dateRated
-        self.rating = bl.rating
-        self.author = FeedbackAuthor(fromBl: bl.ratingOfBs)!
-        self.comment = bl.comment
+        self.init(
+            id: bl.feedbackId,
+            orderId: "\(bl.orderId)",
+            from: bl.from,
+            to: bl.to,
+            dateRated: bl.dateRated,
+            rating: bl.rating,
+            author: FeedbackAuthor(fromBl: bl.ratingOfBs)!,
+            comment: bl.comment
+        )
     }
 }
 
