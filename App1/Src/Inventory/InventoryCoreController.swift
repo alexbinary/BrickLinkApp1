@@ -9,11 +9,13 @@ class InventoryCoreController {
     
     
     private let dataStore: DataStore
+    private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    init(_ dataStore: DataStore) {
+    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
+        self.brickLinkAPIClient = brickLinkAPIClient
     }
     
     
@@ -82,7 +84,7 @@ class InventoryCoreController {
         
         print("Loading inventories")
         
-        let blInventories = await BrickLinkAPIClient.fetchInventories()
+        let blInventories = await brickLinkAPIClient.fetchInventories()
         
         let inventories = blInventories.map { InventoryItem(fromBl: $0) }
         
@@ -97,7 +99,7 @@ class InventoryCoreController {
         
         print("Loading inventory \(id)")
         
-        let blInventory = await BrickLinkAPIClient.fetchInventory(withId: id)
+        let blInventory = await brickLinkAPIClient.fetchInventory(withId: id)
         let inventory = InventoryItem(fromBl: blInventory)
         
         try! dataStore.setInventory(inventory)
@@ -125,7 +127,7 @@ class InventoryCoreController {
     
     public func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
-        let inventories = await BrickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type, matchingColorId: uploadItem.colorId)
+        let inventories = await brickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type, matchingColorId: uploadItem.colorId)
             
         if let inv = inventories.first(where: { inv in
             
@@ -155,7 +157,7 @@ class InventoryCoreController {
         
     ) async -> InventoryItem? {
         
-        let blInventory = await BrickLinkAPIClient.createInventory(
+        let blInventory = await brickLinkAPIClient.createInventory(
             
             ref: ref,
             type: type,
@@ -185,7 +187,7 @@ class InventoryCoreController {
     
     ) async {
         
-        await BrickLinkAPIClient.updateInventory(
+        await brickLinkAPIClient.updateInventory(
             
             id: id,
         
