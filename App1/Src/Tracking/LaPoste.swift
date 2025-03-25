@@ -16,15 +16,24 @@ enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
 struct LaPosteTrackingClient {
     
     
+    let debug: Debug
+    
+    
+    init(_ debug: Debug) {
+        
+        self.debug = debug
+    }
+    
+    
     func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         
-        Debug.printRequest(request)
+        debug.printRequest(request)
         
         let (data, response) = try! await URLSession(configuration: .default).data(for: request)
         
-        Debug.printResponse(data, response)
+        debug.printResponse(data, response)
         
         let decoder = JSONDecoder()
         

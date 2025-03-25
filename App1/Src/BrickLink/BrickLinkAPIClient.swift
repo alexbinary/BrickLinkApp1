@@ -7,11 +7,14 @@ import Core
 struct BrickLinkAPIClient {
     
     
-    var credentials: BrickLinkAPICredentials
+    let credentials: BrickLinkAPICredentials
+    let debug: Debug
     
     
-    init(withCredentials credentials: BrickLinkAPICredentials) {
+    init(withCredentials credentials: BrickLinkAPICredentials, debug: Debug) {
+        
         self.credentials = credentials
+        self.debug = debug
     }
     
     
@@ -40,11 +43,11 @@ struct BrickLinkAPIClient {
         
         request.addAuthentication(using: credentials)
 
-        Debug.printRequest(request)
+        debug.printRequest(request)
         
         let (data, response) = try! await URLSession(configuration: .default).data(for: request)
         
-        Debug.printResponse(data, response)
+        debug.printResponse(data, response)
         
         return (data, response)
     }

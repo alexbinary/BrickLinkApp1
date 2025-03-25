@@ -10,10 +10,10 @@ class TrackingCoreController {
     private let laPosteTrackingClient: LaPosteTrackingClient
     
     
-    init(_ dataStore: DataStore) {
+    init(_ dataStore: DataStore, _ debug: Debug) {
         
         self.dataStore = dataStore
-        self.laPosteTrackingClient = LaPosteTrackingClient()
+        self.laPosteTrackingClient = LaPosteTrackingClient(debug)
     }
     
     

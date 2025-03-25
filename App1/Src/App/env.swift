@@ -33,7 +33,8 @@ func createEnv() -> Env {
         return DataStore(dataFileUrl: URL(fileURLWithPath: path))
     }()
     
-    let brickLinkAPIClient = BrickLinkAPIClient(withCredentials: Secrets.brickLinkAPICredentials)
+    let debug = Debug(printRequest: Secrets.Network.printRequest, printResponse: Secrets.Network.printResponse)
+    let brickLinkAPIClient = BrickLinkAPIClient(withCredentials: Secrets.brickLinkAPICredentials, debug: debug)
     
     // Core controllers
     
@@ -45,7 +46,7 @@ func createEnv() -> Env {
     let orderCoreController = OrderCoreController(dataStore, brickLinkAPIClient)
     let pickingCoreController = PickingCoreController(dataStore)
     let shippingCoreController = ShippingCoreController(dataStore)
-    let trackingCoreController = TrackingCoreController(dataStore)
+    let trackingCoreController = TrackingCoreController(dataStore, debug)
     let feedbackCoreController = FeedbackCoreController(dataStore, brickLinkAPIClient)
     let refundCoreController = RefundCoreController(dataStore)
     let transactionCoreController = TransactionCoreController(dataStore)

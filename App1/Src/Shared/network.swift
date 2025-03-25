@@ -3,13 +3,13 @@ import Foundation
 
 
 
-enum Debug {
+struct Debug {
     
-    static let printRequest = Secrets.Network.printRequest
-    static let printResponse = Secrets.Network.printResponse
+    let printRequest: Bool
+    let printResponse: Bool
     
     
-    static func printRequest(_ request: URLRequest) {
+    func printRequest(_ request: URLRequest) {
         
         if printRequest {
             print(request.url!.absoluteString)
@@ -20,7 +20,7 @@ enum Debug {
     }
     
     
-    static func printResponse(_ data: Data, _ response: URLResponse) {
+    func printResponse(_ data: Data, _ response: URLResponse) {
         
         if printResponse {
             print(String(data: data, encoding: .utf8)!)
