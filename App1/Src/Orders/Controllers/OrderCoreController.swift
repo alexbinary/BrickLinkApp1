@@ -201,25 +201,26 @@ extension OrderSummary {
     
     
     init(fromBl bl: BrickLinkOrder) {
-        
-        self.id = "\(bl.orderId)"
-        self.date = bl.dateOrdered
-        self.buyer = bl.buyerName
-        self.items = bl.totalCount
-        self.lots = bl.uniqueCount
-        
-        self.subTotal = bl.cost.subtotal.floatValue
-        self.grandTotal = bl.cost.grandTotal.floatValue
-        self.costCurrencyCode = bl.cost.currencyCode
-        
-        self.dispSubTotal = bl.dispCost.subtotal.floatValue
-        self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
-        self.dispCostCurrencyCode = bl.dispCost.currencyCode
-        
-        self.status = OrderStatus(rawValue: bl.status)!
-        self.dateStatusChanged = bl.dateStatusChanged
-        
-        self.paymentStatus = PaymentStatus(rawValue: bl.payment.status)!
+        self.init(
+            id: "\(bl.orderId)",
+            date: bl.dateOrdered,
+            buyer: bl.buyerName,
+            items: bl.totalCount,
+            lots: bl.uniqueCount,
+            
+            subTotal: bl.cost.subtotal.floatValue,
+            grandTotal: bl.cost.grandTotal.floatValue,
+            costCurrencyCode: bl.cost.currencyCode,
+            
+            dispSubTotal: bl.dispCost.subtotal.floatValue,
+            dispGrandTotal: bl.dispCost.grandTotal.floatValue,
+            dispCostCurrencyCode: bl.dispCost.currencyCode,
+            
+            status: OrderStatus(rawValue: bl.status)!,
+            dateStatusChanged: bl.dateStatusChanged,
+            
+            paymentStatus: PaymentStatus(rawValue: bl.payment.status)!
+        )
     }
 }
 
@@ -230,34 +231,36 @@ extension OrderDetails {
     
     init(fromBl bl: BrickLinkOrder) {
         
-        self.id = "\(bl.orderId)"
-        self.date = bl.dateOrdered
-        self.buyer = bl.buyerName
-        self.items = bl.totalCount
-        self.lots = bl.uniqueCount
-        
-        self.subTotal = bl.cost.subtotal.floatValue
-        self.grandTotal = bl.cost.grandTotal.floatValue
-        self.shippingCost = bl.cost.shipping!.floatValue
-        self.costCurrencyCode = bl.cost.currencyCode
-        
-        self.dispSubTotal = bl.dispCost.subtotal.floatValue
-        self.dispGrandTotal = bl.dispCost.grandTotal.floatValue
-        self.dispShippingCost = bl.dispCost.shipping!.floatValue
-        self.dispCostCurrencyCode = bl.dispCost.currencyCode
-        
-        self.status = OrderStatus(rawValue: bl.status)!
-        self.driveThruSent = bl.driveThruSent!
-        self.trackingNo = bl.shipping!.trackingNo
-        self.totalWeight = bl.totalWeight!.floatValue
-        
-        self.shippingMethodId = bl.shipping!.methodId
-        self.shippingMethodName = bl.shipping!.method
-        self.shippingAddress = bl.shipping!.address.full.htmlUnescape()
-        self.shippingAddressCountryCode = bl.shipping!.address.countryCode
-        self.shippingAddressName = bl.shipping!.address.name.full
-        
-        self.remarks = bl.remarks
+        self.init(
+            id: "\(bl.orderId)",
+            date: bl.dateOrdered,
+            buyer: bl.buyerName,
+            items: bl.totalCount,
+            lots: bl.uniqueCount,
+
+            subTotal: bl.cost.subtotal.floatValue,
+            grandTotal: bl.cost.grandTotal.floatValue,
+            shippingCost: bl.cost.shipping!.floatValue,
+            costCurrencyCode: bl.cost.currencyCode,
+
+            dispSubTotal: bl.dispCost.subtotal.floatValue,
+            dispGrandTotal: bl.dispCost.grandTotal.floatValue,
+            dispShippingCost: bl.dispCost.shipping!.floatValue,
+            dispCostCurrencyCode: bl.dispCost.currencyCode,
+
+            status: OrderStatus(rawValue: bl.status)!,
+            driveThruSent: bl.driveThruSent!,
+            trackingNo: bl.shipping!.trackingNo,
+            totalWeight: bl.totalWeight!.floatValue,
+
+            shippingMethodId: bl.shipping!.methodId,
+            shippingMethodName: bl.shipping!.method,
+            shippingAddress: bl.shipping!.address.full.htmlUnescape(),
+            shippingAddressCountryCode: bl.shipping!.address.countryCode,
+            shippingAddressName: bl.shipping!.address.name.full,
+
+            remarks: bl.remarks
+        )
     }
 }
 

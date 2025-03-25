@@ -1,5 +1,7 @@
 
 import SwiftUI
+import Core
+
 
 
 struct OrdersMainList: View {

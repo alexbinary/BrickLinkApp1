@@ -1,5 +1,6 @@
 
 import SwiftUI
+import Core
 
 
 
@@ -216,7 +217,7 @@ struct OrderDetailComptaView: View {
             createdAt: Date(),
             type: .orderShipping,
             amount: shippingAmount,
-            fees: nil,
+            fees: nil as Float?,
             paymentMethod: shippingPaymentMethod,
             comment: shippingComment,
             orderRefIn: order.id

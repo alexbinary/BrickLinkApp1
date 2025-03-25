@@ -1,6 +1,7 @@
 
 import SwiftUI
 import HTMLEntities
+import Core
 
 
 
