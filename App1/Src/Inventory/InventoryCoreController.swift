@@ -207,16 +207,17 @@ extension InventoryItem {
     
     
     init(fromBl bl: BrickLinkInventoryItem) {
-        
-        self.id = "\(bl.inventoryId)"
-        self.condition = bl.newOrUsed
-        self.colorId = "\(bl.colorId)"
-        self.ref = bl.item.no
-        self.name = bl.item.name
-        self.type = bl.item.type
-        self.description = bl.description ?? ""
-        self.remarks = bl.remarks ?? ""
-        self.quantity = bl.quantity
-        self.unitPrice = bl.unitPrice.floatValue
+        self.init(
+            id: "\(bl.inventoryId)",
+            condition: bl.newOrUsed,
+            colorId: "\(bl.colorId)",
+            ref: bl.item.no,
+            name: bl.item.name,
+            type: bl.item.type,
+            description: bl.description ?? "",
+            remarks: bl.remarks ?? "",
+            quantity: bl.quantity,
+            unitPrice: bl.unitPrice.floatValue
+        )
     }
 }
