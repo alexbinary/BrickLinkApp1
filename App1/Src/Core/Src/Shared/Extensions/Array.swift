@@ -6,7 +6,7 @@ import Foundation
 extension Array {
 
     
-    func limit(_ n: Int) -> Self {
+    public func limit(_ n: Int) -> Self {
         
         if self.isEmpty {
             return []
@@ -21,7 +21,7 @@ extension Array {
 extension Array where Element: Equatable {
     
     
-    var unique: Self {
+    public var unique: Self {
         
         var uniqueItems: Self = []
         
