@@ -1,17 +1,16 @@
 
 import Foundation
-import Core
 
 
 
-class TrackingCoreController {
+public class TrackingCoreController {
     
     
     private let dataStore: DataStore
     private let laPosteTrackingClient: LaPosteTrackingClient
     
     
-    init(_ dataStore: DataStore, _ debug: Debug) {
+    public init(_ dataStore: DataStore, _ debug: Debug) {
         
         self.dataStore = dataStore
         self.laPosteTrackingClient = LaPosteTrackingClient(debug)
