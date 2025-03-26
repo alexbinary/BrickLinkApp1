@@ -1,12 +1,11 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class UploadUserStore {
+public class UploadUserStore {
     
     
     private let uploadCoreController: UploadCoreController
@@ -14,7 +13,7 @@ class UploadUserStore {
     private let catalog: Catalog
 
     
-    init(_ uploadCoreController: UploadCoreController, _ inventoryCoreController: InventoryCoreController, _ catalog: Catalog) {
+    public init(_ uploadCoreController: UploadCoreController, _ inventoryCoreController: InventoryCoreController, _ catalog: Catalog) {
         
         self.uploadCoreController = uploadCoreController
         self.inventoryCoreController = inventoryCoreController
