@@ -1,19 +1,18 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class FeedbackPostController {
+public class FeedbackPostController {
     
     
     private let feedbackCoreController: FeedbackCoreController
     private let orderCoreController: OrderCoreController
     
     
-    init(
+    public init(
         _ feedbackCoreController: FeedbackCoreController,
         _ orderCoreController: OrderCoreController
     ) {
