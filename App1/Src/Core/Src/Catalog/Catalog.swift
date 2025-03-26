@@ -1,19 +1,19 @@
 
 import Foundation
+import HTMLEntities
 import SwiftUI
-import Core
 
 
 
 @Observable
-class Catalog {
+public class Catalog {
     
     
     private let dataStore: DataStore
     private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    public init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
         self.brickLinkAPIClient = brickLinkAPIClient

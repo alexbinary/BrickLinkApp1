@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2967A80B2D92E5890025F16B /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 2967A80A2D92E5890025F16B /* Core */; };
-		29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */ = {isa = PBXBuildFile; productRef = 29EDBB502CA069E900F77959 /* HTMLEntities */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +35,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */,
 				2967A80B2D92E5890025F16B /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,7 +87,6 @@
 			);
 			name = App1;
 			packageProductDependencies = (
-				29EDBB502CA069E900F77959 /* HTMLEntities */,
 				2967A80A2D92E5890025F16B /* Core */,
 			);
 			productName = BrickLinkApp1;
@@ -146,8 +143,8 @@
 			);
 			mainGroup = 29BB30832C77B0CA000525CB;
 			packageReferences = (
-				29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */,
 				29941FDD2D9442800083B00C /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				29BBFF872D944B110019035C /* XCRemoteSwiftPackageReference "swift-html-entities" */,
 			);
 			productRefGroup = 29BB308D2C77B0CA000525CB /* Products */;
 			projectDirPath = "";
@@ -473,7 +470,7 @@
 				minimumVersion = 1.8.4;
 			};
 		};
-		29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */ = {
+		29BBFF872D944B110019035C /* XCRemoteSwiftPackageReference "swift-html-entities" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Kitura/swift-html-entities.git";
 			requirement = {
@@ -487,11 +484,6 @@
 		2967A80A2D92E5890025F16B /* Core */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Core;
-		};
-		29EDBB502CA069E900F77959 /* HTMLEntities */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */;
-			productName = HTMLEntities;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

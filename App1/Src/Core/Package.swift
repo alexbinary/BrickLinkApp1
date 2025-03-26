@@ -17,13 +17,17 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", from: "1.8.4"),
+        .package(url: "https://github.com/Kitura/swift-html-entities.git", from: "4.0.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Core",
-            dependencies: ["CryptoSwift"]
+            dependencies: [
+                "CryptoSwift",
+                .product(name: "HTMLEntities", package: "swift-html-entities"),
+            ]
         ),
     ]
 )
