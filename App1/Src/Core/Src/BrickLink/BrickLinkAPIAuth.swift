@@ -9,7 +9,7 @@ import CryptoSwift
 
 
 
-struct BrickLinkAPICredentials {
+public struct BrickLinkAPICredentials {
 
     
     let consumerKey: String
@@ -17,6 +17,15 @@ struct BrickLinkAPICredentials {
     
     let tokenValue: String
     let tokenSecret: String
+    
+    
+    public init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
+     
+        self.consumerKey = consumerKey
+        self.consumerSecret = consumerSecret
+        self.tokenValue = tokenValue
+        self.tokenSecret = tokenSecret
+    }
 }
 
 
@@ -24,7 +33,7 @@ struct BrickLinkAPICredentials {
 extension URLRequest {
     
     
-    mutating func addAuthentication(using credentials: BrickLinkAPICredentials) {
+    public mutating func addAuthentication(using credentials: BrickLinkAPICredentials) {
         
         let authorizationHeader = buildAuthorizationHeader(using: credentials)
         

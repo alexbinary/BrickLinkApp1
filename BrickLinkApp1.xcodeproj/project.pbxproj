@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2967A80B2D92E5890025F16B /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 2967A80A2D92E5890025F16B /* Core */; };
-		29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 29D674572C77C7E300BAA00A /* CryptoSwift */; };
 		29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */ = {isa = PBXBuildFile; productRef = 29EDBB502CA069E900F77959 /* HTMLEntities */; };
 /* End PBXBuildFile section */
 
@@ -38,7 +37,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				29EDBB512CA069E900F77959 /* HTMLEntities in Frameworks */,
-				29D674582C77C7E300BAA00A /* CryptoSwift in Frameworks */,
 				2967A80B2D92E5890025F16B /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,7 +89,6 @@
 			);
 			name = App1;
 			packageProductDependencies = (
-				29D674572C77C7E300BAA00A /* CryptoSwift */,
 				29EDBB502CA069E900F77959 /* HTMLEntities */,
 				2967A80A2D92E5890025F16B /* Core */,
 			);
@@ -149,8 +146,8 @@
 			);
 			mainGroup = 29BB30832C77B0CA000525CB;
 			packageReferences = (
-				29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */,
+				29941FDD2D9442800083B00C /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			productRefGroup = 29BB308D2C77B0CA000525CB /* Products */;
 			projectDirPath = "";
@@ -468,12 +465,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+		29941FDD2D9442800083B00C /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
-				kind = exactVersion;
-				version = 1.8.3;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.4;
 			};
 		};
 		29EDBB4F2CA069E800F77959 /* XCRemoteSwiftPackageReference "swift-html-entities" */ = {
@@ -490,11 +487,6 @@
 		2967A80A2D92E5890025F16B /* Core */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Core;
-		};
-		29D674572C77C7E300BAA00A /* CryptoSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 29D674562C77C7E300BAA00A /* XCRemoteSwiftPackageReference "CryptoSwift" */;
-			productName = CryptoSwift;
 		};
 		29EDBB502CA069E900F77959 /* HTMLEntities */ = {
 			isa = XCSwiftPackageProductDependency;
