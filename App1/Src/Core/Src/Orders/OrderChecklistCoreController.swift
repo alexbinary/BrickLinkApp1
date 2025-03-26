@@ -1,12 +1,11 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class OrderChecklistCoreController {
+public class OrderChecklistCoreController {
     
     
     private let orderCoreController: OrderCoreController
@@ -18,7 +17,7 @@ class OrderChecklistCoreController {
     private let pickingProgressCoreController: PickingProgressCoreController
     
     
-    init(
+    public init(
         _ orderCoreController: OrderCoreController,
         _ pickingCoreController: PickingCoreController,
         _ shippingCoreController: ShippingCoreController,
