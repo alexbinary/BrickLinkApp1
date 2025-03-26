@@ -1,19 +1,18 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class OrderMacroStatusCoreController {
+public class OrderMacroStatusCoreController {
     
     
     private let orderCoreController: OrderCoreController
     private let orderChecklistCoreController: OrderChecklistCoreController
     
     
-    init(
+    public init(
         _ orderCoreController: OrderCoreController,
         _ orderChecklistCoreController: OrderChecklistCoreController
     ) {

@@ -4,7 +4,7 @@ import Core
 
 
 
-enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
+public enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
     
     
     case validatePayment
@@ -18,7 +18,7 @@ enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
     case closed
     
     
-    var descriptionAndPicto: (picto: String, text: String) {
+    public var descriptionAndPicto: (picto: String, text: String) {
         
         switch self {
         
@@ -51,14 +51,13 @@ enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
         }
     }
         
-    var descriptionWithPicto: String {
+    public var descriptionWithPicto: String {
         
         let (picto, text) = descriptionAndPicto
         return "\(picto) \(text)"
     }
     
-    
-    var descriptionWithoutPicto: String {
+    public var descriptionWithoutPicto: String {
         
         descriptionAndPicto.text
     }
