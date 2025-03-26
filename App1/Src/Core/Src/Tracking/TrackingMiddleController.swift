@@ -1,19 +1,18 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class TrackingMiddleController {
+public class TrackingMiddleController {
     
     
     private let trackingCoreController: TrackingCoreController
     private let orderCoreController: OrderCoreController
     
     
-    init(_ trackingCoreController: TrackingCoreController, _ orderCoreController: OrderCoreController) {
+    public init(_ trackingCoreController: TrackingCoreController, _ orderCoreController: OrderCoreController) {
         
         self.trackingCoreController = trackingCoreController
         self.orderCoreController = orderCoreController

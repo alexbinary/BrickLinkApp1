@@ -3,7 +3,7 @@ import Foundation
 
 
 
-public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
+public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
     
     case noData
     case inTransit
@@ -12,6 +12,7 @@ public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
 
 
 
+@MainActor
 public struct LaPosteTrackingClient {
     
     
