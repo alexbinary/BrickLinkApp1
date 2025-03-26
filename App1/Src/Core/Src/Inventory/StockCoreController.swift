@@ -1,12 +1,11 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class StockCoreController {
+public class StockCoreController {
     
     
     private let inventoryCoreController: InventoryCoreController
@@ -15,7 +14,7 @@ class StockCoreController {
     private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     
     
-    init(
+    public init(
         _ inventoryCoreController: InventoryCoreController,
         _ pickingCoreController: PickingCoreController,
         _ orderCoreController: OrderCoreController,
