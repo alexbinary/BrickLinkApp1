@@ -5,6 +5,7 @@ import Core
 
 
 @Observable
+@MainActor
 class StockCoreController {
     
     

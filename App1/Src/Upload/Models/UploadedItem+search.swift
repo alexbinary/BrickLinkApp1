@@ -7,6 +7,7 @@ import Core
 extension UploadedItem {
     
     
+    @MainActor
     func matches(_ rawSearchText: String, _ catalog: Catalog) -> Bool {
         
         let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -21,6 +22,7 @@ extension UploadedItem {
     }
     
     
+    @MainActor
     func searchableText(_ catalog: Catalog) -> String {
         
         [

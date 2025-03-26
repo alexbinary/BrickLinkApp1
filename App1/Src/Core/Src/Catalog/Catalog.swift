@@ -6,6 +6,7 @@ import SwiftUI
 
 
 @Observable
+@MainActor
 public class Catalog {
     
     

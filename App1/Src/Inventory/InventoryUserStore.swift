@@ -6,6 +6,7 @@ import Core
 
 
 @Observable
+@MainActor
 class InventoryUserStore {
     
     

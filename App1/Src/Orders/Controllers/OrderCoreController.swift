@@ -4,6 +4,7 @@ import Core
 
 
 
+@MainActor
 class OrderCoreController {
     
     

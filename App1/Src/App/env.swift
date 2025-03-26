@@ -27,6 +27,7 @@ typealias Env = (
 
 
 
+@MainActor
 func createEnv() -> Env {
     
     let dataStore: DataStore = {
