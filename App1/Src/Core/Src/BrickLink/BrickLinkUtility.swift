@@ -1,13 +1,12 @@
 
 import Foundation
-import Core
 
 
 
-enum BrickLinkUtility {
+public enum BrickLinkUtility {
     
     
-    static func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+    public static func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
         
         switch type {
         case .part:
@@ -18,13 +17,13 @@ enum BrickLinkUtility {
     }
     
     
-    static func url(forDetailsOfOrderWithId orderId: String) -> URL? {
+    public static func url(forDetailsOfOrderWithId orderId: String) -> URL? {
         
         return URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(orderId)#/")
     }
     
     
-    static func url(forInventoryItemWithId inventoryId: String) -> URL? {
+    public static func url(forInventoryItemWithId inventoryId: String) -> URL? {
         
         return URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryId)#/")
     }
