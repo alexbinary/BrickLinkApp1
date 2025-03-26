@@ -1,16 +1,15 @@
 
 import Foundation
-import Core
 
 
 
-class UploadCoreController {
+public class UploadCoreController {
     
 
     private let dataStore: DataStore
     
     
-    init(_ dataStore: DataStore) {
+    public init(_ dataStore: DataStore) {
         
         self.dataStore = dataStore
     }
