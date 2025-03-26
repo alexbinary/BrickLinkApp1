@@ -1,12 +1,11 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class ResultUserStore {
+public class ResultUserStore {
     
     
     private let orderCoreController: OrderCoreController
@@ -15,7 +14,7 @@ class ResultUserStore {
     private let transactionCoreController: TransactionCoreController
     
     
-    init(
+    public init(
         _ orderCoreController: OrderCoreController,
         _ shippingCoreController: ShippingCoreController,
         _ refundCoreController: RefundCoreController,
