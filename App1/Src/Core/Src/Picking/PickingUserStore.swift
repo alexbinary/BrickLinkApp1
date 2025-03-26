@@ -1,12 +1,11 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class PickingUserStore {
+public class PickingUserStore {
     
     
     private let pickingCoreController: PickingCoreController
@@ -14,7 +13,7 @@ class PickingUserStore {
     private let orderCoreController: OrderCoreController
     
     
-    init(
+    public init(
         _ pickingCoreController: PickingCoreController,
         _ pickingProgressCoreController: PickingProgressCoreController,
         _ orderCoreController: OrderCoreController
