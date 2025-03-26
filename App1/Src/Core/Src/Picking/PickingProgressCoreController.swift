@@ -1,19 +1,18 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class PickingProgressCoreController {
+public class PickingProgressCoreController {
     
     
     private let pickingCoreController: PickingCoreController
     private let orderCoreController: OrderCoreController
     
     
-    init(
+    public init(
         _ pickingCoreController: PickingCoreController,
         _ orderCoreController: OrderCoreController
     ) {
