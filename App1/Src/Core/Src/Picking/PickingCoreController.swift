@@ -1,16 +1,15 @@
 
 import Foundation
-import Core
 
 
 
-class PickingCoreController {
+public class PickingCoreController {
     
     
     private let dataStore: DataStore
     
     
-    init(_ dataStore: DataStore) {
+    public init(_ dataStore: DataStore) {
         
         self.dataStore = dataStore
     }
