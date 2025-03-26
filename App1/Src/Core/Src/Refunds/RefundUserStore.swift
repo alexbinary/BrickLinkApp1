@@ -1,18 +1,17 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class RefundUserStore {
+public class RefundUserStore {
     
     
     let refundCoreController: RefundCoreController
     
     
-    init(_ refundCoreController: RefundCoreController) {
+    public init(_ refundCoreController: RefundCoreController) {
         
         self.refundCoreController = refundCoreController
     }
