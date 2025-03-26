@@ -1,19 +1,18 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class ShippingUserStore {
+public class ShippingUserStore {
     
     
     private let shippingCoreController: ShippingCoreController
     private let orderCoreController: OrderCoreController
     
     
-    init(_ shippingCoreController: ShippingCoreController, _ orderCoreController: OrderCoreController) {
+    public init(_ shippingCoreController: ShippingCoreController, _ orderCoreController: OrderCoreController) {
      
         self.shippingCoreController = shippingCoreController
         self.orderCoreController = orderCoreController
