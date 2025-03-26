@@ -1,20 +1,19 @@
 
 import Foundation
 import SwiftUI
-import Core
 
 
 
 @Observable
 @MainActor
-class InventoryUserStore {
+public class InventoryUserStore {
     
     
     private let inventoryCoreController: InventoryCoreController
     private let stockCoreController: StockCoreController
     
     
-    init(
+    public init(
         _ inventoryCoreController: InventoryCoreController,
         _ stockCoreController: StockCoreController
     ) {
