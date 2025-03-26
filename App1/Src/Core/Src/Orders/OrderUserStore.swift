@@ -1,12 +1,11 @@
 
 import Foundation
-import Core
 
 
 
 @Observable
 @MainActor
-class OrderUserStore {
+public class OrderUserStore {
     
     
     private let orderCoreController: OrderCoreController
@@ -18,7 +17,7 @@ class OrderUserStore {
     private let feedbackPostController: FeedbackPostController
     
     
-    init(
+    public init(
         _ orderCoreController: OrderCoreController,
         _ orderChecklistCoreController: OrderChecklistCoreController,
         _ orderMacroStatusCoreController: OrderMacroStatusCoreController,
@@ -679,25 +678,25 @@ class OrderUserStore {
 
 
 
-struct Checklist {
+public struct Checklist {
     
-    let sections: [Section]
+    public let sections: [Section]
     
-    struct Section: Identifiable {
+    public struct Section: Identifiable {
         
-        var id: String { title }
-        let title: String
-        let items: [Item]
+        public var id: String { title }
+        public let title: String
+        public let items: [Item]
     }
     
-    struct Item: Identifiable {
+    public struct Item: Identifiable {
         
-        var id: String { label }
-        let label: String
-        let checked: Bool
-        let mandatory: Bool
+        public var id: String { label }
+        public let label: String
+        public let checked: Bool
+        public let mandatory: Bool
         
-        init(label: String, checked: Bool, mandatory: Bool = true) {
+        public init(label: String, checked: Bool, mandatory: Bool = true) {
             self.label = label
             self.checked = checked
             self.mandatory = mandatory
