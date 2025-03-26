@@ -1,18 +1,17 @@
 
 import Foundation
-import Core
 
 
 
 @MainActor
-class FeedbackCoreController {
+public class FeedbackCoreController {
     
     
     private let dataStore: DataStore
     private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    public init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
         self.brickLinkAPIClient = brickLinkAPIClient
