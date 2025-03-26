@@ -1,19 +1,18 @@
 
 import Foundation
 import SwiftUI
-import Core
 
 
 
 @Observable
 @MainActor
-class TransactionUserStore {
+public class TransactionUserStore {
     
     
     private let transactionCoreController: TransactionCoreController
     
     
-    init(_ transactionStore: TransactionCoreController) {
+    public init(_ transactionStore: TransactionCoreController) {
         
         self.transactionCoreController = transactionStore
     }
