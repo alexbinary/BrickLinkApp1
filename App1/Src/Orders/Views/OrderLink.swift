@@ -23,7 +23,7 @@ struct OrderLink<Label>: View where Label: View {
     
     var body: some View {
 
-        Link(destination: orderStore.url(forDetailsOfOrderWithId: order.id)!, label: label)
+        Link(destination: orderStore.url(forDetailsOf: order)!, label: label)
     }
 }
 

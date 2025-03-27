@@ -97,7 +97,7 @@ enum ButtonType {
     
     let env = createEnv()
     let order = env.stores.order.orderSummaries.first!
-    let item = env.stores.order.orderItems(forOrderWithId: order.id).first!
+    let item = env.stores.order.orderItems(for: order).first!
     
     PickingItemView(item, button: .pick)
         .inject(env)

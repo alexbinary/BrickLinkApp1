@@ -13,8 +13,8 @@ class NavigationController {
     
     var orders: [Order.ID] = Secrets.Defaults.ordersActiveNavigationPath
     
-    func pushOrder(_ orderId: Order.ID) {
-        orders.append(orderId)
+    func push(_ order: Order) {
+        orders.append(order.id)
     }
     
     

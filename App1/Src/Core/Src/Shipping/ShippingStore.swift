@@ -21,34 +21,34 @@ public class ShippingStore {
     }
     
     
-    public func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
+    public func orderDetails(for order: Order) -> OrderDetails? {
         
-        orderCoreController.orderDetails(forOrderWithId: orderId)
+        orderCoreController.orderDetails(for: order)
     }
     
     
     // MARK: - Shipping cost
     
     
-    public func confirmedShippingCost(forOrderWithId orderId: Order.ID) -> Float? {
+    public func confirmedShippingCost(for order: Order) -> Float? {
         
-        shippingCoreController.confirmedShippingCost(forOrderWithId: orderId)
+        shippingCoreController.confirmedShippingCost(for: order)
     }
     
     
-    public func confirmShippingCost(forOrderWithId orderId: Order.ID, cost: Float) {
+    public func confirmShippingCost(for order: Order, cost: Float) {
         
-        shippingCoreController.confirmShippingCost(forOrderWithId: orderId, cost: cost)
+        shippingCoreController.confirmShippingCost(for: order, cost: cost)
     }
     
     
-    public func selectedShippingCost(forOrderWithId orderId: Order.ID) -> SelectedShippingCost? {
+    public func selectedShippingCost(for order: Order) -> SelectedShippingCost? {
         
-        let order = orderDetails(forOrderWithId: orderId)!
+        let orderDetails = orderDetails(for: order)!
         
-        let weight = order.totalWeight * orderWeightMarginRatio
+        let weight = orderDetails.totalWeight * orderWeightMarginRatio
         
-        if order.shippingMethodId == shippingMethodId_France_LaPoste {
+        if orderDetails.shippingMethodId == shippingMethodId_France_LaPoste {
             
             if let band = shippingCostBandsFrance
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
@@ -92,7 +92,7 @@ public class ShippingStore {
             
             return nil
             
-        } else if order.shippingMethodId == shippingMethodId_Europe_LaPoste {
+        } else if orderDetails.shippingMethodId == shippingMethodId_Europe_LaPoste {
             
             if let band = shippingCostBandsEurope
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
@@ -136,7 +136,7 @@ public class ShippingStore {
             
             return nil
             
-        } else if order.shippingMethodId == shippingMethodId_World_LaPoste {
+        } else if orderDetails.shippingMethodId == shippingMethodId_World_LaPoste {
             
             if let band = shippingCostBandsWorld
                 .first(where: { Float($0.minWeight) <= weight && Float($0.maxWeight) >= weight }) {
@@ -152,7 +152,7 @@ public class ShippingStore {
                     chooseLetter = true
                     value = band.letter?.bestPrice
                 } else {
-                    if ["US"].contains(order.shippingAddressCountryCode) {
+                    if ["US"].contains(orderDetails.shippingAddressCountryCode) {
                         chooseParcelZC = true
                         value = band.priceParcelZC
                     } else {
@@ -193,34 +193,34 @@ public class ShippingStore {
     // MARK: - Stamping
     
     
-    public func confirmedStamping(forOrderWithId orderId: Order.ID) -> String? {
+    public func confirmedStamping(for order: Order) -> String? {
         
-        shippingCoreController.confirmedStamping(forOrderWithId: orderId)
+        shippingCoreController.confirmedStamping(for: order)
     }
     
     
-    public func confirmStamping(forOrderWithId orderId: Order.ID, stamping: String) {
+    public func confirmStamping(for order: Order, stamping: String) {
         
-        shippingCoreController.confirmStamping(forOrderWithId: orderId, stamping: stamping)
+        shippingCoreController.confirmStamping(for: order, stamping: stamping)
     }
     
     
-    public func dateOrderValidatedWithoutStamping(orderId: Order.ID) -> Date? {
+    public func dateOrderValidatedWithoutStamping(_ order: Order) -> Date? {
         
-        shippingCoreController.dateOrderValidatedWithoutStamping(orderId: orderId)
+        shippingCoreController.dateOrderValidatedWithoutStamping(order)
     }
     
     
-    public func validateOrderWithoutStamping(orderId: Order.ID) {
+    public func validateOrderWithoutStamping(_ order: Order) {
         
-        shippingCoreController.validateOrderWithoutStamping(orderId: orderId)
+        shippingCoreController.validateOrderWithoutStamping(order)
     }
     
     
-    public func recommendedStampingMethod(forOrderWithId orderId: Order.ID) -> String {
+    public func recommendedStampingMethod(for order: Order) -> String {
         
-        let selectedShippingCost = selectedShippingCost(forOrderWithId: orderId)
-        let order = orderDetails(forOrderWithId: orderId)!
+        let selectedShippingCost = selectedShippingCost(for: order)
+        let orderDetails = orderDetails(for: order)!
         
         var s = ""
         
@@ -231,7 +231,7 @@ public class ShippingStore {
             } else {
                 s = "\(selectedLetterStamping.nbTimbres ?? 0) timbres"
                 
-                if order.shippingMethodId != shippingMethodId_France_LaPoste {
+                if orderDetails.shippingMethodId != shippingMethodId_France_LaPoste {
                     s += " international"
                 }
                 

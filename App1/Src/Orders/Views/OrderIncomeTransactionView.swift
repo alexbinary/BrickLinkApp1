@@ -28,9 +28,9 @@ struct OrderIncomeTransactionView: View {
 
         Group {
             
-            let transactions = transactionStore.incomeTransactions(forOrderWithId: order.id)
+            let transactions = transactionStore.incomeTransactions(for: order)
             
-            if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+            if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(order) {
                 
                 HStack {
                     Text("Validated without transaction on")
@@ -136,7 +136,7 @@ struct OrderIncomeTransactionView: View {
                             self.submitIncomeTransaction()
                         }
                         Button("Validate without transaction") {
-                            transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                            transactionStore.validateOrderWithoutIncomeTransaction(order)
                         }
                     }
                 }

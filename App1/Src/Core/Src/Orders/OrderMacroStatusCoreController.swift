@@ -21,108 +21,107 @@ class OrderMacroStatusCoreController {
     }
     
     
-    func orderChecklistIncomeTransaction(_ orderId: Order.ID) -> Bool {
+    func orderChecklistIncomeTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistIncomeTransaction(orderId)
+        orderChecklistCoreController.orderChecklistIncomeTransaction(order)
     }
     
     
-    func orderChecklistShippingTransaction(_ orderId: Order.ID) -> Bool {
+    func orderChecklistShippingTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistShippingTransaction(orderId)
+        orderChecklistCoreController.orderChecklistShippingTransaction(order)
     }
     
     
-    func orderChecklistPicking(_ orderId: Order.ID) -> Bool {
+    func orderChecklistPicking(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistPicking(orderId)
+        orderChecklistCoreController.orderChecklistPicking(order)
     }
     
     
-    func orderChecklistVerification(_ orderId: Order.ID) -> Bool {
+    func orderChecklistVerification(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistVerification(orderId)
+        orderChecklistCoreController.orderChecklistVerification(order)
     }
     
     
-    func orderChecklistPacked(_ orderId: Order.ID) -> Bool {
+    func orderChecklistPacked(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistPacked(orderId)
+        orderChecklistCoreController.orderChecklistPacked(order)
     }
     
     
-    func orderChecklistShipped(_ orderId: Order.ID) -> Bool {
+    func orderChecklistShipped(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistShipped(orderId)
+        orderChecklistCoreController.orderChecklistShipped(order)
     }
     
     
-    func orderChecklistTrackingNo(_ orderId: Order.ID) -> Bool {
+    func orderChecklistTrackingNo(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistTrackingNo(orderId)
+        orderChecklistCoreController.orderChecklistTrackingNo(order)
     }
     
     
-    func orderChecklistDriveThru(_ orderId: Order.ID) -> Bool {
+    func orderChecklistDriveThru(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistDriveThru(orderId)
+        orderChecklistCoreController.orderChecklistDriveThru(order)
     }
     
     
-    func orderChecklistStamping(_ orderId: Order.ID) -> Bool {
+    func orderChecklistStamping(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistStamping(orderId)
+        orderChecklistCoreController.orderChecklistStamping(order)
     }
     
     
-    func orderChecklistReceived(_ orderId: Order.ID) -> Bool {
+    func orderChecklistReceived(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistReceived(orderId)
+        orderChecklistCoreController.orderChecklistReceived(order)
     }
     
     
-    func orderChecklistCompleted(_ orderId: Order.ID) -> Bool {
+    func orderChecklistCompleted(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistCompleted(orderId)
+        orderChecklistCoreController.orderChecklistCompleted(order)
     }
     
     
-    func orderChecklistBuyerFeedback(_ orderId: Order.ID) -> Bool {
+    func orderChecklistBuyerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistBuyerFeedback(orderId)
+        orderChecklistCoreController.orderChecklistBuyerFeedback(order)
     }
     
     
-    func orderChecklistSellerFeedback(_ orderId: Order.ID) -> Bool {
+    func orderChecklistSellerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistSellerFeedback(orderId)
+        orderChecklistCoreController.orderChecklistSellerFeedback(order)
     }
     
     
-    func orderChecklistUnchangedFor30Days(_ orderId: Order.ID) -> Bool {
+    func orderChecklistUnchangedFor30Days(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistUnchangedFor30Days(orderId)
+        orderChecklistCoreController.orderChecklistUnchangedFor30Days(order)
     }
     
     
     // MARK: - Order summaries
     
     
-    func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
+    //
+    func orderSummary(forOrderId orderId: Order.ID) -> Order? {
         
-        orderCoreController.orderSummary(forOrderWithId: orderId)
+        orderCoreController.orderSummary(forOrderId: orderId)
     }
     
     
     // MARK: - Order macro status
     
     
-    func macroStatus(forOrderWithId orderId: Order.ID) -> OrderMacroStatus {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func macroStatus(for order: Order) -> OrderMacroStatus {
         
         if order.status.isOneOf(.cancelled, .purged) {
-            return orderChecklistUnchangedFor30Days(orderId) ? .closed : .recentlyClosed
+            return orderChecklistUnchangedFor30Days(order) ? .closed : .recentlyClosed
         }
         
         let initialStatus: OrderMacroStatus = .validatePayment
@@ -131,40 +130,40 @@ class OrderMacroStatusCoreController {
             (condition: () -> Bool, status: OrderMacroStatus)
         ] = [
             (condition: {
-                self.orderChecklistIncomeTransaction(orderId)
+                self.orderChecklistIncomeTransaction(order)
                 
             }, status: .pickAndPack
             ),
             (condition: {
-                self.orderChecklistPicking(orderId)
-                && self.orderChecklistVerification(orderId)
-                && self.orderChecklistPacked(orderId)
+                self.orderChecklistPicking(order)
+                && self.orderChecklistVerification(order)
+                && self.orderChecklistPacked(order)
                 
             }, status: .ship
             ),
             (condition: {
-                self.orderChecklistStamping(orderId)
-                && self.orderChecklistShippingTransaction(orderId)
-                && self.orderChecklistTrackingNo(orderId)
-                && self.orderChecklistShipped(orderId)
-                && self.orderChecklistDriveThru(orderId)
+                self.orderChecklistStamping(order)
+                && self.orderChecklistShippingTransaction(order)
+                && self.orderChecklistTrackingNo(order)
+                && self.orderChecklistShipped(order)
+                && self.orderChecklistDriveThru(order)
                 
             }, status: .inTransit
             ),
             (condition: {
-                self.orderChecklistReceived(orderId)
+                self.orderChecklistReceived(order)
                 
             }, status: .received
             ),
             (condition: {
-                self.orderChecklistCompleted(orderId)
-                || self.orderChecklistBuyerFeedback(orderId)
-                || self.orderChecklistUnchangedFor30Days(orderId)
+                self.orderChecklistCompleted(order)
+                || self.orderChecklistBuyerFeedback(order)
+                || self.orderChecklistUnchangedFor30Days(order)
                 
             }, status: .giveFeedback
             ),
             (condition: {
-                self.orderChecklistSellerFeedback(orderId)
+                self.orderChecklistSellerFeedback(order)
                 
             }, status: .closed
             )
@@ -184,11 +183,11 @@ class OrderMacroStatusCoreController {
             return validatedStatus
         }()
         
-        if status == .inTransit, orderChecklistUnchangedFor30Days(orderId) {
+        if status == .inTransit, orderChecklistUnchangedFor30Days(order) {
             status = .inTransitFor30PlusDays
         }
         
-        if status == .closed, !orderChecklistUnchangedFor30Days(orderId) {
+        if status == .closed, !orderChecklistUnchangedFor30Days(order) {
             status = .recentlyClosed
         }
         

@@ -24,10 +24,10 @@ struct OrderDetailPickingView: View {
     }
     
     
-    var pickedOrderItems: [OrderItem] { pickingStore.pickedOrderItems(forOrderWithId: order.id) }
-    var verifiedOrderItems: [OrderItem] { pickingStore.verifiedOrderItems(forOrderWithId: order.id) }
-    var nextOrderItemsToPick: [OrderItem] { pickingStore.nextOrderItemsToPick(forOrderWithId: order.id) }
-    var nextOrderItemsToVerify: [OrderItem] { pickingStore.nextOrderItemsToVerify(forOrderWithId: order.id) }
+    var pickedOrderItems: [OrderItem] { pickingStore.pickedOrderItems(for: order) }
+    var verifiedOrderItems: [OrderItem] { pickingStore.verifiedOrderItems(for: order) }
+    var nextOrderItemsToPick: [OrderItem] { pickingStore.nextOrderItemsToPick(for: order) }
+    var nextOrderItemsToVerify: [OrderItem] { pickingStore.nextOrderItemsToVerify(for: order) }
     
     
     var body: some View {
@@ -88,7 +88,7 @@ struct OrderDetailPickingView: View {
         }
         .padding()
         .onChange(of: order, initial: true) { Task {
-            await orderStore.loadOrderItemsIfMissing(forOrderWithId: order.id)
+            await orderStore.loadOrderItemsIfMissing(for: order)
         }}
         .onAppear { Task {
             await inventoryStore.reloadInventories()

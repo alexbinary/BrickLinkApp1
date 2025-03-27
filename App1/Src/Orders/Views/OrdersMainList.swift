@@ -37,7 +37,7 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: Order.ID.self) { orderId in
-            OrderDetailView(orderStore.orderSummary(forOrderWithId: orderId)!)
+            OrderDetailView(orderStore.orderSummary(forOrderId: orderId)!)
         }
         .toolbar {
             
@@ -90,7 +90,7 @@ struct OrdersMainList: View {
     func itemView(_ order: Order) -> some View {
         
         OrdersMainListItem(order: order)
-            .onTapGesture { nav.pushOrder(order.id) }
+            .onTapGesture { nav.push(order) }
             .padding([.leading, .trailing])
     }
 }

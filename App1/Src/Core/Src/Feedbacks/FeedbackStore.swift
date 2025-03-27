@@ -24,50 +24,50 @@ public class FeedbackStore {
     // MARK: - Read feedbacks
     
     
-    public func feedbacks(forOrderWithId orderId: Order.ID) -> [Feedback] {
+    public func feedbacks(for order: Order) -> [Feedback] {
         
-        feedbackCoreController.feedbacks(forOrderWithId: orderId)
+        feedbackCoreController.feedbacks(for: order)
     }
     
     
-    public func buyerFeedback(forOrderWithId orderId: Order.ID) -> Feedback? {
+    public func buyerFeedback(for order: Order) -> Feedback? {
         
-        feedbackCoreController.buyerFeedback(forOrderWithId: orderId)
+        feedbackCoreController.buyerFeedback(for: order)
     }
     
     
-    public func sellerFeedback(forOrderWithId orderId: Order.ID) -> Feedback? {
+    public func sellerFeedback(for order: Order) -> Feedback? {
         
-        feedbackCoreController.sellerFeedback(forOrderWithId: orderId)
+        feedbackCoreController.sellerFeedback(for: order)
     }
     
     
     // MARK: - Post feedback
     
     
-    public func postPraiseFeedback(forOrderWithId orderId: Order.ID) async {
+    public func postPraiseFeedback(for order: Order) async {
         
-        await feedbackPostController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackPostController.postPraiseFeedback(for: order)
     }
     
     
     // MARK: - Validation without feedback
     
     
-    public func dateOrderValidatedWithoutFeedback(orderId: Order.ID) -> Date? {
+    public func dateOrderValidatedWithoutFeedback(_ order: Order) -> Date? {
         
-        feedbackCoreController.dateOrderValidatedWithoutFeedback(orderId: orderId)
+        feedbackCoreController.dateOrderValidatedWithoutFeedback(order)
     }
     
     
-    public func orderIsValidatedWithoutFeedback(orderId: Order.ID) -> Bool {
+    public func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
-        feedbackCoreController.orderIsValidatedWithoutFeedback(orderId: orderId)
+        feedbackCoreController.orderIsValidatedWithoutFeedback(order)
     }
     
     
-    public func validateOrderWithoutFeedback(orderId: Order.ID) {
+    public func validateOrderWithoutFeedback(_ order: Order) {
         
-        feedbackCoreController.validateOrderWithoutFeedback(orderId: orderId)
+        feedbackCoreController.validateOrderWithoutFeedback(order)
     }
 }

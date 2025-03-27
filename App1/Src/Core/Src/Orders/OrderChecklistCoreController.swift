@@ -36,120 +36,118 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
+    func orderSummary(forOrderId orderId: Order.ID) -> Order? {
         
-        orderCoreController.orderSummary(forOrderWithId: orderId)
+        orderCoreController.orderSummary(forOrderId: orderId)
     }
     
     
-    func orderIsValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutIncomeTransaction(_ order: Order) -> Bool {
         
-        transactionCoreController.orderIsValidatedWithoutIncomeTransaction(orderId: orderId)
+        transactionCoreController.orderIsValidatedWithoutIncomeTransaction(order)
     }
     
     
-    func incomeTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
+    func incomeTransactions(for order: Order) -> [Transaction] {
         
-        transactionCoreController.incomeTransactions(forOrderWithId: orderId)
+        transactionCoreController.incomeTransactions(for: order)
     }
     
     
-    func shippingTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
+    func shippingTransactions(for order: Order) -> [Transaction] {
         
-        transactionCoreController.shippingTransactions(forOrderWithId: orderId)
+        transactionCoreController.shippingTransactions(for: order)
     }
     
     
-    func orderIsValidatedWithoutShippingTransaction(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutShippingTransaction(_ order: Order) -> Bool {
         
-        transactionCoreController.orderIsValidatedWithoutShippingTransaction(orderId: orderId)
+        transactionCoreController.orderIsValidatedWithoutShippingTransaction(order)
     }
     
     
-    func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
+    func orderDetails(for order: Order) -> OrderDetails? {
         
-        orderCoreController.orderDetails(forOrderWithId: orderId)
+        orderCoreController.orderDetails(for: order)
     }
     
     
-    func stamping(forOrderWithId orderId: Order.ID) -> String? {
+    func stamping(for order: Order) -> String? {
         
-        shippingCoreController.confirmedStamping(forOrderWithId: orderId)
+        shippingCoreController.confirmedStamping(for: order)
     }
     
     
-    func orderIsValidatedWithoutStamping(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutStamping(_ order: Order) -> Bool {
         
-        shippingCoreController.orderIsValidatedWithoutStamping(orderId: orderId)
+        shippingCoreController.orderIsValidatedWithoutStamping(order)
     }
     
     
-    func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
+    func orderItems(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(for: order)
     }
     
     
-    func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
+    func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(forOrderWithId: orderId)
+        pickingCoreController.pickedItemIds(for: order)
     }
     
     
-    func verifiedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
+    func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.verifiedItemIds(forOrderWithId: orderId)
+        pickingCoreController.verifiedItemIds(for: order)
     }
     
     
-    func orderFeedbacks(forOrderWithId orderId: Order.ID) -> [Feedback] {
+    func orderFeedbacks(for order: Order) -> [Feedback] {
         
-        feedbackCoreController.feedbacks(forOrderWithId: orderId)
+        feedbackCoreController.feedbacks(for: order)
     }
     
     
-    func orderIsValidatedWithoutFeedback(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
-        feedbackCoreController.orderIsValidatedWithoutFeedback(orderId: orderId)
+        feedbackCoreController.orderIsValidatedWithoutFeedback(order)
     }
     
     
     // -
     
     
-    func orderChecklistPayment(_ orderId: Order.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func orderChecklistPayment(_ order: Order) -> Bool {
         
         return order.paymentStatus.isOneOf(.completed, .received)
     }
     
     
-    func orderChecklistIncomeTransaction(_ orderId: Order.ID) -> Bool {
+    func orderChecklistIncomeTransaction(_ order: Order) -> Bool {
         
-        if orderIsValidatedWithoutIncomeTransaction(orderId: orderId) {
+        if orderIsValidatedWithoutIncomeTransaction(order) {
             return true
         }
-        return !incomeTransactions(forOrderWithId: orderId).isEmpty
+        return !incomeTransactions(for: order).isEmpty
     }
     
     
-    func orderChecklistShippingTransaction(_ orderId: Order.ID) -> Bool {
+    func orderChecklistShippingTransaction(_ order: Order) -> Bool {
         
-        if !shippingTransactions(forOrderWithId: orderId).isEmpty {
+        if !shippingTransactions(for: order).isEmpty {
             
             return true
         }
         
-        if orderIsValidatedWithoutShippingTransaction(orderId: orderId) {
+        if orderIsValidatedWithoutShippingTransaction(order) {
             
             return true
         }
         
-        let order = orderDetails(forOrderWithId: orderId)!
-        if order.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
+        let orderDetails = orderDetails(for: order)!
+        if orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
         
-            let stamping = stamping(forOrderWithId: orderId)
+            let stamping = stamping(for: order)
             if !(stamping ?? "").isEmpty, stamping != "Bureau de poste" {
                 
                 return true
@@ -160,110 +158,100 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderChecklistPicking(_ orderId: Order.ID) -> Bool {
+    func orderChecklistPicking(_ order: Order) -> Bool {
         
-        let items = orderItems(forOrderWithId: orderId)
+        let items = orderItems(for: order)
         
-        let pickedItemIds = pickedItemIds(forOrderWithId: orderId)
+        let pickedItemIds = pickedItemIds(for: order)
         
         return items.allSatisfy { pickedItemIds.contains($0.id) }
     }
     
     
-    func orderChecklistVerification(_ orderId: Order.ID) -> Bool {
+    func orderChecklistVerification(_ order: Order) -> Bool {
         
-        let items = orderItems(forOrderWithId: orderId)
+        let items = orderItems(for: order)
         
-        let verifiedItemIds = verifiedItemIds(forOrderWithId: orderId)
+        let verifiedItemIds = verifiedItemIds(for: order)
         
         return items.allSatisfy { verifiedItemIds.contains($0.id) }
     }
     
     
-    func orderChecklistPacked(_ orderId: Order.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func orderChecklistPacked(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.packed, .shipped, .received, .completed)
     }
     
     
-    func orderChecklistShipped(_ orderId: Order.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func orderChecklistShipped(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.shipped, .received, .completed)
     }
     
     
-    func orderChecklistTrackingNo(_ orderId: Order.ID) -> Bool {
+    func orderChecklistTrackingNo(_ order: Order) -> Bool {
         
-        let order = orderDetails(forOrderWithId: orderId)!
+        let order = orderDetails(for: order)!
         
         return !(order.trackingNo ?? "").isEmpty
     }
     
     
-    func orderChecklistDriveThru(_ orderId: Order.ID) -> Bool {
+    func orderChecklistDriveThru(_ order: Order) -> Bool {
         
-        let order = orderDetails(forOrderWithId: orderId)!
+        let orderDetails = orderDetails(for: order)!
         
-        return order.driveThruSent
+        return orderDetails.driveThruSent
     }
     
     
-    func orderChecklistStamping(_ orderId: Order.ID) -> Bool {
+    func orderChecklistStamping(_ order: Order) -> Bool {
         
-        if orderIsValidatedWithoutStamping(orderId: orderId) {
+        if orderIsValidatedWithoutStamping(order) {
             return true
         }
         
-        let order = orderDetails(forOrderWithId: orderId)!
-        if order.shippingMethodId == shippingMethodId_France_MondialRelay {
+        let orderDetails = orderDetails(for: order)!
+        if orderDetails.shippingMethodId == shippingMethodId_France_MondialRelay {
             return true
         }
         
-        let stamping = stamping(forOrderWithId: orderId)
+        let stamping = stamping(for: order)
         
         return !(stamping ?? "").isEmpty
     }
     
     
-    func orderChecklistReceived(_ orderId: Order.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func orderChecklistReceived(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.received, .completed)
     }
     
     
-    func orderChecklistCompleted(_ orderId: Order.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func orderChecklistCompleted(_ order: Order) -> Bool {
         
         return order.status == .completed
     }
     
     
-    func orderChecklistBuyerFeedback(_ orderId: Order.ID) -> Bool {
+    func orderChecklistBuyerFeedback(_ order: Order) -> Bool {
         
-        return orderFeedbacks(forOrderWithId: orderId).buyerFeedback() != nil
+        return orderFeedbacks(for: order).buyerFeedback() != nil
     }
     
     
-    func orderChecklistSellerFeedback(_ orderId: Order.ID) -> Bool {
+    func orderChecklistSellerFeedback(_ order: Order) -> Bool {
         
-        if orderIsValidatedWithoutFeedback(orderId: orderId) {
+        if orderIsValidatedWithoutFeedback(order) {
             return true
         }
         
-        return orderFeedbacks(forOrderWithId: orderId).sellerFeedback() != nil
+        return orderFeedbacks(for: order).sellerFeedback() != nil
     }
     
     
-    func orderChecklistUnchangedFor30Days(_ orderId: Order.ID) -> Bool {
-        
-        let order = orderSummary(forOrderWithId: orderId)!
+    func orderChecklistUnchangedFor30Days(_ order: Order) -> Bool {
         
         return order.dateStatusChanged.days(to: Date()) > 30
     }

@@ -21,37 +21,37 @@ class PickingProgressCoreController {
     }
     
     
-    func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
+    func orderItems(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(for: order)
     }
     
     
-    func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
+    func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(forOrderWithId: orderId)
+        pickingCoreController.pickedItemIds(for: order)
     }
     
     
-    func verifiedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
+    func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.verifiedItemIds(forOrderWithId: orderId)
+        pickingCoreController.verifiedItemIds(for: order)
     }
     
 
-    func pickingProgress(forOrderWithId orderId: Order.ID) -> Percent {
+    func pickingProgress(for order: Order) -> Percent {
         
-        let total = orderItems(forOrderWithId: orderId).count
-        let picked = pickedItemIds(forOrderWithId: orderId).count
+        let total = orderItems(for: order).count
+        let picked = pickedItemIds(for: order).count
         
         return Percent(Double(picked)/Double(total))
     }
     
 
-    func pickingVerificationProgress(forOrderWithId orderId: Order.ID) -> Percent {
+    func pickingVerificationProgress(for order: Order) -> Percent {
         
-        let total = orderItems(forOrderWithId: orderId).count
-        let verified = verifiedItemIds(forOrderWithId: orderId).count
+        let total = orderItems(for: order).count
+        let verified = verifiedItemIds(for: order).count
         
         return Percent(Double(verified)/Double(total))
     }

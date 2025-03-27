@@ -12,7 +12,7 @@ struct OrderDetailView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails? { orderStore.orderDetails(forOrderWithId: order.id) }
+    var orderDetails: OrderDetails? { orderStore.orderDetails(for: order) }
     
     init(_ order: Order) {
         self.order = order
@@ -79,7 +79,7 @@ struct OrderDetailView: View {
         }
         .padding()
         .onChange(of: order.id, initial: true) {
-            Task { await orderStore.forceRefreshOrder(orderId: order.id)}
+            Task { await orderStore.forceRefreshOrder(order)}
         }
         .navigationTitle("Order \(order.id)")
     }

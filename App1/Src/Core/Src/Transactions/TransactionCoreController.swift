@@ -29,21 +29,21 @@ class TransactionCoreController {
     }
     
     
-    func incomeTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
+    func incomeTransactions(for order: Order) -> [Transaction] {
         
-        return allTransactions.filter { $0.type == .orderIncome && $0.orderRefIn == orderId }
+        return allTransactions.filter { $0.type == .orderIncome && $0.orderRefIn == order.id }
     }
     
     
-    func shippingTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
+    func shippingTransactions(for order: Order) -> [Transaction] {
         
-        return allTransactions.filter { $0.type == .orderShipping && $0.orderRefIn == orderId }
+        return allTransactions.filter { $0.type == .orderShipping && $0.orderRefIn == order.id }
     }
     
     
-    func refundTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
+    func refundTransactions(for order: Order) -> [Transaction] {
         
-        return allTransactions.filter { $0.type == .orderRefund && $0.orderRefIn == orderId }
+        return allTransactions.filter { $0.type == .orderRefund && $0.orderRefIn == order.id }
     }
     
     
@@ -53,22 +53,22 @@ class TransactionCoreController {
     }
     
     
-    func validateOrderWithoutIncomeTransaction(orderId: Order.ID) {
+    func validateOrderWithoutIncomeTransaction(_ order: Order) {
         
-        try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
+        try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: order.id)
         try! dataStore.save()
     }
     
     
-    func dateOrderValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Date? {
+    func dateOrderValidatedWithoutIncomeTransaction(_ order: Order) -> Date? {
         
-        return dateValidatedWithoutIncomeTransactionByOrderId[orderId]
+        return dateValidatedWithoutIncomeTransactionByOrderId[order.id]
     }
     
     
-    func orderIsValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutIncomeTransaction(_ order: Order) -> Bool {
         
-        return dateValidatedWithoutIncomeTransactionByOrderId[orderId] != nil
+        return dateValidatedWithoutIncomeTransactionByOrderId[order.id] != nil
     }
     
     
@@ -78,21 +78,21 @@ class TransactionCoreController {
     }
     
     
-    func validateOrderWithoutShippingTransaction(orderId: Order.ID) {
+    func validateOrderWithoutShippingTransaction(_ order: Order) {
         
-        try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
+        try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: order.id)
         try! dataStore.save()
     }
     
     
-    func dateOrderValidatedWithoutShippingTransaction(orderId: Order.ID) -> Date? {
+    func dateOrderValidatedWithoutShippingTransaction(_ order: Order) -> Date? {
         
-        return dateValidatedWithoutShippingTransactionByOrderId[orderId]
+        return dateValidatedWithoutShippingTransactionByOrderId[order.id]
     }
     
     
-    func orderIsValidatedWithoutShippingTransaction(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutShippingTransaction(_ order: Order) -> Bool {
         
-        return dateValidatedWithoutShippingTransactionByOrderId[orderId] != nil
+        return dateValidatedWithoutShippingTransactionByOrderId[order.id] != nil
     }
 }

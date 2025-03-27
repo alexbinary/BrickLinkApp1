@@ -25,12 +25,12 @@ struct PickingProgressView: View {
             GridRow {
                 Text("Picking")
                 
-                let progress = pickingStore.pickingProgress(forOrderWithId: order.id)
+                let progress = pickingStore.pickingProgress(for: order)
                 Text("\(progress) complete")
                 
                 if progress < 100% {
-                    let parts = pickingStore.totalPartsLeftToPick(forOrderWithId: order.id)
-                    let lots = pickingStore.totalLotsLeftToPick(forOrderWithId: order.id)
+                    let parts = pickingStore.totalPartsLeftToPick(for: order)
+                    let lots = pickingStore.totalLotsLeftToPick(for: order)
                     Text("\(parts) parts in \(lots) lots left to pick")
                         .foregroundStyle(.secondary)
                         .font(.body)
@@ -40,12 +40,12 @@ struct PickingProgressView: View {
             GridRow {
                 Text("Verify")
                 
-                let progress = pickingStore.pickingVerificationProgress(forOrderWithId: order.id)
+                let progress = pickingStore.pickingVerificationProgress(for: order)
                 Text("\(progress) verified")
                 
                 if progress < 100% {
-                    let parts = pickingStore.totalPartsLeftToVerify(forOrderWithId: order.id)
-                    let lots = pickingStore.totalLotsLeftToVerify(forOrderWithId: order.id)
+                    let parts = pickingStore.totalPartsLeftToVerify(for: order)
+                    let lots = pickingStore.totalLotsLeftToVerify(for: order)
                     Text("\(parts) parts in \(lots) lots left to verify")
                         .foregroundStyle(.secondary)
                         .font(.body)

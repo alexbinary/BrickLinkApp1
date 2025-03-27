@@ -39,9 +39,9 @@ public class OrderStore {
     // MARK: - URLs
     
     
-    public func url(forDetailsOfOrderWithId orderId: String) -> URL? {
+    public func url(forDetailsOf order: Order) -> URL? {
         
-        BrickLinkUtility.url(forDetailsOfOrderWithId: orderId)
+        BrickLinkUtility.url(forDetailsOfOrderWithId: order.id)
     }
     
     
@@ -54,9 +54,10 @@ public class OrderStore {
     }
     
     
-    public func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
+    //
+    public func orderSummary(forOrderId orderId: Order.ID) -> Order? {
         
-        orderCoreController.orderSummary(forOrderWithId: orderId)
+        orderCoreController.orderSummary(forOrderId: orderId)
     }
     
     
@@ -75,95 +76,95 @@ public class OrderStore {
     }
     
     
-    public func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
+    public func orderDetails(for order: Order) -> OrderDetails? {
         
-        orderCoreController.orderDetails(forOrderWithId: orderId)
+        orderCoreController.orderDetails(for: order)
     }
     
     
-    public func loadOrderDetails(forOrderWithId orderId: Order.ID) async {
+    public func loadOrderDetails(for order: Order) async {
         
-        await orderCoreController.loadOrderDetails(forOrderWithId: orderId)
+        await orderCoreController.loadOrderDetails(for: order)
     }
     
     
-    public func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
+    public func loadOrderDetailsIfMissing(for order: Order) async {
         
-        await orderCoreController.loadOrderDetailsIfMissing(forOrderWithId: orderId)
+        await orderCoreController.loadOrderDetailsIfMissing(for: order)
     }
     
     
     // MARK: - Items
     
     
-    public func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
+    public func orderItems(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(for: order)
     }
     
     
-    public func loadOrderItems(forOrderWithId orderId: Order.ID) async {
+    public func loadOrderItems(for order: Order) async {
         
-        await orderCoreController.loadOrderItems(forOrderWithId: orderId)
+        await orderCoreController.loadOrderItems(for: order)
     }
     
     
-    public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
+    public func loadOrderItemsIfMissing(for order: Order) async {
         
-        await orderCoreController.loadOrderItemsIfMissing(forOrderWithId: orderId)
+        await orderCoreController.loadOrderItemsIfMissing(for: order)
     }
     
     
     // MARK: - Update
     
     
-    public func updateOrderStatus(orderId: Order.ID, status: OrderStatus) async {
+    public func updateOrderStatus(_ order: Order, status: OrderStatus) async {
         
-        await orderCoreController.updateOrderStatus(orderId: orderId, status: status)
+        await orderCoreController.updateOrderStatus(order, status: status)
     }
     
     
-    public func updateTrackingNo(forOrderWithId orderId: Order.ID, trackingNo: String) async {
+    public func updateTrackingNo(for order: Order, trackingNo: String) async {
         
-        await orderCoreController.updateTrackingNo(forOrderWithId: orderId, trackingNo: trackingNo)
+        await orderCoreController.updateTrackingNo(for: order, trackingNo: trackingNo)
     }
     
     
-    public func sendDriveThru(orderId: Order.ID) async {
+    public func sendDriveThru(for order: Order) async {
         
-        await orderCoreController.sendDriveThru(orderId: orderId)
+        await orderCoreController.sendDriveThru(for: order)
     }
     
     
     // MARK: - Feedbacks
     
     
-    public func orderFeedbacks(forOrderWithId orderId: Order.ID) -> [Feedback] {
+    public func orderFeedbacks(for order: Order) -> [Feedback] {
         
-        feedbackCoreController.feedbacks(forOrderWithId: orderId)
+        feedbackCoreController.feedbacks(for: order)
     }
     
     
-    public func loadOrderFeedbacks(forOrderWithId orderId: Order.ID) async {
+    public func loadOrderFeedbacks(for order: Order) async {
         
-        await feedbackCoreController.loadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackCoreController.loadOrderFeedbacks(for: order)
     }
     
     
-    public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: Order.ID) async {
+    public func loadOrderFeedbacksIfMissing(for order: Order) async {
         
-        await feedbackCoreController.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
+        await feedbackCoreController.loadOrderFeedbacksIfMissing(for: order)
     }
     
     
     // MARK: - Reload
     
     
-    public func forceRefreshOrder(orderId: Order.ID) async {
+    public func forceRefreshOrder(_ order: Order) async {
         
-        await loadOrderDetails(forOrderWithId: orderId)
-        await loadOrderItems(forOrderWithId: orderId)
-        await loadOrderFeedbacks(forOrderWithId: orderId)
+        await loadOrderDetails(for: order)
+        await loadOrderItems(for: order)
+        await loadOrderFeedbacks(for: order)
     }
     
     
@@ -171,9 +172,9 @@ public class OrderStore {
         
         for order in orderSummaries {
             
-            await loadOrderDetailsIfMissing(forOrderWithId: order.id)
-            await loadOrderItemsIfMissing(forOrderWithId: order.id)
-            await loadOrderFeedbacksIfMissing(forOrderWithId: order.id)
+            await loadOrderDetailsIfMissing(for: order)
+            await loadOrderItemsIfMissing(for: order)
+            await loadOrderFeedbacksIfMissing(for: order)
         }
     }
     
@@ -182,57 +183,54 @@ public class OrderStore {
         
         for order in orderSummaries {
             
-            await refreshOrder(orderId: order.id)
+            await refreshOrder(order)
         }
     }
     
     
-    public func refreshOrder(orderId: Order.ID) async {
+    public func refreshOrder(_ order: Order) async {
         
-        if shouldRefreshOrder(orderId: orderId) {
+        if shouldRefreshOrder(order) {
             
-            await loadOrderDetails(forOrderWithId: orderId)
-            await loadOrderItems(forOrderWithId: orderId)
-            await loadOrderFeedbacks(forOrderWithId: orderId)
+            await loadOrderDetails(for: order)
+            await loadOrderItems(for: order)
+            await loadOrderFeedbacks(for: order)
         }
     }
     
     
-    public func orderIsClosedForMoreThan30Days(orderId: Order.ID) -> Bool {
-        
-        let orderSummary = orderSummary(forOrderWithId: orderId)!
+    public func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
         
         return (
-            orderSummary.status.isOneOf(.completed, .cancelled, .purged)
+            order.status.isOneOf(.completed, .cancelled, .purged)
             &&
-            orderSummary.dateStatusChanged.days(to: Date()) > 30
+            order.dateStatusChanged.days(to: Date()) > 30
         )
     }
     
     
-    public func shouldRefreshOrder(orderId: Order.ID) -> Bool {
+    public func shouldRefreshOrder(_ order: Order) -> Bool {
         
-        if orderIsClosedForMoreThan30Days(orderId: orderId) {
+        if orderIsClosedForMoreThan30Days(order) {
             
             guard
-                let orderDetails = orderDetails(forOrderWithId: orderId)
+                let orderDetails = orderDetails(for: order)
             else {
                 return true
             }
             
-            let orderItems = orderItems(forOrderWithId: orderId)
+            let orderItems = orderItems(for: order)
             if orderItems.isEmpty {
                 
                 return true
             }
             
-            let orderSummary = orderSummary(forOrderWithId: orderId)!
-            if orderDetails.differs(from: orderSummary) {
+            if orderDetails.differs(from: order) {
                 
                 return true
             }
             
-            let feedbacks = orderFeedbacks(forOrderWithId: orderId)
+            let feedbacks = orderFeedbacks(for: order)
             if !feedbacks.hasSellerFeedback() {
                 
                 return true
@@ -250,9 +248,9 @@ public class OrderStore {
     // MARK: - Macro status
     
     
-    public func macroStatus(forOrderWithId orderId: Order.ID) -> OrderMacroStatus {
+    public func macroStatus(for order: Order) -> OrderMacroStatus {
         
-        orderMacroStatusCoreController.macroStatus(forOrderWithId: orderId)
+        orderMacroStatusCoreController.macroStatus(for: order)
     }
     
     
@@ -265,61 +263,61 @@ public class OrderStore {
             .init(
                 header: OrderMacroStatus.inTransitFor30PlusDays.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
+                    .filter { macroStatus(for: $0) == .inTransitFor30PlusDays }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
                 header: OrderMacroStatus.giveFeedback.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .giveFeedback }
+                    .filter { macroStatus(for: $0) == .giveFeedback }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
                 header: OrderMacroStatus.validatePayment.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .validatePayment }
+                    .filter { macroStatus(for: $0) == .validatePayment }
                     .sorted { $0.date > $1.date }
             ),
             .init(
                 header: OrderMacroStatus.pickAndPack.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .pickAndPack }
+                    .filter { macroStatus(for: $0) == .pickAndPack }
                     .sorted {
-                        orderChecklistVerification($0.id) != orderChecklistVerification($1.id)
-                        && orderChecklistVerification($0.id)
+                        orderChecklistVerification($0) != orderChecklistVerification($1)
+                        && orderChecklistVerification($0)
                         ||
-                        orderChecklistVerification($0.id) != orderChecklistVerification($1.id)
+                        orderChecklistVerification($0) != orderChecklistVerification($1)
                         && $0.lots < $1.lots
                     }
             ),
             .init(
                 header: OrderMacroStatus.ship.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .ship }
+                    .filter { macroStatus(for: $0) == .ship }
                     .sorted { $0.date > $1.date }
             ),
             .init(
                 header: OrderMacroStatus.received.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .received }
+                    .filter { macroStatus(for: $0) == .received }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
                 header: OrderMacroStatus.inTransit.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .inTransit }
+                    .filter { macroStatus(for: $0) == .inTransit }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
                 header: OrderMacroStatus.recentlyClosed.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(forOrderWithId: $0.id) == .recentlyClosed }
+                    .filter { macroStatus(for: $0) == .recentlyClosed }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
         ]
         
         let closedOrders = orders
-            .filter { macroStatus(forOrderWithId: $0.id) == .closed }
+            .filter { macroStatus(for: $0) == .closed }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
         
         sections.append(contentsOf: closedOrders.grouppedByMonth.map { item in
@@ -339,15 +337,15 @@ public class OrderStore {
     }
     
     
-    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: Order.ID) async {
+    public func reloadLaPosteTrackingStatus(for order: Order) async {
         
-        await trackingMiddleController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
+        await trackingMiddleController.reloadLaPosteTrackingStatus(for: order)
     }
     
     
-    public func reloadOrderFeedbacks(forOrderWithId orderId: Order.ID) async {
+    public func reloadOrderFeedbacks(for order: Order) async {
         
-        await feedbackCoreController.reloadOrderFeedbacks(forOrderWithId: orderId)
+        await feedbackCoreController.reloadOrderFeedbacks(for: order)
     }
     
     
@@ -358,17 +356,17 @@ public class OrderStore {
         let allOrders = orderSummaries
         
         let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
-            .filter { macroStatus(forOrderWithId: $0.id) == .inTransit }
+            .filter { macroStatus(for: $0) == .inTransit }
         
         for order in ordersThatNeedRefreshLaPosteTrackingStatus {
-            await reloadLaPosteTrackingStatus(forOrderWithId: order.id)
+            await reloadLaPosteTrackingStatus(for: order)
         }
         
         let ordersThatNeedRefreshFeedback = allOrders
-            .filter { macroStatus(forOrderWithId: $0.id).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback) }
+            .filter { macroStatus(for: $0).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback) }
         
         for order in ordersThatNeedRefreshFeedback {
-            await reloadOrderFeedbacks(forOrderWithId: order.id)
+            await reloadOrderFeedbacks(for: order)
         }
     }
     
@@ -376,115 +374,115 @@ public class OrderStore {
     // MARK: - Checklist
     
     
-    public func orderChecklistPayment(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistPayment(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistPayment(orderId)
+        orderChecklistCoreController.orderChecklistPayment(order)
     }
     
     
-    public func orderChecklistIncomeTransaction(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistIncomeTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistIncomeTransaction(orderId)
+        orderChecklistCoreController.orderChecklistIncomeTransaction(order)
     }
     
     
-    public func orderChecklistPicking(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistPicking(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistPicking(orderId)
+        orderChecklistCoreController.orderChecklistPicking(order)
     }
     
     
-    public func orderChecklistVerification(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistVerification(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistVerification(orderId)
+        orderChecklistCoreController.orderChecklistVerification(order)
     }
     
     
-    public func orderChecklistPacked(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistPacked(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistPacked(orderId)
+        orderChecklistCoreController.orderChecklistPacked(order)
     }
     
     
-    public func orderChecklistStamping(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistStamping(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistStamping(orderId)
+        orderChecklistCoreController.orderChecklistStamping(order)
     }
     
     
-    public func orderChecklistShippingTransaction(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistShippingTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistShippingTransaction(orderId)
+        orderChecklistCoreController.orderChecklistShippingTransaction(order)
     }
     
     
-    public func orderChecklistTrackingNo(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistTrackingNo(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistTrackingNo(orderId)
+        orderChecklistCoreController.orderChecklistTrackingNo(order)
     }
     
     
-    public func orderChecklistShipped(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistShipped(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistShipped(orderId)
+        orderChecklistCoreController.orderChecklistShipped(order)
     }
     
         
-    public func orderChecklistDriveThru(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistDriveThru(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistDriveThru(orderId)
+        orderChecklistCoreController.orderChecklistDriveThru(order)
     }
     
     
-    public func orderChecklistReceived(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistReceived(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistReceived(orderId)
+        orderChecklistCoreController.orderChecklistReceived(order)
     }
     
     
-    public func orderChecklistCompleted(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistCompleted(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistCompleted(orderId)
+        orderChecklistCoreController.orderChecklistCompleted(order)
     }
     
     
-    public func orderChecklistBuyerFeedback(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistBuyerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistBuyerFeedback(orderId)
+        orderChecklistCoreController.orderChecklistBuyerFeedback(order)
     }
     
     
-    public func orderChecklistSellerFeedback(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistSellerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistSellerFeedback(orderId)
+        orderChecklistCoreController.orderChecklistSellerFeedback(order)
     }
     
     
-    public func orderChecklistUnchangedFor30Days(_ orderId: Order.ID) -> Bool {
+    public func orderChecklistUnchangedFor30Days(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.orderChecklistUnchangedFor30Days(orderId)
+        orderChecklistCoreController.orderChecklistUnchangedFor30Days(order )
     }
     
     
-    public func pickingProgress(forOrderWithId orderId: Order.ID) -> Percent {
+    public func pickingProgress(for order: Order) -> Percent {
         
-        pickingProgressCoreController.pickingProgress(forOrderWithId: orderId)
+        pickingProgressCoreController.pickingProgress(for: order)
     }
     
     
-    public func pickingVerificationProgress(forOrderWithId orderId: Order.ID) -> Percent {
+    public func pickingVerificationProgress(for order: Order) -> Percent {
         
-        pickingProgressCoreController.pickingVerificationProgress(forOrderWithId: orderId)
+        pickingProgressCoreController.pickingVerificationProgress(for: order)
     }
     
     
-    public func laPosteTrackingStatus(forOrderWithId orderId: Order.ID) -> LaPosteTrackingStatus? {
+    public func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
-        trackingMiddleController.laPosteTrackingStatus(forOrderWithId: orderId)
+        trackingMiddleController.laPosteTrackingStatus(for: order)
     }
     
     
-    public func checklist(forOrderWithId orderId: Order.ID) -> Checklist {
+    public func checklist(for order: Order) -> Checklist {
         
         Checklist(sections: [
             .init(
@@ -492,11 +490,11 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Payment received",
-                        checked: orderChecklistPayment(orderId)
+                        checked: orderChecklistPayment(order)
                     ),
                     .init(
                         label: "Register transaction",
-                        checked: orderChecklistIncomeTransaction(orderId)
+                        checked: orderChecklistIncomeTransaction(order)
                     ),
                 ]
             ),
@@ -505,29 +503,29 @@ public class OrderStore {
                 items: [
                     .init(
                         label: {
-                            let progress = pickingProgress(forOrderWithId: orderId)
+                            let progress = pickingProgress(for: order)
                             if progress == 0% || progress == 100% {
                                 return  "Pick items"
                             } else {
                                 return "Pick items - \(progress) complete"
                             }
                         }(),
-                        checked: orderChecklistPicking(orderId)
+                        checked: orderChecklistPicking(order)
                     ),
                     .init(
                         label: {
-                            let progress = pickingProgressCoreController.pickingVerificationProgress(forOrderWithId: orderId)
+                            let progress = pickingProgressCoreController.pickingVerificationProgress(for: order)
                             if progress == 0% || progress == 100% {
                                 return "Verify items"
                             } else {
                                 return "Verify items - \(progress) complete"
                             }
                         }(),
-                        checked: orderChecklistVerification(orderId)
+                        checked: orderChecklistVerification(order)
                     ),
                     .init(
                         label: "Pack order",
-                        checked: orderChecklistPacked(orderId)
+                        checked: orderChecklistPacked(order)
                     ),
                 ]
             ),
@@ -536,23 +534,23 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Validate stamping",
-                        checked: orderChecklistStamping(orderId)
+                        checked: orderChecklistStamping(order)
                     ),
                     .init(
                         label: "Register transaction",
-                        checked: orderChecklistShippingTransaction(orderId)
+                        checked: orderChecklistShippingTransaction(order)
                     ),
                     .init(
                         label: "Input tracking no",
-                        checked: orderChecklistTrackingNo(orderId)
+                        checked: orderChecklistTrackingNo(order)
                     ),
                     .init(
                         label: "Mark Shipped",
-                        checked: orderChecklistShipped(orderId)
+                        checked: orderChecklistShipped(order)
                     ),
                     .init(
                         label: "Send drive thru",
-                        checked: orderChecklistDriveThru(orderId)
+                        checked: orderChecklistDriveThru(order)
                     ),
                 ]
             ),
@@ -561,7 +559,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Picked up by transporter",
-                        checked: laPosteTrackingStatus(forOrderWithId: orderId)?.isOneOf(.inTransit, .delivered) ?? false,
+                        checked: laPosteTrackingStatus(for: order)?.isOneOf(.inTransit, .delivered) ?? false,
                         mandatory: false
                     ),
                 ]
@@ -571,7 +569,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Received",
-                        checked: orderChecklistReceived(orderId)
+                        checked: orderChecklistReceived(order)
                     ),
                 ]
             ),
@@ -580,11 +578,11 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Completed",
-                        checked: orderChecklistCompleted(orderId)
+                        checked: orderChecklistCompleted(order)
                     ),
                     .init(
                         label: "Buyer feedback",
-                        checked: orderChecklistBuyerFeedback(orderId)
+                        checked: orderChecklistBuyerFeedback(order)
                     ),
                 ]
             ),
@@ -593,7 +591,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Give feedback",
-                        checked: orderChecklistSellerFeedback(orderId)
+                        checked: orderChecklistSellerFeedback(order)
                     ),
                 ]
             ),
@@ -611,7 +609,7 @@ public class OrderStore {
     public var ordersThatNeedCompletedAndGiveFeedback: [Order] {
         
         orderSummaries
-            .filter { macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
+            .filter { macroStatus(for: $0) == .inTransitFor30PlusDays }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
     
@@ -619,7 +617,7 @@ public class OrderStore {
     public var ordersThatNeedGiveFeedback: [Order] {
         
         orderSummaries
-            .filter { macroStatus(forOrderWithId: $0.id) == .giveFeedback }
+            .filter { macroStatus(for: $0) == .giveFeedback }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
     
@@ -628,10 +626,10 @@ public class OrderStore {
         
         orderSummaries
             .filter {
-                macroStatus(forOrderWithId: $0.id) == .ship
-                && orderChecklistStamping($0.id)
-                && orderChecklistShippingTransaction($0.id)
-                && orderChecklistTrackingNo($0.id)
+                macroStatus(for: $0) == .ship
+                && orderChecklistStamping($0)
+                && orderChecklistShippingTransaction($0)
+                && orderChecklistTrackingNo($0)
             }
             .sorted { $0.date > $1.date }
     }
@@ -645,9 +643,9 @@ public class OrderStore {
     }
     
     
-    public func postPraiseOrderFeedback(orderId: Order.ID) async {
+    public func postPraiseOrderFeedback(for order: Order) async {
         
-        await feedbackPostController.postPraiseFeedback(forOrderWithId: orderId)
+        await feedbackPostController.postPraiseFeedback(for: order)
     }
     
     
@@ -655,19 +653,19 @@ public class OrderStore {
         
         for order in ordersThatNeedCompletedAndGiveFeedback {
         
-            await updateOrderStatus(orderId: order.id, status: .completed)
-            await postPraiseOrderFeedback(orderId: order.id)
+            await updateOrderStatus(order, status: .completed)
+            await postPraiseOrderFeedback(for: order)
         }
         
         for order in ordersThatNeedGiveFeedback {
             
-            await postPraiseOrderFeedback(orderId: order.id)
+            await postPraiseOrderFeedback(for: order)
         }
         
         for order in ordersToShipAndSendDriveThru {
             
-            await updateOrderStatus(orderId: order.id, status: .shipped)
-            await sendDriveThru(orderId: order.id)
+            await updateOrderStatus(order, status: .shipped)
+            await sendDriveThru(for: order)
         }
     }
     
@@ -678,7 +676,7 @@ public class OrderStore {
     public var numberForSidebarBadge: Int {
         
         orderSummaries.filter {
-            macroStatus(forOrderWithId: $0.id).isOneOf(
+            macroStatus(for: $0).isOneOf(
                 .ship, .pickAndPack, .validatePayment, .giveFeedback, .inTransitFor30PlusDays
             )
         }.count

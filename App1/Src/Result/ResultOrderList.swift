@@ -73,7 +73,7 @@ struct ResultOrderList: View {
                 }
                 
                 TableColumn("Shipping") { order in
-                    let orderDetails = orderStore.orderDetails(forOrderWithId: order.id)!
+                    let orderDetails = orderStore.orderDetails(for: order)!
                     Text(
                         abs(orderDetails.shippingCost),
                         format: .currency(code: "EUR").presentation(.isoCode)
@@ -82,7 +82,7 @@ struct ResultOrderList: View {
                 
                 TableColumn("Shipping cost") { order in
                     Text(
-                        abs(shippingStore.confirmedShippingCost(forOrderWithId: order.id) ?? 0),
+                        abs(shippingStore.confirmedShippingCost(for: order) ?? 0),
                         format: .currency(code: "EUR").presentation(.isoCode)
                     ).amountColor(.bad)
                 }

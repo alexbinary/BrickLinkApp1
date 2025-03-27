@@ -96,11 +96,11 @@ class InventoryCoreController {
     }
     
     
-    func loadInventory(withId id: InventoryItem.ID) async {
+    func loadInventory(withId inventoryId: InventoryItem.ID) async {
         
-        print("Loading inventory \(id)")
+        print("Loading inventory \(inventoryId)")
         
-        let blInventory = await brickLinkAPIClient.fetchInventory(withId: id)
+        let blInventory = await brickLinkAPIClient.fetchInventory(inventoryId: inventoryId)
         let inventory = InventoryItem(fromBl: blInventory)
         
         try! dataStore.setInventory(inventory)
@@ -128,7 +128,7 @@ class InventoryCoreController {
     
     func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
-        let inventories = await brickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type.brickLinkItemType, matchingColorId: uploadItem.colorId)
+        let inventories = await brickLinkAPIClient.fetchInventories(itemType: uploadItem.type.brickLinkItemType, colorId: uploadItem.colorId)
             
         if let inv = inventories.first(where: { inv in
             
@@ -180,7 +180,7 @@ class InventoryCoreController {
     
     func updateInventory(
         
-        id: InventoryItem.ID,
+        inventoryId: InventoryItem.ID,
         
         addQuantity: Int,
         unitPrice: Float? = nil,
@@ -190,14 +190,14 @@ class InventoryCoreController {
         
         await brickLinkAPIClient.updateInventory(
             
-            id: id,
+            inventoryId: inventoryId,
         
             addQuantity: addQuantity,
             unitPrice: unitPrice,
             remarks: remarks
         )
         
-        await self.reloadInventory(withId: id)
+        await self.reloadInventory(withId: inventoryId)
     }
 }
 

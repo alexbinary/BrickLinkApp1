@@ -21,7 +21,7 @@ struct OrderDetailComptaView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
+    var orderDetails: OrderDetails { orderStore.orderDetails(for: order)! }
     
     init(_ order: Order) {
         self.order = order
@@ -76,9 +76,9 @@ struct OrderDetailComptaView: View {
                         self.submitIncomeTransaction()
                     }
                     Button("Validate without transaction") {
-                        transactionStore.validateOrderWithoutIncomeTransaction(orderId: order.id)
+                        transactionStore.validateOrderWithoutIncomeTransaction(order)
                     }
-                    if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(orderId: order.id) {
+                    if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(order) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -86,7 +86,7 @@ struct OrderDetailComptaView: View {
             }
 
             TransactionListView(
-                transactions: transactionStore.incomeTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.incomeTransactions(for: order),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -98,7 +98,7 @@ struct OrderDetailComptaView: View {
                
             HStack {
                 Text("Confirmed stamping:")
-                if let stamping = shippingStore.confirmedStamping(forOrderWithId: order.id) {
+                if let stamping = shippingStore.confirmedStamping(for: order) {
                     Text(stamping)
                 }
             }
@@ -121,9 +121,9 @@ struct OrderDetailComptaView: View {
                         self.submitShippingTransaction()
                     }
                     Button("Validate without transaction") {
-                        transactionStore.validateOrderWithoutShippingTransaction(orderId: order.id)
+                        transactionStore.validateOrderWithoutShippingTransaction(order)
                     }
-                    if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(orderId: order.id) {
+                    if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(order) {
                         Text("Validated without transaction on")
                         Text(date, format: .dateTime)
                     }
@@ -131,7 +131,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: transactionStore.shippingTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.shippingTransactions(for: order),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -173,7 +173,7 @@ struct OrderDetailComptaView: View {
             }
             
             TransactionListView(
-                transactions: transactionStore.refundTransactions(forOrderWithId: order.id),
+                transactions: transactionStore.refundTransactions(for: order),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
@@ -187,7 +187,7 @@ struct OrderDetailComptaView: View {
             self.incomeComment = ""
 
             self.shippingDate = Date()
-            self.shippingAmount = shippingStore.confirmedShippingCost(forOrderWithId: order.id) ?? 0
+            self.shippingAmount = shippingStore.confirmedShippingCost(for: order) ?? 0
             self.shippingPaymentMethod = .cb_iban
             self.shippingComment = ""
             

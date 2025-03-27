@@ -36,50 +36,50 @@ public class TransactionStore {
     // MARK: - Income
     
     
-    public func incomeTransactions(forOrderWithId orderId: Order.ID) -> [Core.Transaction] {
+    public func incomeTransactions(for order: Order) -> [Core.Transaction] {
         
-        transactionCoreController.incomeTransactions(forOrderWithId: orderId)
+        transactionCoreController.incomeTransactions(for: order)
     }
     
     
-    public func dateOrderValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Date? {
+    public func dateOrderValidatedWithoutIncomeTransaction(_ order: Order) -> Date? {
         
-        transactionCoreController.dateOrderValidatedWithoutIncomeTransaction(orderId: orderId)
+        transactionCoreController.dateOrderValidatedWithoutIncomeTransaction(order)
     }
     
     
-    public func validateOrderWithoutIncomeTransaction(orderId: Order.ID) {
+    public func validateOrderWithoutIncomeTransaction(_ order: Order) {
         
-        transactionCoreController.validateOrderWithoutIncomeTransaction(orderId: orderId)
+        transactionCoreController.validateOrderWithoutIncomeTransaction(order)
     }
     
     
     // MARK: - Shipping
     
     
-    public func shippingTransactions(forOrderWithId orderId: Order.ID) -> [Core.Transaction] {
+    public func shippingTransactions(for order: Order) -> [Core.Transaction] {
         
-        transactionCoreController.shippingTransactions(forOrderWithId: orderId)
+        transactionCoreController.shippingTransactions(for: order)
     }
     
     
-    public func dateOrderValidatedWithoutShippingTransaction(orderId: Order.ID) -> Date? {
+    public func dateOrderValidatedWithoutShippingTransaction(_ order: Order) -> Date? {
         
-        transactionCoreController.dateOrderValidatedWithoutShippingTransaction(orderId: orderId)
+        transactionCoreController.dateOrderValidatedWithoutShippingTransaction(order)
     }
     
     
-    public func validateOrderWithoutShippingTransaction(orderId: Order.ID) {
+    public func validateOrderWithoutShippingTransaction(_ order: Order) {
         
-        transactionCoreController.validateOrderWithoutShippingTransaction(orderId: orderId)
+        transactionCoreController.validateOrderWithoutShippingTransaction(order)
     }
     
     
     // MARK: - Refunds
     
     
-    public func refundTransactions(forOrderWithId orderId: Order.ID) -> [Core.Transaction] {
+    public func refundTransactions(for order: Order) -> [Core.Transaction] {
         
-        transactionCoreController.refundTransactions(forOrderWithId: orderId)
+        transactionCoreController.refundTransactions(for: order)
     }
 }

@@ -19,15 +19,15 @@ class ShippingCoreController {
     // MARK: - Shipping cost
     
     
-    func confirmedShippingCost(forOrderWithId orderId: Order.ID) -> Float? {
+    func confirmedShippingCost(for order: Order) -> Float? {
         
-        return dataStore.shippingCostsByOrderId[orderId]
+        return dataStore.shippingCostsByOrderId[order.id]
     }
     
     
-    func confirmShippingCost(forOrderWithId orderId: Order.ID, cost: Float) {
+    func confirmShippingCost(for order: Order, cost: Float) {
         
-        try! dataStore.setShippingCost(cost, forOrderId: orderId)
+        try! dataStore.setShippingCost(cost, forOrderId: order.id)
         try! dataStore.save()
     }
     
@@ -35,15 +35,15 @@ class ShippingCoreController {
     // MARK: - Stamping
     
     
-    func confirmedStamping(forOrderWithId orderId: Order.ID) -> String? {
+    func confirmedStamping(for order: Order) -> String? {
         
-        return dataStore.stampingMethodByOrderId[orderId]
+        return dataStore.stampingMethodByOrderId[order.id]
     }
     
     
-    func confirmStamping(forOrderWithId orderId: Order.ID, stamping: String) {
+    func confirmStamping(for order: Order, stamping: String) {
         
-        try! dataStore.setStampingMethod(stamping, forOrderId: orderId)
+        try! dataStore.setStampingMethod(stamping, forOrderId: order.id)
         try! dataStore.save()
     }
     
@@ -54,21 +54,21 @@ class ShippingCoreController {
     }
     
     
-    func validateOrderWithoutStamping(orderId: Order.ID) {
+    func validateOrderWithoutStamping(_ order: Order) {
         
-        try! dataStore.setDateValidatedWithoutStamping(Date(), forOrderId: orderId)
+        try! dataStore.setDateValidatedWithoutStamping(Date(), forOrderId: order.id)
         try! dataStore.save()
     }
     
     
-    func dateOrderValidatedWithoutStamping(orderId: Order.ID) -> Date? {
+    func dateOrderValidatedWithoutStamping(_ order: Order) -> Date? {
         
-        return dateValidatedWithoutStampingByOrderId[orderId]
+        return dateValidatedWithoutStampingByOrderId[order.id]
     }
     
     
-    func orderIsValidatedWithoutStamping(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutStamping(_ order: Order) -> Bool {
         
-        return dateValidatedWithoutStampingByOrderId[orderId] != nil
+        return dateValidatedWithoutStampingByOrderId[order.id] != nil
     }
 }

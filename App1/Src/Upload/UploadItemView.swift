@@ -402,7 +402,7 @@ struct UploadItemView: View {
                                             
                                             await inventoryStore.updateInventory(
                                                 
-                                                id: inventoryItem.id,
+                                                inventoryId: inventoryItem.id,
                                                 addQuantity: submitQty!,
                                                 unitPrice: submitUnitPrice!,
                                                 remarks: submitRemarks!

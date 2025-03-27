@@ -21,13 +21,13 @@ class FeedbackPostController {
     }
     
     
-    func postPraiseFeedback(forOrderWithId orderId: Order.ID) async {
+    func postPraiseFeedback(for order: Order) async {
         
-        guard let order = orderCoreController.orderDetails(forOrderWithId: orderId) else { return }
+        guard let orderDetails = orderCoreController.orderDetails(for: order) else { return }
         
         await feedbackCoreController.postFeedback(
-            forOrderWithId: orderId, rating: .praise,
-            comment: order.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
+            for: order, rating: .praise,
+            comment: orderDetails.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
         )
     }
 }

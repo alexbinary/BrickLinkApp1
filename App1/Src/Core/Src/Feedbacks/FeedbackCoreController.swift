@@ -21,52 +21,52 @@ class FeedbackCoreController {
     // MARK: - Read feedbacks
     
     
-    func feedbacks(forOrderWithId orderId: Order.ID) -> [Feedback] {
+    func feedbacks(for order: Order) -> [Feedback] {
         
-        dataStore.orderFeedbacksByOrderId[orderId] ?? []
+        dataStore.orderFeedbacksByOrderId[order.id] ?? []
     }
     
     
-    func buyerFeedback(forOrderWithId orderId: Order.ID) -> Feedback? {
+    func buyerFeedback(for order: Order) -> Feedback? {
         
-        feedbacks(forOrderWithId: orderId).buyerFeedback()
+        feedbacks(for: order).buyerFeedback()
     }
     
     
-    func sellerFeedback(forOrderWithId orderId: Order.ID) -> Feedback? {
+    func sellerFeedback(for order: Order) -> Feedback? {
         
-        feedbacks(forOrderWithId: orderId).sellerFeedback()
+        feedbacks(for: order).sellerFeedback()
     }
     
     
-    func loadOrderFeedbacks(forOrderWithId orderId: Order.ID) async {
+    func loadOrderFeedbacks(for order: Order) async {
         
-        print("Loading order feedbacks \(orderId)")
+        print("Loading order feedbacks \(order.id)")
         
-        let blFeedbacks = await brickLinkAPIClient.fetchFeedbacks(forOrderWithId: orderId)
+        let blFeedbacks = await brickLinkAPIClient.fetchFeedbacks(orderId: order.id)
         let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
         
         print("loaded \(feedbacks.count) feedbacks")
         
-        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: orderId)
+        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: order.id)
         try! dataStore.save()
     }
     
     
-    func loadOrderFeedbacksIfMissing(forOrderWithId orderId: Order.ID) async {
+    func loadOrderFeedbacksIfMissing(for order: Order) async {
         
-        if !dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
+        if !dataStore.orderFeedbacksByOrderId.keys.contains(order.id) {
             
-            await loadOrderFeedbacks(forOrderWithId: orderId)
+            await loadOrderFeedbacks(for: order)
         }
     }
     
     
-    func reloadOrderFeedbacks(forOrderWithId orderId: Order.ID) async {
+    func reloadOrderFeedbacks(for order: Order) async {
         
-        if dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
+        if dataStore.orderFeedbacksByOrderId.keys.contains(order.id) {
             
-            await loadOrderFeedbacks(forOrderWithId: orderId)
+            await loadOrderFeedbacks(for: order)
         }
     }
     
@@ -74,11 +74,11 @@ class FeedbackCoreController {
     // MARK: - Post feedback
     
     
-    func postFeedback(forOrderWithId: Order.ID, rating: FeedbackRating, comment: String) async {
+    func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
         
-        await brickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
+        await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
-        await reloadOrderFeedbacks(forOrderWithId: forOrderWithId)
+        await reloadOrderFeedbacks(for: order)
     }
     
     
@@ -91,22 +91,22 @@ class FeedbackCoreController {
     }
     
     
-    func validateOrderWithoutFeedback(orderId: Order.ID) {
+    func validateOrderWithoutFeedback(_ order: Order) {
         
-        try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
+        try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: order.id)
         try! dataStore.save()
     }
     
     
-    func dateOrderValidatedWithoutFeedback(orderId: Order.ID) -> Date? {
+    func dateOrderValidatedWithoutFeedback(_ order: Order) -> Date? {
         
-        return dateValidatedWithoutFeedbackByOrderId[orderId]
+        return dateValidatedWithoutFeedbackByOrderId[order.id]
     }
     
     
-    func orderIsValidatedWithoutFeedback(orderId: Order.ID) -> Bool {
+    func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
-        return dateValidatedWithoutFeedbackByOrderId[orderId] != nil
+        return dateValidatedWithoutFeedbackByOrderId[order.id] != nil
     }
 }
 

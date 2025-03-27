@@ -73,9 +73,9 @@ public class InventoryStore {
     }
     
     
-    public func updateInventory(id: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
+    public func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
-        await inventoryCoreController.updateInventory(id: id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        await inventoryCoreController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
     
     

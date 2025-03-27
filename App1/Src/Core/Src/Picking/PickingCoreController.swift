@@ -19,9 +19,22 @@ class PickingCoreController {
     // MARK: - Pick
     
     
+    func pickedItemIds(for order: Order) -> [OrderItem.ID] {
+        
+        pickedItemIds(forOrderWithId: order.id)
+    }
+    
+    
+    //
     func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         return dataStore.pickedItemIdsByOrderId[orderId] ?? []
+    }
+    
+    
+    func pickItem(for order: Order, itemId: OrderItem.ID) {
+        
+        pickItem(forOrderWithId: order.id, itemId: itemId)
     }
     
     
@@ -35,6 +48,12 @@ class PickingCoreController {
     func pick(_ item: OrderItem) {
         
         pickItem(forOrderWithId: item.orderId, itemId: item.id)
+    }
+    
+    
+    func unpickItem(for order: Order, itemId: OrderItem.ID) {
+        
+        unpickItem(forOrderWithId: order.id, itemId: itemId)
     }
     
     
@@ -54,9 +73,15 @@ class PickingCoreController {
     // MARK: - Verify
     
     
-    func verifiedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
+    func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        return dataStore.verifiedItemIdsByOrderId[orderId] ?? []
+        return dataStore.verifiedItemIdsByOrderId[order.id] ?? []
+    }
+    
+    
+    func verifyItem(for order: Order, itemId: OrderItem.ID) {
+        
+        verifyItem(forOrderWithId: order.id, itemId: itemId)
     }
     
     
@@ -70,6 +95,12 @@ class PickingCoreController {
     func verify(_ item: OrderItem) {
         
         verifyItem(forOrderWithId: item.orderId, itemId: item.id)
+    }
+    
+    
+    func unverifyItem(for order: Order, itemId: OrderItem.ID) {
+        
+        unverifyItem(forOrderWithId: order.id, itemId: itemId)
     }
     
     

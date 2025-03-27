@@ -145,7 +145,7 @@ struct ResultHistoryView: View {
                         let orders = ordersByMonth[month]
                         
                         let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                        let totalShipping = orders.map { orderStore.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
+                        let totalShipping = orders.map { orderStore.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
                         
                         let totalIncome = totalItems + totalShipping
                         
@@ -164,7 +164,7 @@ struct ResultHistoryView: View {
                         
                         let totalItemCost: Float = 0
                         
-                        let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.confirmedShippingCost(forOrderWithId: $1.id) ?? 0) }
+                        let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.confirmedShippingCost(for: $1) ?? 0) }
                         
                         let totalFees = orders.reduce(0) { $0 + (resultStore.fees(for: $1) ?? 0) }
                         let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
@@ -271,11 +271,11 @@ struct ResultHistoryView: View {
                             let orders = ordersByMonth[month]
                             
                             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                            let totalShipping = orders.map { orderStore.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
+                            let totalShipping = orders.map { orderStore.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
                             
                             let totalItemCost: Float = 0
                             
-                            let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.confirmedShippingCost(forOrderWithId: $1.id) ?? 0) }
+                            let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.confirmedShippingCost(for: $1) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (resultStore.fees(for: $1) ?? 0) }
                             let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }
@@ -323,11 +323,11 @@ struct ResultHistoryView: View {
                             let orders = visibleOrders
                             
                             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                            let totalShipping = orders.map { orderStore.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
+                            let totalShipping = orders.map { orderStore.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
                             
                             let totalItemCost: Float = 0
                             
-                            let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.confirmedShippingCost(forOrderWithId: $1.id) ?? 0) }
+                            let totalShippingCost = orders.reduce(0) { $0 + (shippingStore.confirmedShippingCost(for: $1) ?? 0) }
                             
                             let totalFees = orders.reduce(0) { $0 + (resultStore.fees(for: $1) ?? 0) }
                             let totalRefund = orders.flatMap { refundStore.refunds(for: $0) }.reduce(0) { $0 + $1.amount }

@@ -15,7 +15,7 @@ struct OrderDetailShippingView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
+    var orderDetails: OrderDetails { orderStore.orderDetails(for: order)! }
     
     init(_ order: Order) {
         self.order = order
@@ -104,14 +104,14 @@ struct OrderDetailShippingView: View {
                     
                     HeaderTitleView(label: "􀐚 Packing & Stamping")
                     
-                    let recommendedStampingMethod = shippingStore.recommendedStampingMethod(forOrderWithId: order.id)
+                    let recommendedStampingMethod = shippingStore.recommendedStampingMethod(for: order)
                     
                     Grid(alignment: .leading, verticalSpacing: 8) {
                         
                         GridRow {
                             Text("Shipping cost :")
                             
-                            var shippingCostEditValue = shippingStore.confirmedShippingCost(forOrderWithId: order.id) ?? 0
+                            var shippingCostEditValue = shippingStore.confirmedShippingCost(for: order) ?? 0
                             
                             let shippingCostBinding = Binding<Float> {
                                 return shippingCostEditValue
@@ -124,19 +124,19 @@ struct OrderDetailShippingView: View {
                                 format: .currency(code: "EUR").presentation(.isoCode)
                             )
                             .onSubmit {
-                                shippingStore.confirmShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                shippingStore.confirmShippingCost(for: order, cost: shippingCostEditValue)
                             }
                             .frame(maxWidth: 120)
                             
                             HStack {
                                 Button("Save") {
-                                    shippingStore.confirmShippingCost(forOrderWithId: order.id, cost: shippingCostEditValue)
+                                    shippingStore.confirmShippingCost(for: order, cost: shippingCostEditValue)
                                 }
                                 
                                 if let shippingCostPredictedValue = selectedShippingCost?.value {
                                     
                                     Button {
-                                        shippingStore.confirmShippingCost(forOrderWithId: order.id, cost: NSDecimalNumber(decimal:  shippingCostPredictedValue).floatValue)
+                                        shippingStore.confirmShippingCost(for: order, cost: NSDecimalNumber(decimal:  shippingCostPredictedValue).floatValue)
                                     } label: {
                                         HStack {
                                             Text("Predicted:")
@@ -150,7 +150,7 @@ struct OrderDetailShippingView: View {
                         GridRow {
                             Text("Stamping :")
                             
-                            if let confirmedMethod = shippingStore.confirmedStamping(forOrderWithId: order.id) {
+                            if let confirmedMethod = shippingStore.confirmedStamping(for: order) {
                                 Text(confirmedMethod)
                             } else {
                                 Text("")
@@ -158,12 +158,12 @@ struct OrderDetailShippingView: View {
                             
                             HStack {
                                 Button("Recommended: \(recommendedStampingMethod)") {
-                                    shippingStore.confirmStamping(forOrderWithId: order.id, stamping: recommendedStampingMethod)
+                                    shippingStore.confirmStamping(for: order, stamping: recommendedStampingMethod)
                                 }
                                 
                                 if recommendedStampingMethod != "Bureau de poste" {
                                     Button("Bureau de poste") {
-                                        shippingStore.confirmStamping(forOrderWithId: order.id, stamping: "Bureau de poste")
+                                        shippingStore.confirmStamping(for: order, stamping: "Bureau de poste")
                                     }
                                 }
                             }
@@ -174,9 +174,9 @@ struct OrderDetailShippingView: View {
                             Text("")
                             HStack {
                                 Button("Validate without stamping") {
-                                    shippingStore.validateOrderWithoutStamping(orderId: order.id)
+                                    shippingStore.validateOrderWithoutStamping(order)
                                 }
-                                if let date = shippingStore.dateOrderValidatedWithoutStamping(orderId: order.id) {
+                                if let date = shippingStore.dateOrderValidatedWithoutStamping(order) {
                                     Text("Validated without stamping on")
                                     Text(date, format: .dateTime)
                                 }
@@ -205,12 +205,12 @@ struct OrderDetailShippingView: View {
                             
                             TextField("Tracking No", text: trackingNoBinding)
                                 .onSubmit {
-                                    Task { await orderStore.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
+                                    Task { await orderStore.updateTrackingNo(for: order, trackingNo: trackingNoEditValue ?? "") }
                                 }
                                 .frame(maxWidth: 140)
                             
                             Button("Save") {
-                                Task { await orderStore.updateTrackingNo(forOrderWithId: order.id, trackingNo: trackingNoEditValue ?? "") }
+                                Task { await orderStore.updateTrackingNo(for: order, trackingNo: trackingNoEditValue ?? "") }
                             }
                         }
                         
@@ -225,14 +225,14 @@ struct OrderDetailShippingView: View {
                             }
                             
                             Button("Send") {
-                                Task { await orderStore.sendDriveThru(orderId: order.id) }
+                                Task { await orderStore.sendDriveThru(for: order) }
                             }
                         }
                         
                         Button("Ship and send Drive thru") {
                             Task {
-                                await orderStore.updateOrderStatus(orderId: order.id, status: .shipped)
-                                await orderStore.sendDriveThru(orderId: order.id)
+                                await orderStore.updateOrderStatus(order, status: .shipped)
+                                await orderStore.sendDriveThru(for: order)
                             }
                         }
                     }
@@ -245,7 +245,7 @@ struct OrderDetailShippingView: View {
     
     var selectedShippingCost: SelectedShippingCost? {
         
-        shippingStore.selectedShippingCost(forOrderWithId: order.id)
+        shippingStore.selectedShippingCost(for: order)
     }
 }
 

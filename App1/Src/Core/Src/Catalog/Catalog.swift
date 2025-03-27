@@ -71,7 +71,7 @@ public class Catalog {
     
     public func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
         
-        if let entry = await brickLinkAPIClient.fetchCatalogEntry(forItemType: type.brickLinkItemType, ref: ref) {
+        if let entry = await brickLinkAPIClient.fetchCatalogEntry(itemType: type.brickLinkItemType, ref: ref) {
             
             return CatalogEntry(fromBl: entry)
         }

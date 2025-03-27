@@ -33,12 +33,19 @@ class StockCoreController {
     }
     
     
-    func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
+    func orderItems(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(forOrderWithId: orderId)
+        orderCoreController.orderItems(for: order)
     }
     
     
+    func pickedItemIds(for order: Order) -> [OrderItem.ID] {
+        
+        pickingCoreController.pickedItemIds(for: order)
+    }
+    
+    
+    //
     func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         pickingCoreController.pickedItemIds(forOrderWithId: orderId)
@@ -59,9 +66,9 @@ class StockCoreController {
     }
     
     
-    func macroStatus(forOrderWithId orderId: Order.ID) -> OrderMacroStatus {
+    func macroStatus(for order: Order) -> OrderMacroStatus {
         
-        orderMacroStatusCoreController.macroStatus(forOrderWithId: orderId)
+        orderMacroStatusCoreController.macroStatus(for: order)
     }
     
     
@@ -88,13 +95,13 @@ class StockCoreController {
         
         let itemsNotPickedYet = orderSummaries.filter {
             
-            macroStatus(forOrderWithId: $0.id).isOneOf(.validatePayment, .pickAndPack)
+            macroStatus(for: $0).isOneOf(.validatePayment, .pickAndPack)
             
         }.flatMap { order in
             
-            orderItems(forOrderWithId: order.id).filter { item in
+            orderItems(for: order).filter { item in
                 
-                !pickedItemIds(forOrderWithId: order.id).contains(item.id)
+                !pickedItemIds(for: order).contains(item.id)
             }
         }
         

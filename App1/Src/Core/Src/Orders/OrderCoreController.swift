@@ -27,7 +27,8 @@ class OrderCoreController {
     }
     
     
-    func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
+    //
+    func orderSummary(forOrderId orderId: Order.ID) -> Order? {
         
         orderSummaries.first { $0.id == orderId }
     }
@@ -74,38 +75,38 @@ class OrderCoreController {
     }
     
     
-    func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
+    func orderDetails(for order: Order) -> OrderDetails? {
         
-        orderDetails.first { $0.id == orderId }
+        orderDetails.first { $0.id == order.id }
     }
     
     
-    func loadOrderDetails(forOrderWithId orderId: Order.ID) async {
+    func loadOrderDetails(for order: Order) async {
         
-        print("Loading order details \(orderId)")
+        print("Loading order details \(order.id)")
         
-        let blOrder = await brickLinkAPIClient.fetchDetails(forOrderWithId: orderId)
-        let order = OrderDetails(fromBl: blOrder)
+        let blOrder = await brickLinkAPIClient.fetchOrderDetails(orderId: order.id)
+        let orderDetails = OrderDetails(fromBl: blOrder)
         
-        try! dataStore.setOrderDetail(order)
+        try! dataStore.setOrderDetail(orderDetails)
         try! dataStore.save()
     }
     
     
-    func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
+    func loadOrderDetailsIfMissing(for order: Order) async {
         
-        if !orderDetails.contains(where: { $0.id == orderId }) {
+        if !orderDetails.contains(where: { $0.id == order.id }) {
             
-            await loadOrderDetails(forOrderWithId: orderId)
+            await loadOrderDetails(for: order)
         }
     }
     
     
-    func reloadOrderDetails(forOrderWithId orderId: String) async {
+    func reloadOrderDetails(for order: Order) async {
         
-        if orderDetails.contains(where: { $0.id == orderId }) {
+        if orderDetails.contains(where: { $0.id == order.id }) {
             
-            await loadOrderDetails(forOrderWithId: orderId)
+            await loadOrderDetails(for: order)
         }
     }
     
@@ -113,41 +114,41 @@ class OrderCoreController {
     // MARK: - Order status, Tracking no, Drive thru
     
     
-    func updateOrderStatus(orderId: Order.ID, status: OrderStatus) async {
+    func updateOrderStatus(_ order: Order, status: OrderStatus) async {
         
-        print("Update status \(status) for order \(orderId)")
+        print("Update status \(status) for order \(order.id)")
         
-        await brickLinkAPIClient.updateStatus(ofOrderWithId: orderId, to: status)
+        await brickLinkAPIClient.updateOrderStatus(orderId: order.id, status: status)
         
         await parallel([
             { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(forOrderWithId: orderId) },
+            { await self.reloadOrderDetails(for: order) },
         ])
     }
     
     
-    func updateTrackingNo(forOrderWithId orderId: Order.ID, trackingNo: String) async {
+    func updateTrackingNo(for order: Order, trackingNo: String) async {
         
-        print("Update tracking no \(trackingNo) for order \(orderId)")
+        print("Update tracking no \(trackingNo) for order \(order.id)")
         
-        await brickLinkAPIClient.updateTrackingNo(ofOrderWithId: orderId, to: trackingNo)
+        await brickLinkAPIClient.updateTrackingNo(orderId: order.id, trackingNo: trackingNo)
         
         await parallel([
             { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(forOrderWithId: orderId) },
+            { await self.reloadOrderDetails(for: order) },
         ])
     }
     
     
-    func sendDriveThru(orderId: Order.ID) async {
+    func sendDriveThru(for order: Order) async {
         
-        print("Send drive thru for order \(orderId)")
+        print("Send drive thru for order \(order.id)")
         
-        await brickLinkAPIClient.sendDriveThru(forOrderWithId: orderId, mailMe: true)
+        await brickLinkAPIClient.sendDriveThru(orderId: order.id, mailMe: true)
         
         await parallel([
             { await self.reloadOrderSummaries() },
-            { await self.reloadOrderDetails(forOrderWithId: orderId) },
+            { await self.reloadOrderDetails(for: order) },
         ])
     }
     
@@ -155,42 +156,42 @@ class OrderCoreController {
     // MARK: - Order items
     
     
-    func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
+    func orderItems(for order: Order) -> [OrderItem] {
         
-        (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
+        (dataStore.orderItemsByOrderId[order.id] ?? []).reduce([], { $0 + $1 })
     }
     
     
-    func orderItems(forOrderWithId orderId: Order.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    func orderItems(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        let items = orderItems(forOrderWithId: orderId)
+        let items = orderItems(for: order)
         
         return itemsIds.map { id in items.first { $0.id == id }! }
     }
     
     
-    func loadOrderItems(forOrderWithId orderId: Order.ID) async {
+    func loadOrderItems(for order: Order) async {
         
-        print("Loading order items \(orderId)")
+        print("Loading order items \(order.id)")
         
-        let blBatches = await brickLinkAPIClient.fetchItems(forOrderWithId: orderId)
+        let blBatches = await brickLinkAPIClient.fetchOrderItems(orderId: order.id)
         
         let batches = blBatches.map { blItems in
-            blItems.map { OrderItem(fromBl: $0, orderId: orderId) }
+            blItems.map { OrderItem(fromBl: $0, orderId: order.id) }
         }
         
         print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items")
         
-        try! dataStore.setOrderItems(batches, forOrderId: orderId)
+        try! dataStore.setOrderItems(batches, forOrderId: order.id)
         try! dataStore.save()
     }
     
     
-    func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
+    func loadOrderItemsIfMissing(for order: Order) async {
         
-        if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
+        if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == order.id }) {
             
-            await loadOrderItems(forOrderWithId: orderId)
+            await loadOrderItems(for: order)
         }
     }
 }

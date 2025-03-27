@@ -27,29 +27,29 @@ struct OrdersActionsSheet: View {
                     
                     sectionView(orders: orderStore.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistCompleted(order.id))
+                            CheckView(checked: orderStore.orderChecklistCompleted(order))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: orderStore.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order.id))
+                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: orderStore.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistShipped(order.id))
+                            CheckView(checked: orderStore.orderChecklistShipped(order))
                             Text("Mark shipped")
                         }
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistDriveThru(order.id))
+                            CheckView(checked: orderStore.orderChecklistDriveThru(order))
                             Text("Send drive thru")
                         }
                     }
