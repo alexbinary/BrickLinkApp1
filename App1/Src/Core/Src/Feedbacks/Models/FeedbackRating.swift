@@ -1,7 +1,7 @@
 
-public enum FeedbackRating: Codable {
+public enum FeedbackRating: Int, Codable {
     
-    case praise
-    case neutral
-    case complaint
+    case praise = 0
+    case neutral = 1
+    case complaint = 2
 }
