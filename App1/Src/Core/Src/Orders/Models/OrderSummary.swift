@@ -7,10 +7,15 @@ public struct OrderSummary: Identifiable, Equatable, Codable, Datable {
     
     public let id: String
     public let date: Date
+    public let dateStatusChanged: Date
     public let buyer: String
+    public let status: OrderStatus
+    
     public let items: Int
     public let lots: Int
-
+    
+    public let paymentStatus: PaymentStatus
+    
     public let subTotal: Float
     public let grandTotal: Float
     public let costCurrencyCode: String
@@ -18,11 +23,6 @@ public struct OrderSummary: Identifiable, Equatable, Codable, Datable {
     public let dispSubTotal: Float
     public let dispGrandTotal: Float
     public let dispCostCurrencyCode: String
-
-    public let status: OrderStatus
-    public let dateStatusChanged: Date
-
-    public let paymentStatus: PaymentStatus
 }
 
 

@@ -204,9 +204,14 @@ extension OrderSummary {
         self.init(
             id: "\(bl.orderId)",
             date: bl.dateOrdered,
+            dateStatusChanged: bl.dateStatusChanged,
             buyer: bl.buyerName,
+            status: OrderStatus(rawValue: bl.status)!,
+            
             items: bl.totalCount,
             lots: bl.uniqueCount,
+            
+            paymentStatus: PaymentStatus(rawValue: bl.payment.status)!,
             
             subTotal: bl.cost.subtotal.floatValue,
             grandTotal: bl.cost.grandTotal.floatValue,
@@ -214,12 +219,7 @@ extension OrderSummary {
             
             dispSubTotal: bl.dispCost.subtotal.floatValue,
             dispGrandTotal: bl.dispCost.grandTotal.floatValue,
-            dispCostCurrencyCode: bl.dispCost.currencyCode,
-            
-            status: OrderStatus(rawValue: bl.status)!,
-            dateStatusChanged: bl.dateStatusChanged,
-            
-            paymentStatus: PaymentStatus(rawValue: bl.payment.status)!
+            dispCostCurrencyCode: bl.dispCost.currencyCode
         )
     }
 }
@@ -234,10 +234,25 @@ extension OrderDetails {
         self.init(
             id: "\(bl.orderId)",
             date: bl.dateOrdered,
+            dateStatusChanged: bl.dateStatusChanged,
             buyer: bl.buyerName,
+            status: OrderStatus(rawValue: bl.status)!,
+            remarks: bl.remarks,
+            
             items: bl.totalCount,
             lots: bl.uniqueCount,
-
+            totalWeight: bl.totalWeight!.floatValue,
+            driveThruSent: bl.driveThruSent!,
+            trackingNo: bl.shipping!.trackingNo,
+            
+            paymentStatus: PaymentStatus(rawValue: bl.payment.status)!,
+            
+            shippingMethodId: bl.shipping!.methodId,
+            shippingMethodName: bl.shipping!.method,
+            shippingAddress: bl.shipping!.address.full.htmlUnescape(),
+            shippingAddressCountryCode: bl.shipping!.address.countryCode,
+            shippingAddressName: bl.shipping!.address.name.full,
+            
             subTotal: bl.cost.subtotal.floatValue,
             grandTotal: bl.cost.grandTotal.floatValue,
             shippingCost: bl.cost.shipping!.floatValue,
@@ -246,20 +261,7 @@ extension OrderDetails {
             dispSubTotal: bl.dispCost.subtotal.floatValue,
             dispGrandTotal: bl.dispCost.grandTotal.floatValue,
             dispShippingCost: bl.dispCost.shipping!.floatValue,
-            dispCostCurrencyCode: bl.dispCost.currencyCode,
-
-            status: OrderStatus(rawValue: bl.status)!,
-            driveThruSent: bl.driveThruSent!,
-            trackingNo: bl.shipping!.trackingNo,
-            totalWeight: bl.totalWeight!.floatValue,
-
-            shippingMethodId: bl.shipping!.methodId,
-            shippingMethodName: bl.shipping!.method,
-            shippingAddress: bl.shipping!.address.full.htmlUnescape(),
-            shippingAddressCountryCode: bl.shipping!.address.countryCode,
-            shippingAddressName: bl.shipping!.address.name.full,
-
-            remarks: bl.remarks
+            dispCostCurrencyCode: bl.dispCost.currencyCode
         )
     }
 }

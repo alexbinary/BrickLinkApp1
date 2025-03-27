@@ -33,8 +33,8 @@ struct BrickLinkOrderDetails: Decodable {
     let dateStatusChanged: Date
     let buyerName: String
     let status: String
-    let totalCount: Int
     let remarks: String?
+    let totalCount: Int
     let uniqueCount: Int
     let totalWeight: FixedPointNumber?
     let driveThruSent: Bool?

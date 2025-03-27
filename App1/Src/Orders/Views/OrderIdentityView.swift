@@ -44,7 +44,7 @@ struct OrderIdentityView: View {
                 }
                 GridRow {
                     Text(order.status.rawValue).font(.title3)
-                    Text(orderSummary.dateStatusChanged, format: .dateTime)
+                    Text(order.dateStatusChanged, format: .dateTime)
                         .monospacedDigit()
                 }
             }

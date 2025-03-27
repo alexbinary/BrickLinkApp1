@@ -7,9 +7,24 @@ public struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     
     public let id: String
     public let date: Date
+    public let dateStatusChanged: Date
     public let buyer: String
+    public let status: OrderStatus
+    public let remarks: String?
+    
     public let items: Int
     public let lots: Int
+    public let totalWeight: Float
+    public let driveThruSent: Bool
+    public let trackingNo: String?
+    
+    public let paymentStatus: PaymentStatus
+    
+    public let shippingMethodId: Int
+    public let shippingMethodName: String?
+    public let shippingAddress: String
+    public let shippingAddressCountryCode: String
+    public let shippingAddressName: String
     
     public let subTotal: Float
     public let grandTotal: Float
@@ -20,20 +35,6 @@ public struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     public let dispGrandTotal: Float
     public let dispShippingCost: Float
     public let dispCostCurrencyCode: String
-    
-    public let status: OrderStatus
-    public let driveThruSent: Bool
-    public let trackingNo: String?
-    public let totalWeight: Float
-    
-    public let shippingMethodId: Int
-    public let shippingMethodName: String?
-    public let shippingAddress: String
-    public let shippingAddressCountryCode: String
-    public let shippingAddressName: String
-    
-    public let remarks: String?
-    
     
     public var isShippedWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
 }
