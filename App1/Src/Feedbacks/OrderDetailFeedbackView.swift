@@ -26,7 +26,7 @@ struct OrderDetailFeedbackView: View {
             Table(feedbacks.sorted { $0.dateRated < $1.dateRated }) {
                 
                 TableColumn("From", value: \.from)
-                TableColumn("Rating") { FeedbackRating($0) }
+                TableColumn("Rating") { FeedbackRatingView($0) }
                 TableColumn("Comment", value: \.comment)
                 TableColumn("Date") { Text($0.dateRated, format: .dateTime) }
             }

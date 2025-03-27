@@ -91,14 +91,14 @@ struct OrdersMainListItem: View {
                                 HStack {
                                     Text("Seller:")
                                     if let feedback = feedbackStore.sellerFeedback(forOrderWithId: order.id) {
-                                        FeedbackRating(feedback)
+                                        FeedbackRatingView(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                                 
                                 HStack {
                                     Text("Buyer:")
                                     if let feedback = feedbackStore.buyerFeedback(forOrderWithId: order.id) {
-                                        FeedbackRating(feedback)
+                                        FeedbackRatingView(feedback)
                                     }
                                 }.frame(width: 100, alignment: .leading)
                             }

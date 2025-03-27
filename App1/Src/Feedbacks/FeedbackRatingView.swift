@@ -4,7 +4,7 @@ import Core
 
 
 
-struct FeedbackRating: View {
+struct FeedbackRatingView: View {
     
     
     let feedback: Feedback
@@ -34,6 +34,6 @@ struct FeedbackRating: View {
 
 
 #Preview {
-    FeedbackRating(Feedback(id: 1, orderId: "", from: "", to: "", dateRated: .now, rating: .praise, author: .buyer, comment: ""))
+    FeedbackRatingView(Feedback(id: 1, orderId: "", from: "", to: "", dateRated: .now, rating: .praise, author: .buyer, comment: ""))
         .padding()
 }
