@@ -36,7 +36,7 @@ struct OrdersMainList: View {
             .searchable(text: $searchText, prompt: "Search orders")
         }
         .navigationTitle("Orders")
-        .navigationDestination(for: OrderSummary.ID.self) { orderId in
+        .navigationDestination(for: Order.ID.self) { orderId in
             OrderDetailView(orderSummary: orderStore.orderSummary(forOrderWithId: orderId)!)
         }
         .toolbar {
@@ -87,7 +87,7 @@ struct OrdersMainList: View {
     
     
     @ViewBuilder
-    func itemView(_ order: OrderSummary) -> some View {
+    func itemView(_ order: Order) -> some View {
         
         OrdersMainListItem(order: order)
             .onTapGesture { nav.pushOrder(order.id) }

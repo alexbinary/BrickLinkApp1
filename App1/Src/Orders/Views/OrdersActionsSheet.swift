@@ -10,7 +10,7 @@ struct OrdersActionsSheet: View {
     var orderStore
     
     
-    let orders: [OrderSummary]
+    let orders: [Order]
     
     
     var body: some View {
@@ -67,7 +67,7 @@ struct OrdersActionsSheet: View {
     
     
     @ViewBuilder
-    func sectionView(orders: [OrderSummary], title: String, @ViewBuilder content: @escaping (_ order: OrderSummary) -> some View) -> some View {
+    func sectionView(orders: [Order], title: String, @ViewBuilder content: @escaping (_ order: Order) -> some View) -> some View {
     
         if !orders.isEmpty {
             

@@ -11,11 +11,11 @@ struct OrderLink<Label>: View where Label: View {
     var orderStore
     
     
-    let order: OrderSummary
+    let order: Order
     let label: () -> Label
     
     
-    init(_ order: OrderSummary, label: @escaping () -> Label) {
+    init(_ order: Order, label: @escaping () -> Label) {
         self.order = order
         self.label = label
     }

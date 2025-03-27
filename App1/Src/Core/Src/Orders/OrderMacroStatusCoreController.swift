@@ -21,85 +21,85 @@ class OrderMacroStatusCoreController {
     }
     
     
-    func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistIncomeTransaction(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistIncomeTransaction(orderId)
     }
     
     
-    func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistShippingTransaction(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistShippingTransaction(orderId)
     }
     
     
-    func orderChecklistPicking(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistPicking(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPicking(orderId)
     }
     
     
-    func orderChecklistVerification(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistVerification(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistVerification(orderId)
     }
     
     
-    func orderChecklistPacked(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistPacked(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPacked(orderId)
     }
     
     
-    func orderChecklistShipped(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistShipped(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistShipped(orderId)
     }
     
     
-    func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistTrackingNo(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistTrackingNo(orderId)
     }
     
     
-    func orderChecklistDriveThru(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistDriveThru(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistDriveThru(orderId)
     }
     
     
-    func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistStamping(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistStamping(orderId)
     }
     
     
-    func orderChecklistReceived(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistReceived(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistReceived(orderId)
     }
     
     
-    func orderChecklistCompleted(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistCompleted(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistCompleted(orderId)
     }
     
     
-    func orderChecklistBuyerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistBuyerFeedback(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistBuyerFeedback(orderId)
     }
     
     
-    func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistSellerFeedback(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistSellerFeedback(orderId)
     }
     
     
-    func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistUnchangedFor30Days(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistUnchangedFor30Days(orderId)
     }
@@ -108,7 +108,7 @@ class OrderMacroStatusCoreController {
     // MARK: - Order summaries
     
     
-    func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+    func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
         
         orderCoreController.orderSummary(forOrderWithId: orderId)
     }
@@ -117,7 +117,7 @@ class OrderMacroStatusCoreController {
     // MARK: - Order macro status
     
     
-    func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
+    func macroStatus(forOrderWithId orderId: Order.ID) -> OrderMacroStatus {
         
         let order = orderSummary(forOrderWithId: orderId)!
         

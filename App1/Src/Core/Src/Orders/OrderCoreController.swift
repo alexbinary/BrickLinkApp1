@@ -21,13 +21,13 @@ class OrderCoreController {
     // MARK: - Order summaries
     
     
-    var orderSummaries: [OrderSummary] {
+    var orderSummaries: [Order] {
         
         dataStore.orderSummaries
     }
     
     
-    func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+    func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
         
         orderSummaries.first { $0.id == orderId }
     }
@@ -38,7 +38,7 @@ class OrderCoreController {
         print("Loading orders")
         
         let blOrders = await brickLinkAPIClient.fetchOrderSummaries()
-        let orderSummaries = blOrders.map { OrderSummary(fromBl: $0) }.sorted { $0.date > $1.date }
+        let orderSummaries = blOrders.map { Order(fromBl: $0) }.sorted { $0.date > $1.date }
         
         print("loaded \(orderSummaries.count) orders")
         
@@ -74,13 +74,13 @@ class OrderCoreController {
     }
     
     
-    func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+    func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
         
         orderDetails.first { $0.id == orderId }
     }
     
     
-    func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadOrderDetails(forOrderWithId orderId: Order.ID) async {
         
         print("Loading order details \(orderId)")
         
@@ -113,7 +113,7 @@ class OrderCoreController {
     // MARK: - Order status, Tracking no, Drive thru
     
     
-    func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
+    func updateOrderStatus(orderId: Order.ID, status: OrderStatus) async {
         
         print("Update status \(status) for order \(orderId)")
         
@@ -126,7 +126,7 @@ class OrderCoreController {
     }
     
     
-    func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
+    func updateTrackingNo(forOrderWithId orderId: Order.ID, trackingNo: String) async {
         
         print("Update tracking no \(trackingNo) for order \(orderId)")
         
@@ -139,7 +139,7 @@ class OrderCoreController {
     }
     
     
-    func sendDriveThru(orderId: OrderSummary.ID) async {
+    func sendDriveThru(orderId: Order.ID) async {
         
         print("Send drive thru for order \(orderId)")
         
@@ -155,13 +155,13 @@ class OrderCoreController {
     // MARK: - Order items
     
     
-    func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
     }
     
     
-    func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    func orderItems(forOrderWithId orderId: Order.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
         let items = orderItems(forOrderWithId: orderId)
         
@@ -169,7 +169,7 @@ class OrderCoreController {
     }
     
     
-    func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadOrderItems(forOrderWithId orderId: Order.ID) async {
         
         print("Loading order items \(orderId)")
         
@@ -197,7 +197,7 @@ class OrderCoreController {
 
 
 
-extension OrderSummary {
+extension Order {
     
     
     init(fromBl bl: BrickLinkOrderSummary) {

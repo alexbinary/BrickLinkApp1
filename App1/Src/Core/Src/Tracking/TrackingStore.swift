@@ -17,13 +17,13 @@ public class TrackingStore {
     }
     
     
-    public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
+    public func laPosteTrackingStatus(forOrderWithId orderId: Order.ID) -> LaPosteTrackingStatus? {
         
         trackingMiddleController.laPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     
-    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: Order.ID) async {
         
         await trackingMiddleController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
     }

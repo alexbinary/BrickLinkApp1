@@ -33,11 +33,11 @@ struct ResultHistoryView: View {
     
     @State var animateGraph = false
     
-    @State var selectedMostProfitableOrder: OrderDetails.ID? = nil
-    @State var selectedLeastProfitableOrder: OrderDetails.ID? = nil
+    @State var selectedMostProfitableOrder: Order.ID? = nil
+    @State var selectedLeastProfitableOrder: Order.ID? = nil
     
     
-    var selectedOrderIds: Set<OrderDetails.ID> { nav.resultSelectedOrderIds }
+    var selectedOrderIds: Set<Order.ID> { nav.resultSelectedOrderIds }
     
     var orders: [OrderDetails] {
         (

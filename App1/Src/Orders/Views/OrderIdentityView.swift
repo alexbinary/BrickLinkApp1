@@ -12,7 +12,7 @@ struct OrderIdentityView: View {
     
     
     let order: OrderDetails
-    var orderSummary: OrderSummary { orderStore.orderSummary(forOrderWithId: order.id)! }
+    var orderSummary: Order { orderStore.orderSummary(forOrderWithId: order.id)! }
     
     init(_ order: OrderDetails) {
         self.order = order

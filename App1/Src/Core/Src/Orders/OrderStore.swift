@@ -48,13 +48,13 @@ public class OrderStore {
     // MARK: - Summaries
     
     
-    public var orderSummaries: [OrderSummary] {
+    public var orderSummaries: [Order] {
         
         orderCoreController.orderSummaries
     }
     
     
-    public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+    public func orderSummary(forOrderWithId orderId: Order.ID) -> Order? {
         
         orderCoreController.orderSummary(forOrderWithId: orderId)
     }
@@ -75,13 +75,13 @@ public class OrderStore {
     }
     
     
-    public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+    public func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
         
         orderCoreController.orderDetails(forOrderWithId: orderId)
     }
     
     
-    public func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
+    public func loadOrderDetails(forOrderWithId orderId: Order.ID) async {
         
         await orderCoreController.loadOrderDetails(forOrderWithId: orderId)
     }
@@ -96,13 +96,13 @@ public class OrderStore {
     // MARK: - Items
     
     
-    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         orderCoreController.orderItems(forOrderWithId: orderId)
     }
     
     
-    public func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
+    public func loadOrderItems(forOrderWithId orderId: Order.ID) async {
         
         await orderCoreController.loadOrderItems(forOrderWithId: orderId)
     }
@@ -117,19 +117,19 @@ public class OrderStore {
     // MARK: - Update
     
     
-    public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
+    public func updateOrderStatus(orderId: Order.ID, status: OrderStatus) async {
         
         await orderCoreController.updateOrderStatus(orderId: orderId, status: status)
     }
     
     
-    public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
+    public func updateTrackingNo(forOrderWithId orderId: Order.ID, trackingNo: String) async {
         
         await orderCoreController.updateTrackingNo(forOrderWithId: orderId, trackingNo: trackingNo)
     }
     
     
-    public func sendDriveThru(orderId: OrderSummary.ID) async {
+    public func sendDriveThru(orderId: Order.ID) async {
         
         await orderCoreController.sendDriveThru(orderId: orderId)
     }
@@ -138,19 +138,19 @@ public class OrderStore {
     // MARK: - Feedbacks
     
     
-    public func orderFeedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
+    public func orderFeedbacks(forOrderWithId orderId: Order.ID) -> [Feedback] {
         
         feedbackCoreController.feedbacks(forOrderWithId: orderId)
     }
     
     
-    public func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
+    public func loadOrderFeedbacks(forOrderWithId orderId: Order.ID) async {
         
         await feedbackCoreController.loadOrderFeedbacks(forOrderWithId: orderId)
     }
     
     
-    public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
+    public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: Order.ID) async {
         
         await feedbackCoreController.loadOrderFeedbacksIfMissing(forOrderWithId: orderId)
     }
@@ -159,7 +159,7 @@ public class OrderStore {
     // MARK: - Reload
     
     
-    public func forceRefreshOrder(orderId: OrderSummary.ID) async {
+    public func forceRefreshOrder(orderId: Order.ID) async {
         
         await loadOrderDetails(forOrderWithId: orderId)
         await loadOrderItems(forOrderWithId: orderId)
@@ -187,7 +187,7 @@ public class OrderStore {
     }
     
     
-    public func refreshOrder(orderId: OrderSummary.ID) async {
+    public func refreshOrder(orderId: Order.ID) async {
         
         if shouldRefreshOrder(orderId: orderId) {
             
@@ -198,7 +198,7 @@ public class OrderStore {
     }
     
     
-    public func orderIsClosedForMoreThan30Days(orderId: OrderSummary.ID) -> Bool {
+    public func orderIsClosedForMoreThan30Days(orderId: Order.ID) -> Bool {
         
         let orderSummary = orderSummary(forOrderWithId: orderId)!
         
@@ -210,7 +210,7 @@ public class OrderStore {
     }
     
     
-    public func shouldRefreshOrder(orderId: OrderSummary.ID) -> Bool {
+    public func shouldRefreshOrder(orderId: Order.ID) -> Bool {
         
         if orderIsClosedForMoreThan30Days(orderId: orderId) {
             
@@ -250,7 +250,7 @@ public class OrderStore {
     // MARK: - Macro status
     
     
-    public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
+    public func macroStatus(forOrderWithId orderId: Order.ID) -> OrderMacroStatus {
         
         orderMacroStatusCoreController.macroStatus(forOrderWithId: orderId)
     }
@@ -339,13 +339,13 @@ public class OrderStore {
     }
     
     
-    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: Order.ID) async {
         
         await trackingMiddleController.reloadLaPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     
-    public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
+    public func reloadOrderFeedbacks(forOrderWithId orderId: Order.ID) async {
         
         await feedbackCoreController.reloadOrderFeedbacks(forOrderWithId: orderId)
     }
@@ -376,115 +376,115 @@ public class OrderStore {
     // MARK: - Checklist
     
     
-    public func orderChecklistPayment(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistPayment(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPayment(orderId)
     }
     
     
-    public func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistIncomeTransaction(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistIncomeTransaction(orderId)
     }
     
     
-    public func orderChecklistPicking(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistPicking(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPicking(orderId)
     }
     
     
-    public func orderChecklistVerification(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistVerification(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistVerification(orderId)
     }
     
     
-    public func orderChecklistPacked(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistPacked(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPacked(orderId)
     }
     
     
-    public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistStamping(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistStamping(orderId)
     }
     
     
-    public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistShippingTransaction(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistShippingTransaction(orderId)
     }
     
     
-    public func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistTrackingNo(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistTrackingNo(orderId)
     }
     
     
-    public func orderChecklistShipped(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistShipped(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistShipped(orderId)
     }
     
         
-    public func orderChecklistDriveThru(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistDriveThru(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistDriveThru(orderId)
     }
     
     
-    public func orderChecklistReceived(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistReceived(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistReceived(orderId)
     }
     
     
-    public func orderChecklistCompleted(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistCompleted(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistCompleted(orderId)
     }
     
     
-    public func orderChecklistBuyerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistBuyerFeedback(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistBuyerFeedback(orderId)
     }
     
     
-    public func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistSellerFeedback(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistSellerFeedback(orderId)
     }
     
     
-    public func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
+    public func orderChecklistUnchangedFor30Days(_ orderId: Order.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistUnchangedFor30Days(orderId)
     }
     
     
-    public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
+    public func pickingProgress(forOrderWithId orderId: Order.ID) -> Percent {
         
         pickingProgressCoreController.pickingProgress(forOrderWithId: orderId)
     }
     
     
-    public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
+    public func pickingVerificationProgress(forOrderWithId orderId: Order.ID) -> Percent {
         
         pickingProgressCoreController.pickingVerificationProgress(forOrderWithId: orderId)
     }
     
     
-    public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
+    public func laPosteTrackingStatus(forOrderWithId orderId: Order.ID) -> LaPosteTrackingStatus? {
         
         trackingMiddleController.laPosteTrackingStatus(forOrderWithId: orderId)
     }
     
     
-    public func checklist(forOrderWithId orderId: OrderSummary.ID) -> Checklist {
+    public func checklist(forOrderWithId orderId: Order.ID) -> Checklist {
         
         Checklist(sections: [
             .init(
@@ -608,7 +608,7 @@ public class OrderStore {
     // MARK: - Actions
     
     
-    public var ordersThatNeedCompletedAndGiveFeedback: [OrderSummary] {
+    public var ordersThatNeedCompletedAndGiveFeedback: [Order] {
         
         orderSummaries
             .filter { macroStatus(forOrderWithId: $0.id) == .inTransitFor30PlusDays }
@@ -616,7 +616,7 @@ public class OrderStore {
     }
     
     
-    public var ordersThatNeedGiveFeedback: [OrderSummary] {
+    public var ordersThatNeedGiveFeedback: [Order] {
         
         orderSummaries
             .filter { macroStatus(forOrderWithId: $0.id) == .giveFeedback }
@@ -624,7 +624,7 @@ public class OrderStore {
     }
     
     
-    public var ordersToShipAndSendDriveThru: [OrderSummary] {
+    public var ordersToShipAndSendDriveThru: [Order] {
         
         orderSummaries
             .filter {
@@ -637,7 +637,7 @@ public class OrderStore {
     }
     
     
-    public var ordersThatNeedAction: [OrderSummary] {
+    public var ordersThatNeedAction: [Order] {
         
         ordersThatNeedCompletedAndGiveFeedback
         + ordersThatNeedGiveFeedback
@@ -645,7 +645,7 @@ public class OrderStore {
     }
     
     
-    public func postPraiseOrderFeedback(orderId: OrderSummary.ID) async {
+    public func postPraiseOrderFeedback(orderId: Order.ID) async {
         
         await feedbackPostController.postPraiseFeedback(forOrderWithId: orderId)
     }

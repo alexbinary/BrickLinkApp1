@@ -11,7 +11,7 @@ struct OrderDetailView: View {
     var orderStore
     
     
-    let orderSummary: OrderSummary
+    let orderSummary: Order
     var order: OrderDetails? { orderStore.orderDetails(forOrderWithId: orderSummary.id) }
     
     

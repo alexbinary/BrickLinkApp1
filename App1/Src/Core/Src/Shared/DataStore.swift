@@ -103,13 +103,13 @@ class DataStore {
     }
     
     
-    var orderSummaries: [OrderSummary] {
+    var orderSummaries: [Order] {
         
         data?.orderSummaries ?? []
     }
     
     
-    func setOrderSummaries(_ orderSummaries: [OrderSummary]) throws {
+    func setOrderSummaries(_ orderSummaries: [Order]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -145,13 +145,13 @@ class DataStore {
     }
     
     
-    var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]] {
+    var orderItemsByOrderId: [Order.ID: [[OrderItem]]] {
         
         data?.orderItemsByOrderId ?? [:]
     }
     
     
-    func setOrderItemsByOrderId(_ orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]) throws {
+    func setOrderItemsByOrderId(_ orderItemsByOrderId: [Order.ID: [[OrderItem]]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -159,7 +159,7 @@ class DataStore {
     }
     
     
-    func setOrderItems(_ items: [[OrderItem]], forOrderId orderId: OrderSummary.ID) throws {
+    func setOrderItems(_ items: [[OrderItem]], forOrderId orderId: Order.ID) throws {
         
         var orderItemsByOrderId = self.orderItemsByOrderId
         
@@ -169,13 +169,13 @@ class DataStore {
     }
     
     
-    var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]] {
+    var orderFeedbacksByOrderId: [Order.ID: [Feedback]] {
         
         data?.orderFeedbacksByOrderId ?? [:]
     }
     
     
-    func setOrderFeedbacksByOrderId(_ orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]]) throws {
+    func setOrderFeedbacksByOrderId(_ orderFeedbacksByOrderId: [Order.ID: [Feedback]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -183,7 +183,7 @@ class DataStore {
     }
     
     
-    func setOrderFeedbacks(_ feedbacks: [Feedback], forOrderId orderId: OrderSummary.ID) throws {
+    func setOrderFeedbacks(_ feedbacks: [Feedback], forOrderId orderId: Order.ID) throws {
         
         var orderFeedbacksByOrderId = self.orderFeedbacksByOrderId
         
@@ -193,13 +193,13 @@ class DataStore {
     }
 
     
-    var shippingCostsByOrderId: [OrderSummary.ID: Float] {
+    var shippingCostsByOrderId: [Order.ID: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
     }
     
     
-    func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderSummary.ID: Float]) throws {
+    func setShippingCostsByOrderId(_ shippingCostsByOrderId: [Order.ID: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -207,7 +207,7 @@ class DataStore {
     }
     
     
-    func setShippingCost(_ cost: Float, forOrderId orderId: OrderSummary.ID) throws {
+    func setShippingCost(_ cost: Float, forOrderId orderId: Order.ID) throws {
         
         var shippingCostsByOrderId = self.shippingCostsByOrderId
         
@@ -217,13 +217,13 @@ class DataStore {
     }
     
     
-    var stampingMethodByOrderId: [OrderSummary.ID: String] {
+    var stampingMethodByOrderId: [Order.ID: String] {
         
         data?.stampingMethodByOrderId ?? [:]
     }
     
     
-    func setStampingMethodByOrderId(_ stampingMethodByOrderId: [OrderSummary.ID: String]) throws {
+    func setStampingMethodByOrderId(_ stampingMethodByOrderId: [Order.ID: String]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -231,7 +231,7 @@ class DataStore {
     }
     
     
-    func setStampingMethod(_ method: String, forOrderId orderId: OrderSummary.ID) throws {
+    func setStampingMethod(_ method: String, forOrderId orderId: Order.ID) throws {
         
         var stampingMethodByOrderId = self.stampingMethodByOrderId
         
@@ -241,13 +241,13 @@ class DataStore {
     }
     
     
-    var pickedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
+    var pickedItemIdsByOrderId: [Order.ID: [OrderItem.ID]] {
         
         data?.pickedItemIdsByOrderId ?? [:]
     }
     
     
-    func setPickedItemIdsByOrderId(_ pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
+    func setPickedItemIdsByOrderId(_ pickedItemsByOrderId: [Order.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -255,7 +255,7 @@ class DataStore {
     }
     
     
-    func addPickedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
+    func addPickedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: Order.ID) throws {
         
         var pickedItemsByOrderId = self.pickedItemIdsByOrderId
         var pickedItemsForOrder = pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -269,7 +269,7 @@ class DataStore {
     }
     
     
-    func removePickedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
+    func removePickedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: Order.ID) throws {
         
         var pickedItemsByOrderId = self.pickedItemIdsByOrderId
         var pickedItemsForOrder = pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -285,13 +285,13 @@ class DataStore {
     }
     
     
-    var verifiedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
+    var verifiedItemIdsByOrderId: [Order.ID: [OrderItem.ID]] {
         
         data?.verifiedItemIdsByOrderId ?? [:]
     }
     
     
-    func setVerifiedItemIdsByOrderId(_ verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
+    func setVerifiedItemIdsByOrderId(_ verifiedItemsByOrderId: [Order.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -299,7 +299,7 @@ class DataStore {
     }
     
     
-    func addVerifiedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
+    func addVerifiedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: Order.ID) throws {
         
         var verifiedItemsByOrderId = self.verifiedItemIdsByOrderId
         var verifiedItemsForOrder = verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -313,7 +313,7 @@ class DataStore {
     }
     
     
-    func removeVerifiedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
+    func removeVerifiedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: Order.ID) throws {
         
         var verifiedItemsByOrderId = self.verifiedItemIdsByOrderId
         var verifiedItemsForOrder = verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -329,13 +329,13 @@ class DataStore {
     }
     
     
-    var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutIncomeTransactionByOrderId: [Order.ID: Date] {
         
         data?.dateValidatedWithoutIncomeTransactionByOrderId ?? [:]
     }
     
     
-    func setDateValidatedWithoutIncomeTransactionByOrderId(_ dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutIncomeTransactionByOrderId(_ dateValidatedWithoutIncomeTransactionByOrderId: [Order.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -343,7 +343,7 @@ class DataStore {
     }
     
     
-    func setDateValidatedWithoutIncomeTransaction(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutIncomeTransaction(_ date: Date, forOrderId orderId: Order.ID) throws {
         
         var dateValidatedWithoutIncomeTransactionByOrderId = self.dateValidatedWithoutIncomeTransactionByOrderId
         
@@ -353,13 +353,13 @@ class DataStore {
     }
     
     
-    var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutShippingTransactionByOrderId: [Order.ID: Date] {
         
         data?.dateValidatedWithoutShippingTransactionByOrderId ?? [:]
     }
     
     
-    func setDateValidatedWithoutShippingTransactionByOrderId(_ dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutShippingTransactionByOrderId(_ dateValidatedWithoutShippingTransactionByOrderId: [Order.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -367,7 +367,7 @@ class DataStore {
     }
     
     
-    func setDateValidatedWithoutShippingTransaction(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutShippingTransaction(_ date: Date, forOrderId orderId: Order.ID) throws {
         
         var dateValidatedWithoutShippingTransactionByOrderId = self.dateValidatedWithoutShippingTransactionByOrderId
         
@@ -377,13 +377,13 @@ class DataStore {
     }
     
     
-    var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutStampingByOrderId: [Order.ID: Date] {
         
         data?.dateValidatedWithoutStampingByOrderId ?? [:]
     }
     
     
-    func setDateValidatedWithoutStampingByOrderId(_ dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutStampingByOrderId(_ dateValidatedWithoutStampingByOrderId: [Order.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -391,7 +391,7 @@ class DataStore {
     }
     
     
-    func setDateValidatedWithoutStamping(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutStamping(_ date: Date, forOrderId orderId: Order.ID) throws {
         
         var dateValidatedWithoutStampingByOrderId = self.dateValidatedWithoutStampingByOrderId
         
@@ -401,13 +401,13 @@ class DataStore {
     }
     
     
-    var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutFeedbackByOrderId: [Order.ID: Date] {
         
         data?.dateValidatedWithoutFeedbackByOrderId ?? [:]
     }
     
     
-    func setDateValidatedWithoutFeedbackByOrderId(_ dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutFeedbackByOrderId(_ dateValidatedWithoutFeedbackByOrderId: [Order.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -415,7 +415,7 @@ class DataStore {
     }
     
     
-    func setDateValidatedWithoutFeedback(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutFeedback(_ date: Date, forOrderId orderId: Order.ID) throws {
         
         var dateValidatedWithoutFeedbackByOrderId = self.dateValidatedWithoutFeedbackByOrderId
         
@@ -590,21 +590,21 @@ class DataFile: Codable {
     
     var colors: [LegoColor]?
     var inventories: [InventoryItem]?
-    var orderSummaries: [OrderSummary]?
+    var orderSummaries: [Order]?
     var orderDetails: [OrderDetails]?
-    var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]?
-    var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]]?
+    var orderItemsByOrderId: [Order.ID: [[OrderItem]]]?
+    var orderFeedbacksByOrderId: [Order.ID: [Feedback]]?
     
     // MARK: - Local data
     
-    var shippingCostsByOrderId: [OrderSummary.ID: Float]?
-    var stampingMethodByOrderId: [OrderSummary.ID: String]?
-    var pickedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
-    var verifiedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]]?
-    var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]?
-    var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]?
-    var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]?
-    var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]?
+    var shippingCostsByOrderId: [Order.ID: Float]?
+    var stampingMethodByOrderId: [Order.ID: String]?
+    var pickedItemIdsByOrderId: [Order.ID: [OrderItem.ID]]?
+    var verifiedItemIdsByOrderId: [Order.ID: [OrderItem.ID]]?
+    var dateValidatedWithoutIncomeTransactionByOrderId: [Order.ID: Date]?
+    var dateValidatedWithoutShippingTransactionByOrderId: [Order.ID: Date]?
+    var dateValidatedWithoutStampingByOrderId: [Order.ID: Date]?
+    var dateValidatedWithoutFeedbackByOrderId: [Order.ID: Date]?
     var uploadItems: [UploadItem]?
     var uploadedItems: [UploadedItem]?
     var transactions: [Transaction]?

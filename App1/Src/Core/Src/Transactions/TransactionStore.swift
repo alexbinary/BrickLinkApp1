@@ -36,19 +36,19 @@ public class TransactionStore {
     // MARK: - Income
     
     
-    public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Core.Transaction] {
+    public func incomeTransactions(forOrderWithId orderId: Order.ID) -> [Core.Transaction] {
         
         transactionCoreController.incomeTransactions(forOrderWithId: orderId)
     }
     
     
-    public func dateOrderValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Date? {
+    public func dateOrderValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Date? {
         
         transactionCoreController.dateOrderValidatedWithoutIncomeTransaction(orderId: orderId)
     }
     
     
-    public func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
+    public func validateOrderWithoutIncomeTransaction(orderId: Order.ID) {
         
         transactionCoreController.validateOrderWithoutIncomeTransaction(orderId: orderId)
     }
@@ -57,19 +57,19 @@ public class TransactionStore {
     // MARK: - Shipping
     
     
-    public func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Core.Transaction] {
+    public func shippingTransactions(forOrderWithId orderId: Order.ID) -> [Core.Transaction] {
         
         transactionCoreController.shippingTransactions(forOrderWithId: orderId)
     }
     
     
-    public func dateOrderValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Date? {
+    public func dateOrderValidatedWithoutShippingTransaction(orderId: Order.ID) -> Date? {
         
         transactionCoreController.dateOrderValidatedWithoutShippingTransaction(orderId: orderId)
     }
     
     
-    public func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
+    public func validateOrderWithoutShippingTransaction(orderId: Order.ID) {
         
         transactionCoreController.validateOrderWithoutShippingTransaction(orderId: orderId)
     }
@@ -78,7 +78,7 @@ public class TransactionStore {
     // MARK: - Refunds
     
     
-    public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Core.Transaction] {
+    public func refundTransactions(forOrderWithId orderId: Order.ID) -> [Core.Transaction] {
         
         transactionCoreController.refundTransactions(forOrderWithId: orderId)
     }

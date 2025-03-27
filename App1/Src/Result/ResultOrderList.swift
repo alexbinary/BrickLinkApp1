@@ -19,9 +19,9 @@ struct ResultOrderList: View {
     
     let orders: [OrderDetails]
     let title: String
-    let selection: Binding<OrderDetails.ID?>
+    let selection: Binding<Order.ID?>
     
-    init(_ orders: [OrderDetails], title: String, selection: Binding<OrderDetails.ID?>) {
+    init(_ orders: [OrderDetails], title: String, selection: Binding<Order.ID?>) {
         self.orders = orders
         self.title = title
         self.selection = selection

@@ -12,8 +12,8 @@ struct ResultDashboard: View {
     var resultStore
     
     
-    @State var selectedMostProfitableOrder: OrderDetails.ID? = nil
-    @State var selectedLeastProfitableOrder: OrderDetails.ID? = nil
+    @State var selectedMostProfitableOrder: Order.ID? = nil
+    @State var selectedLeastProfitableOrder: Order.ID? = nil
     
     
     var body: some View {

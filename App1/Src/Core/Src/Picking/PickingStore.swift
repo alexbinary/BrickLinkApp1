@@ -24,13 +24,13 @@ public class PickingStore {
     }
     
     
-    public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    public func orderItems(forOrderWithId orderId: Order.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
         orderCoreController.orderItems(forOrderWithId: orderId, fromItemIds: itemsIds)
     }
     
     
-    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         orderCoreController.orderItems(forOrderWithId: orderId)
     }
@@ -39,13 +39,13 @@ public class PickingStore {
     // MARK: - Pick
     
     
-    public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    public func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         pickingCoreController.pickedItemIds(forOrderWithId: orderId)
     }
     
     
-    public func pickedOrderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func pickedOrderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         let pickedIds = pickedItemIds(forOrderWithId: orderId)
         
@@ -53,7 +53,7 @@ public class PickingStore {
     }
     
     
-    public func nextOrderItemsToPick(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func nextOrderItemsToPick(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         let pickedIds = pickedItemIds(forOrderWithId: orderId)
         
@@ -63,7 +63,7 @@ public class PickingStore {
     }
     
     
-    public func orderItemsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func orderItemsLeftToPick(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         let pickedIds = pickedItemIds(forOrderWithId: orderId)
         
@@ -71,19 +71,19 @@ public class PickingStore {
     }
     
     
-    public func pickingProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
+    public func pickingProgress(forOrderWithId orderId: Order.ID) -> Percent {
         
         pickingProgressCoreController.pickingProgress(forOrderWithId: orderId)
     }
     
     
-    public func totalLotsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalLotsLeftToPick(forOrderWithId orderId: Order.ID) -> Int {
         
         orderItemsLeftToPick(forOrderWithId: orderId).count
     }
     
     
-    public func totalPartsLeftToPick(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalPartsLeftToPick(forOrderWithId orderId: Order.ID) -> Int {
         
         orderItemsLeftToPick(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
     }
@@ -104,13 +104,13 @@ public class PickingStore {
     // MARK: - Verify
     
     
-    public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    public func verifiedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         pickingCoreController.verifiedItemIds(forOrderWithId: orderId)
     }
     
     
-    public func verifiedOrderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func verifiedOrderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         let verifiedIds = verifiedItemIds(forOrderWithId: orderId)
         
@@ -118,7 +118,7 @@ public class PickingStore {
     }
     
     
-    public func nextOrderItemsToVerify(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func nextOrderItemsToVerify(forOrderWithId orderId: Order.ID) -> [OrderItem] {
     
         let pickedIds = pickedItemIds(forOrderWithId: orderId)
         let verifiedIds = verifiedItemIds(forOrderWithId: orderId)
@@ -129,7 +129,7 @@ public class PickingStore {
     }
     
     
-    public func orderItemsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    public func orderItemsLeftToVerify(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         let verifiedIds = verifiedItemIds(forOrderWithId: orderId)
         
@@ -137,19 +137,19 @@ public class PickingStore {
     }
     
     
-    public func pickingVerificationProgress(forOrderWithId orderId: OrderSummary.ID) -> Percent {
+    public func pickingVerificationProgress(forOrderWithId orderId: Order.ID) -> Percent {
         
         pickingProgressCoreController.pickingVerificationProgress(forOrderWithId: orderId)
     }
     
     
-    public func totalLotsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalLotsLeftToVerify(forOrderWithId orderId: Order.ID) -> Int {
         
         orderItemsLeftToVerify(forOrderWithId: orderId).count
     }
     
     
-    public func totalPartsLeftToVerify(forOrderWithId orderId: OrderSummary.ID) -> Int {
+    public func totalPartsLeftToVerify(forOrderWithId orderId: Order.ID) -> Int {
         
         orderItemsLeftToVerify(forOrderWithId: orderId).reduce(0) { $0 + Int($1.quantity)! }
     }

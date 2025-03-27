@@ -44,7 +44,7 @@ public struct OrderDetails: Identifiable, Equatable, Codable, Datable {
 extension OrderDetails {
     
     
-    public func differs(from summary: OrderSummary) -> Bool {
+    public func differs(from summary: Order) -> Bool {
         
         return
             self.id != summary.id

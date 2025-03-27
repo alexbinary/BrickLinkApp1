@@ -27,19 +27,19 @@ class StockCoreController {
     }
     
     
-    var orderSummaries: [OrderSummary] {
+    var orderSummaries: [Order] {
         
         orderCoreController.orderSummaries
     }
     
     
-    func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    func orderItems(forOrderWithId orderId: Order.ID) -> [OrderItem] {
         
         orderCoreController.orderItems(forOrderWithId: orderId)
     }
     
     
-    func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         pickingCoreController.pickedItemIds(forOrderWithId: orderId)
     }
@@ -59,7 +59,7 @@ class StockCoreController {
     }
     
     
-    func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
+    func macroStatus(forOrderWithId orderId: Order.ID) -> OrderMacroStatus {
         
         orderMacroStatusCoreController.macroStatus(forOrderWithId: orderId)
     }

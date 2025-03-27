@@ -6,14 +6,14 @@ import Foundation
 public struct OrdersMainListSection {
     
     public let header: String
-    public let orders: [OrderSummary]
+    public let orders: [Order]
 }
 
 
 
 extension Array where Element == OrdersMainListSection {
     
-    public var allOrders: [OrderSummary] {
+    public var allOrders: [Order] {
         
         return flatMap(\.orders)
     }

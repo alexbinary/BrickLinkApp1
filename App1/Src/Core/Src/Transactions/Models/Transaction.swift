@@ -15,9 +15,9 @@ public struct Transaction: Identifiable, Codable, Hashable, Datable {
     public var netAmount: Float { amount - (fees ?? 0) }
     public var paymentMethod: PaymentMethod
     public var comment: String
-    public let orderRefIn: OrderSummary.ID
+    public let orderRefIn: Order.ID
     
-    public init(id: UUID = UUID(), date: Date, createdAt: Date, type: TransactionType, amount: Float, fees: Float?, paymentMethod: PaymentMethod, comment: String, orderRefIn: OrderSummary.ID) {
+    public init(id: UUID = UUID(), date: Date, createdAt: Date, type: TransactionType, amount: Float, fees: Float?, paymentMethod: PaymentMethod, comment: String, orderRefIn: Order.ID) {
         self.id = id
         self.date = date
         self.createdAt = createdAt

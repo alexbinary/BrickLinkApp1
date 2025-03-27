@@ -21,7 +21,7 @@ class FeedbackPostController {
     }
     
     
-    func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
+    func postPraiseFeedback(forOrderWithId orderId: Order.ID) async {
         
         guard let order = orderCoreController.orderDetails(forOrderWithId: orderId) else { return }
         

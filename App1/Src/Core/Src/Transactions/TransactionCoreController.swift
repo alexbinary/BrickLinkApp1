@@ -29,69 +29,69 @@ class TransactionCoreController {
     }
     
     
-    func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    func incomeTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
         
         return allTransactions.filter { $0.type == .orderIncome && $0.orderRefIn == orderId }
     }
     
     
-    func shippingTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    func shippingTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
         
         return allTransactions.filter { $0.type == .orderShipping && $0.orderRefIn == orderId }
     }
     
     
-    func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    func refundTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
         
         return allTransactions.filter { $0.type == .orderRefund && $0.orderRefIn == orderId }
     }
     
     
-    var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutIncomeTransactionByOrderId: [Order.ID: Date] {
         
         dataStore.dateValidatedWithoutIncomeTransactionByOrderId
     }
     
     
-    func validateOrderWithoutIncomeTransaction(orderId: OrderDetails.ID) {
+    func validateOrderWithoutIncomeTransaction(orderId: Order.ID) {
         
         try! dataStore.setDateValidatedWithoutIncomeTransaction(Date(), forOrderId: orderId)
         try! dataStore.save()
     }
     
     
-    func dateOrderValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Date? {
+    func dateOrderValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Date? {
         
         return dateValidatedWithoutIncomeTransactionByOrderId[orderId]
     }
     
     
-    func orderIsValidatedWithoutIncomeTransaction(orderId: OrderDetails.ID) -> Bool {
+    func orderIsValidatedWithoutIncomeTransaction(orderId: Order.ID) -> Bool {
         
         return dateValidatedWithoutIncomeTransactionByOrderId[orderId] != nil
     }
     
     
-    var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutShippingTransactionByOrderId: [Order.ID: Date] {
         
         dataStore.dateValidatedWithoutShippingTransactionByOrderId
     }
     
     
-    func validateOrderWithoutShippingTransaction(orderId: OrderDetails.ID) {
+    func validateOrderWithoutShippingTransaction(orderId: Order.ID) {
         
         try! dataStore.setDateValidatedWithoutShippingTransaction(Date(), forOrderId: orderId)
         try! dataStore.save()
     }
     
     
-    func dateOrderValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Date? {
+    func dateOrderValidatedWithoutShippingTransaction(orderId: Order.ID) -> Date? {
         
         return dateValidatedWithoutShippingTransactionByOrderId[orderId]
     }
     
     
-    func orderIsValidatedWithoutShippingTransaction(orderId: OrderDetails.ID) -> Bool {
+    func orderIsValidatedWithoutShippingTransaction(orderId: Order.ID) -> Bool {
         
         return dateValidatedWithoutShippingTransactionByOrderId[orderId] != nil
     }

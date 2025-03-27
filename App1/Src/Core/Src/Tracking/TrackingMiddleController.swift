@@ -19,7 +19,7 @@ class TrackingMiddleController {
     }
     
     
-    func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+    func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
         
         orderCoreController.orderDetails(forOrderWithId: orderId)
     }
@@ -37,7 +37,7 @@ class TrackingMiddleController {
     }
     
     
-    func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(forOrderWithId orderId: Order.ID) -> LaPosteTrackingStatus? {
         
         if let order = orderDetails(forOrderWithId: orderId),
            let trackingNo = order.trackingNo {
@@ -49,7 +49,7 @@ class TrackingMiddleController {
     }
     
     
-    func loadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadLaPosteTrackingStatus(forOrderWithId orderId: Order.ID) async {
         
         let order = orderDetails(forOrderWithId: orderId)!
         let trackingNo = order.trackingNo!
@@ -58,7 +58,7 @@ class TrackingMiddleController {
     }
     
     
-    func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+    func reloadLaPosteTrackingStatus(forOrderWithId orderId: Order.ID) async {
         
         await loadLaPosteTrackingStatus(forOrderWithId: orderId)
     }

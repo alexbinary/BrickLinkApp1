@@ -10,7 +10,7 @@ struct LaPosteTrackingStatusIndicator: View {
     var trackingMiddleController
     
     
-    let order: OrderSummary
+    let order: Order
     var status: LaPosteTrackingStatus? { trackingMiddleController.laPosteTrackingStatus(forOrderWithId: order.id) }
     
     

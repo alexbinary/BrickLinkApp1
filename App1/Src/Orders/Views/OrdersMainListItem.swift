@@ -17,7 +17,7 @@ struct OrdersMainListItem: View {
     var feedbackStore
     
     
-    let order: OrderSummary
+    let order: Order
     var macroStatus: OrderMacroStatus { orderStore.macroStatus(forOrderWithId: order.id) }
     
     

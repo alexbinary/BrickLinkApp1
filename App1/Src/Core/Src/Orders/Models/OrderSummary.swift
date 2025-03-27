@@ -3,7 +3,7 @@ import Foundation
 
 
 
-public struct OrderSummary: Identifiable, Equatable, Codable, Datable {
+public struct Order: Identifiable, Equatable, Codable, Datable {
     
     public let id: String
     public let date: Date
@@ -27,7 +27,7 @@ public struct OrderSummary: Identifiable, Equatable, Codable, Datable {
 
 
 
-extension OrderSummary {
+extension Order {
     
     
     public func matches(_ rawSearchText: String) -> Bool {

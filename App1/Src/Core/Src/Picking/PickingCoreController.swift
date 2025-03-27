@@ -19,13 +19,13 @@ class PickingCoreController {
     // MARK: - Pick
     
     
-    func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         return dataStore.pickedItemIdsByOrderId[orderId] ?? []
     }
     
     
-    func pickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func pickItem(forOrderWithId orderId: Order.ID, itemId: OrderItem.ID) {
         
         try! dataStore.addPickedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
@@ -38,7 +38,7 @@ class PickingCoreController {
     }
     
     
-    func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func unpickItem(forOrderWithId orderId: Order.ID, itemId: OrderItem.ID) {
         
         try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
@@ -54,13 +54,13 @@ class PickingCoreController {
     // MARK: - Verify
     
     
-    func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    func verifiedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
         return dataStore.verifiedItemIdsByOrderId[orderId] ?? []
     }
     
     
-    func verifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func verifyItem(forOrderWithId orderId: Order.ID, itemId: OrderItem.ID) {
         
         try! dataStore.addVerifiedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
@@ -73,7 +73,7 @@ class PickingCoreController {
     }
     
     
-    func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func unverifyItem(forOrderWithId orderId: Order.ID, itemId: OrderItem.ID) {
         
         try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()

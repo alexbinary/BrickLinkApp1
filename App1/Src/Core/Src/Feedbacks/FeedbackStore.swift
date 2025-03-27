@@ -24,19 +24,19 @@ public class FeedbackStore {
     // MARK: - Read feedbacks
     
     
-    public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
+    public func feedbacks(forOrderWithId orderId: Order.ID) -> [Feedback] {
         
         feedbackCoreController.feedbacks(forOrderWithId: orderId)
     }
     
     
-    public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+    public func buyerFeedback(forOrderWithId orderId: Order.ID) -> Feedback? {
         
         feedbackCoreController.buyerFeedback(forOrderWithId: orderId)
     }
     
     
-    public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+    public func sellerFeedback(forOrderWithId orderId: Order.ID) -> Feedback? {
         
         feedbackCoreController.sellerFeedback(forOrderWithId: orderId)
     }
@@ -45,7 +45,7 @@ public class FeedbackStore {
     // MARK: - Post feedback
     
     
-    public func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
+    public func postPraiseFeedback(forOrderWithId orderId: Order.ID) async {
         
         await feedbackPostController.postPraiseFeedback(forOrderWithId: orderId)
     }
@@ -54,19 +54,19 @@ public class FeedbackStore {
     // MARK: - Validation without feedback
     
     
-    public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
+    public func dateOrderValidatedWithoutFeedback(orderId: Order.ID) -> Date? {
         
         feedbackCoreController.dateOrderValidatedWithoutFeedback(orderId: orderId)
     }
     
     
-    public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
+    public func orderIsValidatedWithoutFeedback(orderId: Order.ID) -> Bool {
         
         feedbackCoreController.orderIsValidatedWithoutFeedback(orderId: orderId)
     }
     
     
-    public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
+    public func validateOrderWithoutFeedback(orderId: Order.ID) {
         
         feedbackCoreController.validateOrderWithoutFeedback(orderId: orderId)
     }

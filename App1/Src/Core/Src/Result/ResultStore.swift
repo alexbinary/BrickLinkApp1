@@ -33,7 +33,7 @@ public class ResultStore {
     }
     
     
-    public func shippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
+    public func shippingCost(forOrderWithId orderId: Order.ID) -> Float? {
         
         shippingCoreController.confirmedShippingCost(forOrderWithId: orderId)
     }
@@ -45,13 +45,13 @@ public class ResultStore {
     }
     
     
-    public func incomeTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    public func incomeTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
         
         transactionCoreController.incomeTransactions(forOrderWithId: orderId)
     }
     
     
-    public func refundTransactions(forOrderWithId orderId: OrderDetails.ID) -> [Transaction] {
+    public func refundTransactions(forOrderWithId orderId: Order.ID) -> [Transaction] {
         
         transactionCoreController.refundTransactions(forOrderWithId: orderId)
     }

@@ -21,7 +21,7 @@ public class ShippingStore {
     }
     
     
-    public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+    public func orderDetails(forOrderWithId orderId: Order.ID) -> OrderDetails? {
         
         orderCoreController.orderDetails(forOrderWithId: orderId)
     }
@@ -30,19 +30,19 @@ public class ShippingStore {
     // MARK: - Shipping cost
     
     
-    public func confirmedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> Float? {
+    public func confirmedShippingCost(forOrderWithId orderId: Order.ID) -> Float? {
         
         shippingCoreController.confirmedShippingCost(forOrderWithId: orderId)
     }
     
     
-    public func confirmShippingCost(forOrderWithId orderId: OrderSummary.ID, cost: Float) {
+    public func confirmShippingCost(forOrderWithId orderId: Order.ID, cost: Float) {
         
         shippingCoreController.confirmShippingCost(forOrderWithId: orderId, cost: cost)
     }
     
     
-    public func selectedShippingCost(forOrderWithId orderId: OrderSummary.ID) -> SelectedShippingCost? {
+    public func selectedShippingCost(forOrderWithId orderId: Order.ID) -> SelectedShippingCost? {
         
         let order = orderDetails(forOrderWithId: orderId)!
         
@@ -193,31 +193,31 @@ public class ShippingStore {
     // MARK: - Stamping
     
     
-    public func confirmedStamping(forOrderWithId orderId: OrderSummary.ID) -> String? {
+    public func confirmedStamping(forOrderWithId orderId: Order.ID) -> String? {
         
         shippingCoreController.confirmedStamping(forOrderWithId: orderId)
     }
     
     
-    public func confirmStamping(forOrderWithId orderId: OrderSummary.ID, stamping: String) {
+    public func confirmStamping(forOrderWithId orderId: Order.ID, stamping: String) {
         
         shippingCoreController.confirmStamping(forOrderWithId: orderId, stamping: stamping)
     }
     
     
-    public func dateOrderValidatedWithoutStamping(orderId: OrderDetails.ID) -> Date? {
+    public func dateOrderValidatedWithoutStamping(orderId: Order.ID) -> Date? {
         
         shippingCoreController.dateOrderValidatedWithoutStamping(orderId: orderId)
     }
     
     
-    public func validateOrderWithoutStamping(orderId: OrderDetails.ID) {
+    public func validateOrderWithoutStamping(orderId: Order.ID) {
         
         shippingCoreController.validateOrderWithoutStamping(orderId: orderId)
     }
     
     
-    public func recommendedStampingMethod(forOrderWithId orderId: OrderSummary.ID) -> String {
+    public func recommendedStampingMethod(forOrderWithId orderId: Order.ID) -> String {
         
         let selectedShippingCost = selectedShippingCost(forOrderWithId: orderId)
         let order = orderDetails(forOrderWithId: orderId)!
