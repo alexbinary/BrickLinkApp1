@@ -36,6 +36,15 @@ public class OrderStore {
     }
     
     
+    // MARK: - URLs
+    
+    
+    public func url(forDetailsOfOrderWithId orderId: String) -> URL? {
+        
+        BrickLinkUtility.url(forDetailsOfOrderWithId: orderId)
+    }
+    
+    
     // MARK: - Summaries
     
     

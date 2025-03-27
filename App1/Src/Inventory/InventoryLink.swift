@@ -7,6 +7,10 @@ import Core
 struct InventoryLink<Label>: View where Label: View {
     
     
+    @Environment(InventoryStore.self)
+    var inventoryStore
+    
+    
     let inventoryItem: InventoryItem
     let label: () -> Label
     
@@ -18,7 +22,7 @@ struct InventoryLink<Label>: View where Label: View {
     
     var body: some View {
 
-        Link(destination: BrickLinkUtility.url(forInventoryItemWithId: inventoryItem.id)!, label: label)
+        Link(destination: inventoryStore.url(forInventoryItemWithId: inventoryItem.id)!, label: label)
     }
 }
 

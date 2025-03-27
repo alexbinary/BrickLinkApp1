@@ -22,6 +22,15 @@ public class InventoryStore {
     }
     
     
+    // MARK: - URLs
+    
+    
+    public func url(forInventoryItemWithId inventoryId: String) -> URL? {
+        
+        BrickLinkUtility.url(forInventoryItemWithId: inventoryId)
+    }
+    
+    
     // MARK: - Read inventories
     
     

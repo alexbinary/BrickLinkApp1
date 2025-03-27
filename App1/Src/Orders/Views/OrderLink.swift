@@ -7,6 +7,10 @@ import Core
 struct OrderLink<Label>: View where Label: View {
     
     
+    @Environment(OrderStore.self)
+    var orderStore
+    
+    
     let order: OrderSummary
     let label: () -> Label
     
@@ -19,7 +23,7 @@ struct OrderLink<Label>: View where Label: View {
     
     var body: some View {
 
-        Link(destination: BrickLinkUtility.url(forDetailsOfOrderWithId: order.id)!, label: label)
+        Link(destination: orderStore.url(forDetailsOfOrderWithId: order.id)!, label: label)
     }
 }
 
