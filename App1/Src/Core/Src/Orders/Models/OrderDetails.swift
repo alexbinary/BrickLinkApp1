@@ -36,33 +36,6 @@ public struct OrderDetails: Identifiable, Equatable, Codable, Datable {
     
     
     public var isShippedWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
-    
-    
-    public init(id: String, date: Date, buyer: String, items: Int, lots: Int, subTotal: Float, grandTotal: Float, shippingCost: Float, costCurrencyCode: String, dispSubTotal: Float, dispGrandTotal: Float, dispShippingCost: Float, dispCostCurrencyCode: String, status: OrderStatus, driveThruSent: Bool, trackingNo: String?, totalWeight: Float, shippingMethodId: Int, shippingMethodName: String?, shippingAddress: String, shippingAddressCountryCode: String, shippingAddressName: String, remarks: String?) {
-        self.id = id
-        self.date = date
-        self.buyer = buyer
-        self.items = items
-        self.lots = lots
-        self.subTotal = subTotal
-        self.grandTotal = grandTotal
-        self.shippingCost = shippingCost
-        self.costCurrencyCode = costCurrencyCode
-        self.dispSubTotal = dispSubTotal
-        self.dispGrandTotal = dispGrandTotal
-        self.dispShippingCost = dispShippingCost
-        self.dispCostCurrencyCode = dispCostCurrencyCode
-        self.status = status
-        self.driveThruSent = driveThruSent
-        self.trackingNo = trackingNo
-        self.totalWeight = totalWeight
-        self.shippingMethodId = shippingMethodId
-        self.shippingMethodName = shippingMethodName
-        self.shippingAddress = shippingAddress
-        self.shippingAddressCountryCode = shippingAddressCountryCode
-        self.shippingAddressName = shippingAddressName
-        self.remarks = remarks
-    }
 }
 
 

@@ -23,23 +23,6 @@ public struct OrderSummary: Identifiable, Equatable, Codable, Datable {
     public let dateStatusChanged: Date
 
     public let paymentStatus: PaymentStatus
-    
-    public init(id: String, date: Date, buyer: String, items: Int, lots: Int, subTotal: Float, grandTotal: Float, costCurrencyCode: String, dispSubTotal: Float, dispGrandTotal: Float, dispCostCurrencyCode: String, status: OrderStatus, dateStatusChanged: Date, paymentStatus: PaymentStatus) {
-        self.id = id
-        self.date = date
-        self.buyer = buyer
-        self.items = items
-        self.lots = lots
-        self.subTotal = subTotal
-        self.grandTotal = grandTotal
-        self.costCurrencyCode = costCurrencyCode
-        self.dispSubTotal = dispSubTotal
-        self.dispGrandTotal = dispGrandTotal
-        self.dispCostCurrencyCode = dispCostCurrencyCode
-        self.status = status
-        self.dateStatusChanged = dateStatusChanged
-        self.paymentStatus = paymentStatus
-    }
 }
 
 
