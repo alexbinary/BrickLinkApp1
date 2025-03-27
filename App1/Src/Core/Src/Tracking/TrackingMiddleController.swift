@@ -39,22 +39,18 @@ class TrackingMiddleController {
     
     func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
-        if let order = details(for: order),
-           let trackingNo = order.trackingNo {
-            
+        if let trackingNo = details(for: order)?.trackingNo {
             return laPosteTrackingStatus(forTrackingNo: trackingNo)
-        } else {
-            return nil
         }
+        return nil
     }
     
     
     func loadLaPosteTrackingStatus(for order: Order) async {
         
-        let orderDetails = details(for: order)!
-        let trackingNo = orderDetails.trackingNo!
-            
-        await loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+        if let trackingNo = details(for: order)?.trackingNo {
+            await loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+        }
     }
     
     

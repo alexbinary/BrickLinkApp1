@@ -120,8 +120,10 @@ class OrderChecklistCoreController {
     func orderChecklistIncomeTransaction(_ order: Order) -> Bool {
         
         if orderIsValidatedWithoutIncomeTransaction(order) {
+            
             return true
         }
+        
         return !incomeTransactions(for: order).isEmpty
     }
     
@@ -138,9 +140,8 @@ class OrderChecklistCoreController {
             return true
         }
         
-        let orderDetails = details(for: order)!
-        if orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
-        
+        if let orderDetails = details(for: order), orderDetails.shipsWithLaPoste {
+                
             let stamping = stamping(for: order)
             if !(stamping ?? "").isEmpty, stamping != "Bureau de poste" {
                 
@@ -185,35 +186,30 @@ class OrderChecklistCoreController {
     
     
     func orderChecklistTrackingNo(_ order: Order) -> Bool {
-        
-        let orderDetails = details(for: order)!
-        
-        return !(orderDetails.trackingNo ?? "").isEmpty
+            
+        return (details(for: order)?.trackingNo ?? "").isEmpty ? false : true
     }
     
     
     func orderChecklistDriveThru(_ order: Order) -> Bool {
         
-        let orderDetails = details(for: order)!
-        
-        return orderDetails.driveThruSent
+        details(for: order)?.driveThruSent ?? false
     }
     
     
     func orderChecklistStamping(_ order: Order) -> Bool {
         
+        if let orderDetails = details(for: order), orderDetails.shipsWithMondialRelay {
+            
+            return true
+        }
+        
         if orderIsValidatedWithoutStamping(order) {
+            
             return true
         }
         
-        let orderDetails = details(for: order)!
-        if orderDetails.shippingMethodId == shippingMethodId_France_MondialRelay {
-            return true
-        }
-        
-        let stamping = stamping(for: order)
-        
-        return !(stamping ?? "").isEmpty
+        return (stamping(for: order) ?? "").isEmpty ? false : true
     }
     
     
@@ -238,6 +234,7 @@ class OrderChecklistCoreController {
     func orderChecklistSellerFeedback(_ order: Order) -> Bool {
         
         if orderIsValidatedWithoutFeedback(order) {
+            
             return true
         }
         

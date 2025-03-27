@@ -12,7 +12,7 @@ struct OrderCostView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.details(for: order)! }
+    var orderDetails: OrderDetails? { orderStore.details(for: order) }
     
     init(_ order: Order) {
         self.order = order
@@ -51,16 +51,19 @@ struct OrderCostView: View {
                     }
                 }
                 
-                VStack(alignment: .leading) {
-                    
-                    Text("􀖧 Shipping").captionStyle()
-                    
-                    Text(orderDetails.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                        .font(.title3)
-                    
-                    if order.dispCostCurrencyCode != order.costCurrencyCode {
-                        Text(orderDetails.dispShippingCost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                if let orderDetails = orderDetails {
+                
+                    VStack(alignment: .leading) {
+                        
+                        Text("􀖧 Shipping").captionStyle()
+                        
+                        Text(orderDetails.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                             .font(.title3)
+                        
+                        if order.dispCostCurrencyCode != order.costCurrencyCode {
+                            Text(orderDetails.dispShippingCost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                                .font(.title3)
+                        }
                     }
                 }
             }

@@ -44,7 +44,7 @@ public class ShippingStore {
     
     public func selectedShippingCost(for order: Order) -> SelectedShippingCost? {
         
-        let orderDetails = details(for: order)!
+        guard let orderDetails = details(for: order) else { return nil }
         
         let weight = orderDetails.totalWeight * orderWeightMarginRatio
         
@@ -220,18 +220,20 @@ public class ShippingStore {
     public func recommendedStampingMethod(for order: Order) -> String {
         
         let selectedShippingCost = selectedShippingCost(for: order)
-        let orderDetails = details(for: order)!
-        
+
         var s = ""
         
         if let selectedLetterStamping = selectedShippingCost?.letterStamping {
             
             if selectedLetterStamping.usePostOffice {
+                
                 return "Bureau de poste"
-            } else {
+                
+            } else if let orderDetails = details(for: order) {
+                
                 s = "\(selectedLetterStamping.nbTimbres ?? 0) timbres"
                 
-                if orderDetails.shippingMethodId != shippingMethodId_France_LaPoste {
+                if !orderDetails.shipsToFrance {
                     s += " international"
                 }
                 

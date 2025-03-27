@@ -63,11 +63,14 @@ struct ResultContentView: View {
             }
             
             TableColumn("Shipping") { order in
-                let orderDetails = orderStore.details(for: order)!
-                Text(
-                    abs(orderDetails.shippingCost),
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                ).amountColor(.good)
+                
+                if let orderDetails = orderStore.details(for: order) {
+                    
+                    Text(
+                        abs(orderDetails.shippingCost),
+                        format: .currency(code: "EUR").presentation(.isoCode)
+                    ).amountColor(.good)
+                }
             }
             
             TableColumn("Shipping cost") { order in

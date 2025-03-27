@@ -23,7 +23,7 @@ class FeedbackPostController {
     
     func postPraiseFeedback(for order: Order) async {
         
-        guard let orderDetails = orderCoreController.details(for: order) else { return }
+        let orderDetails = orderCoreController.details(for: order)!
         
         await feedbackCoreController.postFeedback(
             for: order, rating: .praise,

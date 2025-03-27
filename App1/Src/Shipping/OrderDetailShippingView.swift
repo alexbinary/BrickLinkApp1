@@ -15,7 +15,7 @@ struct OrderDetailShippingView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.details(for: order)! }
+    var orderDetails: OrderDetails? { orderStore.details(for: order) }
     
     init(_ order: Order) {
         self.order = order
@@ -38,62 +38,65 @@ struct OrderDetailShippingView: View {
                 
                 Spacer()
                 
-                let width1: CGFloat = 90
-                let width2: CGFloat = 170
-                let height1: CGFloat = 20
-                let height2: CGFloat = 10
-                
-                Grid(alignment: .leading) {
+                if let orderDetails = orderDetails {
                     
-                    GridRow {
+                    let width1: CGFloat = 90
+                    let width2: CGFloat = 170
+                    let height1: CGFloat = 20
+                    let height2: CGFloat = 10
+                    
+                    Grid(alignment: .leading) {
                         
-                        InfoCardView(title: "􀭭 Weight") {
+                        GridRow {
                             
-                            Text("\(String(format: "%.0f", orderDetails.totalWeight))g")
-                                .bold()
-                                .frame(width: width1, height: height1)
+                            InfoCardView(title: "􀭭 Weight") {
+                                
+                                Text("\(String(format: "%.0f", orderDetails.totalWeight))g")
+                                    .bold()
+                                    .frame(width: width1, height: height1)
+                                
+                            } detail: {
+                                
+                                Text("Charged \(String(format: "%.0f", orderDetails.totalWeight * orderWeightMarginRatio))g")
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: width1, height: height2)
+                            }
                             
-                        } detail: {
-                            
-                            Text("Charged \(String(format: "%.0f", orderDetails.totalWeight * orderWeightMarginRatio))g")
-                                .foregroundStyle(.secondary)
-                                .frame(width: width1, height: height2)
+                            InfoCardView(title: "􀖧 Shipping") {
+                                
+                                Text(orderDetails.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                                    .bold()
+                                    .frame(width: width2, height: height1)
+                                
+                            } detail: {
+                                
+                                Text(orderDetails.shippingMethodName ?? "")
+                                    .lineLimit(2, reservesSpace: true)
+                                    .foregroundStyle(.secondary)
+                                    .frame(height: height2)
+                            }
                         }
                         
-                        InfoCardView(title: "􀖧 Shipping") {
+                        VStack(alignment: .leading, spacing: 12) {
                             
-                            Text(orderDetails.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
-                                .bold()
-                                .frame(width: width2, height: height1)
+                            HeaderTitleView(label: "􂄹 Remarks")
                             
-                        } detail: {
-                            
-                            Text(orderDetails.shippingMethodName ?? "")
-                                .lineLimit(2, reservesSpace: true)
-                                .foregroundStyle(.secondary)
-                                .frame(height: height2)
+                            Text(orderDetails.remarks ?? "").font(.title3).padding(.horizontal)
                         }
+                        .padding(8)
+                        .roundedContainer(style: .outline)
                     }
                     
-                    VStack(alignment: .leading, spacing: 12) {
-                
-                        HeaderTitleView(label: "􂄹 Remarks")
-                        
-                        Text(orderDetails.remarks ?? "").font(.title3).padding(.horizontal)
-                    }
-                    .padding(8)
-                    .roundedContainer(style: .outline)
+                    Spacer()
+                    
+                    ShippingCostInfo(
+                        shippingMethodId: orderDetails.shippingMethodId,
+                        selectedShippingCost: selectedShippingCost
+                    )
+                    .padding()
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .roundedContainer(style: .info)
                 }
-                
-                Spacer()
-                
-                ShippingCostInfo(
-                    shippingMethodId: orderDetails.shippingMethodId,
-                    selectedShippingCost: selectedShippingCost
-                )
-                .padding()
-                .frame(maxHeight: .infinity, alignment: .top)
-                .roundedContainer(style: .info)
             }
             
             Divider()
@@ -185,54 +188,57 @@ struct OrderDetailShippingView: View {
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 12) {
+                if let orderDetails = orderDetails {
                     
-                    HeaderTitleView(label: "􁁾 Shipping")
-                    
-                    Grid(alignment: .leading, verticalSpacing: 8) {
+                    VStack(alignment: .leading, spacing: 12) {
                         
-                        GridRow {
+                        HeaderTitleView(label: "􁁾 Shipping")
+                        
+                        Grid(alignment: .leading, verticalSpacing: 8) {
                             
-                            Text("Tracking no :")
-                            
-                            var trackingNoEditValue = orderDetails.trackingNo
-                            
-                            let trackingNoBinding = Binding<String> {
-                                return trackingNoEditValue ?? ""
-                            } set: { newValue in
-                                trackingNoEditValue = newValue
-                            }
-                            
-                            TextField("Tracking No", text: trackingNoBinding)
-                                .onSubmit {
+                            GridRow {
+                                
+                                Text("Tracking no :")
+                                
+                                var trackingNoEditValue = orderDetails.trackingNo
+                                
+                                let trackingNoBinding = Binding<String> {
+                                    return trackingNoEditValue ?? ""
+                                } set: { newValue in
+                                    trackingNoEditValue = newValue
+                                }
+                                
+                                TextField("Tracking No", text: trackingNoBinding)
+                                    .onSubmit {
+                                        Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
+                                    }
+                                    .frame(maxWidth: 140)
+                                
+                                Button("Save") {
                                     Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
                                 }
-                                .frame(maxWidth: 140)
-                            
-                            Button("Save") {
-                                Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
-                            }
-                        }
-                        
-                        GridRow {
-                            
-                            Text("Drive thru :")
-                            
-                            if orderDetails.driveThruSent {
-                                Text("sent")
-                            } else {
-                                Text("not sent")
                             }
                             
-                            Button("Send") {
-                                Task { await orderStore.sendDriveThru(for: order) }
+                            GridRow {
+                                
+                                Text("Drive thru :")
+                                
+                                if orderDetails.driveThruSent {
+                                    Text("sent")
+                                } else {
+                                    Text("not sent")
+                                }
+                                
+                                Button("Send") {
+                                    Task { await orderStore.sendDriveThru(for: order) }
+                                }
                             }
-                        }
-                        
-                        Button("Ship and send Drive thru") {
-                            Task {
-                                await orderStore.updateStatus(of: order, to: .shipped)
-                                await orderStore.sendDriveThru(for: order)
+                            
+                            Button("Ship and send Drive thru") {
+                                Task {
+                                    await orderStore.updateStatus(of: order, to: .shipped)
+                                    await orderStore.sendDriveThru(for: order)
+                                }
                             }
                         }
                     }

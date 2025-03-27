@@ -12,7 +12,7 @@ struct OrderAddressView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.details(for: order)! }
+    var orderDetails: OrderDetails? { orderStore.details(for: order) }
     
     init(_ order: Order) {
         self.order = order
@@ -21,11 +21,14 @@ struct OrderAddressView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        if let orderDetails = orderDetails {
             
-            Text(orderDetails.shippingAddressName)
-            Text(orderDetails.shippingAddress).fixedSize(horizontal: false, vertical: true)
-            Text(orderDetails.shippingAddressCountryCode)
+            VStack(alignment: .leading) {
+                
+                Text(orderDetails.shippingAddressName)
+                Text(orderDetails.shippingAddress).fixedSize(horizontal: false, vertical: true)
+                Text(orderDetails.shippingAddressCountryCode)
+            }
         }
     }
 }

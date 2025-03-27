@@ -21,5 +21,7 @@ public struct OrderDetails: Identifiable, Equatable, Codable {
     public let shippingCost: Float
     public let dispShippingCost: Float
 
-    public var isShippedWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
+    public var shipsToFrance: Bool { shippingMethodId.isOneOf(shippingMethodIds_France) }
+    public var shipsWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
+    public var shipsWithMondialRelay: Bool { shippingMethodId.isOneOf(shippingMethodIds_MondialRelay) }
 }

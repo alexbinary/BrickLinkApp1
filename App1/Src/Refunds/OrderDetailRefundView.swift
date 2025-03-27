@@ -10,12 +10,8 @@ struct OrderDetailRefundView: View {
     @Environment(RefundStore.self)
     var refundStore
     
-    @Environment(OrderStore.self)
-    var orderStore
-    
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.details(for: order)! }
     
     init(_ order: Order) {
         self.order = order

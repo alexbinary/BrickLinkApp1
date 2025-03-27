@@ -136,6 +136,14 @@ public let shippingMethodIds_LaPoste = [
     shippingMethodId_Europe_LaPoste,
     shippingMethodId_World_LaPoste,
 ]
+public let shippingMethodIds_MondialRelay = [
+    shippingMethodId_France_MondialRelay,
+]
+
+public let shippingMethodIds_France = [
+    shippingMethodId_France_LaPoste,
+    shippingMethodId_France_MondialRelay,
+]
 
 
 public let priceTimbreFrance: Decimal = 1.39
