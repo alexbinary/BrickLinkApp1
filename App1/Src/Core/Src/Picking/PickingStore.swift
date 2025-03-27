@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class PickingUserStore {
+public class PickingStore {
     
     
     private let pickingCoreController: PickingCoreController

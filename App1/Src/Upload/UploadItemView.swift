@@ -10,10 +10,10 @@ struct UploadItemView: View {
     @Environment(Catalog.self)
     var catalog
     
-    @Environment(UploadUserStore.self)
+    @Environment(UploadStore.self)
     var uploadStore
     
-    @Environment(InventoryUserStore.self)
+    @Environment(InventoryStore.self)
     var inventoryStore
     
     

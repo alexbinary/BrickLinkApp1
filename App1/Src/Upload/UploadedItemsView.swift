@@ -7,7 +7,7 @@ import Core
 struct UploadedItemsView: View {
     
     
-    @Environment(UploadUserStore.self)
+    @Environment(UploadStore.self)
     var uploadStore
     
     

@@ -7,7 +7,7 @@ import Core
 struct UploadAddView: View {
     
     
-    @Environment(UploadUserStore.self)
+    @Environment(UploadStore.self)
     var uploadStore
 
     

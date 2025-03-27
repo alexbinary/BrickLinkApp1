@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class FeedbackUserStore {
+public class FeedbackStore {
     
     
     private let feedbackCoreController: FeedbackCoreController

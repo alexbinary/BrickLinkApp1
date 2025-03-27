@@ -7,13 +7,13 @@ import Core
 struct OrderDetailComptaView: View {
     
     
-    @Environment(TransactionUserStore.self)
+    @Environment(TransactionStore.self)
     var transactionStore
     
-    @Environment(ShippingUserStore.self)
+    @Environment(ShippingStore.self)
     var shippingStore
     
-    @Environment(RefundUserStore.self)
+    @Environment(RefundStore.self)
     var refundStore
     
     

@@ -7,13 +7,13 @@ import Core
 struct OrdersMainListItem: View {
     
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(PickingUserStore.self)
+    @Environment(PickingStore.self)
     var pickingStore
     
-    @Environment(FeedbackUserStore.self)
+    @Environment(FeedbackStore.self)
     var feedbackStore
     
     

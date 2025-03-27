@@ -7,10 +7,10 @@ import Core
 struct OrderDetailShippingView: View {
     
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(ShippingUserStore.self)
+    @Environment(ShippingStore.self)
     var shippingStore
     
     

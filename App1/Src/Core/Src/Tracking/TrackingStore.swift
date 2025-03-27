@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class TrackingUserStore {
+public class TrackingStore {
     
     
     private let trackingMiddleController: TrackingMiddleController

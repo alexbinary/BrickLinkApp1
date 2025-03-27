@@ -7,16 +7,16 @@ import Core
 struct ResultContentView: View {
     
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(ShippingUserStore.self)
+    @Environment(ShippingStore.self)
     var shippingStore
     
-    @Environment(RefundUserStore.self)
+    @Environment(RefundStore.self)
     var refundStore
     
-    @Environment(ResultUserStore.self)
+    @Environment(ResultStore.self)
     var resultStore
     
     @Environment(NavigationController.self)

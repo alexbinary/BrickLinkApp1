@@ -7,7 +7,7 @@ import Core
 struct PickingProgressView: View {
     
     
-    @Environment(PickingUserStore.self)
+    @Environment(PickingStore.self)
     var pickingStore
     
     

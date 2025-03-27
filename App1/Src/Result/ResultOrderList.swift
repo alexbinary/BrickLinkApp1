@@ -7,13 +7,13 @@ import Core
 struct ResultOrderList: View {
     
     
-    @Environment(ShippingUserStore.self)
+    @Environment(ShippingStore.self)
     var shippingStore
     
-    @Environment(RefundUserStore.self)
+    @Environment(RefundStore.self)
     var refundStore
     
-    @Environment(ResultUserStore.self)
+    @Environment(ResultStore.self)
     var resultStore
     
     

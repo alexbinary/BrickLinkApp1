@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class OrderUserStore {
+public class OrderStore {
     
     
     private let orderCoreController: OrderCoreController

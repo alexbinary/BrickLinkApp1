@@ -8,7 +8,7 @@ import Core
 struct ResultDashboard: View {
     
     
-    @Environment(ResultUserStore.self)
+    @Environment(ResultStore.self)
     var resultStore
     
     

@@ -6,7 +6,7 @@ import Core
 struct LaPosteTrackingStatusIndicator: View {
     
     
-    @Environment(TrackingUserStore.self)
+    @Environment(TrackingStore.self)
     var trackingMiddleController
     
     

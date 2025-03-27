@@ -10,10 +10,10 @@ struct Sidebar: View {
     @Environment(NavigationController.self)
     var nav
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(UploadUserStore.self)
+    @Environment(UploadStore.self)
     var uploadStore
     
     

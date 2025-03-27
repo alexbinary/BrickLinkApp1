@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class RefundUserStore {
+public class RefundStore {
     
     
     let refundCoreController: RefundCoreController

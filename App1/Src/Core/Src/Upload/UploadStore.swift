@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class UploadUserStore {
+public class UploadStore {
     
     
     private let uploadCoreController: UploadCoreController

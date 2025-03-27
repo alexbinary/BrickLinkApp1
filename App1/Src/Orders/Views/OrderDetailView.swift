@@ -7,7 +7,7 @@ import Core
 struct OrderDetailView: View {
     
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
     

@@ -9,18 +9,18 @@ public typealias Env = (
     
     stores: (
         
-        inventory: InventoryUserStore,
-        upload: UploadUserStore,
+        inventory: InventoryStore,
+        upload: UploadStore,
 
-        order: OrderUserStore,
-        picking: PickingUserStore,
-        shipping: ShippingUserStore,
-        tracking: TrackingUserStore,
-        feedback: FeedbackUserStore,
-        refund: RefundUserStore,
+        order: OrderStore,
+        picking: PickingStore,
+        shipping: ShippingStore,
+        tracking: TrackingStore,
+        feedback: FeedbackStore,
+        refund: RefundStore,
 
-        transaction: TransactionUserStore,
-        result: ResultUserStore
+        transaction: TransactionStore,
+        result: ResultStore
     )
 )
 
@@ -61,18 +61,18 @@ public func createEnv(brickLinkCredentials: BrickLinkAPICredentials, debug: Debu
     
     // User Stores
     
-    let inventoryUserStore = InventoryUserStore(inventoryCoreController, stockCoreController)
-    let uploadUserStore = UploadUserStore(uploadCoreController, inventoryCoreController, catalog)
+    let inventoryStore = InventoryStore(inventoryCoreController, stockCoreController)
+    let uploadStore = UploadStore(uploadCoreController, inventoryCoreController, catalog)
     
-    let orderUserStore = OrderUserStore(orderCoreController, orderChecklistCoreController, orderMacroStatusCoreController, pickingProgressCoreController, trackingMiddleController, feedbackCoreController, feedbackPostController)
-    let pickingUserStore = PickingUserStore(pickingCoreController, pickingProgressCoreController, orderCoreController)
-    let shippingUserStore = ShippingUserStore(shippingCoreController, orderCoreController)
-    let trackingUserStore = TrackingUserStore(trackingMiddleController)
-    let feedbackUserStore = FeedbackUserStore(feedbackCoreController, feedbackPostController)
-    let refundUserStore = RefundUserStore(refundCoreController)
+    let orderStore = OrderStore(orderCoreController, orderChecklistCoreController, orderMacroStatusCoreController, pickingProgressCoreController, trackingMiddleController, feedbackCoreController, feedbackPostController)
+    let pickingStore = PickingStore(pickingCoreController, pickingProgressCoreController, orderCoreController)
+    let shippingStore = ShippingStore(shippingCoreController, orderCoreController)
+    let trackingStore = TrackingStore(trackingMiddleController)
+    let feedbackStore = FeedbackStore(feedbackCoreController, feedbackPostController)
+    let refundStore = RefundStore(refundCoreController)
     
-    let transactionUserStore = TransactionUserStore(transactionCoreController)
-    let resultUserStore = ResultUserStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
+    let transactionStore = TransactionStore(transactionCoreController)
+    let resultStore = ResultStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
     
     return (
         
@@ -80,18 +80,18 @@ public func createEnv(brickLinkCredentials: BrickLinkAPICredentials, debug: Debu
         
         stores: (
             
-            inventory: inventoryUserStore,
-            upload: uploadUserStore,
+            inventory: inventoryStore,
+            upload: uploadStore,
             
-            order: orderUserStore,
-            picking: pickingUserStore,
-            shipping: shippingUserStore,
-            tracking: trackingUserStore,
-            feedback: feedbackUserStore,
-            refund: refundUserStore,
+            order: orderStore,
+            picking: pickingStore,
+            shipping: shippingStore,
+            tracking: trackingStore,
+            feedback: feedbackStore,
+            refund: refundStore,
             
-            transaction: transactionUserStore,
-            result: resultUserStore
+            transaction: transactionStore,
+            result: resultStore
         )
     )
 }

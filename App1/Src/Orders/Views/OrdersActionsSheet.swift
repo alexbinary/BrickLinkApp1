@@ -6,7 +6,7 @@ import Core
 struct OrdersActionsSheet: View {
     
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
     

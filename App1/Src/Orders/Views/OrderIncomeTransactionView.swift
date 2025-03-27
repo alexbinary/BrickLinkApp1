@@ -7,7 +7,7 @@ import Core
 struct OrderIncomeTransactionView: View {
 
     
-    @Environment(TransactionUserStore.self)
+    @Environment(TransactionStore.self)
     var transactionStore
     
     

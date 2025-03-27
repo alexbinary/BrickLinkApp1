@@ -7,7 +7,7 @@ import Core
 struct OrderDetailFeedbackView: View {
     
     
-    @Environment(FeedbackUserStore.self)
+    @Environment(FeedbackStore.self)
     var feedbackStore
     
     

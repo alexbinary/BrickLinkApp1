@@ -7,10 +7,10 @@ import Core
 struct PickingItemView: View {
     
     
-    @Environment(PickingUserStore.self)
+    @Environment(PickingStore.self)
     var pickingStore
     
-    @Environment(InventoryUserStore.self)
+    @Environment(InventoryStore.self)
     var inventoryStore
     
     

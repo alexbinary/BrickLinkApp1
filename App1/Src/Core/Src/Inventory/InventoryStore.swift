@@ -6,7 +6,7 @@ import SwiftUI
 
 @Observable
 @MainActor
-public class InventoryUserStore {
+public class InventoryStore {
     
     
     private let inventoryCoreController: InventoryCoreController

@@ -8,7 +8,7 @@ import Core
 struct CashFlowDetailView: View {
     
     
-    @Environment(TransactionUserStore.self)
+    @Environment(TransactionStore.self)
     var transactionStore
     
     @Environment(NavigationController.self)

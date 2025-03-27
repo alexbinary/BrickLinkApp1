@@ -7,7 +7,7 @@ import Core
 struct OrderChecklistView: View {
 
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore 
     
     

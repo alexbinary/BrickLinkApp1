@@ -7,7 +7,7 @@ import Core
 struct OrdersMainList: View {
     
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
     @Environment(NavigationController.self)

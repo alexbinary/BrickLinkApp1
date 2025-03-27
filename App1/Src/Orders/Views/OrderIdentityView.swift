@@ -7,7 +7,7 @@ import Core
 struct OrderIdentityView: View {
 
     
-    @Environment(OrderUserStore.self)
+    @Environment(OrderStore.self)
     var orderStore
     
     

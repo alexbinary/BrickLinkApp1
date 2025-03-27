@@ -7,7 +7,7 @@ import Core
 struct OrderDetailRefundView: View {
     
     
-    @Environment(RefundUserStore.self)
+    @Environment(RefundStore.self)
     var refundStore
     
     

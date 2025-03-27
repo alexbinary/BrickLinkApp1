@@ -6,7 +6,7 @@ import SwiftUI
 
 @Observable
 @MainActor
-public class TransactionUserStore {
+public class TransactionStore {
     
     
     private let transactionCoreController: TransactionCoreController
