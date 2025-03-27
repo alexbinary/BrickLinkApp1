@@ -124,7 +124,7 @@ struct BrickLinkCatalogItem: Decodable {
 
 
 
-public enum BrickLinkItemType: String, Decodable, Encodable, CaseIterable, Sendable {
+enum BrickLinkItemType: String, Decodable, Encodable, CaseIterable, Sendable {
     
     case part = "PART"
     case minifig = "MINIFIG"

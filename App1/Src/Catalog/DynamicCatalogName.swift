@@ -11,13 +11,13 @@ struct DynamicCatalogName: View {
     var catalog
     
     
-    var type: BrickLinkItemType
+    var type: ItemType
     var ref: String
     
     @Binding
     var name: String?
     
-    init(forItemType type: BrickLinkItemType, ref: String, name: Binding<String?>) {
+    init(forItemType type: ItemType, ref: String, name: Binding<String?>) {
         self.type = type
         self.ref = ref
         self._name = name

@@ -6,7 +6,7 @@ import Foundation
 public struct UploadedItem: Identifiable, Codable, Equatable {
     
     public var id = UUID()
-    public let type: BrickLinkItemType
+    public let type: ItemType
     public let ref: String
     public let name: String?
     public let colorId: LegoColor.ID
@@ -22,7 +22,7 @@ public struct UploadedItem: Identifiable, Codable, Equatable {
     public let uploadDate: Date
     public let inventoryStatus: UploadInventoryStatus
     
-    public init(id: UUID = UUID(), type: BrickLinkItemType, ref: String, name: String?, colorId: LegoColor.ID, qtyBefore: Int?, qtyAfter: Int, condition: String, comment: String?, remarksBefore: String?, remarksAfter: String, unitPriceBefore: Float?, unitPriceAfter: Float, inventoryId: InventoryItem.ID, uploadDate: Date, inventoryStatus: UploadInventoryStatus) {
+    public init(id: UUID = UUID(), type: ItemType, ref: String, name: String?, colorId: LegoColor.ID, qtyBefore: Int?, qtyAfter: Int, condition: String, comment: String?, remarksBefore: String?, remarksAfter: String, unitPriceBefore: Float?, unitPriceAfter: Float, inventoryId: InventoryItem.ID, uploadDate: Date, inventoryStatus: UploadInventoryStatus) {
         self.id = id
         self.type = type
         self.ref = ref

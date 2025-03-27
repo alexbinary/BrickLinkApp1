@@ -52,9 +52,9 @@ class UploadListXMLParserDelegate : NSObject, XMLParserDelegate {
         guard elementName == "ITEM" else { return }
             
         let ref: String = self.ref
-        let type: BrickLinkItemType? = {
+        let type: ItemType? = {
             switch self.type {
-            case "P": BrickLinkItemType.part
+            case "P": ItemType.part
             default: nil
             }
         }()

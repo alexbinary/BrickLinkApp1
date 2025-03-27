@@ -4,16 +4,16 @@ import Core
 
 
 
-struct BrickLinkItemTypePicker: View {
+struct ItemTypePicker: View {
 
     
     let label: String
 
     @Binding
-    var selection: BrickLinkItemType
+    var selection: ItemType
     
     
-    init(_ label: String, selection: Binding<BrickLinkItemType>) {
+    init(_ label: String, selection: Binding<ItemType>) {
         self.label = label
         self._selection = selection
     }
@@ -22,7 +22,7 @@ struct BrickLinkItemTypePicker: View {
     var body: some View {
 
         Picker(label, selection: $selection) {
-            ForEach(BrickLinkItemType.allCases, id: \.self) { type in
+            ForEach(ItemType.allCases, id: \.self) { type in
                 Text(type.rawValue).tag(type)
             }
         }
@@ -32,6 +32,6 @@ struct BrickLinkItemTypePicker: View {
 
 
 #Preview {
-    @Previewable @State var selection: BrickLinkItemType = .part
-    BrickLinkItemTypePicker("Type", selection: $selection)
+    @Previewable @State var selection: ItemType = .part
+    ItemTypePicker("Type", selection: $selection)
 }

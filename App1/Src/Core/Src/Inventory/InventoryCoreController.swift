@@ -37,7 +37,7 @@ class InventoryCoreController {
     
     func inventory(
         
-        forType type: BrickLinkItemType,
+        forType type: ItemType,
         ref: String,
         comment: String?,
         colorId: String,
@@ -128,11 +128,11 @@ class InventoryCoreController {
     
     func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
-        let inventories = await brickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type, matchingColorId: uploadItem.colorId)
+        let inventories = await brickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type.brickLinkItemType, matchingColorId: uploadItem.colorId)
             
         if let inv = inventories.first(where: { inv in
             
-            inv.item.type == uploadItem.type
+            inv.item.type == uploadItem.type.brickLinkItemType
             && inv.item.no == uploadItem.ref
             && "\(inv.colorId)" == uploadItem.colorId
             && inv.newOrUsed == uploadItem.condition
@@ -148,7 +148,7 @@ class InventoryCoreController {
     func createInventory(
         
         ref: String,
-        type: BrickLinkItemType,
+        type: ItemType,
         colorId: String,
         quantity: Int,
         unitPrice: Float,
@@ -161,7 +161,7 @@ class InventoryCoreController {
         let blInventory = await brickLinkAPIClient.createInventory(
             
             ref: ref,
-            type: type,
+            type: type.brickLinkItemType,
             colorId: colorId,
             quantity: quantity,
             unitPrice: unitPrice,
@@ -213,7 +213,7 @@ extension InventoryItem {
             colorId: "\(bl.colorId)",
             ref: bl.item.no,
             name: bl.item.name,
-            type: bl.item.type,
+            type: ItemType(fromBl: bl.item.type),
             description: bl.description ?? "",
             remarks: bl.remarks ?? "",
             quantity: bl.quantity,

@@ -47,7 +47,7 @@ class StockCoreController {
     
     func inventory(
         
-        forType type: BrickLinkItemType,
+        forType type: ItemType,
         ref: String,
         comment: String?,
         colorId: String,
@@ -67,7 +67,7 @@ class StockCoreController {
     
     func inStockQuantity(
         
-        forType type: BrickLinkItemType,
+        forType type: ItemType,
         ref: String,
         comment: String?,
         colorId: String,

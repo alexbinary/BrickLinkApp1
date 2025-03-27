@@ -69,9 +69,9 @@ public class Catalog {
     // MARK: - Items
     
     
-    public func fetchEntry(forItemType type: BrickLinkItemType, ref: String) async -> CatalogEntry? {
+    public func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
         
-        if let entry = await brickLinkAPIClient.fetchCatalogEntry(forItemType: type, ref: ref) {
+        if let entry = await brickLinkAPIClient.fetchCatalogEntry(forItemType: type.brickLinkItemType, ref: ref) {
             
             return CatalogEntry(fromBl: entry)
         }
@@ -80,9 +80,9 @@ public class Catalog {
     }
     
     
-    public func url(forImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+    public func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
         
-        BrickLinkUtility.url(forCatalogImageOfItemOfType: type, ref: ref, colorId: colorId)
+        BrickLinkUtility.url(forCatalogImageOfItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
     }
 }
 
@@ -109,5 +109,18 @@ extension CatalogEntry {
         self.init(
             name: bl.name.htmlUnescape()
         )
+    }
+}
+
+
+
+extension ItemType {
+    
+    
+    var brickLinkItemType: BrickLinkItemType {
+        switch self {
+        case .minifig: .minifig
+        case .part: .part
+        }
     }
 }

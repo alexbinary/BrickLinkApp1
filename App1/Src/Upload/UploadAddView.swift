@@ -11,7 +11,7 @@ struct UploadAddView: View {
     var uploadStore
 
     
-    @State var type: BrickLinkItemType = .part
+    @State var type: ItemType = .part
     @State var ref: String = ""
     @State var name: String? = nil
     @State var colorId: LegoColor.ID = ""
@@ -36,7 +36,7 @@ struct UploadAddView: View {
                         
                         Form {
                             
-                            BrickLinkItemTypePicker("Type", selection: $type)
+                            ItemTypePicker("Type", selection: $type)
                                 
                             TextField("Ref", text: $ref)
                             

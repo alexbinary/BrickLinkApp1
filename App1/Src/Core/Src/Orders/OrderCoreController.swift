@@ -278,12 +278,25 @@ extension OrderItem {
             colorName: bl.colorName,
             ref: bl.item.no,
             name: bl.item.name.htmlUnescape(),
-            type: bl.item.type,
+            type: ItemType(fromBl: bl.item.type),
             location: bl.remarks ?? "",
             comment: (bl.description ?? "").htmlUnescape(),
             quantity: "\(bl.quantity)",
             unitPrice: bl.unitPrice.floatValue,
             unitPriceFinal: bl.unitPriceFinal.floatValue
         )
+    }
+}
+
+
+
+extension ItemType {
+    
+    
+    init(fromBl bl: BrickLinkItemType) {
+        switch bl {
+        case .part: self = .part
+        case .minifig: self = .minifig
+        }
     }
 }

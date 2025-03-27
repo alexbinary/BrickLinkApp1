@@ -14,14 +14,14 @@ public struct OrderItem: Identifiable, Codable {
     public let colorName: String
     public let ref: String
     public let name: String
-    public let type: BrickLinkItemType
+    public let type: ItemType
     public let location: String
     public let comment: String
     public let quantity: String
     public let unitPrice: Float
     public let unitPriceFinal: Float
     
-    public init(inventoryId: InventoryItem.ID, orderId: String, condition: String, colorId: String, colorName: String, ref: String, name: String, type: BrickLinkItemType, location: String, comment: String, quantity: String, unitPrice: Float, unitPriceFinal: Float) {
+    public init(inventoryId: InventoryItem.ID, orderId: String, condition: String, colorId: String, colorName: String, ref: String, name: String, type: ItemType, location: String, comment: String, quantity: String, unitPrice: Float, unitPriceFinal: Float) {
         self.inventoryId = inventoryId
         self.orderId = orderId
         self.condition = condition

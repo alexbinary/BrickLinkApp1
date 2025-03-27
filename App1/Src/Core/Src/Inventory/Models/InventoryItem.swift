@@ -10,7 +10,7 @@ public struct InventoryItem: Identifiable, Codable, Sendable {
     public let colorId: String
     public let ref: String
     public let name: String
-    public let type: BrickLinkItemType
+    public let type: ItemType
     public let description: String
     public let remarks: String
     public let quantity: Int
@@ -22,7 +22,7 @@ public struct InventoryItem: Identifiable, Codable, Sendable {
         colorId: String,
         ref: String,
         name: String,
-        type: BrickLinkItemType,
+        type: ItemType,
         description: String,
         remarks: String,
         quantity: Int,

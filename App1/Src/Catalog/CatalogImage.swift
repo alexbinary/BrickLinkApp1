@@ -11,11 +11,11 @@ struct CatalogImage: View {
     var catalog
     
     
-    let type: BrickLinkItemType
+    let type: ItemType
     let ref: String
     let colorId: String
     
-    init(itemType type: BrickLinkItemType, ref: String, colorId: String) {
+    init(itemType type: ItemType, ref: String, colorId: String) {
         self.type = type
         self.ref = ref
         self.colorId = colorId
