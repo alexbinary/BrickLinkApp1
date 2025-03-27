@@ -45,25 +45,24 @@ public class OrderStore {
     }
     
     
-    // MARK: - Summaries
+    // MARK: - Orders
     
     
-    public var orderSummaries: [Order] {
+    public var orders: [Order] {
         
-        orderCoreController.orderSummaries
+        orderCoreController.orders
     }
     
     
-    //
-    public func orderSummary(forOrderId orderId: Order.ID) -> Order? {
+    public func order(withId orderId: Order.ID) -> Order? {
         
-        orderCoreController.orderSummary(forOrderId: orderId)
+        orderCoreController.order(withId: orderId)
     }
     
     
-    public func loadOrderSummaries() async {
+    public func loadOrders() async {
         
-        await orderCoreController.loadOrderSummaries()
+        await orderCoreController.loadOrders()
     }
     
     
@@ -170,7 +169,7 @@ public class OrderStore {
     
     public func loadMissingOrders() async {
         
-        for order in orderSummaries {
+        for order in orders {
             
             await loadOrderDetailsIfMissing(for: order)
             await loadOrderItemsIfMissing(for: order)
@@ -181,7 +180,7 @@ public class OrderStore {
     
     public func refreshAllOrders() async {
         
-        for order in orderSummaries {
+        for order in orders {
             
             await refreshOrder(order)
         }
@@ -256,7 +255,7 @@ public class OrderStore {
     
     public func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection] {
         
-        let orders = orderSummaries.filter { $0.matches(searchText) }
+        let orders = orders.filter { $0.matches(searchText) }
         
         var sections: [OrdersMainListSection] = [
             
@@ -331,9 +330,9 @@ public class OrderStore {
     }
     
     
-    public func reloadOrderSummaries() async {
+    public func reloadOrders() async {
         
-        await orderCoreController.reloadOrderSummaries()
+        await orderCoreController.reloadOrders()
     }
     
     
@@ -351,9 +350,9 @@ public class OrderStore {
     
     public func refreshOrdersMainList() async {
         
-        await reloadOrderSummaries()
+        await reloadOrders()
         
-        let allOrders = orderSummaries
+        let allOrders = orders
         
         let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
             .filter { macroStatus(for: $0) == .inTransit }
@@ -608,7 +607,7 @@ public class OrderStore {
     
     public var ordersThatNeedCompletedAndGiveFeedback: [Order] {
         
-        orderSummaries
+        orders
             .filter { macroStatus(for: $0) == .inTransitFor30PlusDays }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
@@ -616,7 +615,7 @@ public class OrderStore {
     
     public var ordersThatNeedGiveFeedback: [Order] {
         
-        orderSummaries
+        orders
             .filter { macroStatus(for: $0) == .giveFeedback }
             .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
@@ -624,7 +623,7 @@ public class OrderStore {
     
     public var ordersToShipAndSendDriveThru: [Order] {
         
-        orderSummaries
+        orders
             .filter {
                 macroStatus(for: $0) == .ship
                 && orderChecklistStamping($0)
@@ -675,7 +674,7 @@ public class OrderStore {
     
     public var numberForSidebarBadge: Int {
         
-        orderSummaries.filter {
+        orders.filter {
             macroStatus(for: $0).isOneOf(
                 .ship, .pickAndPack, .validatePayment, .giveFeedback, .inTransitFor30PlusDays
             )

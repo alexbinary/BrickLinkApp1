@@ -27,9 +27,9 @@ public class ResultStore {
     }
     
     
-    public var orderSummaries: [Order] {
+    public var orders: [Order] {
         
-        orderCoreController.orderSummaries
+        orderCoreController.orders
     }
     
     
@@ -129,7 +129,7 @@ public class ResultStore {
         
         let periodNLastDays = 30
         
-        let orders = orderSummaries
+        let orders = orders
             .filter { $0.date.days(to: .now) < periodNLastDays }
             .filter { self.profitMargin(for: $0) != nil }
             .sorted { (self.profitMargin(for: $0) ?? 0) > (self.profitMargin(for: $1) ?? 0) }

@@ -286,7 +286,7 @@ struct OrdersMainListItem: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderSummaries.first!
+    let order = env.stores.order.orders.first!
     
     OrdersMainListItem(order: order)
         .inject(env)

@@ -29,7 +29,7 @@ class StockCoreController {
     
     var orderSummaries: [Order] {
         
-        orderCoreController.orderSummaries
+        orderCoreController.orders
     }
     
     

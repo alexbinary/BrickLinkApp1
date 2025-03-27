@@ -21,6 +21,9 @@ class OrderMacroStatusCoreController {
     }
     
     
+    // MARK: - Order macro status
+    
+    
     func orderChecklistIncomeTransaction(_ order: Order) -> Bool {
         
         orderChecklistCoreController.orderChecklistIncomeTransaction(order)
@@ -103,19 +106,6 @@ class OrderMacroStatusCoreController {
         
         orderChecklistCoreController.orderChecklistUnchangedFor30Days(order)
     }
-    
-    
-    // MARK: - Order summaries
-    
-    
-    //
-    func orderSummary(forOrderId orderId: Order.ID) -> Order? {
-        
-        orderCoreController.orderSummary(forOrderId: orderId)
-    }
-    
-    
-    // MARK: - Order macro status
     
     
     func macroStatus(for order: Order) -> OrderMacroStatus {

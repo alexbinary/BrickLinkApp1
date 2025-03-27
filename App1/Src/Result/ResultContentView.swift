@@ -105,7 +105,7 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = orderStore.orderSummaries.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
+            let ordersByMonth = orderStore.orders.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
             
             ForEach(ordersByMonth, id: \.month) { (month, elements) in
                 Section(month.name) {

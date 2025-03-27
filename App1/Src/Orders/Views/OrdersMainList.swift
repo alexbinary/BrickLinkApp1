@@ -37,7 +37,7 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: Order.ID.self) { orderId in
-            OrderDetailView(orderStore.orderSummary(forOrderId: orderId)!)
+            OrderDetailView(orderStore.order(withId: orderId)!)
         }
         .toolbar {
             
@@ -57,7 +57,7 @@ struct OrdersMainList: View {
             }
             .disabled(refreshing)
         }
-        .onChange(of: orderStore.orderSummaries, initial: true) {
+        .onChange(of: orderStore.orders, initial: true) {
             Task { await refresh() }
         }
     }

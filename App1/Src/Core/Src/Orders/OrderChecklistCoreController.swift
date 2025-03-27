@@ -36,12 +36,6 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderSummary(forOrderId orderId: Order.ID) -> Order? {
-        
-        orderCoreController.orderSummary(forOrderId: orderId)
-    }
-    
-    
     func orderIsValidatedWithoutIncomeTransaction(_ order: Order) -> Bool {
         
         transactionCoreController.orderIsValidatedWithoutIncomeTransaction(order)

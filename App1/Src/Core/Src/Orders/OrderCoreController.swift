@@ -21,20 +21,19 @@ class OrderCoreController {
     // MARK: - Order summaries
     
     
-    var orderSummaries: [Order] {
+    var orders: [Order] {
         
         dataStore.orderSummaries
     }
     
     
-    //
-    func orderSummary(forOrderId orderId: Order.ID) -> Order? {
+    func order(withId orderId: Order.ID) -> Order? {
         
-        orderSummaries.first { $0.id == orderId }
+        orders.first { $0.id == orderId }
     }
     
     
-    func loadOrderSummaries() async {
+    func loadOrders() async {
         
         print("Loading orders")
         
@@ -48,20 +47,20 @@ class OrderCoreController {
     }
     
     
-    func loadOrderSummariesIfMissing() async {
+    func loadOrdersIfMissing() async {
         
-        if orderSummaries.isEmpty {
+        if orders.isEmpty {
         
-            await loadOrderSummaries()
+            await loadOrders()
         }
     }
     
     
-    func reloadOrderSummaries() async {
+    func reloadOrders() async {
         
-        if !orderSummaries.isEmpty {
+        if !orders.isEmpty {
         
-            await loadOrderSummaries()
+            await loadOrders()
         }
     }
     
@@ -121,7 +120,7 @@ class OrderCoreController {
         await brickLinkAPIClient.updateOrderStatus(orderId: order.id, status: status)
         
         await parallel([
-            { await self.reloadOrderSummaries() },
+            { await self.reloadOrders() },
             { await self.reloadOrderDetails(for: order) },
         ])
     }
@@ -134,7 +133,7 @@ class OrderCoreController {
         await brickLinkAPIClient.updateTrackingNo(orderId: order.id, trackingNo: trackingNo)
         
         await parallel([
-            { await self.reloadOrderSummaries() },
+            { await self.reloadOrders() },
             { await self.reloadOrderDetails(for: order) },
         ])
     }
@@ -147,7 +146,7 @@ class OrderCoreController {
         await brickLinkAPIClient.sendDriveThru(orderId: order.id, mailMe: true)
         
         await parallel([
-            { await self.reloadOrderSummaries() },
+            { await self.reloadOrders() },
             { await self.reloadOrderDetails(for: order) },
         ])
     }

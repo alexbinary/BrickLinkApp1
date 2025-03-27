@@ -249,7 +249,7 @@ struct OrderDetailComptaView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderSummaries.first!
+    let order = env.stores.order.orders.first!
     
     OrderDetailComptaView(order)
         .inject(env)

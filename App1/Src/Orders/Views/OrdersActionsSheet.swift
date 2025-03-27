@@ -95,7 +95,7 @@ struct OrdersActionsSheet: View {
 #Preview {
     
     let env = createEnv()
-    let orders = env.stores.order.orderSummaries
+    let orders = env.stores.order.orders
     
     OrdersActionsSheet(orders: orders)
         .inject(env)

@@ -20,7 +20,7 @@ struct MainApp: App {
                 .task { await parallel([
                     { await env.catalog.loadColors() },
                     { await env.stores.inventory.loadInventories() },
-                    { await env.stores.order.loadOrderSummaries() },
+                    { await env.stores.order.loadOrders() },
                 ])}
         }
     }

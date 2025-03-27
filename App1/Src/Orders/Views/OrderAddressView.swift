@@ -35,7 +35,7 @@ struct OrderAddressView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderSummaries.first!
+    let order = env.stores.order.orders.first!
     
     OrderAddressView(order)
         .inject(env)

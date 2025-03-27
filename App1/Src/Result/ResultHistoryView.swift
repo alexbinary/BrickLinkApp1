@@ -42,8 +42,8 @@ struct ResultHistoryView: View {
     var orders: [Order] {
         (
             !selectedOrderIds.isEmpty
-                ? orderStore.orderSummaries.filter { selectedOrderIds.contains($0.id) }
-                : orderStore.orderSummaries
+                ? orderStore.orders.filter { selectedOrderIds.contains($0.id) }
+                : orderStore.orders
         )
         .filter { resultStore.profitMargin(for: $0) != nil }
     }
