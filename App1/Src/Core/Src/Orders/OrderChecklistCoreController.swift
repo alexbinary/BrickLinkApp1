@@ -78,9 +78,9 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderItems(for order: Order) -> [OrderItem] {
+    func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(for: order)
+        orderCoreController.items(for: order)
     }
     
     
@@ -154,7 +154,7 @@ class OrderChecklistCoreController {
     
     func orderChecklistPicking(_ order: Order) -> Bool {
         
-        let items = orderItems(for: order)
+        let items = items(for: order)
         
         let pickedItemIds = pickedItemIds(for: order)
         
@@ -164,7 +164,7 @@ class OrderChecklistCoreController {
     
     func orderChecklistVerification(_ order: Order) -> Bool {
         
-        let items = orderItems(for: order)
+        let items = items(for: order)
         
         let verifiedItemIds = verifiedItemIds(for: order)
         

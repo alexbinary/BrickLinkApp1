@@ -155,21 +155,21 @@ class OrderCoreController {
     // MARK: - Order items
     
     
-    func orderItems(for order: Order) -> [OrderItem] {
+    func items(for order: Order) -> [OrderItem] {
         
         (dataStore.orderItemsByOrderId[order.id] ?? []).reduce([], { $0 + $1 })
     }
     
     
-    func orderItems(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    func items(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        let items = orderItems(for: order)
+        let items = items(for: order)
         
         return itemsIds.map { id in items.first { $0.id == id }! }
     }
     
     
-    func loadOrderItems(for order: Order) async {
+    func loadItems(for order: Order) async {
         
         print("Loading order items \(order.id)")
         
@@ -186,11 +186,11 @@ class OrderCoreController {
     }
     
     
-    func loadOrderItemsIfMissing(for order: Order) async {
+    func loadItemsIfMissing(for order: Order) async {
         
         if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == order.id }) {
             
-            await loadOrderItems(for: order)
+            await loadItems(for: order)
         }
     }
 }

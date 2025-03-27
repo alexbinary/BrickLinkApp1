@@ -24,15 +24,15 @@ public class PickingStore {
     }
     
     
-    public func orderItems(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    public func items(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        orderCoreController.orderItems(for: order, fromItemIds: itemsIds)
+        orderCoreController.items(for: order, fromItemIds: itemsIds)
     }
     
     
-    public func orderItems(for order: Order) -> [OrderItem] {
+    public func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(for: order)
+        orderCoreController.items(for: order)
     }
     
     
@@ -49,7 +49,7 @@ public class PickingStore {
         
         let pickedIds = pickedItemIds(for: order)
         
-        return orderItems(for: order, fromItemIds: pickedIds).reversed()
+        return items(for: order, fromItemIds: pickedIds).reversed()
     }
     
     
@@ -57,7 +57,7 @@ public class PickingStore {
         
         let pickedIds = pickedItemIds(for: order)
         
-        return orderItems(for: order)
+        return items(for: order)
             .filter { !pickedIds.contains($0.id) }
             .sorted { $0.location < $1.location }
     }
@@ -67,7 +67,7 @@ public class PickingStore {
         
         let pickedIds = pickedItemIds(for: order)
         
-        return orderItems(for: order).filter { !pickedIds.contains($0.id) }
+        return items(for: order).filter { !pickedIds.contains($0.id) }
     }
     
     
@@ -114,7 +114,7 @@ public class PickingStore {
         
         let verifiedIds = verifiedItemIds(for: order)
         
-        return orderItems(for: order, fromItemIds: verifiedIds).reversed()
+        return items(for: order, fromItemIds: verifiedIds).reversed()
     }
     
     
@@ -123,7 +123,7 @@ public class PickingStore {
         let pickedIds = pickedItemIds(for: order)
         let verifiedIds = verifiedItemIds(for: order)
         
-        return orderItems(for: order)
+        return items(for: order)
             .filter { pickedIds.contains($0.id) && !verifiedIds.contains($0.id) }
             .sorted { a, b in a.condition == "N" }
     }
@@ -133,7 +133,7 @@ public class PickingStore {
         
         let verifiedIds = verifiedItemIds(for: order)
         
-        return orderItems(for: order).filter { !verifiedIds.contains($0.id) }
+        return items(for: order).filter { !verifiedIds.contains($0.id) }
     }
     
     

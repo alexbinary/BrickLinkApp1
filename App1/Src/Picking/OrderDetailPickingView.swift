@@ -88,7 +88,7 @@ struct OrderDetailPickingView: View {
         }
         .padding()
         .onChange(of: order, initial: true) { Task {
-            await orderStore.loadOrderItemsIfMissing(for: order)
+            await orderStore.loadItemsIfMissing(for: order)
         }}
         .onAppear { Task {
             await inventoryStore.reloadInventories()

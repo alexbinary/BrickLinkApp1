@@ -21,9 +21,9 @@ class PickingProgressCoreController {
     }
     
     
-    func orderItems(for order: Order) -> [OrderItem] {
+    func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(for: order)
+        orderCoreController.items(for: order)
     }
     
     
@@ -41,7 +41,7 @@ class PickingProgressCoreController {
 
     func pickingProgress(for order: Order) -> Percent {
         
-        let total = orderItems(for: order).count
+        let total = items(for: order).count
         let picked = pickedItemIds(for: order).count
         
         return Percent(Double(picked)/Double(total))
@@ -50,7 +50,7 @@ class PickingProgressCoreController {
 
     func pickingVerificationProgress(for order: Order) -> Percent {
         
-        let total = orderItems(for: order).count
+        let total = items(for: order).count
         let verified = verifiedItemIds(for: order).count
         
         return Percent(Double(verified)/Double(total))

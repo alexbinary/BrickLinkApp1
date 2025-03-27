@@ -90,21 +90,21 @@ public class OrderStore {
     // MARK: - Items
     
     
-    public func orderItems(for order: Order) -> [OrderItem] {
+    public func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(for: order)
+        orderCoreController.items(for: order)
     }
     
     
-    public func loadOrderItems(for order: Order) async {
+    public func loadItems(for order: Order) async {
         
-        await orderCoreController.loadOrderItems(for: order)
+        await orderCoreController.loadItems(for: order)
     }
     
     
-    public func loadOrderItemsIfMissing(for order: Order) async {
+    public func loadItemsIfMissing(for order: Order) async {
         
-        await orderCoreController.loadOrderItemsIfMissing(for: order)
+        await orderCoreController.loadItemsIfMissing(for: order)
     }
     
     
@@ -156,7 +156,7 @@ public class OrderStore {
     public func forceRefreshOrder(_ order: Order) async {
         
         await loadDetails(for: order)
-        await loadOrderItems(for: order)
+        await loadItems(for: order)
         await loadOrderFeedbacks(for: order)
     }
     
@@ -166,7 +166,7 @@ public class OrderStore {
         for order in orders {
             
             await loadDetailsIfMissing(for: order)
-            await loadOrderItemsIfMissing(for: order)
+            await loadItemsIfMissing(for: order)
             await loadOrderFeedbacksIfMissing(for: order)
         }
     }
@@ -186,7 +186,7 @@ public class OrderStore {
         if shouldRefreshOrder(order) {
             
             await loadDetails(for: order)
-            await loadOrderItems(for: order)
+            await loadItems(for: order)
             await loadOrderFeedbacks(for: order)
         }
     }
@@ -212,7 +212,7 @@ public class OrderStore {
                 return true
             }
             
-            let orderItems = orderItems(for: order)
+            let orderItems = items(for: order)
             if orderItems.isEmpty {
                 
                 return true

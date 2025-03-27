@@ -33,9 +33,9 @@ class StockCoreController {
     }
     
     
-    func orderItems(for order: Order) -> [OrderItem] {
+    func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.orderItems(for: order)
+        orderCoreController.items(for: order)
     }
     
     
@@ -99,7 +99,7 @@ class StockCoreController {
             
         }.flatMap { order in
             
-            orderItems(for: order).filter { item in
+            items(for: order).filter { item in
                 
                 !pickedItemIds(for: order).contains(item.id)
             }
