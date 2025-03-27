@@ -19,7 +19,7 @@ public struct BrickLinkAPICredentials {
     let tokenSecret: String
     
     
-    init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
+    public init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
      
         self.consumerKey = consumerKey
         self.consumerSecret = consumerSecret
