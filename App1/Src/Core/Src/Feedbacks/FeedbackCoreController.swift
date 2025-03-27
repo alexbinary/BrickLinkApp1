@@ -39,7 +39,7 @@ class FeedbackCoreController {
     }
     
     
-    func loadOrderFeedbacks(for order: Order) async {
+    func loadFeedbacks(for order: Order) async {
         
         print("Loading order feedbacks \(order.id)")
         
@@ -53,20 +53,20 @@ class FeedbackCoreController {
     }
     
     
-    func loadOrderFeedbacksIfMissing(for order: Order) async {
+    func loadFeedbacksIfMissing(for order: Order) async {
         
         if !dataStore.orderFeedbacksByOrderId.keys.contains(order.id) {
             
-            await loadOrderFeedbacks(for: order)
+            await loadFeedbacks(for: order)
         }
     }
     
     
-    func reloadOrderFeedbacks(for order: Order) async {
+    func reloadFeedbacks(for order: Order) async {
         
         if dataStore.orderFeedbacksByOrderId.keys.contains(order.id) {
             
-            await loadOrderFeedbacks(for: order)
+            await loadFeedbacks(for: order)
         }
     }
     
@@ -78,7 +78,7 @@ class FeedbackCoreController {
         
         await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
-        await reloadOrderFeedbacks(for: order)
+        await reloadFeedbacks(for: order)
     }
     
     

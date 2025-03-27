@@ -132,21 +132,21 @@ public class OrderStore {
     // MARK: - Feedbacks
     
     
-    public func orderFeedbacks(for order: Order) -> [Feedback] {
+    public func feedbacks(for order: Order) -> [Feedback] {
         
         feedbackCoreController.feedbacks(for: order)
     }
     
     
-    public func loadOrderFeedbacks(for order: Order) async {
+    public func loadFeedbacks(for order: Order) async {
         
-        await feedbackCoreController.loadOrderFeedbacks(for: order)
+        await feedbackCoreController.loadFeedbacks(for: order)
     }
     
     
-    public func loadOrderFeedbacksIfMissing(for order: Order) async {
+    public func loadFeedbacksIfMissing(for order: Order) async {
         
-        await feedbackCoreController.loadOrderFeedbacksIfMissing(for: order)
+        await feedbackCoreController.loadFeedbacksIfMissing(for: order)
     }
     
     
@@ -157,7 +157,7 @@ public class OrderStore {
         
         await loadDetails(for: order)
         await loadItems(for: order)
-        await loadOrderFeedbacks(for: order)
+        await loadFeedbacks(for: order)
     }
     
     
@@ -167,7 +167,7 @@ public class OrderStore {
             
             await loadDetailsIfMissing(for: order)
             await loadItemsIfMissing(for: order)
-            await loadOrderFeedbacksIfMissing(for: order)
+            await loadFeedbacksIfMissing(for: order)
         }
     }
     
@@ -187,7 +187,7 @@ public class OrderStore {
             
             await loadDetails(for: order)
             await loadItems(for: order)
-            await loadOrderFeedbacks(for: order)
+            await loadFeedbacks(for: order)
         }
     }
     
@@ -223,7 +223,7 @@ public class OrderStore {
                 return true
             }
             
-            let feedbacks = orderFeedbacks(for: order)
+            let feedbacks = feedbacks(for: order)
             if !feedbacks.hasSellerFeedback() {
                 
                 return true
@@ -336,9 +336,9 @@ public class OrderStore {
     }
     
     
-    public func reloadOrderFeedbacks(for order: Order) async {
+    public func reloadFeedbacks(for order: Order) async {
         
-        await feedbackCoreController.reloadOrderFeedbacks(for: order)
+        await feedbackCoreController.reloadFeedbacks(for: order)
     }
     
     
@@ -359,7 +359,7 @@ public class OrderStore {
             .filter { macroStatus(for: $0).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback) }
         
         for order in ordersThatNeedRefreshFeedback {
-            await reloadOrderFeedbacks(for: order)
+            await reloadFeedbacks(for: order)
         }
     }
     

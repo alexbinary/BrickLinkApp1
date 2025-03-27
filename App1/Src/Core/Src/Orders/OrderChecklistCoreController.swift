@@ -96,7 +96,7 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderFeedbacks(for order: Order) -> [Feedback] {
+    func feedbacks(for order: Order) -> [Feedback] {
         
         feedbackCoreController.feedbacks(for: order)
     }
@@ -231,7 +231,7 @@ class OrderChecklistCoreController {
     
     func orderChecklistBuyerFeedback(_ order: Order) -> Bool {
         
-        return orderFeedbacks(for: order).buyerFeedback() != nil
+        return feedbacks(for: order).buyerFeedback() != nil
     }
     
     
@@ -241,7 +241,7 @@ class OrderChecklistCoreController {
             return true
         }
         
-        return orderFeedbacks(for: order).sellerFeedback() != nil
+        return feedbacks(for: order).sellerFeedback() != nil
     }
     
     
