@@ -11,9 +11,9 @@ struct OrderIncomeTransactionView: View {
     var transactionStore
     
     
-    let order: OrderDetails
+    let order: Order
     
-    init(_ order: OrderDetails) {
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -171,7 +171,7 @@ struct OrderIncomeTransactionView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderIncomeTransactionView(order)
         .inject(env)

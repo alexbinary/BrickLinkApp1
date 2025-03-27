@@ -11,9 +11,9 @@ struct OrderChecklistView: View {
     var orderStore 
     
     
-    let order: OrderDetails
+    let order: Order
     
-    init(_ order: OrderDetails) {
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -67,7 +67,7 @@ extension View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderChecklistView(order)
         .inject(env)

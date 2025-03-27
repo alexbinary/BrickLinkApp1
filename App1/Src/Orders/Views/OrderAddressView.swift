@@ -7,20 +7,25 @@ import Core
 struct OrderAddressView: View {
 
     
-    let order: OrderDetails
+    @Environment(OrderStore.self)
+    var orderStore
     
-    init(_ order: OrderDetails) {
+    
+    let order: Order
+    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
+    
+    init(_ order: Order) {
         self.order = order
     }
     
     
     var body: some View {
-
+        
         VStack(alignment: .leading) {
             
-            Text(order.shippingAddressName)
-            Text(order.shippingAddress).fixedSize(horizontal: false, vertical: true)
-            Text(order.shippingAddressCountryCode)
+            Text(orderDetails.shippingAddressName)
+            Text(orderDetails.shippingAddress).fixedSize(horizontal: false, vertical: true)
+            Text(orderDetails.shippingAddressCountryCode)
         }
     }
 }
@@ -30,7 +35,7 @@ struct OrderAddressView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderAddressView(order)
         .inject(env)

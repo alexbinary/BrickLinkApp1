@@ -11,9 +11,9 @@ struct OrderDetailFeedbackView: View {
     var feedbackStore
     
     
-    let order: OrderDetails
+    let order: Order
     
-    init(_ order: OrderDetails) {
+    init(_ order: Order) {
         self.order = order
     }
     

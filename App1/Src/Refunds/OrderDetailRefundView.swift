@@ -10,10 +10,14 @@ struct OrderDetailRefundView: View {
     @Environment(RefundStore.self)
     var refundStore
     
+    @Environment(OrderStore.self)
+    var orderStore
     
-    let order: OrderDetails
     
-    init(_ order: OrderDetails) {
+    let order: Order
+    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
+    
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -43,7 +47,7 @@ struct OrderDetailRefundView: View {
                 Button("Create refund") { self.submitRefund() }
             }
             
-            Table(refundStore.refunds(for: order)) {
+            Table(refundStore.refunds(for: orderDetails)) {
                 
                 TableColumn("Date") { refund in
                     Text(refund.date, format: .dateTime)

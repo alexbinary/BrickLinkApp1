@@ -7,14 +7,9 @@ import Core
 struct OrderIdentityView: View {
 
     
-    @Environment(OrderStore.self)
-    var orderStore
+    let order: Order
     
-    
-    let order: OrderDetails
-    var orderSummary: Order { orderStore.orderSummary(forOrderWithId: order.id)! }
-    
-    init(_ order: OrderDetails) {
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -30,7 +25,7 @@ struct OrderIdentityView: View {
                     Text("placed").captionStyle()
                 }
                 GridRow {
-                    OrderLink(orderSummary) { Text(order.id) }
+                    OrderLink(order) { Text(order.id) }
                         .font(.title2)
                         .monospacedDigit()
                     Text(order.date, format: .dateTime)
@@ -73,7 +68,7 @@ struct OrderIdentityView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderIdentityView(order)
         .inject(env)

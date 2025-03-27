@@ -17,9 +17,9 @@ struct OrderDetailPickingView: View {
     var pickingStore
     
     
-    let order: OrderDetails
+    let order: Order
     
-    init(_ order: OrderDetails) {
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -101,7 +101,7 @@ struct OrderDetailPickingView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderDetailPickingView(order)
         .inject(env)

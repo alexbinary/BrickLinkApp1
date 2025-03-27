@@ -16,10 +16,14 @@ struct OrderDetailComptaView: View {
     @Environment(RefundStore.self)
     var refundStore
     
+    @Environment(OrderStore.self)
+    var orderStore
     
-    let order: OrderDetails
     
-    init(_ order: OrderDetails) {
+    let order: Order
+    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
+    
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -139,7 +143,7 @@ struct OrderDetailComptaView: View {
             
             HStack {
                 Text("Latest refund:")
-                if let refund = refundStore.refunds(for: order).last {
+                if let refund = refundStore.refunds(for: orderDetails).last {
                     Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
                 }
             }
@@ -188,7 +192,7 @@ struct OrderDetailComptaView: View {
             self.shippingComment = ""
             
             self.refundDate = Date()
-            self.refundAmount = refundStore.refunds(for: order).last?.amount ?? 0
+            self.refundAmount = refundStore.refunds(for: orderDetails).last?.amount ?? 0
             self.refundPaymentMethod = .paypal
             self.refundComment = ""
         }
@@ -245,7 +249,7 @@ struct OrderDetailComptaView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderDetailComptaView(order)
         .inject(env)

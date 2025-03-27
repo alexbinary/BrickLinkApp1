@@ -14,9 +14,10 @@ struct OrderDetailShippingView: View {
     var shippingStore
     
     
-    let order: OrderDetails
+    let order: Order
+    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
     
-    init(_ order: OrderDetails) {
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -48,26 +49,26 @@ struct OrderDetailShippingView: View {
                         
                         InfoCardView(title: "􀭭 Weight") {
                             
-                            Text("\(String(format: "%.0f", order.totalWeight))g")
+                            Text("\(String(format: "%.0f", orderDetails.totalWeight))g")
                                 .bold()
                                 .frame(width: width1, height: height1)
                             
                         } detail: {
                             
-                            Text("Charged \(String(format: "%.0f", order.totalWeight * orderWeightMarginRatio))g")
+                            Text("Charged \(String(format: "%.0f", orderDetails.totalWeight * orderWeightMarginRatio))g")
                                 .foregroundStyle(.secondary)
                                 .frame(width: width1, height: height2)
                         }
                         
                         InfoCardView(title: "􀖧 Shipping") {
                             
-                            Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                            Text(orderDetails.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                                 .bold()
                                 .frame(width: width2, height: height1)
                             
                         } detail: {
                             
-                            Text(order.shippingMethodName ?? "")
+                            Text(orderDetails.shippingMethodName ?? "")
                                 .lineLimit(2, reservesSpace: true)
                                 .foregroundStyle(.secondary)
                                 .frame(height: height2)
@@ -78,7 +79,7 @@ struct OrderDetailShippingView: View {
                 
                         HeaderTitleView(label: "􂄹 Remarks")
                         
-                        Text(order.remarks ?? "").font(.title3).padding(.horizontal)
+                        Text(orderDetails.remarks ?? "").font(.title3).padding(.horizontal)
                     }
                     .padding(8)
                     .roundedContainer(style: .outline)
@@ -87,7 +88,7 @@ struct OrderDetailShippingView: View {
                 Spacer()
                 
                 ShippingCostInfo(
-                    shippingMethodId: order.shippingMethodId,
+                    shippingMethodId: orderDetails.shippingMethodId,
                     selectedShippingCost: selectedShippingCost
                 )
                 .padding()
@@ -194,7 +195,7 @@ struct OrderDetailShippingView: View {
                             
                             Text("Tracking no :")
                             
-                            var trackingNoEditValue = order.trackingNo
+                            var trackingNoEditValue = orderDetails.trackingNo
                             
                             let trackingNoBinding = Binding<String> {
                                 return trackingNoEditValue ?? ""
@@ -217,7 +218,7 @@ struct OrderDetailShippingView: View {
                             
                             Text("Drive thru :")
                             
-                            if order.driveThruSent {
+                            if orderDetails.driveThruSent {
                                 Text("sent")
                             } else {
                                 Text("not sent")
@@ -253,7 +254,7 @@ struct OrderDetailShippingView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderDetailShippingView(order)
         .inject(env)

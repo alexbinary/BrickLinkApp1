@@ -11,8 +11,12 @@ struct OrderDetailView: View {
     var orderStore
     
     
-    let orderSummary: Order
-    var order: OrderDetails? { orderStore.orderDetails(forOrderWithId: orderSummary.id) }
+    let order: Order
+    var orderDetails: OrderDetails? { orderStore.orderDetails(forOrderWithId: order.id) }
+    
+    init(_ order: Order) {
+        self.order = order
+    }
     
     
     @State private var columnWidth: CGFloat?
@@ -22,7 +26,7 @@ struct OrderDetailView: View {
         
         Group {
             
-            if let order = order {
+            if let _ = orderDetails {
                 
                 HStack(alignment: .top, spacing: 12) {
                     
@@ -74,9 +78,9 @@ struct OrderDetailView: View {
             }
         }
         .padding()
-        .onChange(of: orderSummary.id, initial: true) {
-            Task { await orderStore.forceRefreshOrder(orderId: orderSummary.id)}
+        .onChange(of: order.id, initial: true) {
+            Task { await orderStore.forceRefreshOrder(orderId: order.id)}
         }
-        .navigationTitle("Order \(orderSummary.id)")
+        .navigationTitle("Order \(order.id)")
     }
 }

@@ -7,9 +7,14 @@ import Core
 struct OrderCostView: View {
 
     
-    let order: OrderDetails
+    @Environment(OrderStore.self)
+    var orderStore
     
-    init(_ order: OrderDetails) {
+    
+    let order: Order
+    var orderDetails: OrderDetails { orderStore.orderDetails(forOrderWithId: order.id)! }
+    
+    init(_ order: Order) {
         self.order = order
     }
     
@@ -50,11 +55,11 @@ struct OrderCostView: View {
                     
                     Text("􀖧 Shipping").captionStyle()
                     
-                    Text(order.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
+                    Text(orderDetails.shippingCost, format: .currency(code: order.costCurrencyCode).presentation(.isoCode))
                         .font(.title3)
                     
                     if order.dispCostCurrencyCode != order.costCurrencyCode {
-                        Text(order.dispShippingCost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
+                        Text(orderDetails.dispShippingCost, format: .currency(code: order.dispCostCurrencyCode).presentation(.isoCode))
                             .font(.title3)
                     }
                 }
@@ -66,7 +71,7 @@ struct OrderCostView: View {
 #Preview {
     
     let env = createEnv()
-    let order = env.stores.order.orderDetails.first!
+    let order = env.stores.order.orderSummaries.first!
     
     OrderCostView(order)
         .inject(env)
