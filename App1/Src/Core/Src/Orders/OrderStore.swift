@@ -153,7 +153,7 @@ public class OrderStore {
     // MARK: - Reload
     
     
-    public func forceRefreshOrder(_ order: Order) async {
+    public func forceRefresh(_ order: Order) async {
         
         await loadDetails(for: order)
         await loadItems(for: order)
@@ -176,14 +176,14 @@ public class OrderStore {
         
         for order in orders {
             
-            await refreshOrder(order)
+            await refresh(order)
         }
     }
     
     
-    public func refreshOrder(_ order: Order) async {
+    public func refresh(_ order: Order) async {
         
-        if shouldRefreshOrder(order) {
+        if shouldRefresh(order) {
             
             await loadDetails(for: order)
             await loadItems(for: order)
@@ -202,7 +202,7 @@ public class OrderStore {
     }
     
     
-    public func shouldRefreshOrder(_ order: Order) -> Bool {
+    public func shouldRefresh(_ order: Order) -> Bool {
         
         if orderIsClosedForMoreThan30Days(order) {
             
