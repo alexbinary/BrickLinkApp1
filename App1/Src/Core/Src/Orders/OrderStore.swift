@@ -69,12 +69,6 @@ public class OrderStore {
     // MARK: - Details
     
     
-    public var orderDetails: [OrderDetails] {
-        
-        orderCoreController.orderDetails
-    }
-    
-    
     public func orderDetails(for order: Order) -> OrderDetails? {
         
         orderCoreController.orderDetails(for: order)

@@ -33,12 +33,6 @@ public class ResultStore {
     }
     
     
-    public var orderDetails: [OrderDetails] {
-        
-        orderCoreController.orderDetails
-    }
-    
-    
     public func shippingCost(for order: Order) -> Float? {
         
         shippingCoreController.confirmedShippingCost(for: order)
