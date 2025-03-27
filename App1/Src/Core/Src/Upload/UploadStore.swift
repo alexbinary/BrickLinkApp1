@@ -13,8 +13,11 @@ public class UploadStore {
     private let catalog: Catalog
 
     
-    public init(_ uploadCoreController: UploadCoreController, _ inventoryCoreController: InventoryCoreController, _ catalog: Catalog) {
-        
+    init(
+        _ uploadCoreController: UploadCoreController,
+        _ inventoryCoreController: InventoryCoreController,
+        _ catalog: Catalog
+    ) {
         self.uploadCoreController = uploadCoreController
         self.inventoryCoreController = inventoryCoreController
         self.catalog = catalog

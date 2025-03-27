@@ -17,7 +17,7 @@ public class OrderStore {
     private let feedbackPostController: FeedbackPostController
     
     
-    public init(
+    init(
         _ orderCoreController: OrderCoreController,
         _ orderChecklistCoreController: OrderChecklistCoreController,
         _ orderMacroStatusCoreController: OrderMacroStatusCoreController,

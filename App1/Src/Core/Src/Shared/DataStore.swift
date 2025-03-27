@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-public class DataStore {
+class DataStore {
     
     
     private let dataFileUrl: URL
@@ -12,7 +12,7 @@ public class DataStore {
     private var data: DataFile? = nil
     
     
-    public init(dataFileUrl: URL) {
+    init(dataFileUrl: URL) {
         
         print("Init data store with file \(dataFileUrl)")
         
@@ -52,22 +52,22 @@ public class DataStore {
     }
     
     
-    public func save() throws {
+    func save() throws {
         
         try write()
     }
     
     
-    // MARK: - Public setters & getters
+    // MARK: - setters & getters
     
     
-    public var colors: [LegoColor] {
+    var colors: [LegoColor] {
         
         data?.colors ?? []
     }
     
     
-    public func setColors(_ colors: [LegoColor]) throws {
+    func setColors(_ colors: [LegoColor]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -75,13 +75,13 @@ public class DataStore {
     }
     
     
-    public var inventories: [InventoryItem] {
+    var inventories: [InventoryItem] {
         
         data?.inventories ?? []
     }
     
     
-    public func setInventories(_ inventories: [InventoryItem]) throws {
+    func setInventories(_ inventories: [InventoryItem]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -89,7 +89,7 @@ public class DataStore {
     }
     
     
-    public func setInventory(_ inventory: InventoryItem) throws {
+    func setInventory(_ inventory: InventoryItem) throws {
         
         var inventories = self.inventories
         
@@ -103,13 +103,13 @@ public class DataStore {
     }
     
     
-    public var orderSummaries: [OrderSummary] {
+    var orderSummaries: [OrderSummary] {
         
         data?.orderSummaries ?? []
     }
     
     
-    public func setOrderSummaries(_ orderSummaries: [OrderSummary]) throws {
+    func setOrderSummaries(_ orderSummaries: [OrderSummary]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -117,13 +117,13 @@ public class DataStore {
     }
     
     
-    public var orderDetails: [OrderDetails] {
+    var orderDetails: [OrderDetails] {
         
         data?.orderDetails ?? []
     }
     
     
-    public func setOrderDetails(_ orderDetails: [OrderDetails]) throws {
+    func setOrderDetails(_ orderDetails: [OrderDetails]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -131,7 +131,7 @@ public class DataStore {
     }
     
     
-    public func setOrderDetail(_ orderDetail: OrderDetails) throws {
+    func setOrderDetail(_ orderDetail: OrderDetails) throws {
         
         var orderDetails = self.orderDetails
         
@@ -145,13 +145,13 @@ public class DataStore {
     }
     
     
-    public var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]] {
+    var orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]] {
         
         data?.orderItemsByOrderId ?? [:]
     }
     
     
-    public func setOrderItemsByOrderId(_ orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]) throws {
+    func setOrderItemsByOrderId(_ orderItemsByOrderId: [OrderSummary.ID: [[OrderItem]]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -159,7 +159,7 @@ public class DataStore {
     }
     
     
-    public func setOrderItems(_ items: [[OrderItem]], forOrderId orderId: OrderSummary.ID) throws {
+    func setOrderItems(_ items: [[OrderItem]], forOrderId orderId: OrderSummary.ID) throws {
         
         var orderItemsByOrderId = self.orderItemsByOrderId
         
@@ -169,13 +169,13 @@ public class DataStore {
     }
     
     
-    public var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]] {
+    var orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]] {
         
         data?.orderFeedbacksByOrderId ?? [:]
     }
     
     
-    public func setOrderFeedbacksByOrderId(_ orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]]) throws {
+    func setOrderFeedbacksByOrderId(_ orderFeedbacksByOrderId: [OrderSummary.ID: [Feedback]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -183,7 +183,7 @@ public class DataStore {
     }
     
     
-    public func setOrderFeedbacks(_ feedbacks: [Feedback], forOrderId orderId: OrderSummary.ID) throws {
+    func setOrderFeedbacks(_ feedbacks: [Feedback], forOrderId orderId: OrderSummary.ID) throws {
         
         var orderFeedbacksByOrderId = self.orderFeedbacksByOrderId
         
@@ -193,13 +193,13 @@ public class DataStore {
     }
 
     
-    public var shippingCostsByOrderId: [OrderSummary.ID: Float] {
+    var shippingCostsByOrderId: [OrderSummary.ID: Float] {
         
         data?.shippingCostsByOrderId ?? [:]
     }
     
     
-    public func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderSummary.ID: Float]) throws {
+    func setShippingCostsByOrderId(_ shippingCostsByOrderId: [OrderSummary.ID: Float]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -207,7 +207,7 @@ public class DataStore {
     }
     
     
-    public func setShippingCost(_ cost: Float, forOrderId orderId: OrderSummary.ID) throws {
+    func setShippingCost(_ cost: Float, forOrderId orderId: OrderSummary.ID) throws {
         
         var shippingCostsByOrderId = self.shippingCostsByOrderId
         
@@ -217,13 +217,13 @@ public class DataStore {
     }
     
     
-    public var stampingMethodByOrderId: [OrderSummary.ID: String] {
+    var stampingMethodByOrderId: [OrderSummary.ID: String] {
         
         data?.stampingMethodByOrderId ?? [:]
     }
     
     
-    public func setStampingMethodByOrderId(_ stampingMethodByOrderId: [OrderSummary.ID: String]) throws {
+    func setStampingMethodByOrderId(_ stampingMethodByOrderId: [OrderSummary.ID: String]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -231,7 +231,7 @@ public class DataStore {
     }
     
     
-    public func setStampingMethod(_ method: String, forOrderId orderId: OrderSummary.ID) throws {
+    func setStampingMethod(_ method: String, forOrderId orderId: OrderSummary.ID) throws {
         
         var stampingMethodByOrderId = self.stampingMethodByOrderId
         
@@ -241,13 +241,13 @@ public class DataStore {
     }
     
     
-    public var pickedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
+    var pickedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
         
         data?.pickedItemIdsByOrderId ?? [:]
     }
     
     
-    public func setPickedItemIdsByOrderId(_ pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
+    func setPickedItemIdsByOrderId(_ pickedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -255,7 +255,7 @@ public class DataStore {
     }
     
     
-    public func addPickedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
+    func addPickedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
         
         var pickedItemsByOrderId = self.pickedItemIdsByOrderId
         var pickedItemsForOrder = pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -269,7 +269,7 @@ public class DataStore {
     }
     
     
-    public func removePickedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
+    func removePickedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
         
         var pickedItemsByOrderId = self.pickedItemIdsByOrderId
         var pickedItemsForOrder = pickedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -285,13 +285,13 @@ public class DataStore {
     }
     
     
-    public var verifiedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
+    var verifiedItemIdsByOrderId: [OrderSummary.ID: [OrderItem.ID]] {
         
         data?.verifiedItemIdsByOrderId ?? [:]
     }
     
     
-    public func setVerifiedItemIdsByOrderId(_ verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
+    func setVerifiedItemIdsByOrderId(_ verifiedItemsByOrderId: [OrderSummary.ID: [OrderItem.ID]]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -299,7 +299,7 @@ public class DataStore {
     }
     
     
-    public func addVerifiedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
+    func addVerifiedItemId(_ itemId: OrderItem.ID, toOrderWithId orderId: OrderSummary.ID) throws {
         
         var verifiedItemsByOrderId = self.verifiedItemIdsByOrderId
         var verifiedItemsForOrder = verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -313,7 +313,7 @@ public class DataStore {
     }
     
     
-    public func removeVerifiedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
+    func removeVerifiedItemId(_ itemId: OrderItem.ID, fromOrderWithId orderId: OrderSummary.ID) throws {
         
         var verifiedItemsByOrderId = self.verifiedItemIdsByOrderId
         var verifiedItemsForOrder = verifiedItemsByOrderId[orderId] ?? [OrderItem.ID]()
@@ -329,13 +329,13 @@ public class DataStore {
     }
     
     
-    public var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date] {
         
         data?.dateValidatedWithoutIncomeTransactionByOrderId ?? [:]
     }
     
     
-    public func setDateValidatedWithoutIncomeTransactionByOrderId(_ dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutIncomeTransactionByOrderId(_ dateValidatedWithoutIncomeTransactionByOrderId: [OrderSummary.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -343,7 +343,7 @@ public class DataStore {
     }
     
     
-    public func setDateValidatedWithoutIncomeTransaction(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutIncomeTransaction(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
         
         var dateValidatedWithoutIncomeTransactionByOrderId = self.dateValidatedWithoutIncomeTransactionByOrderId
         
@@ -353,13 +353,13 @@ public class DataStore {
     }
     
     
-    public var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date] {
         
         data?.dateValidatedWithoutShippingTransactionByOrderId ?? [:]
     }
     
     
-    public func setDateValidatedWithoutShippingTransactionByOrderId(_ dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutShippingTransactionByOrderId(_ dateValidatedWithoutShippingTransactionByOrderId: [OrderSummary.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -367,7 +367,7 @@ public class DataStore {
     }
     
     
-    public func setDateValidatedWithoutShippingTransaction(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutShippingTransaction(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
         
         var dateValidatedWithoutShippingTransactionByOrderId = self.dateValidatedWithoutShippingTransactionByOrderId
         
@@ -377,13 +377,13 @@ public class DataStore {
     }
     
     
-    public var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date] {
         
         data?.dateValidatedWithoutStampingByOrderId ?? [:]
     }
     
     
-    public func setDateValidatedWithoutStampingByOrderId(_ dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutStampingByOrderId(_ dateValidatedWithoutStampingByOrderId: [OrderSummary.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -391,7 +391,7 @@ public class DataStore {
     }
     
     
-    public func setDateValidatedWithoutStamping(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutStamping(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
         
         var dateValidatedWithoutStampingByOrderId = self.dateValidatedWithoutStampingByOrderId
         
@@ -401,13 +401,13 @@ public class DataStore {
     }
     
     
-    public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
         
         data?.dateValidatedWithoutFeedbackByOrderId ?? [:]
     }
     
     
-    public func setDateValidatedWithoutFeedbackByOrderId(_ dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]) throws {
+    func setDateValidatedWithoutFeedbackByOrderId(_ dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -415,7 +415,7 @@ public class DataStore {
     }
     
     
-    public func setDateValidatedWithoutFeedback(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
+    func setDateValidatedWithoutFeedback(_ date: Date, forOrderId orderId: OrderSummary.ID) throws {
         
         var dateValidatedWithoutFeedbackByOrderId = self.dateValidatedWithoutFeedbackByOrderId
         
@@ -425,13 +425,13 @@ public class DataStore {
     }
     
     
-    public var uploadItems: [UploadItem] {
+    var uploadItems: [UploadItem] {
         
         data?.uploadItems ?? []
     }
     
     
-    public func setUploadItems(_ uploadItems: [UploadItem]) throws {
+    func setUploadItems(_ uploadItems: [UploadItem]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -439,7 +439,7 @@ public class DataStore {
     }
     
     
-    public func addUploadItem(_ uploadItem: UploadItem) throws {
+    func addUploadItem(_ uploadItem: UploadItem) throws {
         
         var uploadItems = self.uploadItems
         
@@ -449,7 +449,7 @@ public class DataStore {
     }
     
     
-    public func addUploadItems(_ uploadItems: [UploadItem]) throws {
+    func addUploadItems(_ uploadItems: [UploadItem]) throws {
         
         var uploadItems = self.uploadItems
         
@@ -459,7 +459,7 @@ public class DataStore {
     }
     
     
-    public func deleteUploadItem(_ uploadItem: UploadItem) throws {
+    func deleteUploadItem(_ uploadItem: UploadItem) throws {
         
         var uploadItems = self.uploadItems
         
@@ -469,7 +469,7 @@ public class DataStore {
     }
     
     
-    public func updateUploadItem(_ updatedItem: UploadItem) throws {
+    func updateUploadItem(_ updatedItem: UploadItem) throws {
         
         var uploadItems = self.uploadItems
         
@@ -482,13 +482,13 @@ public class DataStore {
     }
     
     
-    public var uploadedItems: [UploadedItem] {
+    var uploadedItems: [UploadedItem] {
         
         data?.uploadedItems ?? []
     }
     
     
-    public func setUploadedItems(_ uploadedItems: [UploadedItem]) throws {
+    func setUploadedItems(_ uploadedItems: [UploadedItem]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -496,7 +496,7 @@ public class DataStore {
     }
     
     
-    public func addUploadedItem(_ uploadedItem: UploadedItem) throws {
+    func addUploadedItem(_ uploadedItem: UploadedItem) throws {
         
         var uploadedItems = self.uploadedItems
         
@@ -506,13 +506,13 @@ public class DataStore {
     }
     
     
-    public var transactions: [Transaction] {
+    var transactions: [Transaction] {
         
         data?.transactions ?? []
     }
     
     
-    public func setTransactions(_ transactions: [Transaction]) throws {
+    func setTransactions(_ transactions: [Transaction]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -520,7 +520,7 @@ public class DataStore {
     }
     
     
-    public func addTransaction(_ transaction: Transaction) throws {
+    func addTransaction(_ transaction: Transaction) throws {
         
         var transactions = self.transactions
         
@@ -530,13 +530,13 @@ public class DataStore {
     }
     
     
-    public var allRefunds: [OrderRefund] {
+    var allRefunds: [OrderRefund] {
         
         data?.orderRefunds ?? []
     }
     
     
-    public func setOrderRefunds(_ orderRefunds: [OrderRefund]) throws {
+    func setOrderRefunds(_ orderRefunds: [OrderRefund]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -544,7 +544,7 @@ public class DataStore {
     }
     
     
-    public func addOrderRefund(_ refund: OrderRefund) throws {
+    func addOrderRefund(_ refund: OrderRefund) throws {
         
         var orderRefunds = self.allRefunds
         
@@ -554,13 +554,13 @@ public class DataStore {
     }
     
     
-    public var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus] {
+    var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus] {
         
         data?.laPosteTrackingStatusByTrackingNo ?? [:]
     }
     
     
-    public func setLaPosteTrackingStatusByTrackingNo(_ laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]) throws {
+    func setLaPosteTrackingStatusByTrackingNo(_ laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -568,7 +568,7 @@ public class DataStore {
     }
     
     
-    public func setLaPosteTrackingStatus(_ status: LaPosteTrackingStatus, forTrackingNo trackingNo: String) throws {
+    func setLaPosteTrackingStatus(_ status: LaPosteTrackingStatus, forTrackingNo trackingNo: String) throws {
         
         var laPosteTrackingStatusByTrackingNo = self.laPosteTrackingStatusByTrackingNo
         

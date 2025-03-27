@@ -4,31 +4,31 @@ import Foundation
 
 
 @MainActor
-public class RefundCoreController {
+class RefundCoreController {
     
     
     private let dataStore: DataStore
     
     
-    public init(_ dataStore: DataStore) {
+    init(_ dataStore: DataStore) {
         
         self.dataStore = dataStore
     }
     
     
-    public var allRefunds: [OrderRefund] {
+    var allRefunds: [OrderRefund] {
         
         dataStore.allRefunds
     }
     
     
-    public func refunds(for order: OrderDetails) -> [OrderRefund] {
+    func refunds(for order: OrderDetails) -> [OrderRefund] {
         
         allRefunds.filter { $0.orderId == order.id }
     }
     
     
-    public func create(_ refund: OrderRefund) {
+    func create(_ refund: OrderRefund) {
         
         try! dataStore.addOrderRefund(refund)
         try! dataStore.save()

@@ -5,14 +5,14 @@ import Foundation
 
 @Observable
 @MainActor
-public class FeedbackPostController {
+class FeedbackPostController {
     
     
     private let feedbackCoreController: FeedbackCoreController
     private let orderCoreController: OrderCoreController
     
     
-    public init(
+    init(
         _ feedbackCoreController: FeedbackCoreController,
         _ orderCoreController: OrderCoreController
     ) {
@@ -21,7 +21,7 @@ public class FeedbackPostController {
     }
     
     
-    public func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
+    func postPraiseFeedback(forOrderWithId orderId: OrderSummary.ID) async {
         
         guard let order = orderCoreController.orderDetails(forOrderWithId: orderId) else { return }
         

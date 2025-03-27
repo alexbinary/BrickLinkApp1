@@ -13,7 +13,7 @@ public class PickingStore {
     private let orderCoreController: OrderCoreController
     
     
-    public init(
+    init(
         _ pickingCoreController: PickingCoreController,
         _ pickingProgressCoreController: PickingProgressCoreController,
         _ orderCoreController: OrderCoreController

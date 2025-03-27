@@ -14,7 +14,7 @@ public class ResultStore {
     private let transactionCoreController: TransactionCoreController
     
     
-    public init(
+    init(
         _ orderCoreController: OrderCoreController,
         _ shippingCoreController: ShippingCoreController,
         _ refundCoreController: RefundCoreController,

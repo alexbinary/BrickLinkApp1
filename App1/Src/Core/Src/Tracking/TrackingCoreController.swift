@@ -4,27 +4,27 @@ import Foundation
 
 
 @MainActor
-public class TrackingCoreController {
+class TrackingCoreController {
     
     
     private let dataStore: DataStore
     private let laPosteTrackingClient: LaPosteTrackingClient
     
     
-    public init(_ dataStore: DataStore, _ debug: Debug) {
+    init(_ dataStore: DataStore, _ debug: Debug) {
         
         self.dataStore = dataStore
         self.laPosteTrackingClient = LaPosteTrackingClient(debug)
     }
     
     
-    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
         dataStore.laPosteTrackingStatusByTrackingNo[trackingNo]
     }
     
     
-    public func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
         let status = await laPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
     

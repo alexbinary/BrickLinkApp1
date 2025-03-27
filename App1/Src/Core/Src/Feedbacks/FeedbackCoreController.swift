@@ -4,14 +4,14 @@ import Foundation
 
 
 @MainActor
-public class FeedbackCoreController {
+class FeedbackCoreController {
     
     
     private let dataStore: DataStore
     private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    public init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
         self.brickLinkAPIClient = brickLinkAPIClient
@@ -21,25 +21,25 @@ public class FeedbackCoreController {
     // MARK: - Read feedbacks
     
     
-    public func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
+    func feedbacks(forOrderWithId orderId: OrderSummary.ID) -> [Feedback] {
         
         dataStore.orderFeedbacksByOrderId[orderId] ?? []
     }
     
     
-    public func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+    func buyerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
         feedbacks(forOrderWithId: orderId).buyerFeedback()
     }
     
     
-    public func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
+    func sellerFeedback(forOrderWithId orderId: OrderSummary.ID) -> Feedback? {
         
         feedbacks(forOrderWithId: orderId).sellerFeedback()
     }
     
     
-    public func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
         print("Loading order feedbacks \(orderId)")
         
@@ -53,7 +53,7 @@ public class FeedbackCoreController {
     }
     
     
-    public func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadOrderFeedbacksIfMissing(forOrderWithId orderId: OrderSummary.ID) async {
         
         if !dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
             
@@ -62,7 +62,7 @@ public class FeedbackCoreController {
     }
     
     
-    public func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
+    func reloadOrderFeedbacks(forOrderWithId orderId: OrderSummary.ID) async {
         
         if dataStore.orderFeedbacksByOrderId.keys.contains(orderId) {
             
@@ -74,7 +74,7 @@ public class FeedbackCoreController {
     // MARK: - Post feedback
     
     
-    public func postFeedback(forOrderWithId: OrderSummary.ID, rating: BrickLinkFeedbackRating, comment: String) async {
+    func postFeedback(forOrderWithId: OrderSummary.ID, rating: BrickLinkFeedbackRating, comment: String) async {
         
         await brickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating.rawValue, comment: comment)
         
@@ -85,26 +85,26 @@ public class FeedbackCoreController {
     // MARK: - Validation without feedback
     
     
-    public var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
+    var dateValidatedWithoutFeedbackByOrderId: [OrderSummary.ID: Date] {
         
         dataStore.dateValidatedWithoutFeedbackByOrderId
     }
     
     
-    public func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
+    func validateOrderWithoutFeedback(orderId: OrderDetails.ID) {
         
         try! dataStore.setDateValidatedWithoutFeedback(Date(), forOrderId: orderId)
         try! dataStore.save()
     }
     
     
-    public func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
+    func dateOrderValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Date? {
         
         return dateValidatedWithoutFeedbackByOrderId[orderId]
     }
     
     
-    public func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
+    func orderIsValidatedWithoutFeedback(orderId: OrderDetails.ID) -> Bool {
         
         return dateValidatedWithoutFeedbackByOrderId[orderId] != nil
     }

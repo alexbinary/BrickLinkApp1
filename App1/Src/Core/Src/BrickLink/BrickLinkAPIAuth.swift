@@ -19,7 +19,7 @@ public struct BrickLinkAPICredentials {
     let tokenSecret: String
     
     
-    public init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
+    init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
      
         self.consumerKey = consumerKey
         self.consumerSecret = consumerSecret
@@ -33,7 +33,7 @@ public struct BrickLinkAPICredentials {
 extension URLRequest {
     
     
-    public mutating func addAuthentication(using credentials: BrickLinkAPICredentials) {
+    mutating func addAuthentication(using credentials: BrickLinkAPICredentials) {
         
         let authorizationHeader = buildAuthorizationHeader(using: credentials)
         

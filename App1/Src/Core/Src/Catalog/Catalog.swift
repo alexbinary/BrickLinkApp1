@@ -14,7 +14,7 @@ public class Catalog {
     private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    public init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
         self.brickLinkAPIClient = brickLinkAPIClient

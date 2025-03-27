@@ -12,8 +12,10 @@ public class ShippingStore {
     private let orderCoreController: OrderCoreController
     
     
-    public init(_ shippingCoreController: ShippingCoreController, _ orderCoreController: OrderCoreController) {
-     
+    init(
+        _ shippingCoreController: ShippingCoreController,
+        _ orderCoreController: OrderCoreController
+    ) {
         self.shippingCoreController = shippingCoreController
         self.orderCoreController = orderCoreController
     }

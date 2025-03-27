@@ -3,10 +3,10 @@ import Foundation
 
 
 
-public enum BrickLinkUtility {
+enum BrickLinkUtility {
     
     
-    public static func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+    static func url(forCatalogImageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
         
         switch type {
         case .part:
@@ -17,13 +17,13 @@ public enum BrickLinkUtility {
     }
     
     
-    public static func url(forDetailsOfOrderWithId orderId: String) -> URL? {
+    static func url(forDetailsOfOrderWithId orderId: String) -> URL? {
         
         return URL(string: "https://www.bricklink.com/orderDetail.asp?ID=\(orderId)#/")
     }
     
     
-    public static func url(forInventoryItemWithId inventoryId: String) -> URL? {
+    static func url(forInventoryItemWithId inventoryId: String) -> URL? {
         
         return URL(string: "https://www.bricklink.com/v2/inventory_detail.page?invID=\(inventoryId)#/")
     }

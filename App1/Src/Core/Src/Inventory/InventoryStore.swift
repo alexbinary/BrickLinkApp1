@@ -13,7 +13,7 @@ public class InventoryStore {
     private let stockCoreController: StockCoreController
     
     
-    public init(
+    init(
         _ inventoryCoreController: InventoryCoreController,
         _ stockCoreController: StockCoreController
     ) {

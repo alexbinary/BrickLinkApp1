@@ -11,7 +11,7 @@ public class TrackingStore {
     private let trackingMiddleController: TrackingMiddleController
     
     
-    public init(_ trackingMiddleController: TrackingMiddleController) {
+    init(_ trackingMiddleController: TrackingMiddleController) {
         
         self.trackingMiddleController = trackingMiddleController
     }

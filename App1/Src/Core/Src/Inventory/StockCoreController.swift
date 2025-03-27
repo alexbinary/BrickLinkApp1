@@ -5,7 +5,7 @@ import Foundation
 
 @Observable
 @MainActor
-public class StockCoreController {
+class StockCoreController {
     
     
     private let inventoryCoreController: InventoryCoreController
@@ -14,7 +14,7 @@ public class StockCoreController {
     private let orderMacroStatusCoreController: OrderMacroStatusCoreController
     
     
-    public init(
+    init(
         _ inventoryCoreController: InventoryCoreController,
         _ pickingCoreController: PickingCoreController,
         _ orderCoreController: OrderCoreController,
@@ -27,25 +27,25 @@ public class StockCoreController {
     }
     
     
-    public var orderSummaries: [OrderSummary] {
+    var orderSummaries: [OrderSummary] {
         
         orderCoreController.orderSummaries
     }
     
     
-    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
         orderCoreController.orderItems(forOrderWithId: orderId)
     }
     
     
-    public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         pickingCoreController.pickedItemIds(forOrderWithId: orderId)
     }
     
     
-    public func inventory(
+    func inventory(
         
         forType type: BrickLinkItemType,
         ref: String,
@@ -59,13 +59,13 @@ public class StockCoreController {
     }
     
     
-    public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
+    func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
         orderMacroStatusCoreController.macroStatus(forOrderWithId: orderId)
     }
     
     
-    public func inStockQuantity(
+    func inStockQuantity(
         
         forType type: BrickLinkItemType,
         ref: String,
@@ -112,7 +112,7 @@ public class StockCoreController {
     }
     
     
-    public func inStockQuantity(for orderItem: OrderItem) -> Int {
+    func inStockQuantity(for orderItem: OrderItem) -> Int {
         
         return inStockQuantity(
             
@@ -125,7 +125,7 @@ public class StockCoreController {
     }
     
     
-    public func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
+    func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
         
         let itemIsPicked = pickedItemIds(forOrderWithId: orderItem.orderId).contains(orderItem.id)
         let stock = inStockQuantity(for: orderItem)

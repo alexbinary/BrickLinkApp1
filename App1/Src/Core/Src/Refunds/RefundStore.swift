@@ -11,7 +11,7 @@ public class RefundStore {
     let refundCoreController: RefundCoreController
     
     
-    public init(_ refundCoreController: RefundCoreController) {
+    init(_ refundCoreController: RefundCoreController) {
         
         self.refundCoreController = refundCoreController
     }

@@ -3,97 +3,97 @@ import Foundation
 
 
 
-public struct BrickLinkAPIResponse<T>: Decodable where T: Decodable {
+struct BrickLinkAPIResponse<T>: Decodable where T: Decodable {
     
-    public let data: T?
+    let data: T?
 }
 
 
 
-public struct BrickLinkOrder: Decodable {
+struct BrickLinkOrder: Decodable {
     
     // MARK: Summary
     
-    public let orderId: Int
-    public let dateOrdered: Date
-    public let buyerName: String
-    public let totalCount: Int
-    public let uniqueCount: Int
-    public let cost: BrickLinkOrderCost
-    public let dispCost: BrickLinkOrderCost
-    public let status: String
-    public let dateStatusChanged: Date
-    public let payment: BrickLinkOrderPayment
-    public let remarks: String?
+    let orderId: Int
+    let dateOrdered: Date
+    let buyerName: String
+    let totalCount: Int
+    let uniqueCount: Int
+    let cost: BrickLinkOrderCost
+    let dispCost: BrickLinkOrderCost
+    let status: String
+    let dateStatusChanged: Date
+    let payment: BrickLinkOrderPayment
+    let remarks: String?
     
     // MARK: Details
     
-    public let driveThruSent: Bool?
-    public let shipping: BrickLinkOrderShipping?
-    public let totalWeight: FixedPointNumber?
+    let driveThruSent: Bool?
+    let shipping: BrickLinkOrderShipping?
+    let totalWeight: FixedPointNumber?
 }
 
 
 
-public struct BrickLinkOrderPayment: Decodable {
+struct BrickLinkOrderPayment: Decodable {
     
-    public let status: String
+    let status: String
 }
 
 
 
-public struct BrickLinkOrderShipping: Decodable {
+struct BrickLinkOrderShipping: Decodable {
     
-    public let methodId: Int
-    public let method: String?
-    public let trackingNo: String?
-    public let address: BrickLinkOrderShippingAddress
+    let methodId: Int
+    let method: String?
+    let trackingNo: String?
+    let address: BrickLinkOrderShippingAddress
 }
 
 
 
-public struct BrickLinkOrderShippingAddress: Decodable {
+struct BrickLinkOrderShippingAddress: Decodable {
     
-    public let countryCode: String
-    public let full: String
-    public let name: BrickLinkOrderShippingAddressName
+    let countryCode: String
+    let full: String
+    let name: BrickLinkOrderShippingAddressName
 }
 
 
 
-public struct BrickLinkOrderShippingAddressName: Decodable {
+struct BrickLinkOrderShippingAddressName: Decodable {
     
-    public let full: String
+    let full: String
 }
 
 
 
-public struct BrickLinkOrderItem: Decodable {
+struct BrickLinkOrderItem: Decodable {
     
-    public let inventoryId: Int
-    public let item: BrickLinkCatalogItem
-    public let quantity: Int
-    public let colorId: Int
-    public let colorName: String
-    public let newOrUsed: String
-    public let remarks: String?
-    public let description: String?
-    public let unitPrice: FixedPointNumber
-    public let unitPriceFinal: FixedPointNumber
+    let inventoryId: Int
+    let item: BrickLinkCatalogItem
+    let quantity: Int
+    let colorId: Int
+    let colorName: String
+    let newOrUsed: String
+    let remarks: String?
+    let description: String?
+    let unitPrice: FixedPointNumber
+    let unitPriceFinal: FixedPointNumber
 }
 
 
 
-public struct BrickLinkOrderFeedback: Decodable {
+struct BrickLinkOrderFeedback: Decodable {
     
-    public let feedbackId: Int
-    public let orderId: Int
-    public let from: String
-    public let to: String
-    public let dateRated: Date
-    public let rating: BrickLinkFeedbackRating
-    public let ratingOfBs: BrickLinkFeedbackRatingOfBS
-    public let comment: String
+    let feedbackId: Int
+    let orderId: Int
+    let from: String
+    let to: String
+    let dateRated: Date
+    let rating: BrickLinkFeedbackRating
+    let ratingOfBs: BrickLinkFeedbackRatingOfBS
+    let comment: String
 }
 
 
@@ -107,7 +107,7 @@ public enum BrickLinkFeedbackRating: Int, Decodable, Encodable {
 
 
 
-public enum BrickLinkFeedbackRatingOfBS: String, Decodable, Encodable {
+enum BrickLinkFeedbackRatingOfBS: String, Decodable, Encodable {
     
     case forBuyer = "B"
     case forSeller = "S"
@@ -115,11 +115,11 @@ public enum BrickLinkFeedbackRatingOfBS: String, Decodable, Encodable {
 
 
 
-public struct BrickLinkCatalogItem: Decodable {
+struct BrickLinkCatalogItem: Decodable {
 
-    public let no: String
-    public let name: String
-    public let type: BrickLinkItemType
+    let no: String
+    let name: String
+    let type: BrickLinkItemType
 }
 
 
@@ -132,72 +132,72 @@ public enum BrickLinkItemType: String, Decodable, Encodable, CaseIterable, Senda
 
 
 
-public struct BrickLinkOrderCost: Decodable {
+struct BrickLinkOrderCost: Decodable {
     
-    public let currencyCode: String
-    public let subtotal: FixedPointNumber
-    public let grandTotal: FixedPointNumber
-    public let shipping: FixedPointNumber?
+    let currencyCode: String
+    let subtotal: FixedPointNumber
+    let grandTotal: FixedPointNumber
+    let shipping: FixedPointNumber?
 }
 
 
 
-public struct BrickLinkColor: Decodable {
+struct BrickLinkColor: Decodable {
     
-    public let colorId: Int
-    public let colorName: String
-    public let colorCode: String
+    let colorId: Int
+    let colorName: String
+    let colorCode: String
 }
 
 
-public struct BrickLinkInventoryItem: Decodable {
+struct BrickLinkInventoryItem: Decodable {
     
-    public let inventoryId: Int
-    public let item: BrickLinkCatalogItem
-    public let colorId: Int
-    public let quantity: Int
-    public let newOrUsed: String
-    public let description: String?
-    public let remarks: String?
-    public let unitPrice: FixedPointNumber
+    let inventoryId: Int
+    let item: BrickLinkCatalogItem
+    let colorId: Int
+    let quantity: Int
+    let newOrUsed: String
+    let description: String?
+    let remarks: String?
+    let unitPrice: FixedPointNumber
 }
 
 
 
-public struct FixedPointNumber: Codable, ExpressibleByFloatLiteral, CustomStringConvertible {
+struct FixedPointNumber: Codable, ExpressibleByFloatLiteral, CustomStringConvertible {
     
     
-    public typealias FloatLiteralType = Float
+    typealias FloatLiteralType = Float
     
     
-    public init(floatLiteral value: FloatLiteralType) {
+    init(floatLiteral value: FloatLiteralType) {
     
         self.floatValue = value
     }
     
     
-    public init(_ float: Float) {
+    init(_ float: Float) {
     
         self.floatValue = float
     }
     
     
-    public var floatValue: Float
+    var floatValue: Float
     
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         
         let stringValue = try! decoder.singleValueContainer().decode(String.self)
         self.floatValue = Float(stringValue)!
     }
     
     
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         
         var container = encoder.singleValueContainer()
         try! container.encode(self.floatValue)
     }
     
     
-    public var description: String { "\(floatValue)" }
+    var description: String { "\(floatValue)" }
 }

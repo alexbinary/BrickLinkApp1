@@ -12,7 +12,7 @@ public class FeedbackStore {
     private let feedbackPostController: FeedbackPostController
     
     
-    public init(
+    init(
         _ feedbackCoreController: FeedbackCoreController,
         _ feedbackPostController: FeedbackPostController
     ) {

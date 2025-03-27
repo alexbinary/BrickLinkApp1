@@ -4,13 +4,13 @@ import Foundation
 
 
 @MainActor
-public class PickingCoreController {
+class PickingCoreController {
     
     
     private let dataStore: DataStore
     
     
-    public init(_ dataStore: DataStore) {
+    init(_ dataStore: DataStore) {
         
         self.dataStore = dataStore
     }
@@ -19,33 +19,33 @@ public class PickingCoreController {
     // MARK: - Pick
     
     
-    public func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    func pickedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         return dataStore.pickedItemIdsByOrderId[orderId] ?? []
     }
     
     
-    public func pickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func pickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
         try! dataStore.addPickedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
     }
     
     
-    public func pick(_ item: OrderItem) {
+    func pick(_ item: OrderItem) {
         
         pickItem(forOrderWithId: item.orderId, itemId: item.id)
     }
     
     
-    public func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func unpickItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
         try! dataStore.removePickedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
     }
     
     
-    public func unpick(_ item: OrderItem) {
+    func unpick(_ item: OrderItem) {
         
         unpickItem(forOrderWithId: item.orderId, itemId: item.id)
     }
@@ -54,33 +54,33 @@ public class PickingCoreController {
     // MARK: - Verify
     
     
-    public func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
+    func verifiedItemIds(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem.ID] {
         
         return dataStore.verifiedItemIdsByOrderId[orderId] ?? []
     }
     
     
-    public func verifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func verifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
         try! dataStore.addVerifiedItemId(itemId, toOrderWithId: orderId)
         try! dataStore.save()
     }
     
     
-    public func verify(_ item: OrderItem) {
+    func verify(_ item: OrderItem) {
         
         verifyItem(forOrderWithId: item.orderId, itemId: item.id)
     }
     
     
-    public func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
+    func unverifyItem(forOrderWithId orderId: OrderSummary.ID, itemId: OrderItem.ID) {
         
         try! dataStore.removeVerifiedItemId(itemId, fromOrderWithId: orderId)
         try! dataStore.save()
     }
     
     
-    public func unverify(_ item: OrderItem) {
+    func unverify(_ item: OrderItem) {
         
         unverifyItem(forOrderWithId: item.orderId, itemId: item.id)
     }

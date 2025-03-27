@@ -6,14 +6,14 @@ import SwiftUI
 
 @Observable
 @MainActor
-public class InventoryCoreController {
+class InventoryCoreController {
     
     
     private let dataStore: DataStore
     private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    public init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
         self.brickLinkAPIClient = brickLinkAPIClient
@@ -23,19 +23,19 @@ public class InventoryCoreController {
     // MARK: - Inventory
     
     
-    public var allInventories: [InventoryItem] {
+    var allInventories: [InventoryItem] {
         
         dataStore.inventories
     }
     
     
-    public func inventory(withId id: InventoryItem.ID) -> InventoryItem? {
+    func inventory(withId id: InventoryItem.ID) -> InventoryItem? {
         
         dataStore.inventories.first { $0.id == id }
     }
     
     
-    public func inventory(
+    func inventory(
         
         forType type: BrickLinkItemType,
         ref: String,
@@ -56,7 +56,7 @@ public class InventoryCoreController {
     }
     
     
-    public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
+    func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
         return allInventories.first {
             
@@ -69,7 +69,7 @@ public class InventoryCoreController {
     }
     
     
-    public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
+    func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
         return allInventories.filter {
             
@@ -81,7 +81,7 @@ public class InventoryCoreController {
     }
     
     
-    public func loadInventories() async {
+    func loadInventories() async {
         
         print("Loading inventories")
         
@@ -96,7 +96,7 @@ public class InventoryCoreController {
     }
     
     
-    public func loadInventory(withId id: InventoryItem.ID) async {
+    func loadInventory(withId id: InventoryItem.ID) async {
         
         print("Loading inventory \(id)")
         
@@ -108,7 +108,7 @@ public class InventoryCoreController {
     }
     
     
-    public func reloadInventories() async {
+    func reloadInventories() async {
         
         if !dataStore.inventories.isEmpty {
         
@@ -117,7 +117,7 @@ public class InventoryCoreController {
     }
     
     
-    public func reloadInventory(withId id: InventoryItem.ID) async {
+    func reloadInventory(withId id: InventoryItem.ID) async {
         
         if dataStore.inventories.contains(where: { $0.id == id }) {
             
@@ -126,7 +126,7 @@ public class InventoryCoreController {
     }
     
     
-    public func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
+    func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
         
         let inventories = await brickLinkAPIClient.fetchInventories(matchingItemType: uploadItem.type, matchingColorId: uploadItem.colorId)
             
@@ -145,7 +145,7 @@ public class InventoryCoreController {
     }
     
     
-    public func createInventory(
+    func createInventory(
         
         ref: String,
         type: BrickLinkItemType,
@@ -178,7 +178,7 @@ public class InventoryCoreController {
     }
     
     
-    public func updateInventory(
+    func updateInventory(
         
         id: InventoryItem.ID,
         

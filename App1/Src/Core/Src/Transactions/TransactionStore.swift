@@ -12,7 +12,7 @@ public class TransactionStore {
     private let transactionCoreController: TransactionCoreController
     
     
-    public init(_ transactionStore: TransactionCoreController) {
+    init(_ transactionStore: TransactionCoreController) {
         
         self.transactionCoreController = transactionStore
     }

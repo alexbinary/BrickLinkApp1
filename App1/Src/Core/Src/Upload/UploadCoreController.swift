@@ -4,13 +4,13 @@ import Foundation
 
 
 @MainActor
-public class UploadCoreController {
+class UploadCoreController {
     
 
     private let dataStore: DataStore
     
     
-    public init(_ dataStore: DataStore) {
+    init(_ dataStore: DataStore) {
         
         self.dataStore = dataStore
     }
@@ -19,34 +19,34 @@ public class UploadCoreController {
     // MARK: - Upload
     
     
-    public var uploadItems: [UploadItem] {
+    var uploadItems: [UploadItem] {
         
         dataStore.uploadItems
     }
     
     
-    public func add(_ uploadItem: UploadItem) {
+    func add(_ uploadItem: UploadItem) {
         
         try! dataStore.addUploadItem(uploadItem)
         try! dataStore.save()
     }
     
     
-    public func delete(_ uploadItem: UploadItem) {
+    func delete(_ uploadItem: UploadItem) {
         
         try! dataStore.deleteUploadItem(uploadItem)
         try! dataStore.save()
     }
     
     
-    public func update(_ updatedItem: UploadItem) {
+    func update(_ updatedItem: UploadItem) {
         
         try! dataStore.updateUploadItem(updatedItem)
         try! dataStore.save()
     }
     
     
-    public func importUploadList(fromXml xml: String) {
+    func importUploadList(fromXml xml: String) {
         
         let parser = XMLParser(data: Data(xml.utf8))
         let parserDelegate = UploadListXMLParserDelegate()
@@ -65,13 +65,13 @@ public class UploadCoreController {
     // MARK: - Uploaded items
     
     
-    public var uploadedItems: [UploadedItem] {
+    var uploadedItems: [UploadedItem] {
         
         dataStore.uploadedItems
     }
     
     
-    public func add(_ uploadedItem: UploadedItem) {
+    func add(_ uploadedItem: UploadedItem) {
         
         try! dataStore.addUploadedItem(uploadedItem)
         try! dataStore.save()

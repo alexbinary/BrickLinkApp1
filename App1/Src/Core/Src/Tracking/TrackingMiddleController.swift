@@ -5,39 +5,39 @@ import Foundation
 
 @Observable
 @MainActor
-public class TrackingMiddleController {
+class TrackingMiddleController {
     
     
     private let trackingCoreController: TrackingCoreController
     private let orderCoreController: OrderCoreController
     
     
-    public init(_ trackingCoreController: TrackingCoreController, _ orderCoreController: OrderCoreController) {
+    init(_ trackingCoreController: TrackingCoreController, _ orderCoreController: OrderCoreController) {
         
         self.trackingCoreController = trackingCoreController
         self.orderCoreController = orderCoreController
     }
     
     
-    public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+    func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
         orderCoreController.orderDetails(forOrderWithId: orderId)
     }
     
     
-    public func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
         
         trackingCoreController.laPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     
-    public func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
         await trackingCoreController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
     }
     
     
-    public func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) -> LaPosteTrackingStatus? {
         
         if let order = orderDetails(forOrderWithId: orderId),
            let trackingNo = order.trackingNo {
@@ -49,7 +49,7 @@ public class TrackingMiddleController {
     }
     
     
-    public func loadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
         let order = orderDetails(forOrderWithId: orderId)!
         let trackingNo = order.trackingNo!
@@ -58,7 +58,7 @@ public class TrackingMiddleController {
     }
     
     
-    public func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
+    func reloadLaPosteTrackingStatus(forOrderWithId orderId: OrderSummary.ID) async {
         
         await loadLaPosteTrackingStatus(forOrderWithId: orderId)
     }

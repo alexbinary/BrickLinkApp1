@@ -5,14 +5,14 @@ import Foundation
 
 @Observable
 @MainActor
-public class OrderMacroStatusCoreController {
+class OrderMacroStatusCoreController {
     
     
     private let orderCoreController: OrderCoreController
     private let orderChecklistCoreController: OrderChecklistCoreController
     
     
-    public init(
+    init(
         _ orderCoreController: OrderCoreController,
         _ orderChecklistCoreController: OrderChecklistCoreController
     ) {
@@ -21,85 +21,85 @@ public class OrderMacroStatusCoreController {
     }
     
     
-    public func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistIncomeTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistIncomeTransaction(orderId)
     }
     
     
-    public func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistShippingTransaction(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistShippingTransaction(orderId)
     }
     
     
-    public func orderChecklistPicking(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistPicking(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPicking(orderId)
     }
     
     
-    public func orderChecklistVerification(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistVerification(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistVerification(orderId)
     }
     
     
-    public func orderChecklistPacked(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistPacked(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistPacked(orderId)
     }
     
     
-    public func orderChecklistShipped(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistShipped(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistShipped(orderId)
     }
     
     
-    public func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistTrackingNo(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistTrackingNo(orderId)
     }
     
     
-    public func orderChecklistDriveThru(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistDriveThru(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistDriveThru(orderId)
     }
     
     
-    public func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistStamping(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistStamping(orderId)
     }
     
     
-    public func orderChecklistReceived(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistReceived(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistReceived(orderId)
     }
     
     
-    public func orderChecklistCompleted(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistCompleted(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistCompleted(orderId)
     }
     
     
-    public func orderChecklistBuyerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistBuyerFeedback(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistBuyerFeedback(orderId)
     }
     
     
-    public func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistSellerFeedback(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistSellerFeedback(orderId)
     }
     
     
-    public func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
+    func orderChecklistUnchangedFor30Days(_ orderId: OrderSummary.ID) -> Bool {
         
         orderChecklistCoreController.orderChecklistUnchangedFor30Days(orderId)
     }
@@ -108,7 +108,7 @@ public class OrderMacroStatusCoreController {
     // MARK: - Order summaries
     
     
-    public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+    func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
         orderCoreController.orderSummary(forOrderWithId: orderId)
     }
@@ -117,7 +117,7 @@ public class OrderMacroStatusCoreController {
     // MARK: - Order macro status
     
     
-    public func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
+    func macroStatus(forOrderWithId orderId: OrderSummary.ID) -> OrderMacroStatus {
         
         let order = orderSummary(forOrderWithId: orderId)!
         

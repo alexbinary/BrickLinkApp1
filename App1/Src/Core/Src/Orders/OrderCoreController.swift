@@ -4,14 +4,14 @@ import Foundation
 
 
 @MainActor
-public class OrderCoreController {
+class OrderCoreController {
     
     
     private let dataStore: DataStore
     private let brickLinkAPIClient: BrickLinkAPIClient
     
     
-    public init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
      
         self.dataStore = dataStore
         self.brickLinkAPIClient = brickLinkAPIClient
@@ -21,19 +21,19 @@ public class OrderCoreController {
     // MARK: - Order summaries
     
     
-    public var orderSummaries: [OrderSummary] {
+    var orderSummaries: [OrderSummary] {
         
         dataStore.orderSummaries
     }
     
     
-    public func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
+    func orderSummary(forOrderWithId orderId: OrderDetails.ID) -> OrderSummary? {
         
         orderSummaries.first { $0.id == orderId }
     }
     
     
-    public func loadOrderSummaries() async {
+    func loadOrderSummaries() async {
         
         print("Loading orders")
         
@@ -47,7 +47,7 @@ public class OrderCoreController {
     }
     
     
-    public func loadOrderSummariesIfMissing() async {
+    func loadOrderSummariesIfMissing() async {
         
         if orderSummaries.isEmpty {
         
@@ -56,7 +56,7 @@ public class OrderCoreController {
     }
     
     
-    public func reloadOrderSummaries() async {
+    func reloadOrderSummaries() async {
         
         if !orderSummaries.isEmpty {
         
@@ -68,19 +68,19 @@ public class OrderCoreController {
     // MARK: - Orders details
     
     
-    public var orderDetails: [OrderDetails] {
+    var orderDetails: [OrderDetails] {
         
         dataStore.orderDetails
     }
     
     
-    public func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
+    func orderDetails(forOrderWithId orderId: OrderSummary.ID) -> OrderDetails? {
         
         orderDetails.first { $0.id == orderId }
     }
     
     
-    public func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadOrderDetails(forOrderWithId orderId: OrderSummary.ID) async {
         
         print("Loading order details \(orderId)")
         
@@ -92,7 +92,7 @@ public class OrderCoreController {
     }
     
     
-    public func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
+    func loadOrderDetailsIfMissing(forOrderWithId orderId: String) async {
         
         if !orderDetails.contains(where: { $0.id == orderId }) {
             
@@ -101,7 +101,7 @@ public class OrderCoreController {
     }
     
     
-    public func reloadOrderDetails(forOrderWithId orderId: String) async {
+    func reloadOrderDetails(forOrderWithId orderId: String) async {
         
         if orderDetails.contains(where: { $0.id == orderId }) {
             
@@ -113,7 +113,7 @@ public class OrderCoreController {
     // MARK: - Order status, Tracking no, Drive thru
     
     
-    public func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
+    func updateOrderStatus(orderId: OrderSummary.ID, status: OrderStatus) async {
         
         print("Update status \(status) for order \(orderId)")
         
@@ -126,7 +126,7 @@ public class OrderCoreController {
     }
     
     
-    public func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
+    func updateTrackingNo(forOrderWithId orderId: OrderSummary.ID, trackingNo: String) async {
         
         print("Update tracking no \(trackingNo) for order \(orderId)")
         
@@ -139,7 +139,7 @@ public class OrderCoreController {
     }
     
     
-    public func sendDriveThru(orderId: OrderSummary.ID) async {
+    func sendDriveThru(orderId: OrderSummary.ID) async {
         
         print("Send drive thru for order \(orderId)")
         
@@ -155,13 +155,13 @@ public class OrderCoreController {
     // MARK: - Order items
     
     
-    public func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
+    func orderItems(forOrderWithId orderId: OrderSummary.ID) -> [OrderItem] {
         
         (dataStore.orderItemsByOrderId[orderId] ?? []).reduce([], { $0 + $1 })
     }
     
     
-    public func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    func orderItems(forOrderWithId orderId: OrderSummary.ID, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
         let items = orderItems(forOrderWithId: orderId)
         
@@ -169,7 +169,7 @@ public class OrderCoreController {
     }
     
     
-    public func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
+    func loadOrderItems(forOrderWithId orderId: OrderSummary.ID) async {
         
         print("Loading order items \(orderId)")
         
@@ -186,7 +186,7 @@ public class OrderCoreController {
     }
     
     
-    public func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
+    func loadOrderItemsIfMissing(forOrderWithId orderId: String) async {
         
         if !dataStore.orderItemsByOrderId.keys.contains(where: { $0 == orderId }) {
             
