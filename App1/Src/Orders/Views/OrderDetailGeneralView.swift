@@ -49,7 +49,7 @@ struct OrderDetailGeneralView: View {
             HStack {
                 ForEach(statuses, id: \.self) { status in
                     Button {
-                        Task { await orderStore.updateOrderStatus(order, status: status) }
+                        Task { await orderStore.updateStatus(of: order, to: status) }
                     } label: {
                         Text(status.rawValue).fontWeight(order.status == status ? .bold : .regular)
                     }

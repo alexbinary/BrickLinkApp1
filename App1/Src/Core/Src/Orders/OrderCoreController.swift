@@ -113,7 +113,7 @@ class OrderCoreController {
     // MARK: - Order status, Tracking no, Drive thru
     
     
-    func updateOrderStatus(_ order: Order, status: OrderStatus) async {
+    func updateStatus(of order: Order, to status: OrderStatus) async {
         
         print("Update status \(status) for order \(order.id)")
         
@@ -126,7 +126,7 @@ class OrderCoreController {
     }
     
     
-    func updateTrackingNo(for order: Order, trackingNo: String) async {
+    func updateTrackingNo(of order: Order, to trackingNo: String) async {
         
         print("Update tracking no \(trackingNo) for order \(order.id)")
         

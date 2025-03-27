@@ -205,12 +205,12 @@ struct OrderDetailShippingView: View {
                             
                             TextField("Tracking No", text: trackingNoBinding)
                                 .onSubmit {
-                                    Task { await orderStore.updateTrackingNo(for: order, trackingNo: trackingNoEditValue ?? "") }
+                                    Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
                                 }
                                 .frame(maxWidth: 140)
                             
                             Button("Save") {
-                                Task { await orderStore.updateTrackingNo(for: order, trackingNo: trackingNoEditValue ?? "") }
+                                Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
                             }
                         }
                         
@@ -231,7 +231,7 @@ struct OrderDetailShippingView: View {
                         
                         Button("Ship and send Drive thru") {
                             Task {
-                                await orderStore.updateOrderStatus(order, status: .shipped)
+                                await orderStore.updateStatus(of: order, to: .shipped)
                                 await orderStore.sendDriveThru(for: order)
                             }
                         }

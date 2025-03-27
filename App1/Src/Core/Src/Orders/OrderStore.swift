@@ -111,15 +111,15 @@ public class OrderStore {
     // MARK: - Update
     
     
-    public func updateOrderStatus(_ order: Order, status: OrderStatus) async {
+    public func updateStatus(of order: Order, to status: OrderStatus) async {
         
-        await orderCoreController.updateOrderStatus(order, status: status)
+        await orderCoreController.updateStatus(of: order, to: status)
     }
     
     
-    public func updateTrackingNo(for order: Order, trackingNo: String) async {
+    public func updateTrackingNo(of order: Order, to trackingNo: String) async {
         
-        await orderCoreController.updateTrackingNo(for: order, trackingNo: trackingNo)
+        await orderCoreController.updateTrackingNo(of: order, to: trackingNo)
     }
     
     
@@ -646,7 +646,7 @@ public class OrderStore {
         
         for order in ordersThatNeedCompletedAndGiveFeedback {
         
-            await updateOrderStatus(order, status: .completed)
+            await updateStatus(of: order, to: .completed)
             await postPraiseOrderFeedback(for: order)
         }
         
@@ -657,7 +657,7 @@ public class OrderStore {
         
         for order in ordersToShipAndSendDriveThru {
             
-            await updateOrderStatus(order, status: .shipped)
+            await updateStatus(of: order, to: .shipped)
             await sendDriveThru(for: order)
         }
     }

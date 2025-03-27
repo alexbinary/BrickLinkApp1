@@ -222,7 +222,7 @@ struct OrdersMainListItem: View {
             if !orderStore.orderChecklistShipped(order) && !orderStore.orderChecklistDriveThru(order) {
                 items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
                     Task {
-                        await orderStore.updateOrderStatus(order, status: .shipped)
+                        await orderStore.updateStatus(of: order, to: .shipped)
                         await orderStore.sendDriveThru(for: order)
                     }
                 }))
@@ -243,7 +243,7 @@ struct OrdersMainListItem: View {
             if orderStore.orderChecklistUnchangedFor30Days(order) {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
-                        await orderStore.updateOrderStatus(order, status: .completed)
+                        await orderStore.updateStatus(of: order, to: .completed)
                         await feedbackStore.postPraiseFeedback(for: order)
                     }
                 }))
