@@ -99,13 +99,13 @@ struct BrickLinkAPIClient {
     // MARK: - Orders
     
     
-    func fetchOrderSummaries() async -> [BrickLinkOrder] {
+    func fetchOrderSummaries() async -> [BrickLinkOrderSummary] {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders")!)
     }
     
     
-    func fetchDetails(forOrderWithId orderId: OrderSummary.ID) async -> BrickLinkOrder {
+    func fetchDetails(forOrderWithId orderId: OrderSummary.ID) async -> BrickLinkOrderDetails {
         
         try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!)
     }

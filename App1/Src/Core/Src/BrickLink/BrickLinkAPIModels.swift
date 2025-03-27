@@ -10,27 +10,38 @@ struct BrickLinkAPIResponse<T>: Decodable where T: Decodable {
 
 
 
-struct BrickLinkOrder: Decodable {
-    
-    // MARK: Summary
+struct BrickLinkOrderSummary: Decodable {
     
     let orderId: Int
     let dateOrdered: Date
+    let dateStatusChanged: Date
     let buyerName: String
+    let status: String
     let totalCount: Int
     let uniqueCount: Int
+    let payment: BrickLinkOrderPayment
     let cost: BrickLinkOrderCost
     let dispCost: BrickLinkOrderCost
-    let status: String
+}
+
+
+
+struct BrickLinkOrderDetails: Decodable {
+    
+    let orderId: Int
+    let dateOrdered: Date
     let dateStatusChanged: Date
-    let payment: BrickLinkOrderPayment
+    let buyerName: String
+    let status: String
+    let totalCount: Int
     let remarks: String?
-    
-    // MARK: Details
-    
-    let driveThruSent: Bool?
-    let shipping: BrickLinkOrderShipping?
+    let uniqueCount: Int
     let totalWeight: FixedPointNumber?
+    let driveThruSent: Bool?
+    let payment: BrickLinkOrderPayment
+    let shipping: BrickLinkOrderShipping?
+    let cost: BrickLinkOrderCost
+    let dispCost: BrickLinkOrderCost
 }
 
 

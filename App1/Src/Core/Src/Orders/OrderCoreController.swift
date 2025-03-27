@@ -200,7 +200,7 @@ class OrderCoreController {
 extension OrderSummary {
     
     
-    init(fromBl bl: BrickLinkOrder) {
+    init(fromBl bl: BrickLinkOrderSummary) {
         self.init(
             id: "\(bl.orderId)",
             date: bl.dateOrdered,
@@ -229,7 +229,7 @@ extension OrderSummary {
 extension OrderDetails {
     
     
-    init(fromBl bl: BrickLinkOrder) {
+    init(fromBl bl: BrickLinkOrderDetails) {
         
         self.init(
             id: "\(bl.orderId)",
