@@ -72,10 +72,10 @@ extension Array where Element: Datable {
 
 
 
-extension Array where Element == (month: String, elements: [OrderDetails]) {
+extension Array where Element == (month: String, elements: [Order]) {
     
     
-    public subscript(_ month: String) -> [OrderDetails] {
+    public subscript(_ month: String) -> [Order] {
         
         return self.first(where: { $0.month == month })?.elements ?? []
     }
@@ -83,16 +83,16 @@ extension Array where Element == (month: String, elements: [OrderDetails]) {
 
 
 
-extension Array where Element == (month: BusinessMonth, elements: [OrderDetails]) {
+extension Array where Element == (month: BusinessMonth, elements: [Order]) {
     
     
-    public subscript(_ month: BusinessMonth) -> [OrderDetails] {
+    public subscript(_ month: BusinessMonth) -> [Order] {
         
         return self.first(where: { $0.month == month })?.elements ?? []
     }
     
     
-    public var withAllMonthsToCurrent: [(month: BusinessMonth, elements: [OrderDetails])] {
+    public var withAllMonthsToCurrent: [(month: BusinessMonth, elements: [Order])] {
         
         let orderMonths = self.map { $0.month } .unique.sorted()
         

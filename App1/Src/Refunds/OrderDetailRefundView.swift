@@ -47,7 +47,7 @@ struct OrderDetailRefundView: View {
                 Button("Create refund") { self.submitRefund() }
             }
             
-            Table(refundStore.refunds(for: orderDetails)) {
+            Table(refundStore.refunds(for: order)) {
                 
                 TableColumn("Date") { refund in
                     Text(refund.date, format: .dateTime)

@@ -7,7 +7,7 @@ public struct ResultDashboardModel {
     
     
     public let periodNLastDays: Int
-    public let orders: [OrderDetails]
+    public let orders: [Order]
     
     public let totalItems: Float
     public let totalShipping: Float

@@ -22,7 +22,7 @@ class RefundCoreController {
     }
     
     
-    func refunds(for order: OrderDetails) -> [OrderRefund] {
+    func refunds(for order: Order) -> [OrderRefund] {
         
         allRefunds.filter { $0.orderId == order.id }
     }

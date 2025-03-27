@@ -27,7 +27,7 @@ struct ResultContentView: View {
         
         @Bindable var nav = nav
         
-        Table(of: OrderDetails.self, selection: $nav.resultSelectedOrderIds) {
+        Table(of: Order.self, selection: $nav.resultSelectedOrderIds) {
             
             TableColumn("ID", value: \.id)
             
@@ -63,8 +63,9 @@ struct ResultContentView: View {
             }
             
             TableColumn("Shipping") { order in
+                let orderDetails = orderStore.orderDetails(forOrderWithId: order.id)!
                 Text(
-                    abs(order.shippingCost),
+                    abs(orderDetails.shippingCost),
                     format: .currency(code: "EUR").presentation(.isoCode)
                 ).amountColor(.good)
             }
@@ -104,7 +105,7 @@ struct ResultContentView: View {
             
         } rows: {
             
-            let ordersByMonth = orderStore.orderDetails.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
+            let ordersByMonth = orderStore.orderSummaries.grouppedByBusinessMonth.withAllMonthsToCurrent.reversed()
             
             ForEach(ordersByMonth, id: \.month) { (month, elements) in
                 Section(month.name) {

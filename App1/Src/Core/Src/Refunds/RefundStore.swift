@@ -17,7 +17,7 @@ public class RefundStore {
     }
     
     
-    public func refunds(for order: OrderDetails) -> [OrderRefund] {
+    public func refunds(for order: Order) -> [OrderRefund] {
         
         refundCoreController.refunds(for: order)
     }

@@ -16,12 +16,15 @@ struct ResultOrderList: View {
     @Environment(ResultStore.self)
     var resultStore
     
+    @Environment(OrderStore.self)
+    var orderStore
     
-    let orders: [OrderDetails]
+    
+    let orders: [Order]
     let title: String
     let selection: Binding<Order.ID?>
     
-    init(_ orders: [OrderDetails], title: String, selection: Binding<Order.ID?>) {
+    init(_ orders: [Order], title: String, selection: Binding<Order.ID?>) {
         self.orders = orders
         self.title = title
         self.selection = selection
@@ -70,8 +73,9 @@ struct ResultOrderList: View {
                 }
                 
                 TableColumn("Shipping") { order in
+                    let orderDetails = orderStore.orderDetails(forOrderWithId: order.id)!
                     Text(
-                        abs(order.shippingCost),
+                        abs(orderDetails.shippingCost),
                         format: .currency(code: "EUR").presentation(.isoCode)
                     ).amountColor(.good)
                 }

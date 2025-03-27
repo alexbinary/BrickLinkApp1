@@ -39,11 +39,11 @@ struct ResultHistoryView: View {
     
     var selectedOrderIds: Set<Order.ID> { nav.resultSelectedOrderIds }
     
-    var orders: [OrderDetails] {
+    var orders: [Order] {
         (
             !selectedOrderIds.isEmpty
-                ? orderStore.orderDetails.filter { selectedOrderIds.contains($0.id) }
-                : orderStore.orderDetails
+                ? orderStore.orderSummaries.filter { selectedOrderIds.contains($0.id) }
+                : orderStore.orderSummaries
         )
         .filter { resultStore.profitMargin(for: $0) != nil }
     }
@@ -145,7 +145,7 @@ struct ResultHistoryView: View {
                         let orders = ordersByMonth[month]
                         
                         let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                        let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                        let totalShipping = orders.map { orderStore.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
                         
                         let totalIncome = totalItems + totalShipping
                         
@@ -271,7 +271,7 @@ struct ResultHistoryView: View {
                             let orders = ordersByMonth[month]
                             
                             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                            let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                            let totalShipping = orders.map { orderStore.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
                             
                             let totalItemCost: Float = 0
                             
@@ -317,13 +317,13 @@ struct ResultHistoryView: View {
                             
                             Color.clear.frame(width: 24, height: 0)
                         }
-                        
+//                        
                         if selectedMonth == nil || self.monthClicked {
                             
                             let orders = visibleOrders
                             
                             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                            let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+                            let totalShipping = orders.map { orderStore.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
                             
                             let totalItemCost: Float = 0
                             
@@ -406,7 +406,7 @@ struct ResultHistoryView: View {
                     
                     Text("Counting only orders with complete data").font(.caption)
                 }
-                
+//                
                 HStack {
                     
                     let titleSuffix = {

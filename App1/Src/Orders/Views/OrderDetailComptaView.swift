@@ -143,7 +143,7 @@ struct OrderDetailComptaView: View {
             
             HStack {
                 Text("Latest refund:")
-                if let refund = refundStore.refunds(for: orderDetails).last {
+                if let refund = refundStore.refunds(for: order).last {
                     Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
                 }
             }
@@ -192,7 +192,7 @@ struct OrderDetailComptaView: View {
             self.shippingComment = ""
             
             self.refundDate = Date()
-            self.refundAmount = refundStore.refunds(for: orderDetails).last?.amount ?? 0
+            self.refundAmount = refundStore.refunds(for: order).last?.amount ?? 0
             self.refundPaymentMethod = .paypal
             self.refundComment = ""
         }

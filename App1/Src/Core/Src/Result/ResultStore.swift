@@ -27,6 +27,12 @@ public class ResultStore {
     }
     
     
+    public var orderSummaries: [Order] {
+        
+        orderCoreController.orderSummaries
+    }
+    
+    
     public var orderDetails: [OrderDetails] {
         
         orderCoreController.orderDetails
@@ -39,7 +45,7 @@ public class ResultStore {
     }
     
     
-    public func refunds(for order: OrderDetails) -> [OrderRefund] {
+    public func refunds(for order: Order) -> [OrderRefund] {
         
         refundCoreController.refunds(for: order)
     }
@@ -60,7 +66,7 @@ public class ResultStore {
     // -
     
     
-    public func fees(for order: OrderDetails) -> Float? {
+    public func fees(for order: Order) -> Float? {
         
         let incomeTransactionsFees = incomeTransactions(forOrderWithId: order.id).compactMap { $0.fees }.reduce(0, +)
         let refundTransactionsFees = refundTransactions(forOrderWithId: order.id).compactMap { $0.fees }.reduce(0, +)
@@ -101,12 +107,14 @@ public class ResultStore {
     }
     
     
-    public func profitMargin(for order: OrderDetails) -> Float? {
+    public func profitMargin(for order: Order) -> Float? {
+        
+        let orderDetails = orderCoreController.orderDetails(forOrderWithId: order.id)!
         
         return profitMargin(
             
             totalItems: order.subTotal,
-            totalShipping: order.shippingCost,
+            totalShipping: orderDetails.shippingCost,
         
             itemsCost: 0,
             shippingCost: shippingCost(forOrderWithId: order.id),
@@ -121,13 +129,13 @@ public class ResultStore {
         
         let periodNLastDays = 30
         
-        let orders = orderDetails
+        let orders = orderSummaries
             .filter { $0.date.days(to: .now) < periodNLastDays }
             .filter { self.profitMargin(for: $0) != nil }
             .sorted { (self.profitMargin(for: $0) ?? 0) > (self.profitMargin(for: $1) ?? 0) }
         
         let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-        let totalShipping = orders.reduce(0) { $0 + $1.shippingCost }
+        let totalShipping = orders.map { orderCoreController.orderDetails(forOrderWithId: $0.id)! }.reduce(0) { $0 + $1.shippingCost }
         
         let totalItemCost: Float = 0
         let totalShippingCost = orders.reduce(0) { $0 + (shippingCost(forOrderWithId: $1.id) ?? 0) }
