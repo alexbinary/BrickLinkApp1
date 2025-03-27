@@ -207,18 +207,13 @@ public class OrderStore {
         if orderIsClosedForMoreThan30Days(order) {
             
             guard
-                let orderDetails = details(for: order)
+                let _ = details(for: order)
             else {
                 return true
             }
             
             let orderItems = items(for: order)
             if orderItems.isEmpty {
-                
-                return true
-            }
-            
-            if orderDetails.differs(from: order) {
                 
                 return true
             }

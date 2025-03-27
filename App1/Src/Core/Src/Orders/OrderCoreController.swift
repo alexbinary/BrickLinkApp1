@@ -233,19 +233,11 @@ extension OrderDetails {
         
         self.init(
             id: "\(bl.orderId)",
-            date: bl.dateOrdered,
-            dateStatusChanged: bl.dateStatusChanged,
-            buyer: bl.buyerName,
-            status: OrderStatus(rawValue: bl.status)!,
             remarks: bl.remarks,
             
-            items: bl.totalCount,
-            lots: bl.uniqueCount,
             totalWeight: bl.totalWeight!.floatValue,
             driveThruSent: bl.driveThruSent!,
             trackingNo: bl.shipping!.trackingNo,
-            
-            paymentStatus: PaymentStatus(rawValue: bl.payment.status)!,
             
             shippingMethodId: bl.shipping!.methodId,
             shippingMethodName: bl.shipping!.method,
@@ -253,15 +245,8 @@ extension OrderDetails {
             shippingAddressCountryCode: bl.shipping!.address.countryCode,
             shippingAddressName: bl.shipping!.address.name.full,
             
-            subTotal: bl.cost.subtotal.floatValue,
-            grandTotal: bl.cost.grandTotal.floatValue,
             shippingCost: bl.cost.shipping!.floatValue,
-            costCurrencyCode: bl.cost.currencyCode,
-
-            dispSubTotal: bl.dispCost.subtotal.floatValue,
-            dispGrandTotal: bl.dispCost.grandTotal.floatValue,
-            dispShippingCost: bl.dispCost.shipping!.floatValue,
-            dispCostCurrencyCode: bl.dispCost.currencyCode
+            dispShippingCost: bl.dispCost.shipping!.floatValue
         )
     }
 }
