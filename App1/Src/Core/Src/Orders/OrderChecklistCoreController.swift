@@ -60,9 +60,9 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderDetails(for order: Order) -> OrderDetails? {
+    func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.orderDetails(for: order)
+        orderCoreController.details(for: order)
     }
     
     
@@ -138,7 +138,7 @@ class OrderChecklistCoreController {
             return true
         }
         
-        let orderDetails = orderDetails(for: order)!
+        let orderDetails = details(for: order)!
         if orderDetails.shippingMethodId.isOneOf(shippingMethodIds_LaPoste) {
         
             let stamping = stamping(for: order)
@@ -186,15 +186,15 @@ class OrderChecklistCoreController {
     
     func orderChecklistTrackingNo(_ order: Order) -> Bool {
         
-        let order = orderDetails(for: order)!
+        let orderDetails = details(for: order)!
         
-        return !(order.trackingNo ?? "").isEmpty
+        return !(orderDetails.trackingNo ?? "").isEmpty
     }
     
     
     func orderChecklistDriveThru(_ order: Order) -> Bool {
         
-        let orderDetails = orderDetails(for: order)!
+        let orderDetails = details(for: order)!
         
         return orderDetails.driveThruSent
     }
@@ -206,7 +206,7 @@ class OrderChecklistCoreController {
             return true
         }
         
-        let orderDetails = orderDetails(for: order)!
+        let orderDetails = details(for: order)!
         if orderDetails.shippingMethodId == shippingMethodId_France_MondialRelay {
             return true
         }

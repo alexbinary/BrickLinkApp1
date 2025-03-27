@@ -108,7 +108,7 @@ struct OrdersMainListItem: View {
                             
                             ForEach(tags) { tagView($0) }
                             
-                            if macroStatus == .inTransit, orderStore.orderDetails(for: order)!.isShippedWithLaPoste {
+                            if macroStatus == .inTransit, orderStore.details(for: order)!.isShippedWithLaPoste {
                                 LaPosteTrackingStatusIndicator(order: order)
                             }
                         }

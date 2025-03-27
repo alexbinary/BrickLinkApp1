@@ -145,7 +145,7 @@ struct ResultHistoryView: View {
                         let orders = ordersByMonth[month]
                         
                         let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                        let totalShipping = orders.map { orderStore.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
+                        let totalShipping = orders.map { orderStore.details(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
                         
                         let totalIncome = totalItems + totalShipping
                         
@@ -271,7 +271,7 @@ struct ResultHistoryView: View {
                             let orders = ordersByMonth[month]
                             
                             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                            let totalShipping = orders.map { orderStore.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
+                            let totalShipping = orders.map { orderStore.details(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
                             
                             let totalItemCost: Float = 0
                             
@@ -323,7 +323,7 @@ struct ResultHistoryView: View {
                             let orders = visibleOrders
                             
                             let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-                            let totalShipping = orders.map { orderStore.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
+                            let totalShipping = orders.map { orderStore.details(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
                             
                             let totalItemCost: Float = 0
                             

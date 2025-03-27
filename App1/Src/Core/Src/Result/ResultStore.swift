@@ -103,7 +103,7 @@ public class ResultStore {
     
     public func profitMargin(for order: Order) -> Float? {
         
-        let orderDetails = orderCoreController.orderDetails(for: order)!
+        let orderDetails = orderCoreController.details(for: order)!
         
         return profitMargin(
             
@@ -129,7 +129,7 @@ public class ResultStore {
             .sorted { (self.profitMargin(for: $0) ?? 0) > (self.profitMargin(for: $1) ?? 0) }
         
         let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-        let totalShipping = orders.map { orderCoreController.orderDetails(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
+        let totalShipping = orders.map { orderCoreController.details(for: $0)! }.reduce(0) { $0 + $1.shippingCost }
         
         let totalItemCost: Float = 0
         let totalShippingCost = orders.reduce(0) { $0 + (shippingCost(for: $1) ?? 0) }

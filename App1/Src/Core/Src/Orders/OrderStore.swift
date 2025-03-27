@@ -69,21 +69,21 @@ public class OrderStore {
     // MARK: - Details
     
     
-    public func orderDetails(for order: Order) -> OrderDetails? {
+    public func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.orderDetails(for: order)
+        orderCoreController.details(for: order)
     }
     
     
-    public func loadOrderDetails(for order: Order) async {
+    public func loadDetails(for order: Order) async {
         
-        await orderCoreController.loadOrderDetails(for: order)
+        await orderCoreController.loadDetails(for: order)
     }
     
     
-    public func loadOrderDetailsIfMissing(for order: Order) async {
+    public func loadDetailsIfMissing(for order: Order) async {
         
-        await orderCoreController.loadOrderDetailsIfMissing(for: order)
+        await orderCoreController.loadDetailsIfMissing(for: order)
     }
     
     
@@ -155,7 +155,7 @@ public class OrderStore {
     
     public func forceRefreshOrder(_ order: Order) async {
         
-        await loadOrderDetails(for: order)
+        await loadDetails(for: order)
         await loadOrderItems(for: order)
         await loadOrderFeedbacks(for: order)
     }
@@ -165,7 +165,7 @@ public class OrderStore {
         
         for order in orders {
             
-            await loadOrderDetailsIfMissing(for: order)
+            await loadDetailsIfMissing(for: order)
             await loadOrderItemsIfMissing(for: order)
             await loadOrderFeedbacksIfMissing(for: order)
         }
@@ -185,7 +185,7 @@ public class OrderStore {
         
         if shouldRefreshOrder(order) {
             
-            await loadOrderDetails(for: order)
+            await loadDetails(for: order)
             await loadOrderItems(for: order)
             await loadOrderFeedbacks(for: order)
         }
@@ -207,7 +207,7 @@ public class OrderStore {
         if orderIsClosedForMoreThan30Days(order) {
             
             guard
-                let orderDetails = orderDetails(for: order)
+                let orderDetails = details(for: order)
             else {
                 return true
             }

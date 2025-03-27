@@ -74,13 +74,13 @@ class OrderCoreController {
     }
     
     
-    func orderDetails(for order: Order) -> OrderDetails? {
+    func details(for order: Order) -> OrderDetails? {
         
         orderDetails.first { $0.id == order.id }
     }
     
     
-    func loadOrderDetails(for order: Order) async {
+    func loadDetails(for order: Order) async {
         
         print("Loading order details \(order.id)")
         
@@ -92,20 +92,20 @@ class OrderCoreController {
     }
     
     
-    func loadOrderDetailsIfMissing(for order: Order) async {
+    func loadDetailsIfMissing(for order: Order) async {
         
         if !orderDetails.contains(where: { $0.id == order.id }) {
             
-            await loadOrderDetails(for: order)
+            await loadDetails(for: order)
         }
     }
     
     
-    func reloadOrderDetails(for order: Order) async {
+    func reloadDetails(for order: Order) async {
         
         if orderDetails.contains(where: { $0.id == order.id }) {
             
-            await loadOrderDetails(for: order)
+            await loadDetails(for: order)
         }
     }
     
@@ -121,7 +121,7 @@ class OrderCoreController {
         
         await parallel([
             { await self.reloadOrders() },
-            { await self.reloadOrderDetails(for: order) },
+            { await self.reloadDetails(for: order) },
         ])
     }
     
@@ -134,7 +134,7 @@ class OrderCoreController {
         
         await parallel([
             { await self.reloadOrders() },
-            { await self.reloadOrderDetails(for: order) },
+            { await self.reloadDetails(for: order) },
         ])
     }
     
@@ -147,7 +147,7 @@ class OrderCoreController {
         
         await parallel([
             { await self.reloadOrders() },
-            { await self.reloadOrderDetails(for: order) },
+            { await self.reloadDetails(for: order) },
         ])
     }
     

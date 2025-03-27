@@ -15,7 +15,7 @@ struct OrderDetailRefundView: View {
     
     
     let order: Order
-    var orderDetails: OrderDetails { orderStore.orderDetails(for: order)! }
+    var orderDetails: OrderDetails { orderStore.details(for: order)! }
     
     init(_ order: Order) {
         self.order = order

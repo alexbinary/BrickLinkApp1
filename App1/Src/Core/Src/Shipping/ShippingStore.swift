@@ -21,9 +21,9 @@ public class ShippingStore {
     }
     
     
-    public func orderDetails(for order: Order) -> OrderDetails? {
+    public func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.orderDetails(for: order)
+        orderCoreController.details(for: order)
     }
     
     
@@ -44,7 +44,7 @@ public class ShippingStore {
     
     public func selectedShippingCost(for order: Order) -> SelectedShippingCost? {
         
-        let orderDetails = orderDetails(for: order)!
+        let orderDetails = details(for: order)!
         
         let weight = orderDetails.totalWeight * orderWeightMarginRatio
         
@@ -220,7 +220,7 @@ public class ShippingStore {
     public func recommendedStampingMethod(for order: Order) -> String {
         
         let selectedShippingCost = selectedShippingCost(for: order)
-        let orderDetails = orderDetails(for: order)!
+        let orderDetails = details(for: order)!
         
         var s = ""
         
