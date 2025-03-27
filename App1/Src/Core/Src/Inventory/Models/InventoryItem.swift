@@ -15,28 +15,4 @@ public struct InventoryItem: Identifiable, Codable, Sendable {
     public let remarks: String
     public let quantity: Int
     public let unitPrice: Float
-    
-    public init(
-        id: String,
-        condition: String,
-        colorId: String,
-        ref: String,
-        name: String,
-        type: ItemType,
-        description: String,
-        remarks: String,
-        quantity: Int,
-        unitPrice: Float
-    ) {
-        self.id = id
-        self.condition = condition
-        self.colorId = colorId
-        self.ref = ref
-        self.name = name
-        self.type = type
-        self.description = description
-        self.remarks = remarks
-        self.quantity = quantity
-        self.unitPrice = unitPrice
-    }
 }
