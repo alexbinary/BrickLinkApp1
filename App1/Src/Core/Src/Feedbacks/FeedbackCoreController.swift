@@ -74,9 +74,9 @@ class FeedbackCoreController {
     // MARK: - Post feedback
     
     
-    func postFeedback(forOrderWithId: OrderSummary.ID, rating: BrickLinkFeedbackRating, comment: String) async {
+    func postFeedback(forOrderWithId: OrderSummary.ID, rating: FeedbackRating, comment: String) async {
         
-        await brickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating.rawValue, comment: comment)
+        await brickLinkAPIClient.postFeedback(forOrderWithId: forOrderWithId, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
         await reloadOrderFeedbacks(forOrderWithId: forOrderWithId)
     }
@@ -122,7 +122,7 @@ extension Feedback {
             from: bl.from,
             to: bl.to,
             dateRated: bl.dateRated,
-            rating: bl.rating,
+            rating: FeedbackRating(fromBl: bl.rating),
             author: FeedbackAuthor(fromBl: bl.ratingOfBs)!,
             comment: bl.comment
         )
@@ -139,6 +139,30 @@ extension FeedbackAuthor {
         switch bl {
         case .forBuyer: self = .seller
         case .forSeller: self = .buyer
+        }
+    }
+}
+
+
+
+extension FeedbackRating {
+    
+    
+    
+    init(fromBl bl: BrickLinkFeedbackRating) {
+        switch bl {
+        case .praise: self = .praise
+        case .neutral: self = .neutral
+        case .complaint: self = .complaint
+        }
+    }
+    
+    
+    var bricklinkFeedbackRating: BrickLinkFeedbackRating {
+        switch self {
+        case .praise: .praise
+        case .neutral: .neutral
+        case .complaint: .complaint
         }
     }
 }

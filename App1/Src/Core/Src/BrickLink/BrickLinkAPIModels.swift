@@ -98,7 +98,7 @@ struct BrickLinkOrderFeedback: Decodable {
 
 
 
-public enum BrickLinkFeedbackRating: Int, Decodable, Encodable {
+enum BrickLinkFeedbackRating: Int, Decodable, Encodable {
     
     case praise = 0
     case neutral = 1
