@@ -21,6 +21,7 @@ struct MainApp: App {
                     { await env.catalog.loadColors() },
                     { await env.stores.inventory.loadInventories() },
                     { await env.stores.order.loadOrders() },
+                    { await env.stores.order.loadMissingOrders() },
                 ])}
         }
     }
