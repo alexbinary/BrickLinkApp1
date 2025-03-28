@@ -7,14 +7,16 @@ import CoreBluetooth
 struct BluetoothRootView: View {
     
     var controller = BluetoothController()
+    
+    @State var cmd = ""
 
     var body: some View {
 
-        Button("On") {
-            controller.write(1)
+        Button(controller.state ? "On" : "Off") {
+            controller.toggle()
         }
-        Button("Off") {
-            controller.write(0)
+        TextField("Cmd", text: $cmd).onSubmit {
+            controller.writeCmd(cmd)
         }
     }
 }
@@ -30,12 +32,16 @@ struct BluetoothRootView: View {
 @Observable
 class BluetoothController: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
-    var manager: CBCentralManager!
-    let ledServiceUUID = CBUUID(string: "19B10000-E8F2-537E-4F6C-D104768A1214")
-    let switchCharacteristicUUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
+    var state: Bool = false
     
-    var peripheral: CBPeripheral!
-    var switchCharacteristic: CBCharacteristic!
+    private var manager: CBCentralManager!
+    private let ledServiceUUID = CBUUID(string: "19B10000-E8F2-537E-4F6C-D104768A1214")
+    private let switchCharacteristicUUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
+    private let cmdCharacteristicUUID = CBUUID(string: "19B10002-E8F2-537E-4F6C-D104768A1214")
+    
+    private var peripheral: CBPeripheral!
+    private var switchCharacteristic: CBCharacteristic!
+    private var cmdCharacteristic: CBCharacteristic!
     
     override init() {
         super.init()
@@ -43,11 +49,15 @@ class BluetoothController: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
         manager = CBCentralManager(delegate: self, queue: nil)
     }
     
+    func scan() {
+        print("Scanning for peripherals...")
+        manager.scanForPeripherals(withServices: [ledServiceUUID])
+    }
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print("manager - state update: \(central.state)")
         if central.state == .poweredOn {
-            print("Scanning for peripherals...")
-            manager.scanForPeripherals(withServices: [ledServiceUUID])
+            scan()
         }
     }
     
@@ -71,13 +81,21 @@ class BluetoothController: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
         peripheral.discoverServices([ledServiceUUID])
     }
     
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
+        print("manager - disconnected from peripheral: \(peripheral.identifier)")
+        if let error = error { print(error) }
+        self.peripheral = nil
+        print("Scanning for peripherals...")
+        manager.scanForPeripherals(withServices: [ledServiceUUID])
+    }
+    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?) {
         print("peripheral: \(peripheral.identifier) - discovered services")
         if let error = error { print(error) }
         print((peripheral.services ?? []).map(\.uuid))
         if let ledService = peripheral.services?.first(where: { $0.uuid == ledServiceUUID }) {
             print("found ledService: \(ledService.uuid)")
-            peripheral.discoverCharacteristics([switchCharacteristicUUID], for: ledService)
+            peripheral.discoverCharacteristics([switchCharacteristicUUID, cmdCharacteristicUUID], for: ledService)
         } else {
             print("ledService (\(ledServiceUUID)) not found")
         }
@@ -91,12 +109,26 @@ class BluetoothController: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
             print("found switchCharacteristic: \(switchCharacteristic.uuid)")
             self.switchCharacteristic = switchCharacteristic
         }
+        if let cmdCharacteristic = service.characteristics?.first(where: { $0.uuid == cmdCharacteristicUUID }) {
+            print("found cmdCharacteristic: \(cmdCharacteristic.uuid)")
+            self.cmdCharacteristic = cmdCharacteristic
+        }
     }
     
-    func write(_ n: UInt8) {
+    func toggle() {
+        state.toggle()
+        writeSwitch(state ? 1 : 0)
+    }
+    
+    func writeSwitch(_ n: UInt8) {
         var data = Data()
         data.append(contentsOf: [n])
         peripheral.writeValue(data, for: switchCharacteristic, type: .withResponse)
+    }
+    
+    func writeCmd(_ str: String) {
+        let data = str.data(using: .utf8)!
+        peripheral.writeValue(data, for: cmdCharacteristic, type: .withResponse)
     }
 }
 
