@@ -124,12 +124,7 @@ class SmartDrawersBluetoothController: NSObject, CBCentralManagerDelegate, CBPer
     }
     
     
-    public func openDrawer(_ drawerStr: String) {
-        
-        guard let drawer = UInt8(drawerStr) else {
-            print("Bluetooth error: invalid drawer number: \(drawerStr)")
-            return
-        }
+    public func openDrawer(_ drawer: UInt8) {
         
         guard let peripheral = smartDrawersPeripheral, let drawerCharacteristic = drawerCharacteristic else {
             print("Bluetooth error: device not ready")

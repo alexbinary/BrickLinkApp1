@@ -10,12 +10,12 @@ struct SmartDrawersBluetoothRootView: View {
     var ready: Bool { controller.state == .ready }
     
     
-    @State var drawer = ""
+    @State var drawerStr = ""
     @State var history: [History] = []
     
     struct History: Identifiable {
         let id = UUID()
-        let drawer: String
+        let drawer: UInt8
     }
 
     
@@ -27,7 +27,7 @@ struct SmartDrawersBluetoothRootView: View {
                 Section {
                     ForEach(history.reversed()) { h in
                         
-                        Text(h.drawer)
+                        Text("\(h.drawer)")
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .onTapGesture { send(h.drawer) }
@@ -52,13 +52,13 @@ struct SmartDrawersBluetoothRootView: View {
                 VStack {
                     
                     HStack {
-                        Text(drawer).padding()
+                        Text(drawerStr).padding()
                         Spacer()
                         Button { sendDrawer() }
                         label: { Text("Send").padding() }
                     }
                     
-                    KeyPad { drawer.append($0) }
+                    KeyPad { drawerStr.append($0) }
                 }
                 .font(.title)
                 .padding()
@@ -72,12 +72,17 @@ struct SmartDrawersBluetoothRootView: View {
     
     func sendDrawer() {
         
+        guard let drawer = UInt8(drawerStr) else {
+            print("Error: invalid drawer number: \(drawerStr)")
+            return
+        }
+        
         send(drawer)
-        drawer = ""
+        drawerStr = ""
     }
     
     
-    func send(_ drawer: String) {
+    func send(_ drawer: UInt8) {
         
         controller.openDrawer(drawer)
         history.append(History(drawer: drawer))
