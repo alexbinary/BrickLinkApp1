@@ -7,45 +7,80 @@ struct SmartDrawersBluetoothRootView: View {
     
     
     var controller = SmartDrawersBluetoothController()
+    var ready: Bool { controller.state == .ready }
     
     
     @State var drawer = ""
+    @State var history: [History] = []
+    
+    struct History: Identifiable {
+        let id = UUID()
+        let drawer: String
+    }
 
     
     var body: some View {
 
-        VStack {
+        HSplitView {
             
-            Text(controller.state == .connecting ? "Connecting..." : "Ready")
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .padding(.top, 8)
-            Divider()
-            
-            Spacer()
+            List() {
+                Section {
+                    ForEach(history.reversed()) { h in
+                        
+                        Text(h.drawer)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture { send(h.drawer) }
+                        .font(.title2)
+                    }
+                } header: {
+                    Text("History").font(.title2).padding().frame(height: 48)
+                }
+            }
+            .disabled(!ready)
             
             VStack {
                 
-                HStack {
-                    Text(drawer).padding()
-                    Spacer()
-                    Button { submit() } label: { Text("Send").padding() }
-                }
+                Text(controller.state == .connecting ? "Connecting..." : "Ready")
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(height: 48)
+                Divider()
                 
-                KeyPad { drawer.append($0) }
+                Spacer()
+                
+                VStack {
+                    
+                    HStack {
+                        Text(drawer).padding()
+                        Spacer()
+                        Button { sendDrawer() }
+                        label: { Text("Send").padding() }
+                    }
+                    
+                    KeyPad { drawer.append($0) }
+                }
+                .font(.title)
+                .padding()
+                .disabled(!ready)
+                
+                Spacer()
             }
-            .font(.title)
-            .padding()
-            .disabled(controller.state != .ready)
-            
-            Spacer()
         }
     }
     
     
-    func submit() {
+    func sendDrawer() {
+        
+        send(drawer)
+        drawer = ""
+    }
+    
+    
+    func send(_ drawer: String) {
         
         controller.openDrawer(drawer)
+        history.append(History(drawer: drawer))
     }
 }
 
