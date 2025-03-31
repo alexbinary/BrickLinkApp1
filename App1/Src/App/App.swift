@@ -17,12 +17,10 @@ struct MainApp: App {
                 
                 .inject(env)
 
-                .task { await parallel([
-                    { await env.catalog.loadColors() },
-                    { await env.stores.inventory.loadInventories() },
-                    { await env.stores.order.loadOrders() },
-                    { await env.stores.order.loadMissingOrders() },
-                ])}
+                .task { await env.catalog.loadColors() }
+                .task { await env.stores.inventory.loadInventories() }
+                .task { await env.stores.order.loadOrders() }
+                .task { await env.stores.order.loadMissingOrders() }
         }
     }
 }
