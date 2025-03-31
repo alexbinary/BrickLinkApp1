@@ -166,24 +166,3 @@ class InventoryCoreController {
         await reloadInventory(withId: inventoryId)
     }
 }
-
-
-
-extension InventoryItem {
-    
-    
-    init(fromBl bl: BrickLinkInventoryItem) {
-        self.init(
-            id: "\(bl.inventoryId)",
-            condition: bl.newOrUsed,
-            colorId: "\(bl.colorId)",
-            ref: bl.item.no,
-            name: bl.item.name,
-            type: ItemType(fromBl: bl.item.type),
-            description: bl.description ?? "",
-            remarks: bl.remarks ?? "",
-            quantity: bl.quantity,
-            unitPrice: bl.unitPrice.floatValue
-        )
-    }
-}
