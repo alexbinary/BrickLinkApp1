@@ -31,8 +31,8 @@ struct UploadView: View {
             .tabItem { Text("􀐫 History") }.tag("history")
         }
         .navigationTitle("Upload")
-        .onAppear {
-            Task { await inventoryStore.reloadInventories() }
-        }
+        .onAppear { Task {
+            await inventoryStore.reloadInventories()
+        }}
     }
 }
