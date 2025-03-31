@@ -8,13 +8,13 @@ class FeedbackCoreController {
     
     
     private let dataStore: DataStore
-    private let brickLinkAPIClient: BrickLinkAPIClient
+    private let updateController: UpdateController
     
     
-    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ updateController: UpdateController) {
         
         self.dataStore = dataStore
-        self.brickLinkAPIClient = brickLinkAPIClient
+        self.updateController = updateController
     }
     
     
@@ -41,15 +41,7 @@ class FeedbackCoreController {
     
     func loadFeedbacks(for order: Order) async {
         
-        print("Loading order feedbacks \(order.id)")
-        
-        let blFeedbacks = await brickLinkAPIClient.fetchFeedbacks(orderId: order.id)
-        let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
-        
-        print("loaded \(feedbacks.count) feedbacks")
-        
-        try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: order.id)
-        try! dataStore.save()
+        await updateController.loadFeedbacks(for: order)
     }
     
     
@@ -76,9 +68,7 @@ class FeedbackCoreController {
     
     func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
         
-        await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
-        
-        await reloadFeedbacks(for: order)
+        await updateController.postFeedback(for: order, rating: rating, comment: comment)
     }
     
     

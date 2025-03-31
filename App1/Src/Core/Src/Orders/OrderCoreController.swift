@@ -8,13 +8,13 @@ class OrderCoreController {
     
     
     private let dataStore: DataStore
-    private let brickLinkAPIClient: BrickLinkAPIClient
+    private let updateController: UpdateController
     
     
-    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ updateController: UpdateController) {
      
         self.dataStore = dataStore
-        self.brickLinkAPIClient = brickLinkAPIClient
+        self.updateController = updateController
     }
     
     
@@ -35,15 +35,7 @@ class OrderCoreController {
     
     func loadOrders() async {
         
-        print("Loading orders")
-        
-        let blOrders = await brickLinkAPIClient.fetchOrderSummaries()
-        let orderSummaries = blOrders.map { Order(fromBl: $0) }.sorted { $0.date > $1.date }
-        
-        print("loaded \(orderSummaries.count) orders")
-        
-        try! dataStore.setOrderSummaries(orderSummaries)
-        try! dataStore.save()
+        await updateController.loadOrders()
     }
     
     
@@ -82,13 +74,7 @@ class OrderCoreController {
     
     func loadDetails(for order: Order) async {
         
-        print("Loading order details \(order.id)")
-        
-        let blOrder = await brickLinkAPIClient.fetchOrderDetails(orderId: order.id)
-        let orderDetails = OrderDetails(fromBl: blOrder)
-        
-        try! dataStore.setOrderDetail(orderDetails)
-        try! dataStore.save()
+        await updateController.loadDetails(for: order)
     }
     
     
@@ -115,40 +101,19 @@ class OrderCoreController {
     
     func updateStatus(of order: Order, to status: OrderStatus) async {
         
-        print("Update status \(status) for order \(order.id)")
-        
-        await brickLinkAPIClient.updateOrderStatus(orderId: order.id, status: status)
-        
-        await parallel([
-            { await self.reloadOrders() },
-            { await self.reloadDetails(for: order) },
-        ])
+        await updateController.updateStatus(of: order, to: status)
     }
     
     
     func updateTrackingNo(of order: Order, to trackingNo: String) async {
         
-        print("Update tracking no \(trackingNo) for order \(order.id)")
-        
-        await brickLinkAPIClient.updateTrackingNo(orderId: order.id, trackingNo: trackingNo)
-        
-        await parallel([
-            { await self.reloadOrders() },
-            { await self.reloadDetails(for: order) },
-        ])
+        await updateController.updateTrackingNo(of: order, to: trackingNo)
     }
     
     
     func sendDriveThru(for order: Order) async {
         
-        print("Send drive thru for order \(order.id)")
-        
-        await brickLinkAPIClient.sendDriveThru(orderId: order.id, mailMe: true)
-        
-        await parallel([
-            { await self.reloadOrders() },
-            { await self.reloadDetails(for: order) },
-        ])
+        await updateController.sendDriveThru(for: order)
     }
     
     
@@ -171,18 +136,7 @@ class OrderCoreController {
     
     func loadItems(for order: Order) async {
         
-        print("Loading order items \(order.id)")
-        
-        let blBatches = await brickLinkAPIClient.fetchOrderItems(orderId: order.id)
-        
-        let batches = blBatches.map { blItems in
-            blItems.map { OrderItem(fromBl: $0, orderId: order.id) }
-        }
-        
-        print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items")
-        
-        try! dataStore.setOrderItems(batches, forOrderId: order.id)
-        try! dataStore.save()
+        await updateController.loadItems(for: order)
     }
     
     

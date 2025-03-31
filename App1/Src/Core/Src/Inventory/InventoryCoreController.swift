@@ -10,12 +10,14 @@ class InventoryCoreController {
     
     
     private let dataStore: DataStore
+    private let updateController: UpdateController
     private let brickLinkAPIClient: BrickLinkAPIClient
+
     
-    
-    init(_ dataStore: DataStore, _ brickLinkAPIClient: BrickLinkAPIClient) {
+    init(_ dataStore: DataStore, _ updateController: UpdateController, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
         self.dataStore = dataStore
+        self.updateController = updateController
         self.brickLinkAPIClient = brickLinkAPIClient
     }
     
@@ -83,28 +85,13 @@ class InventoryCoreController {
     
     func loadInventories() async {
         
-        print("Loading inventories")
-        
-        let blInventories = await brickLinkAPIClient.fetchInventories()
-        
-        let inventories = blInventories.map { InventoryItem(fromBl: $0) }
-        
-        print("loaded \(inventories.count) inventories")
-        
-        try! dataStore.setInventories(inventories)
-        try! dataStore.save()
+        await updateController.loadInventories()
     }
     
     
     func loadInventory(withId inventoryId: InventoryItem.ID) async {
         
-        print("Loading inventory \(inventoryId)")
-        
-        let blInventory = await brickLinkAPIClient.fetchInventory(inventoryId: inventoryId)
-        let inventory = InventoryItem(fromBl: blInventory)
-        
-        try! dataStore.setInventory(inventory)
-        try! dataStore.save()
+        await updateController.loadInventory(withId: inventoryId)
     }
     
     

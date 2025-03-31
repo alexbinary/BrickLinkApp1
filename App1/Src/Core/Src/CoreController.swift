@@ -31,15 +31,18 @@ public class CoreController {
         }()
         
         let brickLinkAPIClient = BrickLinkAPIClient(withCredentials: brickLinkCredentials, debug: debug)
+        let laPosteTrackingClient = LaPosteTrackingClient(debug)
         
-        let inventoryCoreController = InventoryCoreController(dataStore, brickLinkAPIClient)
+        let updateController = UpdateController(dataStore, brickLinkAPIClient, laPosteTrackingClient)
+        
+        let inventoryCoreController = InventoryCoreController(dataStore, updateController, brickLinkAPIClient)
         let uploadCoreController = UploadCoreController(dataStore)
         
-        let orderCoreController = OrderCoreController(dataStore, brickLinkAPIClient)
+        let orderCoreController = OrderCoreController(dataStore, updateController)
         let pickingCoreController = PickingCoreController(dataStore)
         let shippingCoreController = ShippingCoreController(dataStore)
-        let trackingCoreController = TrackingCoreController(dataStore, debug)
-        let feedbackCoreController = FeedbackCoreController(dataStore, brickLinkAPIClient)
+        let trackingCoreController = TrackingCoreController(dataStore, updateController)
+        let feedbackCoreController = FeedbackCoreController(dataStore, updateController)
         let refundCoreController = RefundCoreController(dataStore)
         let transactionCoreController = TransactionCoreController(dataStore)
         
@@ -53,7 +56,7 @@ public class CoreController {
         
         // User Stores
         
-        catalog = Catalog(dataStore, brickLinkAPIClient)
+        catalog = Catalog(dataStore, updateController, brickLinkAPIClient)
         
         inventoryStore = InventoryStore(inventoryCoreController, stockCoreController)
         uploadStore = UploadStore(uploadCoreController, inventoryCoreController, catalog)
