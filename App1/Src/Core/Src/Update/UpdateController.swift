@@ -26,6 +26,218 @@ class UpdateController {
     
     func loadColors() async {
      
+        await enqueue { continuation in
+            LoadColorsOperation(continuation: continuation)
+        }
+    }
+    
+    
+    // MARK: - Inventories
+    
+    
+    func loadInventories() async {
+            
+        await enqueue { continuation in
+            LoadInventoriesOperation(continuation: continuation)
+        }
+    }
+    
+    
+    func loadInventory(withId inventoryId: InventoryItem.ID) async {
+        
+        await enqueue { continuation in
+            LoadInventoryOperation(inventoryId: inventoryId, continuation: continuation)
+        }
+    }
+    
+    
+    // MARK: - Orders
+    
+    
+    func loadOrders() async {
+        
+        await enqueue { continuation in
+            LoadOrdersOperation(continuation: continuation)
+        }
+    }
+    
+    
+    func loadDetails(for order: Order) async {
+        
+        await enqueue { continuation in
+            LoadOrderDetailsOperation(order: order, continuation: continuation)
+        }
+    }
+    
+    
+    func loadItems(for order: Order) async {
+        
+        await enqueue { continuation in
+            LoadOrderItemsOperation(order: order, continuation: continuation)
+        }
+    }
+    
+    
+    // MARK: - Order update
+    
+    
+    func updateStatus(of order: Order, to status: OrderStatus) async {
+        
+        await enqueue { continuation in
+            UpdateOrderStatusOperation(order: order, status: status, continuation: continuation)
+        }
+    }
+    
+    
+    func updateTrackingNo(of order: Order, to trackingNo: String) async {
+        
+        await enqueue { continuation in
+            UpdateOrderTrackingNoOperation(order: order, trackingNo: trackingNo, continuation: continuation)
+        }
+    }
+    
+    
+    func sendDriveThru(for order: Order) async {
+        
+        await enqueue { continuation in
+            SendDriveThruOperation(order: order, continuation: continuation)
+        }
+    }
+    
+    
+    // MARK: - Tracking
+    
+    
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+        
+        await enqueue { continuation in
+            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, continuation: continuation)
+        }
+    }
+    
+    
+    // MARK: - Feedbacks
+    
+    
+    func loadFeedbacks(for order: Order) async {
+        
+        await enqueue { continuation in
+            LoadOrderFeedbacksOperation(order: order, continuation: continuation)
+        }
+    }
+    
+    
+    func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
+        
+        await enqueue { continuation in
+            PostOrderFeedbackOperation(order: order, rating: rating, comment: comment, continuation: continuation)
+        }
+    }
+    
+    
+    // MARK: - Queue
+    
+
+    private var queuedOperations: [any UpdateOperation] = []
+    private var runningOperation: (any UpdateOperation)?
+    
+    
+    private func enqueue(_ builder: (CheckedContinuation<(),Never>) -> UpdateOperation) async {
+        
+        await withCheckedContinuation { continuation in
+            enqueue(builder(continuation))
+        }
+    }
+    
+    
+    private func enqueue(_ operation: any UpdateOperation) {
+        
+        queuedOperations.append(operation)
+        
+        Task { await dequeue() }
+    }
+    
+    
+    private func dequeue() async {
+            
+        guard runningOperation == nil, queuedOperations.count > 0 else {
+            return
+        }
+            
+        let operation = queuedOperations.removeFirst()
+        
+        runningOperation = operation
+        await run(operation)
+        runningOperation = nil
+        
+        await dequeue()
+    }
+    
+    
+    private func run(_ operation: any UpdateOperation) async {
+        
+        if operation is LoadColorsOperation {
+            
+            await run_loadColors()
+            
+        } else if operation is LoadInventoriesOperation {
+            
+            await run_loadInventories()
+            
+        } else if let op = operation as? LoadInventoryOperation {
+            
+            await run_loadInventory(withId: op.inventoryId)
+            
+        } else if operation is LoadOrdersOperation {
+            
+            await run_loadOrders()
+            
+        } else if let op = operation as? LoadOrderDetailsOperation {
+            
+            await run_loadDetails(for: op.order)
+        
+        } else if let op = operation as? LoadOrderItemsOperation {
+            
+            await run_loadItems(for: op.order)
+        
+        } else if let op = operation as? UpdateOrderStatusOperation {
+            
+            await run_updateStatus(of: op.order, to: op.status)
+        
+        } else if let op = operation as? UpdateOrderTrackingNoOperation {
+            
+            await run_updateTrackingNo(of: op.order, to: op.trackingNo)
+            
+        } else if let op = operation as? SendDriveThruOperation {
+            
+            await run_sendDriveThru(for: op.order)
+            
+        } else if let op = operation as? UpdateLaPosteTrackingStatusOperation {
+            
+            await run_loadLaPosteTrackingStatus(forTrackingNo: op.trackingNo)
+            
+        } else if let op = operation as? LoadOrderFeedbacksOperation {
+            
+            await run_loadFeedbacks(for: op.order)
+            
+        } else if let op = operation as? PostOrderFeedbackOperation {
+            
+            await run_postFeedback(for: op.order, rating: op.rating, comment: op.comment)
+            
+        } else {
+            
+            fatalError("Unknow update operation: \(operation)")
+        }
+        
+        operation.resumeContinuation()
+    }
+    
+    
+    // MARK: - Operations run code
+    
+    
+    private func run_loadColors() async {
+     
         print("Loading colors")
         
         let blColors = await brickLinkAPIClient.fetchColors()
@@ -38,10 +250,7 @@ class UpdateController {
     }
     
     
-    // MARK: - Inventories
-    
-    
-    func loadInventories() async {
+    private func run_loadInventories() async {
         
         print("Loading inventories")
         
@@ -55,7 +264,7 @@ class UpdateController {
     }
     
     
-    func loadInventory(withId inventoryId: InventoryItem.ID) async {
+    private func run_loadInventory(withId inventoryId: InventoryItem.ID) async {
         
         print("Loading inventory \(inventoryId)")
         
@@ -67,10 +276,7 @@ class UpdateController {
     }
     
     
-    // MARK: - Orders
-    
-
-    func loadOrders() async {
+    private func run_loadOrders() async {
         
         print("Loading orders")
         
@@ -84,7 +290,7 @@ class UpdateController {
     }
     
     
-    func loadDetails(for order: Order) async {
+    private func run_loadDetails(for order: Order) async {
         
         print("Loading order details \(order.id)")
         
@@ -96,7 +302,7 @@ class UpdateController {
     }
     
     
-    func loadItems(for order: Order) async {
+    private func run_loadItems(for order: Order) async {
         
         print("Loading order items \(order.id)")
         
@@ -116,7 +322,7 @@ class UpdateController {
     // MARK: - Order update
     
     
-    func updateStatus(of order: Order, to status: OrderStatus) async {
+    private func run_updateStatus(of order: Order, to status: OrderStatus) async {
         
         print("Update status \(status) for order \(order.id)")
         
@@ -129,7 +335,7 @@ class UpdateController {
     }
     
     
-    func updateTrackingNo(of order: Order, to trackingNo: String) async {
+    private func run_updateTrackingNo(of order: Order, to trackingNo: String) async {
         
         print("Update tracking no \(trackingNo) for order \(order.id)")
         
@@ -142,7 +348,7 @@ class UpdateController {
     }
     
     
-    func sendDriveThru(for order: Order) async {
+    private func run_sendDriveThru(for order: Order) async {
         
         print("Send drive thru for order \(order.id)")
         
@@ -158,7 +364,7 @@ class UpdateController {
     // MARK: - Tracking
     
     
-    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+    private func run_loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
         let status = await laPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
     
@@ -167,10 +373,11 @@ class UpdateController {
     }
     
     
+    
     // MARK: - Feedbacks
     
     
-    func loadFeedbacks(for order: Order) async {
+    private func run_loadFeedbacks(for order: Order) async {
         
         print("Loading order feedbacks \(order.id)")
         
@@ -184,8 +391,8 @@ class UpdateController {
     }
     
     
-    func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
-        
+    private func run_postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
+            
         await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
         await loadFeedbacks(for: order)
