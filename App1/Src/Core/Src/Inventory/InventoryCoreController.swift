@@ -126,25 +126,6 @@ class InventoryCoreController {
     }
     
     
-    func getInventory(for uploadItem: UploadItem) async -> InventoryItem? {
-        
-        let inventories = await brickLinkAPIClient.fetchInventories(itemType: uploadItem.type.brickLinkItemType, colorId: uploadItem.colorId)
-            
-        if let inv = inventories.first(where: { inv in
-            
-            inv.item.type == uploadItem.type.brickLinkItemType
-            && inv.item.no == uploadItem.ref
-            && "\(inv.colorId)" == uploadItem.colorId
-            && inv.newOrUsed == uploadItem.condition
-            && (inv.description ?? "") == (uploadItem.comment ?? "")
-        }) {
-            return InventoryItem(fromBl: inv)
-        }
-        
-        return nil
-    }
-    
-    
     func createInventory(
         
         ref: String,
@@ -178,26 +159,11 @@ class InventoryCoreController {
     }
     
     
-    func updateInventory(
+    func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
-        inventoryId: InventoryItem.ID,
+        await brickLinkAPIClient.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
         
-        addQuantity: Int,
-        unitPrice: Float? = nil,
-        remarks: String? = nil
-    
-    ) async {
-        
-        await brickLinkAPIClient.updateInventory(
-            
-            inventoryId: inventoryId,
-        
-            addQuantity: addQuantity,
-            unitPrice: unitPrice,
-            remarks: remarks
-        )
-        
-        await self.reloadInventory(withId: inventoryId)
+        await reloadInventory(withId: inventoryId)
     }
 }
 
