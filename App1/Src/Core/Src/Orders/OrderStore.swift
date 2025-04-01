@@ -129,7 +129,7 @@ public class OrderStore {
     }
     
     
-    // MARK: - Feedbacks
+    // MARK: - Reload
     
     
     public func feedbacks(for order: Order) -> [Feedback] {
@@ -148,9 +148,6 @@ public class OrderStore {
         
         await feedbackCoreController.loadFeedbacksIfMissing(for: order)
     }
-    
-    
-    // MARK: - Reload
     
     
     public func forceRefresh(_ order: Order) async {
