@@ -113,6 +113,24 @@ class InventoryCoreController {
     }
     
     
+    var isLoadingInventories: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadInventories
+    }
+    
+    
+    var isLoadingInventory: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadInventory
+    }
+    
+    
+    func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadInventory(withId: inventoryId)
+    }
+    
+    
     func createInventory(
         
         ref: String,

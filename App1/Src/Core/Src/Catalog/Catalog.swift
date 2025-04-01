@@ -60,6 +60,12 @@ public class Catalog {
     }
     
     
+    public var isLoadingColors: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadColors
+    }
+    
+    
     // MARK: - Items
     
     

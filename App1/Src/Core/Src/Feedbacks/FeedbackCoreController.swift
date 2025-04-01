@@ -63,12 +63,36 @@ class FeedbackCoreController {
     }
     
     
+    var isLoadingOrderFeedbacks: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadOrderFeedbacks
+    }
+    
+    
+    func isLoadingFeedbacks(for order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadFeedbacks(for: order)
+    }
+    
+    
     // MARK: - Post feedback
     
     
     func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
         
         await updateController.postFeedback(for: order, rating: rating, comment: comment)
+    }
+    
+    
+    var isPostingFeedback: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_postOrderFeedback
+    }
+    
+    
+    func isPostingFeedback(for order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_postFeedback(for: order)
     }
     
     

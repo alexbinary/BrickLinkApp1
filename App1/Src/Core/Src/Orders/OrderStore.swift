@@ -66,6 +66,12 @@ public class OrderStore {
     }
     
     
+    public var isLoadingOrders: Bool {
+     
+        orderCoreController.isLoadingOrders
+    }
+    
+    
     // MARK: - Details
     
     
@@ -84,6 +90,18 @@ public class OrderStore {
     public func loadDetailsIfMissing(for order: Order) async {
         
         await orderCoreController.loadDetailsIfMissing(for: order)
+    }
+    
+    
+    public var isLoadingOrderDetails: Bool {
+        
+        orderCoreController.isLoadingOrderDetails
+    }
+    
+    
+    public func isLoadingDetails(for order: Order) -> Bool {
+        
+        orderCoreController.isLoadingDetails(for: order)
     }
     
     
@@ -108,6 +126,18 @@ public class OrderStore {
     }
     
     
+    public var isLoadingOrderItems: Bool {
+        
+        orderCoreController.isLoadingOrderItems
+    }
+    
+    
+    public func isLoadingItems(for order: Order) -> Bool {
+        
+        orderCoreController.isLoadingItems(for: order)
+    }
+    
+    
     // MARK: - Update
     
     
@@ -117,15 +147,51 @@ public class OrderStore {
     }
     
     
+    public var isUpdatingOrderStatus: Bool {
+        
+        orderCoreController.isUpdatingOrderStatus
+    }
+    
+    
+    public func isUpdatingStatus(of order: Order) -> Bool {
+        
+        orderCoreController.isUpdatingStatus(of: order)
+    }
+    
+    
     public func updateTrackingNo(of order: Order, to trackingNo: String) async {
         
         await orderCoreController.updateTrackingNo(of: order, to: trackingNo)
     }
     
     
+    public var isUpdatingOrderTrackingNo: Bool {
+        
+        orderCoreController.isUpdatingOrderTrackingNo
+    }
+    
+    
+    public func isUpdatingTrackingNo(of order: Order) -> Bool {
+        
+        orderCoreController.isUpdatingTrackingNo(of: order)
+    }
+    
+    
     public func sendDriveThru(for order: Order) async {
         
         await orderCoreController.sendDriveThru(for: order)
+    }
+    
+    
+    public var isSendingDriveThru: Bool {
+        
+        orderCoreController.isSendingDriveThru
+    }
+    
+    
+    public func isSendingDriveThru(for order: Order) -> Bool {
+        
+        orderCoreController.isSendingDriveThru(for: order)
     }
     
     

@@ -28,4 +28,16 @@ class TrackingCoreController {
         
         await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
     }
+    
+    
+    var isLoadingLaPosteTrackingStatus: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus
+    }
+    
+    
+    func isLoadingLaPosteTrackingStatus(forTrackingNo trackingNo: String) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+    }
 }

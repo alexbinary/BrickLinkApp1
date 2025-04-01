@@ -42,12 +42,36 @@ public class FeedbackStore {
     }
     
     
+    public var isLoadingOrderFeedbacks: Bool {
+        
+        feedbackCoreController.isLoadingOrderFeedbacks
+    }
+    
+    
+    public func isLoadingFeedbacks(for order: Order) -> Bool {
+        
+        feedbackCoreController.isLoadingFeedbacks(for: order)
+    }
+    
+    
     // MARK: - Post feedback
     
     
     public func postPraiseFeedback(for order: Order) async {
         
         await feedbackPostController.postPraiseFeedback(for: order)
+    }
+    
+    
+    public var isPostingFeedback: Bool {
+        
+        feedbackCoreController.isPostingFeedback
+    }
+    
+    
+    public func isPostingFeedback(for order: Order) -> Bool {
+        
+        feedbackCoreController.isPostingFeedback(for: order)
     }
     
     

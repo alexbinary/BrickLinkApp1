@@ -32,6 +32,12 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_loadColors: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadColorsOperation })
+    }
+    
+    
     // MARK: - Inventories
     
     
@@ -43,11 +49,34 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_loadInventories: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadInventoriesOperation })
+    }
+    
+    
     func loadInventory(withId inventoryId: InventoryItem.ID) async {
         
         await enqueue { continuation in
             LoadInventoryOperation(inventoryId: inventoryId, continuation: continuation)
         }
+    }
+    
+    
+    var isRunningOrIsScheduledToRun_loadInventory: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadInventoryOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_loadInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? LoadInventoryOperation, op.inventoryId == inventoryId {
+                return true
+            }
+            return false
+        })
     }
     
     
@@ -62,6 +91,12 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_loadOrders: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrdersOperation })
+    }
+    
+    
     func loadDetails(for order: Order) async {
         
         await enqueue { continuation in
@@ -70,11 +105,45 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_loadOrderDetails: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrderDetailsOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_loadDetails(for order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? LoadOrderDetailsOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
+    }
+    
+    
     func loadItems(for order: Order) async {
         
         await enqueue { continuation in
             LoadOrderItemsOperation(order: order, continuation: continuation)
         }
+    }
+    
+    
+    var isRunningOrIsScheduledToRun_loadOrderItems: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrderItemsOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_loadItems(for order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? LoadOrderItemsOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
     }
     
     
@@ -89,6 +158,23 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_updateOrderStatus: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is UpdateOrderStatusOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_updateStatus(of order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? UpdateOrderStatusOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
+    }
+    
+    
     func updateTrackingNo(of order: Order, to trackingNo: String) async {
         
         await enqueue { continuation in
@@ -97,11 +183,45 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_updateOrderTrackingNo: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is UpdateOrderTrackingNoOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_updateTrackingNo(of order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? UpdateOrderTrackingNoOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
+    }
+    
+    
     func sendDriveThru(for order: Order) async {
         
         await enqueue { continuation in
             SendDriveThruOperation(order: order, continuation: continuation)
         }
+    }
+    
+    
+    var isRunningOrIsScheduledToRun_sendDriveThru: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is SendDriveThruOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_sendDriveThru(for order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? SendDriveThruOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
     }
     
     
@@ -116,6 +236,23 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is UpdateLaPosteTrackingStatusOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? UpdateLaPosteTrackingStatusOperation, op.trackingNo == trackingNo {
+                return true
+            }
+            return false
+        })
+    }
+    
+    
     // MARK: - Feedbacks
     
     
@@ -127,6 +264,23 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_loadOrderFeedbacks: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrderFeedbacksOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_loadFeedbacks(for order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? LoadOrderFeedbacksOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
+    }
+    
+    
     func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
         
         await enqueue { continuation in
@@ -135,11 +289,37 @@ class UpdateController {
     }
     
     
+    var isRunningOrIsScheduledToRun_postOrderFeedback: Bool {
+        
+        return hasScheduledOrRunningOperation(matching: { $0 is PostOrderFeedbackOperation })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_postFeedback(for order: Order) -> Bool {
+        
+        return hasScheduledOrRunningOperation(matching: {
+            if let op = $0 as? PostOrderFeedbackOperation, op.order.id == order.id {
+                return true
+            }
+            return false
+        })
+    }
+    
+    
     // MARK: - Queue
     
 
     private var queuedOperations: [any UpdateOperation] = []
     private var runningOperation: (any UpdateOperation)?
+    
+    
+    private func hasScheduledOrRunningOperation(matching predicate: (any UpdateOperation) -> Bool) -> Bool {
+        
+        var ops = queuedOperations
+        if let op = runningOperation { ops.append(op) }
+        
+        return ops.contains(where: { predicate($0) })
+    }
     
     
     private func enqueue(_ builder: (CheckedContinuation<(),Never>) -> UpdateOperation) async {

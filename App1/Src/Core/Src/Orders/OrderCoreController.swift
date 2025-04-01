@@ -57,6 +57,12 @@ class OrderCoreController {
     }
     
     
+    var isLoadingOrders: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadOrders
+    }
+    
+    
     // MARK: - Orders details
     
     
@@ -96,6 +102,18 @@ class OrderCoreController {
     }
     
     
+    var isLoadingOrderDetails: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadOrderDetails
+    }
+    
+
+    func isLoadingDetails(for order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadDetails(for: order)
+    }
+    
+    
     // MARK: - Order items
     
     
@@ -115,7 +133,7 @@ class OrderCoreController {
     
     func loadItems(for order: Order) async {
         
-        await updateController.loadItems(for: order)
+        await updateController.loadItems(for: order, .evenIfNotInvalidated)
     }
     
     
@@ -128,6 +146,18 @@ class OrderCoreController {
     }
     
     
+    var isLoadingOrderItems: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadOrderItems
+    }
+    
+    
+    func isLoadingItems(for order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_loadItems(for: order)
+    }
+    
+    
     // MARK: - Order status, Tracking no, Drive thru
     
     
@@ -137,14 +167,50 @@ class OrderCoreController {
     }
     
     
+    var isUpdatingOrderStatus: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_updateOrderStatus
+    }
+    
+    
+    func isUpdatingStatus(of order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_updateStatus(of: order)
+    }
+    
+    
     func updateTrackingNo(of order: Order, to trackingNo: String) async {
         
         await updateController.updateTrackingNo(of: order, to: trackingNo)
     }
     
     
+    var isUpdatingOrderTrackingNo: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_updateOrderTrackingNo
+    }
+    
+    
+    func isUpdatingTrackingNo(of order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_updateTrackingNo(of: order)
+    }
+    
+    
     func sendDriveThru(for order: Order) async {
         
         await updateController.sendDriveThru(for: order)
+    }
+    
+    
+    var isSendingDriveThru: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_sendDriveThru
+    }
+    
+    
+    func isSendingDriveThru(for order: Order) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_sendDriveThru(for: order)
     }
 }

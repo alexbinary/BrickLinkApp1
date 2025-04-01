@@ -42,6 +42,15 @@ class TrackingMiddleController {
     }
     
     
+    func isLoadingLaPosteTrackingStatus(for order: Order) -> Bool {
+        
+        if let trackingNo = details(for: order)?.trackingNo {
+            return trackingCoreController.isLoadingLaPosteTrackingStatus(forTrackingNo: trackingNo)
+        }
+        return false
+    }
+    
+    
     func reloadLaPosteTrackingStatus(for order: Order) async {
         
         await loadLaPosteTrackingStatus(for: order)

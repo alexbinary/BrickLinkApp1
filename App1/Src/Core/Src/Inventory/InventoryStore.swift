@@ -64,6 +64,24 @@ public class InventoryStore {
     }
     
     
+    public var isLoadingInventories: Bool {
+        
+        inventoryCoreController.isLoadingInventories
+    }
+    
+    
+    public var isLoadingInventory: Bool {
+     
+        inventoryCoreController.isLoadingInventory
+    }
+    
+    
+    public func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+     
+        inventoryCoreController.isLoadingInventory(withId: inventoryId)
+    }
+    
+    
     // MARK: - Create and update inventories
     
     
