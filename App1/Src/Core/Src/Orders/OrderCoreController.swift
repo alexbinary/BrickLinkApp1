@@ -96,27 +96,6 @@ class OrderCoreController {
     }
     
     
-    // MARK: - Order status, Tracking no, Drive thru
-    
-    
-    func updateStatus(of order: Order, to status: OrderStatus) async {
-        
-        await updateController.updateStatus(of: order, to: status)
-    }
-    
-    
-    func updateTrackingNo(of order: Order, to trackingNo: String) async {
-        
-        await updateController.updateTrackingNo(of: order, to: trackingNo)
-    }
-    
-    
-    func sendDriveThru(for order: Order) async {
-        
-        await updateController.sendDriveThru(for: order)
-    }
-    
-    
     // MARK: - Order items
     
     
@@ -146,5 +125,26 @@ class OrderCoreController {
             
             await loadItems(for: order)
         }
+    }
+    
+    
+    // MARK: - Order status, Tracking no, Drive thru
+    
+    
+    func updateStatus(of order: Order, to status: OrderStatus) async {
+        
+        await updateController.updateStatus(of: order, to: status)
+    }
+    
+    
+    func updateTrackingNo(of order: Order, to trackingNo: String) async {
+        
+        await updateController.updateTrackingNo(of: order, to: trackingNo)
+    }
+    
+    
+    func sendDriveThru(for order: Order) async {
+        
+        await updateController.sendDriveThru(for: order)
     }
 }
