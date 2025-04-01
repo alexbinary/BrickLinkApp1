@@ -41,7 +41,7 @@ class FeedbackCoreController {
     
     func loadFeedbacks(for order: Order) async {
         
-        await updateController.loadFeedbacks(for: order)
+        await updateController.loadFeedbacks(for: order, .evenIfNotInvalidated)
     }
     
     

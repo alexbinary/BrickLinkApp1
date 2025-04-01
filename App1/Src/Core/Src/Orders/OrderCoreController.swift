@@ -35,7 +35,7 @@ class OrderCoreController {
     
     func loadOrders() async {
         
-        await updateController.loadOrders()
+        await updateController.loadOrders(.evenIfNotInvalidated)
     }
     
     
@@ -80,7 +80,7 @@ class OrderCoreController {
     
     func loadDetails(for order: Order) async {
         
-        await updateController.loadDetails(for: order)
+        await updateController.loadDetails(for: order, .evenIfNotInvalidated)
     }
     
     

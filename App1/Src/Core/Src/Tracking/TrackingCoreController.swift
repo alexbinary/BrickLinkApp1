@@ -26,7 +26,7 @@ class TrackingCoreController {
     
     func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
         
-        await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
+        await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, .evenIfNotInvalidated)
     }
     
     

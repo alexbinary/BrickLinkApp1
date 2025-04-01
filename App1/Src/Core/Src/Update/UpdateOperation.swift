@@ -17,11 +17,18 @@ extension UpdateOperation {
 }
 
 
+protocol RefreshOperation: UpdateOperation {
+    
+    var strategy: LoadStrategy { get }
+}
+
+
 // MARK: - Colors
 
 
-struct LoadColorsOperation: UpdateOperation {
+struct LoadColorsOperation: RefreshOperation {
     
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -29,15 +36,17 @@ struct LoadColorsOperation: UpdateOperation {
 // MARK: - Inventory
 
 
-struct LoadInventoriesOperation: UpdateOperation {
+struct LoadInventoriesOperation: RefreshOperation {
     
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
 
-struct LoadInventoryOperation: UpdateOperation {
+struct LoadInventoryOperation: RefreshOperation {
     
     let inventoryId: InventoryItem.ID
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -45,22 +54,25 @@ struct LoadInventoryOperation: UpdateOperation {
 // MARK: - Orders
 
 
-struct LoadOrdersOperation: UpdateOperation {
+struct LoadOrdersOperation: RefreshOperation {
     
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
 
-struct LoadOrderDetailsOperation: UpdateOperation {
+struct LoadOrderDetailsOperation: RefreshOperation {
     
     let order: Order
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
 
-struct LoadOrderItemsOperation: UpdateOperation {
+struct LoadOrderItemsOperation: RefreshOperation {
     
     let order: Order
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -94,9 +106,10 @@ struct SendDriveThruOperation: UpdateOperation {
 // MARK: - Tracking
 
 
-struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
+struct UpdateLaPosteTrackingStatusOperation: RefreshOperation {
     
     let trackingNo: String
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -104,9 +117,10 @@ struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
 // MARK: - Feedbacks
 
 
-struct LoadOrderFeedbacksOperation: UpdateOperation {
+struct LoadOrderFeedbacksOperation: RefreshOperation {
     
     let order: Order
+    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 

@@ -24,10 +24,10 @@ class UpdateController {
     // MARK: - Colors
     
     
-    func loadColors() async {
+    func loadColors(_ strategy: LoadStrategy) async {
      
         await enqueue { continuation in
-            LoadColorsOperation(continuation: continuation)
+            LoadColorsOperation(strategy: strategy, continuation: continuation)
         }
     }
     
@@ -41,10 +41,10 @@ class UpdateController {
     // MARK: - Inventories
     
     
-    func loadInventories() async {
+    func loadInventories(_ strategy: LoadStrategy) async {
             
         await enqueue { continuation in
-            LoadInventoriesOperation(continuation: continuation)
+            LoadInventoriesOperation(strategy: strategy, continuation: continuation)
         }
     }
     
@@ -55,10 +55,10 @@ class UpdateController {
     }
     
     
-    func loadInventory(withId inventoryId: InventoryItem.ID) async {
+    func loadInventory(withId inventoryId: InventoryItem.ID, _ strategy: LoadStrategy) async {
         
         await enqueue { continuation in
-            LoadInventoryOperation(inventoryId: inventoryId, continuation: continuation)
+            LoadInventoryOperation(inventoryId: inventoryId, strategy: strategy, continuation: continuation)
         }
     }
     
@@ -83,10 +83,10 @@ class UpdateController {
     // MARK: - Orders
     
     
-    func loadOrders() async {
+    func loadOrders(_ strategy: LoadStrategy) async {
         
         await enqueue { continuation in
-            LoadOrdersOperation(continuation: continuation)
+            LoadOrdersOperation(strategy: strategy, continuation: continuation)
         }
     }
     
@@ -97,10 +97,10 @@ class UpdateController {
     }
     
     
-    func loadDetails(for order: Order) async {
+    func loadDetails(for order: Order, _ strategy: LoadStrategy) async {
         
         await enqueue { continuation in
-            LoadOrderDetailsOperation(order: order, continuation: continuation)
+            LoadOrderDetailsOperation(order: order, strategy: strategy, continuation: continuation)
         }
     }
     
@@ -122,10 +122,10 @@ class UpdateController {
     }
     
     
-    func loadItems(for order: Order) async {
+    func loadItems(for order: Order, _ strategy: LoadStrategy) async {
         
         await enqueue { continuation in
-            LoadOrderItemsOperation(order: order, continuation: continuation)
+            LoadOrderItemsOperation(order: order, strategy: strategy, continuation: continuation)
         }
     }
     
@@ -228,10 +228,10 @@ class UpdateController {
     // MARK: - Tracking
     
     
-    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String, _ strategy: LoadStrategy) async {
         
         await enqueue { continuation in
-            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, continuation: continuation)
+            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, strategy: strategy, continuation: continuation)
         }
     }
     
@@ -256,10 +256,10 @@ class UpdateController {
     // MARK: - Feedbacks
     
     
-    func loadFeedbacks(for order: Order) async {
+    func loadFeedbacks(for order: Order, _ strategy: LoadStrategy) async {
         
         await enqueue { continuation in
-            LoadOrderFeedbacksOperation(order: order, continuation: continuation)
+            LoadOrderFeedbacksOperation(order: order, strategy: strategy, continuation: continuation)
         }
     }
     
@@ -368,9 +368,13 @@ class UpdateController {
             
             await run_loadInventory(withId: op.inventoryId)
             
-        } else if operation is LoadOrdersOperation {
+        } else if let op = operation as? LoadOrdersOperation {
             
-            await run_loadOrders()
+            if ordersInvalidated || op.strategy == .evenIfNotInvalidated {
+                
+                await run_loadOrders()
+                validateOrders()
+            }
             
         } else if let op = operation as? LoadOrderDetailsOperation {
             
@@ -410,6 +414,23 @@ class UpdateController {
         }
         
         operation.resumeContinuation()
+    }
+    
+    
+    // MARK: - Dirty
+    
+    
+    private var ordersInvalidated = true
+    
+    
+    private func invalidateOrders() {
+        
+        ordersInvalidated = true
+    }
+    
+    private func validateOrders() {
+        
+        ordersInvalidated = false
     }
     
     
@@ -508,9 +529,11 @@ class UpdateController {
         
         await brickLinkAPIClient.updateOrderStatus(orderId: order.id, status: status)
         
+        invalidateOrders()
+        
         await parallel([
-            { await self.loadOrders() },
-            { await self.loadDetails(for: order) },
+            { await self.loadOrders(.onlyIfInvalidated) },
+            { await self.loadDetails(for: order, .onlyIfInvalidated) },
         ])
     }
     
@@ -521,9 +544,11 @@ class UpdateController {
         
         await brickLinkAPIClient.updateTrackingNo(orderId: order.id, trackingNo: trackingNo)
         
+        invalidateOrders()
+        
         await parallel([
-            { await self.loadOrders() },
-            { await self.loadDetails(for: order) },
+            { await self.loadOrders(.onlyIfInvalidated) },
+            { await self.loadDetails(for: order, .onlyIfInvalidated) },
         ])
     }
     
@@ -534,9 +559,11 @@ class UpdateController {
         
         await brickLinkAPIClient.sendDriveThru(orderId: order.id, mailMe: true)
         
+        invalidateOrders()
+        
         await parallel([
-            { await self.loadOrders() },
-            { await self.loadDetails(for: order) },
+            { await self.loadOrders(.onlyIfInvalidated) },
+            { await self.loadDetails(for: order, .onlyIfInvalidated) },
         ])
     }
     
@@ -575,6 +602,14 @@ class UpdateController {
             
         await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
-        await loadFeedbacks(for: order)
+        await loadFeedbacks(for: order, .onlyIfInvalidated)
     }
+}
+
+
+
+enum LoadStrategy {
+    
+    case onlyIfInvalidated
+    case evenIfNotInvalidated
 }

@@ -85,13 +85,13 @@ class InventoryCoreController {
     
     func loadInventories() async {
         
-        await updateController.loadInventories()
+        await updateController.loadInventories(.evenIfNotInvalidated)
     }
     
     
     func loadInventory(withId inventoryId: InventoryItem.ID) async {
         
-        await updateController.loadInventory(withId: inventoryId)
+        await updateController.loadInventory(withId: inventoryId, .evenIfNotInvalidated)
     }
     
     
