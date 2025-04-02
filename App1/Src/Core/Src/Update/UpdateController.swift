@@ -24,10 +24,10 @@ class UpdateController {
     // MARK: - Colors
     
     
-    func loadColors(_ strategy: LoadStrategy) async {
+    func loadColors() async {
      
         await enqueue { continuation in
-            LoadColorsOperation(strategy: strategy, continuation: continuation)
+            LoadColorsOperation(continuation: continuation)
         }
     }
     

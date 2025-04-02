@@ -56,7 +56,7 @@ public class Catalog {
     
     public func loadColors() async {
         
-        await updateController.loadColors(.evenIfNotInvalidated)
+        await updateController.loadColors()
     }
     
     

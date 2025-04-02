@@ -17,18 +17,11 @@ extension UpdateOperation {
 }
 
 
-protocol RefreshOperation: UpdateOperation {
-    
-    var strategy: LoadStrategy { get }
-}
-
-
 // MARK: - Colors
 
 
-struct LoadColorsOperation: RefreshOperation {
+struct LoadColorsOperation: UpdateOperation {
     
-    let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -36,14 +29,14 @@ struct LoadColorsOperation: RefreshOperation {
 // MARK: - Inventory
 
 
-struct LoadInventoriesOperation: RefreshOperation {
+struct LoadInventoriesOperation: UpdateOperation {
     
     let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
 
-struct LoadInventoryOperation: RefreshOperation {
+struct LoadInventoryOperation: UpdateOperation {
     
     let inventoryId: InventoryItem.ID
     let strategy: LoadStrategy
@@ -54,14 +47,14 @@ struct LoadInventoryOperation: RefreshOperation {
 // MARK: - Orders
 
 
-struct LoadOrdersOperation: RefreshOperation {
+struct LoadOrdersOperation: UpdateOperation {
     
     let strategy: LoadStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
 
-struct LoadOrderDetailsOperation: RefreshOperation {
+struct LoadOrderDetailsOperation: UpdateOperation {
     
     let order: Order
     let strategy: LoadStrategy
@@ -69,7 +62,7 @@ struct LoadOrderDetailsOperation: RefreshOperation {
 }
 
 
-struct LoadOrderItemsOperation: RefreshOperation {
+struct LoadOrderItemsOperation: UpdateOperation {
     
     let order: Order
     let strategy: LoadStrategy
@@ -106,7 +99,7 @@ struct SendDriveThruOperation: UpdateOperation {
 // MARK: - Tracking
 
 
-struct UpdateLaPosteTrackingStatusOperation: RefreshOperation {
+struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
     
     let trackingNo: String
     let strategy: LoadStrategy
@@ -117,7 +110,7 @@ struct UpdateLaPosteTrackingStatusOperation: RefreshOperation {
 // MARK: - Feedbacks
 
 
-struct LoadOrderFeedbacksOperation: RefreshOperation {
+struct LoadOrderFeedbacksOperation: UpdateOperation {
     
     let order: Order
     let strategy: LoadStrategy
