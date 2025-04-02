@@ -623,7 +623,11 @@ class UpdateController {
     
     private func run_loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) async {
         
+        print("Fetching tracking status for tracking no \(trackingNo)...")
+        
         let status = await laPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
+        
+        print("fetched tracking status for tracking no \(trackingNo)")
     
         try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
         try! dataStore.save()
