@@ -33,9 +33,9 @@ class OrderCoreController {
     }
     
     
-    func loadOrders() async {
+    func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await updateController.loadOrders(.evenIfNotInvalidated)
+        await updateController.loadOrders(refetchStrategy)
     }
     
     
@@ -78,9 +78,9 @@ class OrderCoreController {
     }
     
     
-    func loadDetails(for order: Order) async {
+    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await updateController.loadDetails(for: order, .evenIfNotInvalidated)
+        await updateController.loadDetails(for: order, refetchStrategy)
     }
     
     
@@ -88,7 +88,7 @@ class OrderCoreController {
         
         if !orderDetails.contains(where: { $0.id == order.id }) {
             
-            await loadDetails(for: order)
+            await loadDetails(for: order, .forceRefetch)
         }
     }
     
@@ -133,7 +133,7 @@ class OrderCoreController {
     
     func loadItems(for order: Order) async {
         
-        await updateController.loadItems(for: order, .evenIfNotInvalidated)
+        await updateController.loadItems(for: order, .forceRefetch)
     }
     
     
@@ -179,7 +179,7 @@ class OrderCoreController {
     }
     
     
-    func updateTrackingNo(of order: Order, to trackingNo: String) async {
+    func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await updateController.updateTrackingNo(of: order, to: trackingNo)
     }

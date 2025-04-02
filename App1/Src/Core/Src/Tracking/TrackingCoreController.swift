@@ -18,15 +18,15 @@ class TrackingCoreController {
     }
     
     
-    func laPosteTrackingStatus(forTrackingNo trackingNo: String) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) -> LaPosteTrackingStatus? {
         
         dataStore.laPosteTrackingStatusByTrackingNo[trackingNo]
     }
     
     
-    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, .evenIfNotInvalidated)
+        await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy)
     }
     
     
@@ -36,7 +36,7 @@ class TrackingCoreController {
     }
     
     
-    func isLoadingLaPosteTrackingStatus(forTrackingNo trackingNo: String) -> Bool {
+    func isLoadingLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) -> Bool {
         
         updateController.isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo: trackingNo)
     }

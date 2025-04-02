@@ -11,7 +11,7 @@ public struct OrderDetails: Identifiable, Equatable, Codable {
     
     public let totalWeight: Float
     public let driveThruSent: Bool
-    public let trackingNo: String?
+    public let trackingNo: TrackingNo?
     
     public let shippingMethodId: Int
     public let shippingMethodName: String?

@@ -27,7 +27,7 @@ struct OrdersMainList: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                 ForEach(sections, id: \.header) { section in
-                    
+
                     if section.orders.count > 0 {
                         sectionView(section)
                     }
@@ -38,6 +38,9 @@ struct OrdersMainList: View {
         .navigationTitle("Orders")
         .navigationDestination(for: Order.ID.self) { orderId in
             OrderDetailView(orderStore.order(withId: orderId)!)
+        }
+        .task {
+            await orderStore.refreshOrders(.refetchOnlyIfInvalidated)
         }
         .toolbar {
             
@@ -51,23 +54,11 @@ struct OrdersMainList: View {
             }
             
             Button {
-                Task { await refresh() }
+                Task { await orderStore.refreshOrders(.forceRefetch) }
             } label: {
                 Text("􀅈").padding(.horizontal)
             }
-            .disabled(refreshing)
         }
-        .onChange(of: orderStore.orders, initial: true) {
-            Task { await refresh() }
-        }
-    }
-    
-    
-    func refresh() async {
-        
-        refreshing = true
-        await orderStore.refreshOrdersMainList()
-        refreshing = false
     }
     
     

@@ -35,7 +35,13 @@ struct OrdersMainListItem: View {
                     Grid(alignment: .leading, verticalSpacing: 0) {
                         
                         GridRow {
-                            Text("order").captionStyle()
+                            HStack {
+                                Text("order")
+                                if orderStore.isLoadingDetails(for: order) {
+                                    Text("(updating...)")
+                                }
+                            }
+                            .captionStyle()
                             Text("placed").captionStyle()
                         }
                         

@@ -60,9 +60,9 @@ public class OrderStore {
     }
     
     
-    public func loadOrders() async {
+    public func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await orderCoreController.loadOrders()
+        await orderCoreController.loadOrders(refetchStrategy)
     }
     
     
@@ -81,9 +81,9 @@ public class OrderStore {
     }
     
     
-    public func loadDetails(for order: Order) async {
+    public func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await orderCoreController.loadDetails(for: order)
+        await orderCoreController.loadDetails(for: order, refetchStrategy)
     }
     
     
@@ -159,7 +159,7 @@ public class OrderStore {
     }
     
     
-    public func updateTrackingNo(of order: Order, to trackingNo: String) async {
+    public func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await orderCoreController.updateTrackingNo(of: order, to: trackingNo)
     }
@@ -195,6 +195,46 @@ public class OrderStore {
     }
     
     
+    // MARK: - Refresh
+    
+    
+    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+        
+        await trackingMiddleController.loadLaPosteTrackingStatus(for: order, refetchStrategy)
+    }
+    
+    
+    func orderNeedsRefreshLaPosteTrackingStatus(_ order: Order) -> Bool {
+        
+        macroStatus(for: order) == .inTransit
+    }
+    
+    
+    func orderNeedsRefreshFeedback(_ order: Order) -> Bool {
+        
+        macroStatus(for: order).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback)
+    }
+    
+    
+    public func refreshOrders(_ refetchStrategy: RefetchStrategy) async {
+        
+        await loadOrders(refetchStrategy)
+        
+        for order in orders where details(for: order) == nil
+        || refetchStrategy == .forceRefetch && !orderIsClosedForMoreThan30Days(order) {
+            Task { await loadDetails(for: order, .forceRefetch) }
+        }
+        
+        for order in orders where orderNeedsRefreshLaPosteTrackingStatus(order) {
+            Task { await loadLaPosteTrackingStatus(for: order, refetchStrategy) }
+        }
+
+        for order in orders where orderNeedsRefreshFeedback(order) {
+            Task { await loadFeedbacks(for: order, refetchStrategy) }
+        }
+    }
+    
+    
     // MARK: - Reload
     
     
@@ -204,9 +244,9 @@ public class OrderStore {
     }
     
     
-    public func loadFeedbacks(for order: Order) async {
+    public func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await feedbackCoreController.loadFeedbacks(for: order)
+        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy)
     }
     
     

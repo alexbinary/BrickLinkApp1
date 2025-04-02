@@ -41,10 +41,10 @@ class UpdateController {
     // MARK: - Inventories
     
     
-    func loadInventories(_ strategy: LoadStrategy) async {
+    func loadInventories(_ refetchStrategy: RefetchStrategy) async {
             
         await enqueue { continuation in
-            LoadInventoriesOperation(strategy: strategy, continuation: continuation)
+            LoadInventoriesOperation(refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -55,10 +55,10 @@ class UpdateController {
     }
     
     
-    func loadInventory(withId inventoryId: InventoryItem.ID, _ strategy: LoadStrategy) async {
+    func loadInventory(withId inventoryId: InventoryItem.ID, _ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            LoadInventoryOperation(inventoryId: inventoryId, strategy: strategy, continuation: continuation)
+            LoadInventoryOperation(inventoryId: inventoryId, refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -83,10 +83,10 @@ class UpdateController {
     // MARK: - Orders
     
     
-    func loadOrders(_ strategy: LoadStrategy) async {
+    func loadOrders(_ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            LoadOrdersOperation(strategy: strategy, continuation: continuation)
+            LoadOrdersOperation(refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -97,10 +97,10 @@ class UpdateController {
     }
     
     
-    func loadDetails(for order: Order, _ strategy: LoadStrategy) async {
+    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            LoadOrderDetailsOperation(order: order, strategy: strategy, continuation: continuation)
+            LoadOrderDetailsOperation(order: order, refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -122,10 +122,10 @@ class UpdateController {
     }
     
     
-    func loadItems(for order: Order, _ strategy: LoadStrategy) async {
+    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            LoadOrderItemsOperation(order: order, strategy: strategy, continuation: continuation)
+            LoadOrderItemsOperation(order: order, refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -175,7 +175,7 @@ class UpdateController {
     }
     
     
-    func updateTrackingNo(of order: Order, to trackingNo: String) async {
+    func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await enqueue { continuation in
             UpdateOrderTrackingNoOperation(order: order, trackingNo: trackingNo, continuation: continuation)
@@ -228,10 +228,10 @@ class UpdateController {
     // MARK: - Tracking
     
     
-    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: String, _ strategy: LoadStrategy) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, strategy: strategy, continuation: continuation)
+            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -242,7 +242,7 @@ class UpdateController {
     }
     
     
-    func isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) -> Bool {
+    func isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) -> Bool {
         
         return hasScheduledOrRunningOperation(matching: {
             if let op = $0 as? UpdateLaPosteTrackingStatusOperation, op.trackingNo == trackingNo {
@@ -256,10 +256,10 @@ class UpdateController {
     // MARK: - Feedbacks
     
     
-    func loadFeedbacks(for order: Order, _ strategy: LoadStrategy) async {
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            LoadOrderFeedbacksOperation(order: order, strategy: strategy, continuation: continuation)
+            LoadOrderFeedbacksOperation(order: order, refetchStrategy: refetchStrategy, continuation: continuation)
         }
     }
     
@@ -370,7 +370,7 @@ class UpdateController {
             
         } else if let op = operation as? LoadOrdersOperation {
             
-            if ordersInvalidated || op.strategy == .evenIfNotInvalidated {
+            if ordersInvalidated || op.refetchStrategy == .forceRefetch {
                 
                 await run_loadOrders()
                 validateOrders()
@@ -378,7 +378,11 @@ class UpdateController {
             
         } else if let op = operation as? LoadOrderDetailsOperation {
             
-            await run_loadDetails(for: op.order)
+            if detailsInvalidated(for: op.order) || op.refetchStrategy == .forceRefetch {
+                
+                await run_loadDetails(for: op.order)
+                validateDetails(for: op.order)
+            }
         
         } else if let op = operation as? LoadOrderItemsOperation {
             
@@ -398,7 +402,11 @@ class UpdateController {
             
         } else if let op = operation as? UpdateLaPosteTrackingStatusOperation {
             
-            await run_loadLaPosteTrackingStatus(forTrackingNo: op.trackingNo)
+            if trackingNoStatusInvalidated(op.trackingNo) || op.refetchStrategy == .forceRefetch {
+                
+                await run_loadLaPosteTrackingStatus(forTrackingNo: op.trackingNo)
+                validateTrackingNoStatus(op.trackingNo)
+            }
             
         } else if let op = operation as? LoadOrderFeedbacksOperation {
             
@@ -417,7 +425,7 @@ class UpdateController {
     }
     
     
-    // MARK: - Dirty
+    // MARK: - Invalidate - Orders
     
     
     private var ordersInvalidated = true
@@ -431,6 +439,44 @@ class UpdateController {
     private func validateOrders() {
         
         ordersInvalidated = false
+    }
+    
+    
+    private var invalidatedOrderDetails: Set<Order.ID> = []
+    
+    
+    private func detailsInvalidated(for order: Order) -> Bool {
+        
+        invalidatedOrderDetails.contains(order.id)
+    }
+    
+    private func invalidateDetails(for order: Order) {
+        
+        invalidatedOrderDetails.insert(order.id)
+    }
+    
+    private func validateDetails(for order: Order) {
+        
+        invalidatedOrderDetails.remove(order.id)
+    }
+    
+    
+    private var invalidatedTrackingNoStatus: Set<TrackingNo> = []
+    
+    
+    private func trackingNoStatusInvalidated(_ trackingNo: TrackingNo) -> Bool {
+        
+        invalidatedTrackingNoStatus.contains(trackingNo)
+    }
+    
+    private func invalidateTrackingNoStatus(_ trackingNo: TrackingNo) {
+        
+        invalidatedTrackingNoStatus.insert(trackingNo)
+    }
+    
+    private func validateTrackingNoStatus(_ trackingNo: TrackingNo) {
+        
+        invalidatedTrackingNoStatus.remove(trackingNo)
     }
     
     
@@ -537,12 +583,12 @@ class UpdateController {
         
         invalidateOrders()
         
-        Task { await self.loadOrders(.onlyIfInvalidated) }
-        Task { await self.loadDetails(for: order, .onlyIfInvalidated) }
+        Task { await self.loadOrders(.refetchOnlyIfInvalidated) }
+        Task { await self.loadDetails(for: order, .refetchOnlyIfInvalidated) }
     }
     
     
-    private func run_updateTrackingNo(of order: Order, to trackingNo: String) async {
+    private func run_updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         print("Updating tracking no \(trackingNo) for order \(order.id)...")
         
@@ -552,8 +598,8 @@ class UpdateController {
         
         invalidateOrders()
         
-        Task { await self.loadOrders(.onlyIfInvalidated) }
-        Task { await self.loadDetails(for: order, .onlyIfInvalidated) }
+        Task { await self.loadOrders(.refetchOnlyIfInvalidated) }
+        Task { await self.loadDetails(for: order, .refetchOnlyIfInvalidated) }
     }
     
     
@@ -567,15 +613,15 @@ class UpdateController {
         
         invalidateOrders()
         
-        Task { await self.loadOrders(.onlyIfInvalidated) }
-        Task { await self.loadDetails(for: order, .onlyIfInvalidated) }
+        Task { await self.loadOrders(.refetchOnlyIfInvalidated) }
+        Task { await self.loadDetails(for: order, .refetchOnlyIfInvalidated) }
     }
     
     
     // MARK: - Tracking
     
     
-    private func run_loadLaPosteTrackingStatus(forTrackingNo trackingNo: String) async {
+    private func run_loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) async {
         
         let status = await laPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
     
@@ -606,14 +652,14 @@ class UpdateController {
             
         await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
-        Task { await loadFeedbacks(for: order, .onlyIfInvalidated) }
+        Task { await loadFeedbacks(for: order, .refetchOnlyIfInvalidated) }
     }
 }
 
 
 
-enum LoadStrategy {
+public enum RefetchStrategy {
     
-    case onlyIfInvalidated
-    case evenIfNotInvalidated
+    case refetchOnlyIfInvalidated
+    case forceRefetch
 }

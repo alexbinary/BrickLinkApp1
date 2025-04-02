@@ -554,13 +554,13 @@ class DataStore {
     }
     
     
-    var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus] {
+    var laPosteTrackingStatusByTrackingNo: [TrackingNo: LaPosteTrackingStatus] {
         
         data?.laPosteTrackingStatusByTrackingNo ?? [:]
     }
     
     
-    func setLaPosteTrackingStatusByTrackingNo(_ laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]) throws {
+    func setLaPosteTrackingStatusByTrackingNo(_ laPosteTrackingStatusByTrackingNo: [TrackingNo: LaPosteTrackingStatus]) throws {
         
         guard data != nil else { throw "Attempted to mutate data before it is loaded" }
         
@@ -568,7 +568,7 @@ class DataStore {
     }
     
     
-    func setLaPosteTrackingStatus(_ status: LaPosteTrackingStatus, forTrackingNo trackingNo: String) throws {
+    func setLaPosteTrackingStatus(_ status: LaPosteTrackingStatus, forTrackingNo trackingNo: TrackingNo) throws {
         
         var laPosteTrackingStatusByTrackingNo = self.laPosteTrackingStatusByTrackingNo
         
@@ -609,7 +609,7 @@ class DataFile: Codable {
     var uploadedItems: [UploadedItem]?
     var transactions: [Transaction]?
     var orderRefunds: [OrderRefund]?
-    var laPosteTrackingStatusByTrackingNo: [String: LaPosteTrackingStatus]?
+    var laPosteTrackingStatusByTrackingNo: [TrackingNo: LaPosteTrackingStatus]?
     
     
     enum CodingKeys: String, CodingKey {

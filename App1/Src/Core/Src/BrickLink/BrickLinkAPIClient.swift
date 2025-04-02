@@ -124,7 +124,7 @@ struct BrickLinkAPIClient {
     }
     
     
-    func updateTrackingNo(orderId: String, trackingNo: String) async {
+    func updateTrackingNo(orderId: String, trackingNo: TrackingNo) async {
         
         try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/orders/\(orderId)")!) {
             """

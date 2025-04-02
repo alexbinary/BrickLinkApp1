@@ -3,6 +3,10 @@ import Foundation
 
 
 
+public typealias TrackingNo = String
+
+
+
 public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
     
     case noData
@@ -25,7 +29,7 @@ public struct LaPosteTrackingClient {
     }
     
     
-    public func fetchTrackingStatus(forTrackingNo trackingNo: String) async -> LaPosteTrackingStatus {
+    public func fetchTrackingStatus(forTrackingNo trackingNo: TrackingNo) async -> LaPosteTrackingStatus {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         

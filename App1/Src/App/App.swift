@@ -19,8 +19,6 @@ struct MainApp: App {
 
                 .task { await env.catalog.loadColors() }
                 .task { await env.stores.inventory.loadInventories() }
-                .task { await env.stores.order.loadOrders() }
-                .task { await env.stores.order.loadMissingOrders() }
         }
     }
 }

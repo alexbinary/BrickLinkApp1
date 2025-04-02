@@ -31,7 +31,7 @@ struct LoadColorsOperation: UpdateOperation {
 
 struct LoadInventoriesOperation: UpdateOperation {
     
-    let strategy: LoadStrategy
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -39,7 +39,7 @@ struct LoadInventoriesOperation: UpdateOperation {
 struct LoadInventoryOperation: UpdateOperation {
     
     let inventoryId: InventoryItem.ID
-    let strategy: LoadStrategy
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -49,7 +49,7 @@ struct LoadInventoryOperation: UpdateOperation {
 
 struct LoadOrdersOperation: UpdateOperation {
     
-    let strategy: LoadStrategy
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -57,7 +57,7 @@ struct LoadOrdersOperation: UpdateOperation {
 struct LoadOrderDetailsOperation: UpdateOperation {
     
     let order: Order
-    let strategy: LoadStrategy
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -65,7 +65,7 @@ struct LoadOrderDetailsOperation: UpdateOperation {
 struct LoadOrderItemsOperation: UpdateOperation {
     
     let order: Order
-    let strategy: LoadStrategy
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -84,7 +84,7 @@ struct UpdateOrderStatusOperation: UpdateOperation {
 struct UpdateOrderTrackingNoOperation: UpdateOperation {
     
     let order: Order
-    let trackingNo: String
+    let trackingNo: TrackingNo
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -101,8 +101,8 @@ struct SendDriveThruOperation: UpdateOperation {
 
 struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
     
-    let trackingNo: String
-    let strategy: LoadStrategy
+    let trackingNo: TrackingNo
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -113,7 +113,7 @@ struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
 struct LoadOrderFeedbacksOperation: UpdateOperation {
     
     let order: Order
-    let strategy: LoadStrategy
+    let refetchStrategy: RefetchStrategy
     let continuation: CheckedContinuation<(),Never>
 }
 
