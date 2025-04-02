@@ -410,7 +410,11 @@ class UpdateController {
             
         } else if let op = operation as? LoadOrderFeedbacksOperation {
             
-            await run_loadFeedbacks(for: op.order)
+            if feedbacksInvalidated(for: op.order) || op.refetchStrategy == .forceRefetch {
+                
+                await run_loadFeedbacks(for: op.order)
+                validateFeedbacks(for: op.order)
+            }
             
         } else if let op = operation as? PostOrderFeedbackOperation {
             
@@ -477,6 +481,25 @@ class UpdateController {
     private func validateTrackingNoStatus(_ trackingNo: TrackingNo) {
         
         validatedTrackingNoStatus.insert(trackingNo)
+    }
+    
+    
+    private var validatedFeedbacks: Set<Order.ID> = []
+    
+    
+    private func feedbacksInvalidated(for order: Order) -> Bool {
+        
+        validatedFeedbacks.contains(order.id) == false
+    }
+    
+    private func invalidateFeedbacks(for order: Order) {
+        
+        validatedFeedbacks.remove(order.id)
+    }
+    
+    private func validateFeedbacks(for order: Order) {
+        
+        validatedFeedbacks.insert(order.id)
     }
     
     
