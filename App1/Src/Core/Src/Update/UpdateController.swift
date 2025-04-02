@@ -537,10 +537,8 @@ class UpdateController {
         
         invalidateOrders()
         
-        await parallel([
-            { await self.loadOrders(.onlyIfInvalidated) },
-            { await self.loadDetails(for: order, .onlyIfInvalidated) },
-        ])
+        Task { await self.loadOrders(.onlyIfInvalidated) }
+        Task { await self.loadDetails(for: order, .onlyIfInvalidated) }
     }
     
     
@@ -554,10 +552,8 @@ class UpdateController {
         
         invalidateOrders()
         
-        await parallel([
-            { await self.loadOrders(.onlyIfInvalidated) },
-            { await self.loadDetails(for: order, .onlyIfInvalidated) },
-        ])
+        Task { await self.loadOrders(.onlyIfInvalidated) }
+        Task { await self.loadDetails(for: order, .onlyIfInvalidated) }
     }
     
     
@@ -571,10 +567,8 @@ class UpdateController {
         
         invalidateOrders()
         
-        await parallel([
-            { await self.loadOrders(.onlyIfInvalidated) },
-            { await self.loadDetails(for: order, .onlyIfInvalidated) },
-        ])
+        Task { await self.loadOrders(.onlyIfInvalidated) }
+        Task { await self.loadDetails(for: order, .onlyIfInvalidated) }
     }
     
     
@@ -612,7 +606,7 @@ class UpdateController {
             
         await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
-        await loadFeedbacks(for: order, .onlyIfInvalidated)
+        Task { await loadFeedbacks(for: order, .onlyIfInvalidated) }
     }
 }
 
