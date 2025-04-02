@@ -442,41 +442,41 @@ class UpdateController {
     }
     
     
-    private var invalidatedOrderDetails: Set<Order.ID> = []
+    private var validatedOrderDetails: Set<Order.ID> = []
     
     
     private func detailsInvalidated(for order: Order) -> Bool {
         
-        invalidatedOrderDetails.contains(order.id)
+        validatedOrderDetails.contains(order.id) == false
     }
     
     private func invalidateDetails(for order: Order) {
         
-        invalidatedOrderDetails.insert(order.id)
+        validatedOrderDetails.remove(order.id)
     }
     
     private func validateDetails(for order: Order) {
         
-        invalidatedOrderDetails.remove(order.id)
+        validatedOrderDetails.insert(order.id)
     }
     
     
-    private var invalidatedTrackingNoStatus: Set<TrackingNo> = []
+    private var validatedTrackingNoStatus: Set<TrackingNo> = []
     
     
     private func trackingNoStatusInvalidated(_ trackingNo: TrackingNo) -> Bool {
         
-        invalidatedTrackingNoStatus.contains(trackingNo)
+        validatedTrackingNoStatus.contains(trackingNo) == false
     }
     
     private func invalidateTrackingNoStatus(_ trackingNo: TrackingNo) {
         
-        invalidatedTrackingNoStatus.insert(trackingNo)
+        validatedTrackingNoStatus.remove(trackingNo)
     }
     
     private func validateTrackingNoStatus(_ trackingNo: TrackingNo) {
         
-        invalidatedTrackingNoStatus.remove(trackingNo)
+        validatedTrackingNoStatus.insert(trackingNo)
     }
     
     
