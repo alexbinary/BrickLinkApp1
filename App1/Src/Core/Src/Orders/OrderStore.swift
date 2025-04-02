@@ -235,6 +235,12 @@ public class OrderStore {
     }
     
     
+    public func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy) async {
+        
+        await loadDetails(for: order, refetchStrategy)
+    }
+    
+    
     // MARK: - Reload
     
     

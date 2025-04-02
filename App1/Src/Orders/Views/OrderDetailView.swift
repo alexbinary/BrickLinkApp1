@@ -72,7 +72,7 @@ struct OrderDetailView: View {
         }
         .padding()
         .onChange(of: order.id, initial: true) {
-            Task { await orderStore.forceRefresh(order)}
+            Task { await orderStore.refresh(order, .refetchOnlyIfInvalidated) }
         }
         .navigationTitle("Order \(order.id)")
     }
