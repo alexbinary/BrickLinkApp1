@@ -45,9 +45,15 @@ class FeedbackCoreController {
     }
     
     
+    func hasFeedbacks(for order: Order) -> Bool {
+        
+        dataStore.orderFeedbacksByOrderId.keys.contains(order.id)
+    }
+    
+    
     func loadFeedbacksIfMissing(for order: Order) async {
         
-        if !dataStore.orderFeedbacksByOrderId.keys.contains(order.id) {
+        if !hasFeedbacks(for: order) {
             
             await loadFeedbacks(for: order)
         }
@@ -56,7 +62,7 @@ class FeedbackCoreController {
     
     func reloadFeedbacks(for order: Order) async {
         
-        if dataStore.orderFeedbacksByOrderId.keys.contains(order.id) {
+        if hasFeedbacks(for: order) {
             
             await loadFeedbacks(for: order)
         }

@@ -54,6 +54,29 @@ public class FeedbackStore {
     }
     
     
+    // MARK: - Refresh feedbacks
+    
+    
+    func hasFeedbacks(for order: Order) -> Bool {
+        
+        feedbackCoreController.hasFeedbacks(for: order)
+    }
+    
+    
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+        
+        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy)
+    }
+    
+    
+    public func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+        
+        let strategy = hasFeedbacks(for: order) ? refetchStrategy : .forceRefetch
+        
+        await loadFeedbacks(for: order, strategy)
+    }
+    
+    
     // MARK: - Post feedback
     
     

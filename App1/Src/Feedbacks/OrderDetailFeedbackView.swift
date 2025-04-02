@@ -44,8 +44,14 @@ struct OrderDetailFeedbackView: View {
                     let date = feedbackStore.dateOrderValidatedWithoutFeedback(order)!
                     Text(date, format: .dateTime)
                 }
+                if feedbackStore.isLoadingFeedbacks(for: order) {
+                    Text("updating...")
+                }
             }
         }
         .padding()
+        .task {
+            await feedbackStore.refreshFeedbacks(for: order, .refetchOnlyIfInvalidated)
+        }
     }
 }
