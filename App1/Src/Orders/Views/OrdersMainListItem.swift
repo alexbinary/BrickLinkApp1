@@ -85,7 +85,13 @@ struct OrdersMainListItem: View {
                     HStack(alignment: tags.count == 1 ? .bottom : .top, spacing: 24) {
                         
                         VStack(alignment: .leading) {
-                            Text("feedback").captionStyle()
+                            HStack {
+                                Text("feedback")
+                                if feedbackStore.isLoadingFeedbacks(for: order) {
+                                    Text("(updating...)")
+                                }
+                            }
+                            .captionStyle()
                             HStack(alignment: .firstTextBaseline, spacing: 12) {
                                 
                                 HStack {

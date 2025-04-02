@@ -42,7 +42,7 @@ struct WindowRootView: View {
         .toolbar {
             
             if isLoading {
-                Text("loading...")
+                Text("updating...")
             }
         }
     }
