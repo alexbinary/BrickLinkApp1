@@ -439,12 +439,12 @@ class UpdateController {
     
     private func run_loadColors() async {
      
-        print("Loading colors")
+        print("Loading colors...")
         
         let blColors = await brickLinkAPIClient.fetchColors()
         let colors = blColors.map { LegoColor(fromBl: $0) }
         
-        print("Loaded \(colors.count) colors")
+        print("loaded \(colors.count) colors")
         
         try! dataStore.setColors(colors)
         try! dataStore.save()
@@ -453,7 +453,7 @@ class UpdateController {
     
     private func run_loadInventories() async {
         
-        print("Loading inventories")
+        print("Loading inventories...")
         
         let blInventories = await brickLinkAPIClient.fetchInventories()
         let inventories = blInventories.map { InventoryItem(fromBl: $0) }
@@ -467,10 +467,12 @@ class UpdateController {
     
     private func run_loadInventory(withId inventoryId: InventoryItem.ID) async {
         
-        print("Loading inventory \(inventoryId)")
+        print("Loading inventory \(inventoryId)...")
         
         let blInventory = await brickLinkAPIClient.fetchInventory(inventoryId: inventoryId)
         let inventory = InventoryItem(fromBl: blInventory)
+        
+        print("loaded inventory \(inventoryId)")
         
         try! dataStore.setInventory(inventory)
         try! dataStore.save()
@@ -479,7 +481,7 @@ class UpdateController {
     
     private func run_loadOrders() async {
         
-        print("Loading orders")
+        print("Loading orders...")
         
         let blOrders = await brickLinkAPIClient.fetchOrderSummaries()
         let orderSummaries = blOrders.map { Order(fromBl: $0) }.sorted { $0.date > $1.date }
@@ -493,10 +495,12 @@ class UpdateController {
     
     private func run_loadDetails(for order: Order) async {
         
-        print("Loading order details \(order.id)")
+        print("Loading details for order \(order.id)...")
         
         let blOrder = await brickLinkAPIClient.fetchOrderDetails(orderId: order.id)
         let orderDetails = OrderDetails(fromBl: blOrder)
+        
+        print("loaded details for order \(order.id)")
         
         try! dataStore.setOrderDetail(orderDetails)
         try! dataStore.save()
@@ -505,7 +509,7 @@ class UpdateController {
     
     private func run_loadItems(for order: Order) async {
         
-        print("Loading order items \(order.id)")
+        print("Loading items for order \(order.id)...")
         
         let blBatches = await brickLinkAPIClient.fetchOrderItems(orderId: order.id)
         
@@ -513,7 +517,7 @@ class UpdateController {
             blItems.map { OrderItem(fromBl: $0, orderId: order.id) }
         }
         
-        print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items")
+        print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items for order \(order.id)")
         
         try! dataStore.setOrderItems(batches, forOrderId: order.id)
         try! dataStore.save()
@@ -525,9 +529,11 @@ class UpdateController {
     
     private func run_updateStatus(of order: Order, to status: OrderStatus) async {
         
-        print("Update status \(status) for order \(order.id)")
+        print("Updating status \(status) for order \(order.id)...")
         
         await brickLinkAPIClient.updateOrderStatus(orderId: order.id, status: status)
+        
+        print("updated status \(status) for order \(order.id)")
         
         invalidateOrders()
         
@@ -540,9 +546,11 @@ class UpdateController {
     
     private func run_updateTrackingNo(of order: Order, to trackingNo: String) async {
         
-        print("Update tracking no \(trackingNo) for order \(order.id)")
+        print("Updating tracking no \(trackingNo) for order \(order.id)...")
         
         await brickLinkAPIClient.updateTrackingNo(orderId: order.id, trackingNo: trackingNo)
+        
+        print("updated tracking no \(trackingNo) for order \(order.id)")
         
         invalidateOrders()
         
@@ -555,9 +563,11 @@ class UpdateController {
     
     private func run_sendDriveThru(for order: Order) async {
         
-        print("Send drive thru for order \(order.id)")
+        print("Sending drive thru for order \(order.id)...")
         
         await brickLinkAPIClient.sendDriveThru(orderId: order.id, mailMe: true)
+        
+        print("sent drive thru for order \(order.id)")
         
         invalidateOrders()
         
@@ -586,12 +596,12 @@ class UpdateController {
     
     private func run_loadFeedbacks(for order: Order) async {
         
-        print("Loading order feedbacks \(order.id)")
+        print("Loading feedbacks for order \(order.id)...")
         
         let blFeedbacks = await brickLinkAPIClient.fetchFeedbacks(orderId: order.id)
         let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
         
-        print("loaded \(feedbacks.count) feedbacks")
+        print("loaded \(feedbacks.count) feedbacks for order \(order.id)")
         
         try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: order.id)
         try! dataStore.save()
