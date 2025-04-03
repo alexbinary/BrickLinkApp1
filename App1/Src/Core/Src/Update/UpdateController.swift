@@ -335,7 +335,9 @@ class UpdateController {
             
         } else if let op = operation as? LoadInventoryOperation {
             
-            await run_loadInventory(withId: op.inventoryId)
+            if inventoryInvalidated(op.inventoryId) || op.refetchStrategy == .forceRefetch {
+                await run_loadInventory(withId: op.inventoryId)
+            }
             
         } else if let op = operation as? LoadOrdersOperation {
             
@@ -406,6 +408,35 @@ class UpdateController {
     func validateInventories() {
         
         inventoriesInvalidated = false
+    }
+
+
+    // MARK: - Invalidate - Inventory
+    
+    
+    private var validatedInventories: Set<Order.ID> = []
+    
+    
+    func inventoryInvalidated(_ inventoryId: InventoryItem.ID) -> Bool {
+        
+        validatedInventories.contains(inventoryId) == false
+    }
+    
+    func invalidateInventory(_ inventoryId: InventoryItem.ID) {
+        
+        validatedInventories.remove(inventoryId)
+    }
+    
+    func validateInventory(_ inventoryId: InventoryItem.ID) {
+        
+        validatedInventories.insert(inventoryId)
+    }
+
+    func validateInventories(_ inventories: [InventoryItem]) {
+        
+        for inventory in inventories {
+            validateInventory(inventory.id)
+        }
     }
     
     

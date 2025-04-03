@@ -95,9 +95,9 @@ class InventoryCoreController {
     }
     
     
-    func loadInventory(withId inventoryId: InventoryItem.ID) async {
+    func loadInventory(withId inventoryId: InventoryItem.ID, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await updateController.loadInventory(withId: inventoryId, .forceRefetch)
+        await updateController.loadInventory(withId: inventoryId, refetchStrategy)
     }
     
     
@@ -135,6 +135,18 @@ class InventoryCoreController {
         
         updateController.isRunningOrIsScheduledToRun_loadInventory(withId: inventoryId)
     }
+
+
+    func invalidateInventories() {
+
+        updateController.invalidateInventories()
+    }
+    
+    
+    func invalidateInventory(_ inventoryId: InventoryItem.ID) {
+
+        updateController.invalidateInventory(inventoryId)
+    }
     
     
     func createInventory(
@@ -164,7 +176,9 @@ class InventoryCoreController {
         
         let inventory = InventoryItem(fromBl: blInventory)
         
-        await self.reloadInventories()
+        invalidateInventories()
+        
+        Task { await loadInventories(.refetchOnlyIfInvalidated) }
         
         return inventory
     }
@@ -174,6 +188,8 @@ class InventoryCoreController {
         
         await brickLinkAPIClient.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
         
-        await reloadInventory(withId: inventoryId)
+        invalidateInventory(inventoryId)
+        
+        Task { await loadInventory(withId: inventoryId, .refetchOnlyIfInvalidated) }
     }
 }
