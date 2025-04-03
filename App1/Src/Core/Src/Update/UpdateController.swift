@@ -499,22 +499,22 @@ class UpdateController {
     // MARK: - Invalidate - Orders details
     
     
-    private var validatedOrderDetails: Set<Order.ID> = []
+    private var invalidatedOrderDetails: Set<Order.ID> = []
     
     
     func detailsInvalidated(for order: Order) -> Bool {
         
-        validatedOrderDetails.contains(order.id) == false
+        invalidatedOrderDetails.contains(order.id) == true
     }
     
     func invalidateDetails(for order: Order) {
         
-        validatedOrderDetails.remove(order.id)
+        invalidatedOrderDetails.insert(order.id)
     }
     
     func validateDetails(for order: Order) {
         
-        validatedOrderDetails.insert(order.id)
+        invalidatedOrderDetails.remove(order.id)
     }
     
     
