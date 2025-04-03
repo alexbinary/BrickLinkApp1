@@ -72,6 +72,12 @@ class OrderCoreController {
     }
     
     
+    func hasDetails(for order: Order) -> Bool {
+    
+        orderDetails.contains { $0.id == order.id }
+    }
+    
+    
     func details(for order: Order) -> OrderDetails? {
         
         orderDetails.first { $0.id == order.id }
@@ -117,6 +123,12 @@ class OrderCoreController {
     // MARK: - Order items
     
     
+    func hasItems(for order: Order) -> Bool {
+        
+        dataStore.orderItemsByOrderId.keys.contains(order.id)
+    }
+    
+    
     func items(for order: Order) -> [OrderItem] {
         
         (dataStore.orderItemsByOrderId[order.id] ?? []).reduce([], { $0 + $1 })
@@ -131,9 +143,9 @@ class OrderCoreController {
     }
     
     
-    func loadItems(for order: Order) async {
+    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await updateController.loadItems(for: order, .forceRefetch)
+        await updateController.loadItems(for: order, refetchStrategy)
     }
     
     

@@ -353,7 +353,11 @@ class UpdateController {
         
         } else if let op = operation as? LoadOrderItemsOperation {
             
-            await run_loadItems(for: op.order)
+            if itemsInvalidated(for: op.order) || op.refetchStrategy == .forceRefetch {
+                
+                await run_loadItems(for: op.order)
+                validateItems(for: op.order)
+            }
         
         } else if let op = operation as? UpdateOrderStatusOperation {
             
@@ -413,6 +417,9 @@ class UpdateController {
     }
     
     
+    // MARK: - Invalidate - Orders details
+    
+    
     private var validatedOrderDetails: Set<Order.ID> = []
     
     
@@ -432,6 +439,31 @@ class UpdateController {
     }
     
     
+    // MARK: - Invalidate - Orders items
+    
+    
+    private var validatedOrderItems: Set<Order.ID> = []
+    
+    
+    private func itemsInvalidated(for order: Order) -> Bool {
+        
+        validatedOrderItems.contains(order.id) == false
+    }
+    
+    private func invalidateItems(for order: Order) {
+        
+        validatedOrderItems.remove(order.id)
+    }
+    
+    private func validateItems(for order: Order) {
+        
+        validatedOrderItems.insert(order.id)
+    }
+    
+    
+    // MARK: - Invalidate - Tracking status
+    
+    
     private var validatedTrackingNoStatus: Set<TrackingNo> = []
     
     
@@ -449,6 +481,9 @@ class UpdateController {
         
         validatedTrackingNoStatus.insert(trackingNo)
     }
+    
+    
+    // MARK: - Invalidate - Feedbacks
     
     
     private var validatedFeedbacks: Set<Order.ID> = []

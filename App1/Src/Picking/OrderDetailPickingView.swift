@@ -87,14 +87,16 @@ struct OrderDetailPickingView: View {
             }
         }
         .padding()
-        .onChange(of: order, initial: true) { Task {
-            await orderStore.loadItemsIfMissing(for: order)
-        }}
+        .task {
+            await orderStore.refreshItems(for: order, .refetchOnlyIfInvalidated)
+        }
         .onAppear { Task {
             await inventoryStore.reloadInventories()
         }}
         .toolbar {
             Menu {
+                Button("Reload items (soft)") { Task { await orderStore.refreshItems(for: order, .refetchOnlyIfInvalidated) } }
+                Button("Reload items (hard)") { Task { await orderStore.refreshItems(for: order, .forceRefetch) } }
                 Button("Reload inventory") { Task { await inventoryStore.reloadInventories() } }
             } label: { Text("􀅈").padding(.horizontal) }
             primaryAction: { Task { await inventoryStore.reloadInventories() } }

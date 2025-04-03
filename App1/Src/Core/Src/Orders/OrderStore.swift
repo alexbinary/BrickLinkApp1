@@ -75,6 +75,12 @@ public class OrderStore {
     // MARK: - Details
     
     
+    public func hasDetails(for order: Order) -> Bool {
+        
+        orderCoreController.hasDetails(for: order)
+    }
+    
+    
     public func details(for order: Order) -> OrderDetails? {
         
         orderCoreController.details(for: order)
@@ -108,15 +114,21 @@ public class OrderStore {
     // MARK: - Items
     
     
+    public func hasItems(for order: Order) -> Bool {
+        
+        orderCoreController.hasItems(for: order)
+    }
+    
+    
     public func items(for order: Order) -> [OrderItem] {
         
         orderCoreController.items(for: order)
     }
     
     
-    public func loadItems(for order: Order) async {
+    public func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await orderCoreController.loadItems(for: order)
+        await orderCoreController.loadItems(for: order, refetchStrategy)
     }
     
     
@@ -226,7 +238,7 @@ public class OrderStore {
         
         await loadOrders(refetchStrategy)
         
-        for order in orders where details(for: order) == nil
+        for order in orders where !hasDetails(for: order)
         || refetchStrategy == .forceRefetch && !orderIsClosedForMoreThan30Days(order) {
             Task { await loadDetails(for: order, .forceRefetch) }
         }
@@ -243,9 +255,19 @@ public class OrderStore {
     }
     
     
-    public func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy) async {
+    public func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
-        await loadDetails(for: order, refetchStrategy)
+        let strategy = hasDetails(for: order) ? refetchStrategy : .forceRefetch
+        
+        await loadDetails(for: order, strategy)
+    }
+    
+    
+    public func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+        
+        let strategy = hasItems(for: order) ? refetchStrategy : .forceRefetch
+        
+        await loadItems(for: order, strategy)
     }
     
     
