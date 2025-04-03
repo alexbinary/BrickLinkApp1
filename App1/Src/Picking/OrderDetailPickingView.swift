@@ -93,6 +93,12 @@ struct OrderDetailPickingView: View {
         .onAppear { Task {
             await inventoryStore.reloadInventories()
         }}
+        .toolbar {
+            Menu {
+                Button("Reload inventory") { Task { await inventoryStore.reloadInventories() } }
+            } label: { Text("􀅈").padding(.horizontal) }
+            primaryAction: { Task { await inventoryStore.reloadInventories() } }
+        }
     }
 }
 

@@ -39,9 +39,7 @@ struct OrdersMainList: View {
         .navigationDestination(for: Order.ID.self) { orderId in
             OrderDetailView(orderStore.order(withId: orderId)!)
         }
-        .task {
-            await orderStore.refreshOrders(.refetchOnlyIfInvalidated)
-        }
+        .task { softRefresh() }
         .toolbar {
             
             Button {
@@ -53,12 +51,26 @@ struct OrdersMainList: View {
                 OrdersActionsSheet(orders: orders)
             }
             
-            Button {
-                Task { await orderStore.refreshOrders(.forceRefetch) }
-            } label: {
-                Text("􀅈").padding(.horizontal)
-            }
+            Menu {
+                Button("Soft refresh orders") { softRefresh() }
+                Button("Hard refresh orders") { hardRefresh() }
+                Button("Reload inventory") { /*TODO*/ }
+            } label: { Text("􀅈").padding(.horizontal) }
+            primaryAction: { softRefresh() }
         }
+    }
+    
+    
+    func softRefresh() {
+        
+        // TODO: invalidate orders and related data
+        Task { await orderStore.refreshOrders(.refetchOnlyIfInvalidated) }
+    }
+    
+    
+    func hardRefresh() {
+        
+        Task { await orderStore.refreshOrders(.forceRefetch) }
     }
     
     

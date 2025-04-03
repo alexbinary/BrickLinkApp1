@@ -230,6 +230,8 @@ public class OrderStore {
         || refetchStrategy == .forceRefetch && !orderIsClosedForMoreThan30Days(order) {
             Task { await loadDetails(for: order, .forceRefetch) }
         }
+        // TODO: wait for all details to finish before continuing
+        // orderNeedsRefreshLaPosteTrackingStatus depends on it
         
         for order in orders where orderNeedsRefreshLaPosteTrackingStatus(order) {
             Task { await loadLaPosteTrackingStatus(for: order, refetchStrategy) }
