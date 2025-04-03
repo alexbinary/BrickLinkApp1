@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "fireplusteam.vscode-ios",
-        "sterin.xcodebuild-tools"
+        "sterin.xcodebuild-tools",
+        "sweetpad.sweetpad"
     ]
 }
