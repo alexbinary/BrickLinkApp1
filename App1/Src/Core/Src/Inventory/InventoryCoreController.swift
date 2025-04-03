@@ -31,6 +31,12 @@ class InventoryCoreController {
     }
     
     
+    var hasInventories: Bool {
+        
+        !dataStore.inventories.isEmpty
+    }
+    
+    
     func inventory(withId id: InventoryItem.ID) -> InventoryItem? {
         
         dataStore.inventories.first { $0.id == id }
@@ -83,9 +89,9 @@ class InventoryCoreController {
     }
     
     
-    func loadInventories() async {
+    func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await updateController.loadInventories(.forceRefetch)
+        await updateController.loadInventories(refetchStrategy)
     }
     
     

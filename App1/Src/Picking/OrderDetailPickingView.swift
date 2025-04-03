@@ -90,14 +90,15 @@ struct OrderDetailPickingView: View {
         .task {
             await orderStore.refreshItems(for: order, .refetchOnlyIfInvalidated)
         }
-        .onAppear { Task {
-            await inventoryStore.reloadInventories()
-        }}
+        .task {
+            await inventoryStore.refreshInventories(.refetchOnlyIfInvalidated)
+        }
         .toolbar {
             Menu {
                 Button("Reload items (soft)") { Task { await orderStore.refreshItems(for: order, .refetchOnlyIfInvalidated) } }
                 Button("Reload items (hard)") { Task { await orderStore.refreshItems(for: order, .forceRefetch) } }
-                Button("Reload inventory") { Task { await inventoryStore.reloadInventories() } }
+                Button("Reload inventory (soft)") { Task { await inventoryStore.refreshInventories(.refetchOnlyIfInvalidated) } }
+                Button("Reload inventory (hard)") { Task { await inventoryStore.refreshInventories(.forceRefetch) } }
             } label: { Text("􀅈").padding(.horizontal) }
             primaryAction: { Task { await inventoryStore.reloadInventories() } }
         }

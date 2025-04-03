@@ -18,7 +18,6 @@ struct MainApp: App {
                 .inject(env)
 
                 .task { await env.catalog.loadColors() }
-                .task { await env.stores.inventory.loadInventories() }
         }
     }
 }

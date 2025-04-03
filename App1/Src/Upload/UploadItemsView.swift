@@ -10,6 +10,9 @@ struct UploadItemsView: View {
     @Environment(UploadStore.self)
     var uploadStore
     
+    @Environment(InventoryStore.self)
+    var inventoryStore
+    
 
     var body: some View {
 
@@ -22,6 +25,16 @@ struct UploadItemsView: View {
             } header: {
                 SectionHeader("􀋲 Items to upload", secondaryText: "\(items.count) items")
             }
+        }
+        .task {
+            await inventoryStore.refreshInventories(.refetchOnlyIfInvalidated)
+        }
+        .toolbar {
+            Menu {
+                Button("Reload inventory (soft)") { Task { await inventoryStore.refreshInventories(.refetchOnlyIfInvalidated) } }
+                Button("Reload inventory (hard)") { Task { await inventoryStore.refreshInventories(.forceRefetch) } }
+            } label: { Text("􀅈").padding(.horizontal) }
+            primaryAction: { Task { await inventoryStore.reloadInventories() } }
         }
     }
 }

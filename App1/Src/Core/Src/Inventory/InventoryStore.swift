@@ -40,6 +40,12 @@ public class InventoryStore {
     }
     
     
+    public var hasInventories: Bool {
+        
+        inventoryCoreController.hasInventories
+    }
+    
+    
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
         inventoryCoreController.inventory(for: uploadItem)
@@ -52,9 +58,9 @@ public class InventoryStore {
     }
     
     
-    public func loadInventories() async {
+    public func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
-        await inventoryCoreController.loadInventories()
+        await inventoryCoreController.loadInventories(refetchStrategy)
     }
     
     
@@ -79,6 +85,17 @@ public class InventoryStore {
     public func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
      
         inventoryCoreController.isLoadingInventory(withId: inventoryId)
+    }
+    
+    
+    // MARK: Refresh
+    
+    
+    public func refreshInventories(_ refetchStrategy: RefetchStrategy) async {
+        
+        let strategy = hasInventories ? refetchStrategy : .forceRefetch
+        
+        await loadInventories(strategy)
     }
     
     

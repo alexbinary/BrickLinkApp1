@@ -327,9 +327,13 @@ class UpdateController {
             
             await run_loadColors()
             
-        } else if operation is LoadInventoriesOperation {
+        } else if let op = operation as? LoadInventoriesOperation {
             
-            await run_loadInventories()
+            if inventoriesInvalidated || op.refetchStrategy == .forceRefetch {
+                
+                await run_loadInventories()
+                validateInventories()
+            }
             
         } else if let op = operation as? LoadInventoryOperation {
             
@@ -397,6 +401,23 @@ class UpdateController {
         }
         
         operation.resumeContinuation()
+    }
+    
+    
+    // MARK: - Invalidate - Inventories
+    
+    
+    private var inventoriesInvalidated = true
+    
+    
+    private func invalidateInventories() {
+        
+        inventoriesInvalidated = true
+    }
+    
+    private func validateInventories() {
+        
+        inventoriesInvalidated = false
     }
     
     
