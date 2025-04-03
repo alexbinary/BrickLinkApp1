@@ -330,9 +330,7 @@ class UpdateController {
         } else if let op = operation as? LoadInventoriesOperation {
             
             if inventoriesInvalidated || op.refetchStrategy == .forceRefetch {
-                
                 await run_loadInventories()
-                validateInventories()
             }
             
         } else if let op = operation as? LoadInventoryOperation {
@@ -342,25 +340,19 @@ class UpdateController {
         } else if let op = operation as? LoadOrdersOperation {
             
             if ordersInvalidated || op.refetchStrategy == .forceRefetch {
-                
                 await run_loadOrders()
-                validateOrders()
             }
             
         } else if let op = operation as? LoadOrderDetailsOperation {
             
             if detailsInvalidated(for: op.order) || op.refetchStrategy == .forceRefetch {
-                
                 await run_loadDetails(for: op.order)
-                validateDetails(for: op.order)
             }
         
         } else if let op = operation as? LoadOrderItemsOperation {
             
             if itemsInvalidated(for: op.order) || op.refetchStrategy == .forceRefetch {
-                
                 await run_loadItems(for: op.order)
-                validateItems(for: op.order)
             }
         
         } else if let op = operation as? UpdateOrderStatusOperation {
@@ -378,17 +370,13 @@ class UpdateController {
         } else if let op = operation as? UpdateLaPosteTrackingStatusOperation {
             
             if trackingNoStatusInvalidated(op.trackingNo) || op.refetchStrategy == .forceRefetch {
-                
                 await run_loadLaPosteTrackingStatus(forTrackingNo: op.trackingNo)
-                validateTrackingNoStatus(op.trackingNo)
             }
             
         } else if let op = operation as? LoadOrderFeedbacksOperation {
             
             if feedbacksInvalidated(for: op.order) || op.refetchStrategy == .forceRefetch {
-                
                 await run_loadFeedbacks(for: op.order)
-                validateFeedbacks(for: op.order)
             }
             
         } else if let op = operation as? PostOrderFeedbackOperation {
@@ -407,15 +395,15 @@ class UpdateController {
     // MARK: - Invalidate - Inventories
     
     
-    private var inventoriesInvalidated = true
+    private(set) var inventoriesInvalidated = true
     
     
-    private func invalidateInventories() {
+    func invalidateInventories() {
         
         inventoriesInvalidated = true
     }
     
-    private func validateInventories() {
+    func validateInventories() {
         
         inventoriesInvalidated = false
     }
@@ -424,15 +412,15 @@ class UpdateController {
     // MARK: - Invalidate - Orders
     
     
-    private var ordersInvalidated = true
+    private(set) var ordersInvalidated = true
     
     
-    private func invalidateOrders() {
+    func invalidateOrders() {
         
         ordersInvalidated = true
     }
     
-    private func validateOrders() {
+    func validateOrders() {
         
         ordersInvalidated = false
     }
@@ -444,17 +432,17 @@ class UpdateController {
     private var validatedOrderDetails: Set<Order.ID> = []
     
     
-    private func detailsInvalidated(for order: Order) -> Bool {
+    func detailsInvalidated(for order: Order) -> Bool {
         
         validatedOrderDetails.contains(order.id) == false
     }
     
-    private func invalidateDetails(for order: Order) {
+    func invalidateDetails(for order: Order) {
         
         validatedOrderDetails.remove(order.id)
     }
     
-    private func validateDetails(for order: Order) {
+    func validateDetails(for order: Order) {
         
         validatedOrderDetails.insert(order.id)
     }
@@ -466,17 +454,17 @@ class UpdateController {
     private var validatedOrderItems: Set<Order.ID> = []
     
     
-    private func itemsInvalidated(for order: Order) -> Bool {
+    func itemsInvalidated(for order: Order) -> Bool {
         
         validatedOrderItems.contains(order.id) == false
     }
     
-    private func invalidateItems(for order: Order) {
+    func invalidateItems(for order: Order) {
         
         validatedOrderItems.remove(order.id)
     }
     
-    private func validateItems(for order: Order) {
+    func validateItems(for order: Order) {
         
         validatedOrderItems.insert(order.id)
     }
@@ -488,17 +476,17 @@ class UpdateController {
     private var validatedTrackingNoStatus: Set<TrackingNo> = []
     
     
-    private func trackingNoStatusInvalidated(_ trackingNo: TrackingNo) -> Bool {
+    func trackingNoStatusInvalidated(_ trackingNo: TrackingNo) -> Bool {
         
         validatedTrackingNoStatus.contains(trackingNo) == false
     }
     
-    private func invalidateTrackingNoStatus(_ trackingNo: TrackingNo) {
+    func invalidateTrackingNoStatus(_ trackingNo: TrackingNo) {
         
         validatedTrackingNoStatus.remove(trackingNo)
     }
     
-    private func validateTrackingNoStatus(_ trackingNo: TrackingNo) {
+    func validateTrackingNoStatus(_ trackingNo: TrackingNo) {
         
         validatedTrackingNoStatus.insert(trackingNo)
     }
@@ -510,17 +498,17 @@ class UpdateController {
     private var validatedFeedbacks: Set<Order.ID> = []
     
     
-    private func feedbacksInvalidated(for order: Order) -> Bool {
+    func feedbacksInvalidated(for order: Order) -> Bool {
         
         validatedFeedbacks.contains(order.id) == false
     }
     
-    private func invalidateFeedbacks(for order: Order) {
+    func invalidateFeedbacks(for order: Order) {
         
         validatedFeedbacks.remove(order.id)
     }
     
-    private func validateFeedbacks(for order: Order) {
+    func validateFeedbacks(for order: Order) {
         
         validatedFeedbacks.insert(order.id)
     }
@@ -551,6 +539,9 @@ class UpdateController {
         let inventories = blInventories.map { InventoryItem(fromBl: $0) }
         
         print("loaded \(inventories.count) inventories")
+
+        validateInventories()
+        validateInventories(inventories)
         
         try! dataStore.setInventories(inventories)
         try! dataStore.save()
@@ -565,6 +556,8 @@ class UpdateController {
         let inventory = InventoryItem(fromBl: blInventory)
         
         print("loaded inventory \(inventoryId)")
+
+        validateInventory(inventoryId)
         
         try! dataStore.setInventory(inventory)
         try! dataStore.save()
@@ -579,6 +572,8 @@ class UpdateController {
         let orderSummaries = blOrders.map { Order(fromBl: $0) }.sorted { $0.date > $1.date }
         
         print("loaded \(orderSummaries.count) orders")
+
+        validateOrders()
         
         try! dataStore.setOrderSummaries(orderSummaries)
         try! dataStore.save()
@@ -593,6 +588,8 @@ class UpdateController {
         let orderDetails = OrderDetails(fromBl: blOrder)
         
         print("loaded details for order \(order.id)")
+
+        validateDetails(for: order)
         
         try! dataStore.setOrderDetail(orderDetails)
         try! dataStore.save()
@@ -604,12 +601,11 @@ class UpdateController {
         print("Loading items for order \(order.id)...")
         
         let blBatches = await brickLinkAPIClient.fetchOrderItems(orderId: order.id)
-        
-        let batches = blBatches.map { blItems in
-            blItems.map { OrderItem(fromBl: $0, orderId: order.id) }
-        }
+        let batches = blBatches.map { blItems in blItems.map { OrderItem(fromBl: $0, orderId: order.id) } }
         
         print("loaded \(batches.count) batches with total \(batches.reduce(0){$0+$1.count}) items for order \(order.id)")
+
+        validateItems(for: order)
         
         try! dataStore.setOrderItems(batches, forOrderId: order.id)
         try! dataStore.save()
@@ -671,11 +667,12 @@ class UpdateController {
         let status = await laPosteTrackingClient.fetchTrackingStatus(forTrackingNo: trackingNo)
         
         print("fetched tracking status for tracking no \(trackingNo)")
+
+        validateTrackingNoStatus(trackingNo)
     
         try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
         try! dataStore.save()
     }
-    
     
     
     // MARK: - Feedbacks
@@ -689,6 +686,8 @@ class UpdateController {
         let feedbacks = blFeedbacks.map { Feedback(fromBl: $0) }
         
         print("loaded \(feedbacks.count) feedbacks for order \(order.id)")
+
+        validateFeedbacks(for: order)
         
         try! dataStore.setOrderFeedbacks(feedbacks, forOrderId: order.id)
         try! dataStore.save()
