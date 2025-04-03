@@ -676,6 +676,8 @@ class UpdateController {
             
         await brickLinkAPIClient.postFeedback(orderId: order.id, rating: rating.bricklinkFeedbackRating.rawValue, comment: comment)
         
+        invalidateFeedbacks(for: order)
+        
         Task { await loadFeedbacks(for: order, .refetchOnlyIfInvalidated) }
     }
 }
