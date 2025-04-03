@@ -34,7 +34,7 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadColors: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadColorsOperation.self)
+        hasScheduledOrRunningOperation(ofType: LoadColorsOperation.self)
     }
     
     
@@ -51,7 +51,9 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadInventories: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadInventoriesOperation.self)
+        hasScheduledOrRunningOperation(ofType: LoadInventoriesOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.inventoriesInvalidated
+        })
     }
     
     
@@ -65,13 +67,18 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadInventory: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self)
+        hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.inventoryInvalidated($0.inventoryId)
+        })
     }
     
     
     func isRunningOrIsScheduledToRun_loadInventory(withId inventoryId: InventoryItem.ID) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self, matching: { $0.inventoryId == inventoryId })
+        hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self, matching: {
+            $0.inventoryId == inventoryId &&
+            $0.refetchStrategy == .forceRefetch || self.inventoryInvalidated($0.inventoryId)
+        })
     }
     
     
@@ -88,7 +95,9 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrders: Bool {
         
-        hasScheduledOrRunningOperation(ofType: LoadOrdersOperation.self, matching: { $0.refetchStrategy == .forceRefetch || self.ordersInvalidated })
+        hasScheduledOrRunningOperation(ofType: LoadOrdersOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.ordersInvalidated
+        })
     }
     
     
@@ -102,13 +111,18 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrderDetails: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadOrderDetailsOperation.self)
+        hasScheduledOrRunningOperation(ofType: LoadOrderDetailsOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.detailsInvalidated(for: $0.order)
+        })
     }
     
     
     func isRunningOrIsScheduledToRun_loadDetails(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadOrderDetailsOperation.self, matching: { $0.order.id == order.id })
+        hasScheduledOrRunningOperation(ofType: LoadOrderDetailsOperation.self, matching: {
+            $0.order.id == order.id &&
+            $0.refetchStrategy == .forceRefetch || self.detailsInvalidated(for: $0.order)
+        })
     }
     
     
@@ -122,13 +136,18 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrderItems: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadOrderItemsOperation.self)
+        hasScheduledOrRunningOperation(ofType: LoadOrderItemsOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.itemsInvalidated(for: $0.order)
+        })
     }
     
     
     func isRunningOrIsScheduledToRun_loadItems(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadOrderItemsOperation.self, matching: { $0.order.id == order.id })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderItemsOperation.self, matching: {
+            $0.order.id == order.id &&
+            $0.refetchStrategy == .forceRefetch || self.itemsInvalidated(for: $0.order)
+        })
     }
     
     
@@ -151,13 +170,17 @@ class UpdateController {
     
     func isRunningOrIsScheduledToRun_updateStatus(of order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self, matching: { $0.order.id == order.id })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self, matching: {
+            $0.order.id == order.id
+        })
     }
     
     
     func isRunningOrIsScheduledToRun_updateStatus(of order: Order, to status: OrderStatus) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self, matching: { $0.order.id == order.id && $0.status == status })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self, matching: {
+            $0.order.id == order.id && $0.status == status
+        })
     }
     
     
@@ -177,7 +200,9 @@ class UpdateController {
     
     func isRunningOrIsScheduledToRun_updateTrackingNo(of order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: UpdateOrderTrackingNoOperation.self, matching: { $0.order.id == order.id })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderTrackingNoOperation.self, matching: {
+            $0.order.id == order.id
+        })
     }
     
     
@@ -197,7 +222,9 @@ class UpdateController {
     
     func isRunningOrIsScheduledToRun_sendDriveThru(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: SendDriveThruOperation.self, matching: { $0.order.id == order.id })
+        return hasScheduledOrRunningOperation(ofType: SendDriveThruOperation.self, matching: {
+            $0.order.id == order.id
+        })
     }
     
     
@@ -214,13 +241,18 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: UpdateLaPosteTrackingStatusOperation.self)
+        hasScheduledOrRunningOperation(ofType: UpdateLaPosteTrackingStatusOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.trackingNoStatusInvalidated(forTrackingNo: $0.trackingNo)
+        })
     }
     
     
     func isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: UpdateLaPosteTrackingStatusOperation.self, matching: { $0.trackingNo == trackingNo })
+        hasScheduledOrRunningOperation(ofType: UpdateLaPosteTrackingStatusOperation.self, matching: {
+            $0.trackingNo == trackingNo &&
+            $0.refetchStrategy == .forceRefetch || self.trackingNoStatusInvalidated(forTrackingNo: $0.trackingNo)
+        })
     }
     
     
@@ -237,13 +269,18 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrderFeedbacks: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadOrderFeedbacksOperation.self)
+        hasScheduledOrRunningOperation(ofType: LoadOrderFeedbacksOperation.self, matching: {
+            $0.refetchStrategy == .forceRefetch || self.feedbacksInvalidated(for: $0.order)
+        })
     }
     
     
     func isRunningOrIsScheduledToRun_loadFeedbacks(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: LoadOrderFeedbacksOperation.self, matching: { $0.order.id == order.id })
+        hasScheduledOrRunningOperation(ofType: LoadOrderFeedbacksOperation.self, matching: {
+            $0.order.id == order.id &&
+            $0.refetchStrategy == .forceRefetch || self.feedbacksInvalidated(for: $0.order)
+        })
     }
     
     
@@ -257,13 +294,15 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_postOrderFeedback: Bool {
         
-        return hasScheduledOrRunningOperation(ofType: PostOrderFeedbackOperation.self)
+        hasScheduledOrRunningOperation(ofType: PostOrderFeedbackOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_postFeedback(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(ofType: PostOrderFeedbackOperation.self, matching: { $0.order.id == order.id })
+        hasScheduledOrRunningOperation(ofType: PostOrderFeedbackOperation.self, matching: {
+            $0.order.id == order.id
+        })
     }
     
     
@@ -371,7 +410,7 @@ class UpdateController {
             
         } else if let op = operation as? UpdateLaPosteTrackingStatusOperation {
             
-            if trackingNoStatusInvalidated(op.trackingNo) || op.refetchStrategy == .forceRefetch {
+            if trackingNoStatusInvalidated(forTrackingNo: op.trackingNo) || op.refetchStrategy == .forceRefetch {
                 await run_loadLaPosteTrackingStatus(forTrackingNo: op.trackingNo)
             }
             
@@ -507,17 +546,17 @@ class UpdateController {
     private var validatedTrackingNoStatus: Set<TrackingNo> = []
     
     
-    func trackingNoStatusInvalidated(_ trackingNo: TrackingNo) -> Bool {
+    func trackingNoStatusInvalidated(forTrackingNo trackingNo: TrackingNo) -> Bool {
         
         validatedTrackingNoStatus.contains(trackingNo) == false
     }
     
-    func invalidateTrackingNoStatus(_ trackingNo: TrackingNo) {
+    func invalidateTrackingNoStatus(forTrackingNo trackingNo: TrackingNo) {
         
         validatedTrackingNoStatus.remove(trackingNo)
     }
     
-    func validateTrackingNoStatus(_ trackingNo: TrackingNo) {
+    func validateTrackingNoStatus(forTrackingNo trackingNo: TrackingNo) {
         
         validatedTrackingNoStatus.insert(trackingNo)
     }
@@ -699,7 +738,7 @@ class UpdateController {
         
         print("fetched tracking status for tracking no \(trackingNo)")
 
-        validateTrackingNoStatus(trackingNo)
+        validateTrackingNoStatus(forTrackingNo: trackingNo)
     
         try! dataStore.setLaPosteTrackingStatus(status, forTrackingNo: trackingNo)
         try! dataStore.save()
