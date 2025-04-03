@@ -47,10 +47,16 @@ struct OrdersActionsSheet: View {
                         HStack {
                             CheckView(checked: orderStore.orderChecklistShipped(order))
                             Text("Mark shipped")
+                            if orderStore.isUpdatingStatus(of: order, to: .shipped) {
+                                Text("updating...")
+                            }
                         }
                         HStack {
                             CheckView(checked: orderStore.orderChecklistDriveThru(order))
                             Text("Send drive thru")
+                            if orderStore.isSendingDriveThru(for: order) {
+                                Text("updating...")
+                            }
                         }
                     }
                     

@@ -179,6 +179,12 @@ class OrderCoreController {
     }
     
     
+    func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_updateStatus(of: order, to: status)
+    }
+    
+    
     func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await updateController.updateTrackingNo(of: order, to: trackingNo)

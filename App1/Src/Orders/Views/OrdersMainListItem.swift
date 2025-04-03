@@ -232,7 +232,15 @@ struct OrdersMainListItem: View {
             }
             
             if !orderStore.orderChecklistShipped(order) && !orderStore.orderChecklistDriveThru(order) {
-                items.append(OrderStatusTag(text: "Ship and send Drive thru", status: .actionRequired, action: {
+                
+                var text = "Ship and send Drive thru"
+                if orderStore.isUpdatingStatus(of: order, to: .shipped) {
+                    text += " (shipping...)"
+                }
+                if orderStore.isSendingDriveThru(for: order) {
+                    text += " (sending...)"
+                }
+                items.append(OrderStatusTag(text: text, status: .actionRequired, action: {
                     Task {
                         await orderStore.updateStatus(of: order, to: .shipped)
                         await orderStore.sendDriveThru(for: order)

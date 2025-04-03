@@ -159,6 +159,12 @@ public class OrderStore {
     }
     
     
+    public func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool {
+        
+        orderCoreController.isUpdatingStatus(of: order, to: status)
+    }
+    
+    
     public func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await orderCoreController.updateTrackingNo(of: order, to: trackingNo)
