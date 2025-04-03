@@ -34,7 +34,7 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadColors: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadColorsOperation })
+        return hasScheduledOrRunningOperation(ofType: LoadColorsOperation.self)
     }
     
     
@@ -51,7 +51,7 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadInventories: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadInventoriesOperation })
+        return hasScheduledOrRunningOperation(ofType: LoadInventoriesOperation.self)
     }
     
     
@@ -65,18 +65,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadInventory: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadInventoryOperation })
+        return hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_loadInventory(withId inventoryId: InventoryItem.ID) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? LoadInventoryOperation, op.inventoryId == inventoryId {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self, matching: { $0.inventoryId == inventoryId })
     }
     
     
@@ -93,7 +88,7 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrders: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrdersOperation })
+        hasScheduledOrRunningOperation(ofType: LoadOrdersOperation.self, matching: { $0.refetchStrategy == .forceRefetch || self.ordersInvalidated })
     }
     
     
@@ -107,18 +102,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrderDetails: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrderDetailsOperation })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderDetailsOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_loadDetails(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? LoadOrderDetailsOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderDetailsOperation.self, matching: { $0.order.id == order.id })
     }
     
     
@@ -132,18 +122,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrderItems: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrderItemsOperation })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderItemsOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_loadItems(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? LoadOrderItemsOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderItemsOperation.self, matching: { $0.order.id == order.id })
     }
     
     
@@ -160,18 +145,19 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_updateOrderStatus: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is UpdateOrderStatusOperation })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_updateStatus(of order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? UpdateOrderStatusOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self, matching: { $0.order.id == order.id })
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_updateStatus(of order: Order, to status: OrderStatus) -> Bool {
+        
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderStatusOperation.self, matching: { $0.order.id == order.id && $0.status == status })
     }
     
     
@@ -185,18 +171,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_updateOrderTrackingNo: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is UpdateOrderTrackingNoOperation })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderTrackingNoOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_updateTrackingNo(of order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? UpdateOrderTrackingNoOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: UpdateOrderTrackingNoOperation.self, matching: { $0.order.id == order.id })
     }
     
     
@@ -210,18 +191,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_sendDriveThru: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is SendDriveThruOperation })
+        return hasScheduledOrRunningOperation(ofType: SendDriveThruOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_sendDriveThru(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? SendDriveThruOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: SendDriveThruOperation.self, matching: { $0.order.id == order.id })
     }
     
     
@@ -238,18 +214,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is UpdateLaPosteTrackingStatusOperation })
+        return hasScheduledOrRunningOperation(ofType: UpdateLaPosteTrackingStatusOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? UpdateLaPosteTrackingStatusOperation, op.trackingNo == trackingNo {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: UpdateLaPosteTrackingStatusOperation.self, matching: { $0.trackingNo == trackingNo })
     }
     
     
@@ -266,18 +237,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_loadOrderFeedbacks: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is LoadOrderFeedbacksOperation })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderFeedbacksOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_loadFeedbacks(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? LoadOrderFeedbacksOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: LoadOrderFeedbacksOperation.self, matching: { $0.order.id == order.id })
     }
     
     
@@ -291,18 +257,13 @@ class UpdateController {
     
     var isRunningOrIsScheduledToRun_postOrderFeedback: Bool {
         
-        return hasScheduledOrRunningOperation(matching: { $0 is PostOrderFeedbackOperation })
+        return hasScheduledOrRunningOperation(ofType: PostOrderFeedbackOperation.self)
     }
     
     
     func isRunningOrIsScheduledToRun_postFeedback(for order: Order) -> Bool {
         
-        return hasScheduledOrRunningOperation(matching: {
-            if let op = $0 as? PostOrderFeedbackOperation, op.order.id == order.id {
-                return true
-            }
-            return false
-        })
+        return hasScheduledOrRunningOperation(ofType: PostOrderFeedbackOperation.self, matching: { $0.order.id == order.id })
     }
     
     
@@ -313,12 +274,18 @@ class UpdateController {
     private var runningOperation: (any UpdateOperation)?
     
     
-    private func hasScheduledOrRunningOperation(matching predicate: (any UpdateOperation) -> Bool) -> Bool {
+    private func scheduledOrRunningOperation<T>(ofType type: T.Type, matching predicate: ((T) -> Bool)? = nil) -> T? {
         
         var ops = queuedOperations
         if let op = runningOperation { ops.append(op) }
         
-        return ops.contains(where: { predicate($0) })
+        return ops.first(where: { $0 is T && predicate?($0 as! T) ?? true }) as? T
+    }
+    
+    
+    private func hasScheduledOrRunningOperation<T>(ofType type: T.Type, matching predicate: ((T) -> Bool)? = nil) -> Bool {
+        
+        scheduledOrRunningOperation(ofType: type, matching: predicate) != nil
     }
     
     
