@@ -155,21 +155,13 @@ class OrderChecklistCoreController {
     
     func orderChecklistPicking(_ order: Order) -> Bool {
         
-        let items = items(for: order)
-        
-        let pickedItemIds = pickedItemIds(for: order)
-        
-        return items.allSatisfy { pickedItemIds.contains($0.id) }
+        pickingProgressCoreController.pickingProgress(for: order) == 100%
     }
     
     
     func orderChecklistVerification(_ order: Order) -> Bool {
         
-        let items = items(for: order)
-        
-        let verifiedItemIds = verifiedItemIds(for: order)
-        
-        return items.allSatisfy { verifiedItemIds.contains($0.id) }
+        pickingProgressCoreController.pickingVerificationProgress(for: order) == 100%
     }
     
     

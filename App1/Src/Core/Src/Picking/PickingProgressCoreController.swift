@@ -41,18 +41,20 @@ class PickingProgressCoreController {
 
     func pickingProgress(for order: Order) -> Percent {
         
-        let total = items(for: order).count
         let picked = pickedItemIds(for: order).count
+        if picked == 0 { return 0% }
         
+        let total = items(for: order).count
         return Percent(Double(picked)/Double(total))
     }
     
 
     func pickingVerificationProgress(for order: Order) -> Percent {
         
-        let total = items(for: order).count
         let verified = verifiedItemIds(for: order).count
+        if verified == 0 { return 0% }
         
+        let total = items(for: order).count
         return Percent(Double(verified)/Double(total))
     }
 }
