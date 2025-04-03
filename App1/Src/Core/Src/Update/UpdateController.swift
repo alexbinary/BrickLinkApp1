@@ -607,7 +607,6 @@ class UpdateController {
         invalidateOrders()
         
         Task { await self.loadOrders(.refetchOnlyIfInvalidated) }
-        Task { await self.loadDetails(for: order, .refetchOnlyIfInvalidated) }
     }
     
     
@@ -619,9 +618,8 @@ class UpdateController {
         
         print("updated tracking no \(trackingNo) for order \(order.id)")
         
-        invalidateOrders()
+        invalidateDetails(for: order)
         
-        Task { await self.loadOrders(.refetchOnlyIfInvalidated) }
         Task { await self.loadDetails(for: order, .refetchOnlyIfInvalidated) }
     }
     
@@ -634,9 +632,8 @@ class UpdateController {
         
         print("sent drive thru for order \(order.id)")
         
-        invalidateOrders()
+        invalidateDetails(for: order)
         
-        Task { await self.loadOrders(.refetchOnlyIfInvalidated) }
         Task { await self.loadDetails(for: order, .refetchOnlyIfInvalidated) }
     }
     
