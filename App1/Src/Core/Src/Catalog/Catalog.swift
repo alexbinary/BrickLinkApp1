@@ -54,9 +54,9 @@ public class Catalog {
     }
     
     
-    public func loadColors() async {
+    public func loadColors(_ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadColors()
+        await updateController.loadColors(operationTag)
     }
     
     

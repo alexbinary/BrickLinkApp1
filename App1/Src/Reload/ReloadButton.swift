@@ -22,6 +22,9 @@ struct ReloadButton: View {
     @Environment(FeedbackStore.self)
     var feedbackStore
     
+    @Environment(UpdateStore.self)
+    var updateStore
+    
     
     var items: [ReloadItem] {
         
@@ -61,6 +64,19 @@ struct ReloadButton: View {
     }
     
     
+    @State
+    var currentOperationTag: OperationTag? = nil
+    
+    
+    var isLoading: Bool {
+        
+        if let tag = currentOperationTag {
+            return updateStore.isLoadingOperations(withTag: tag)
+        }
+        return false
+    }
+    
+    
     var body: some View {
 
         Menu {
@@ -70,7 +86,7 @@ struct ReloadButton: View {
             }
             
         } label: {
-            Text("􀅈").padding(.horizontal)
+            Text("􀅈\(isLoading ? " (loading...)" : "")").padding(.horizontal)
         }
 
         primaryAction: {
@@ -103,31 +119,33 @@ struct ReloadButton: View {
     
     func performAction(for item: ReloadItem) {
         
+        currentOperationTag = .new
+        
         switch item {
         
         case .inventoryAndColors:
             
-            Task { await inventoryStore.hardRefreshInventories() }
-            Task { await catalog.loadColors() }
+            Task { await inventoryStore.hardRefreshInventories(currentOperationTag) }
+            Task { await catalog.loadColors(currentOperationTag) }
         
         case .orders:
             
-            Task { await orderStore.hardRefreshOrders() }
+            Task { await orderStore.hardRefreshOrders(currentOperationTag) }
         
         case .order(let orderId, let includeDetails):
             
-            Task { await orderStore.hardRefresh(orderWithId: orderId) }
+            Task { await orderStore.hardRefresh(orderWithId: orderId, currentOperationTag) }
             if includeDetails {
-                Task {await orderStore.hardRefreshDetails(forOrderWithId: orderId) }
+                Task {await orderStore.hardRefreshDetails(forOrderWithId: orderId, currentOperationTag) }
             }
             
         case .items(let orderId):
 
-            Task { await orderStore.hardRefreshItems(forOrderWithId: orderId) }
+            Task { await orderStore.hardRefreshItems(forOrderWithId: orderId, currentOperationTag) }
             
         case .feedbacks(let orderId):
             
-            Task { await feedbackStore.hardRefreshFeedbacks(forOrderWithId: orderId) }
+            Task { await feedbackStore.hardRefreshFeedbacks(forOrderWithId: orderId, currentOperationTag) }
         }
     }
 }

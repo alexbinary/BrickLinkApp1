@@ -24,10 +24,10 @@ class UpdateController {
     // MARK: - Colors
     
     
-    func loadColors() async {
+    func loadColors(_ operationTag: OperationTag? = nil) async {
      
         await enqueue { continuation in
-            LoadColorsOperation(continuation: continuation)
+            LoadColorsOperation(operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -41,10 +41,10 @@ class UpdateController {
     // MARK: - Inventories
     
     
-    func loadInventories(_ refetchStrategy: RefetchStrategy) async {
+    func loadInventories(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
             
         await enqueue { continuation in
-            LoadInventoriesOperation(refetchStrategy: refetchStrategy, continuation: continuation)
+            LoadInventoriesOperation(refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -60,7 +60,7 @@ class UpdateController {
     func loadInventory(withId inventoryId: InventoryItem.ID, _ refetchStrategy: RefetchStrategy) async {
         
         await enqueue { continuation in
-            LoadInventoryOperation(inventoryId: inventoryId, refetchStrategy: refetchStrategy, continuation: continuation)
+            LoadInventoryOperation(inventoryId: inventoryId, refetchStrategy: refetchStrategy, operationTag: nil, continuation: continuation)
         }
     }
     
@@ -85,10 +85,10 @@ class UpdateController {
     // MARK: - Orders
     
     
-    func loadOrders(_ refetchStrategy: RefetchStrategy) async {
+    func loadOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await enqueue { continuation in
-            LoadOrdersOperation(refetchStrategy: refetchStrategy, continuation: continuation)
+            LoadOrdersOperation(refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -101,10 +101,10 @@ class UpdateController {
     }
     
     
-    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await enqueue { continuation in
-            LoadOrderDetailsOperation(order: order, refetchStrategy: refetchStrategy, continuation: continuation)
+            LoadOrderDetailsOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -126,10 +126,10 @@ class UpdateController {
     }
     
     
-    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await enqueue { continuation in
-            LoadOrderItemsOperation(order: order, refetchStrategy: refetchStrategy, continuation: continuation)
+            LoadOrderItemsOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -157,7 +157,7 @@ class UpdateController {
     func updateStatus(of order: Order, to status: OrderStatus) async {
         
         await enqueue { continuation in
-            UpdateOrderStatusOperation(order: order, status: status, continuation: continuation)
+            UpdateOrderStatusOperation(order: order, status: status, operationTag: nil, continuation: continuation)
         }
     }
     
@@ -187,7 +187,7 @@ class UpdateController {
     func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await enqueue { continuation in
-            UpdateOrderTrackingNoOperation(order: order, trackingNo: trackingNo, continuation: continuation)
+            UpdateOrderTrackingNoOperation(order: order, trackingNo: trackingNo, operationTag: nil, continuation: continuation)
         }
     }
     
@@ -209,7 +209,7 @@ class UpdateController {
     func sendDriveThru(for order: Order) async {
         
         await enqueue { continuation in
-            SendDriveThruOperation(order: order, continuation: continuation)
+            SendDriveThruOperation(order: order, operationTag: nil, continuation: continuation)
         }
     }
     
@@ -231,10 +231,10 @@ class UpdateController {
     // MARK: - Tracking
     
     
-    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await enqueue { continuation in
-            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, refetchStrategy: refetchStrategy, continuation: continuation)
+            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -259,10 +259,10 @@ class UpdateController {
     // MARK: - Feedbacks
     
     
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await enqueue { continuation in
-            LoadOrderFeedbacksOperation(order: order, refetchStrategy: refetchStrategy, continuation: continuation)
+            LoadOrderFeedbacksOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
         }
     }
     
@@ -287,7 +287,7 @@ class UpdateController {
     func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
         
         await enqueue { continuation in
-            PostOrderFeedbackOperation(order: order, rating: rating, comment: comment, continuation: continuation)
+            PostOrderFeedbackOperation(order: order, rating: rating, comment: comment, operationTag: nil, continuation: continuation)
         }
     }
     
@@ -306,6 +306,15 @@ class UpdateController {
     }
     
     
+    // MARK: - Loading state
+    
+    
+    public func isRunningOrIsScheduledToRun_operations(withTag tag: UUID) -> Bool {
+        
+        hasScheduledOrRunningOperation(matching: { $0.operationTag == tag })
+    }
+    
+    
     // MARK: - Queue
     
 
@@ -313,12 +322,24 @@ class UpdateController {
     private var runningOperation: (any UpdateOperation)?
     
     
-    private func scheduledOrRunningOperation<T>(ofType type: T.Type, matching predicate: ((T) -> Bool)? = nil) -> T? {
+    private func scheduledOrRunningOperation(matching predicate: (UpdateOperation) -> Bool) -> UpdateOperation? {
         
         var ops = queuedOperations
         if let op = runningOperation { ops.append(op) }
         
-        return ops.first(where: { $0 is T && predicate?($0 as! T) ?? true }) as? T
+        return ops.first(where: { predicate($0) })
+    }
+    
+    
+    private func hasScheduledOrRunningOperation(matching predicate: (UpdateOperation) -> Bool) -> Bool {
+        
+        scheduledOrRunningOperation(matching: predicate) != nil
+    }
+    
+    
+    private func scheduledOrRunningOperation<T>(ofType type: T.Type, matching predicate: ((T) -> Bool)? = nil) -> T? {
+        
+        scheduledOrRunningOperation(matching: { $0 is T && predicate?($0 as! T) ?? true }) as? T
     }
     
     
@@ -780,4 +801,15 @@ public enum RefetchStrategy: Sendable {
     
     case refetchOnlyIfInvalidated
     case forceRefetch
+}
+
+
+public typealias OperationTag = UUID
+
+extension OperationTag {
+    
+    public static var new: OperationTag {
+        
+        OperationTag()
+    }
 }

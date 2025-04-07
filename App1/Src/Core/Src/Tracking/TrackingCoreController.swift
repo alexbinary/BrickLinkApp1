@@ -24,9 +24,9 @@ class TrackingCoreController {
     }
     
     
-    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy)
+        await updateController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy, operationTag)
     }
     
     

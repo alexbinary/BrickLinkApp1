@@ -89,9 +89,9 @@ class InventoryCoreController {
     }
     
     
-    func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadInventories(refetchStrategy)
+        await updateController.loadInventories(refetchStrategy, operationTag)
     }
     
     

@@ -33,9 +33,9 @@ class OrderCoreController {
     }
     
     
-    func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadOrders(refetchStrategy)
+        await updateController.loadOrders(refetchStrategy, operationTag)
     }
     
     
@@ -66,9 +66,9 @@ class OrderCoreController {
     }
     
     
-    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadDetails(for: order, refetchStrategy)
+        await updateController.loadDetails(for: order, refetchStrategy, operationTag)
     }
     
     
@@ -107,9 +107,9 @@ class OrderCoreController {
     }
     
     
-    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadItems(for: order, refetchStrategy)
+        await updateController.loadItems(for: order, refetchStrategy, operationTag)
     }
     
     

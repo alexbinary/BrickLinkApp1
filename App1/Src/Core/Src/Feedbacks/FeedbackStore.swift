@@ -72,17 +72,17 @@ public class FeedbackStore {
     }
     
     
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy)
+        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     
-    func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasFeedbacks(for: order) ? refetchStrategy : .forceRefetch
         
-        await loadFeedbacks(for: order, strategy)
+        await loadFeedbacks(for: order, strategy, operationTag)
     }
     
     
@@ -98,15 +98,15 @@ public class FeedbackStore {
     }
     
     
-    public func hardRefreshFeedbacks(for order: Order) async {
+    public func hardRefreshFeedbacks(for order: Order, _ operationTag: OperationTag? = nil) async {
         
-        await refreshFeedbacks(for: order, .forceRefetch)
+        await refreshFeedbacks(for: order, .forceRefetch, operationTag)
     }
     
     
-    public func hardRefreshFeedbacks(forOrderWithId orderId: Order.ID) async {
+    public func hardRefreshFeedbacks(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
-        await hardRefreshFeedbacks(for: order(withId: orderId)!)
+        await hardRefreshFeedbacks(for: order(withId: orderId)!, operationTag)
     }
     
     

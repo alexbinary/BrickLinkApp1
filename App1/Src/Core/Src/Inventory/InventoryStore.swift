@@ -58,9 +58,9 @@ public class InventoryStore {
     }
     
     
-    public func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    public func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await inventoryCoreController.loadInventories(refetchStrategy)
+        await inventoryCoreController.loadInventories(refetchStrategy, operationTag)
     }
     
     
@@ -85,11 +85,11 @@ public class InventoryStore {
     // MARK: Refresh
     
     
-    func refreshInventories(_ refetchStrategy: RefetchStrategy) async {
+    func refreshInventories(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasInventories ? refetchStrategy : .forceRefetch
         
-        await loadInventories(strategy)
+        await loadInventories(strategy, operationTag)
     }
     
     
@@ -99,9 +99,9 @@ public class InventoryStore {
     }
     
     
-    public func hardRefreshInventories() async {
+    public func hardRefreshInventories(_ operationTag: OperationTag? = nil) async {
      
-        await refreshInventories(.forceRefetch)
+        await refreshInventories(.forceRefetch, operationTag)
     }
     
     

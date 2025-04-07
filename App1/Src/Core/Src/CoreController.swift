@@ -22,6 +22,8 @@ public class CoreController {
     public let transactionStore: TransactionStore
     public let resultStore: ResultStore
     
+    public let updateStore: UpdateStore
+    
     
     public init(brickLinkCredentials: BrickLinkAPICredentials, debug: Debug) {
         
@@ -70,5 +72,7 @@ public class CoreController {
         
         transactionStore = TransactionStore(transactionCoreController)
         resultStore = ResultStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
+        
+        updateStore = UpdateStore(updateController)
     }
 }

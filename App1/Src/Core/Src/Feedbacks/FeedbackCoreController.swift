@@ -39,9 +39,9 @@ class FeedbackCoreController {
     }
     
     
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await updateController.loadFeedbacks(for: order, refetchStrategy)
+        await updateController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     

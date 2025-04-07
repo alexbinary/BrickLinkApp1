@@ -21,7 +21,9 @@ public typealias Env = (
         refund: RefundStore,
 
         transaction: TransactionStore,
-        result: ResultStore
+        result: ResultStore,
+        
+        update: UpdateStore
     )
 )
 
@@ -55,7 +57,9 @@ public func createEnv() -> Env {
             refund: coreController.refundStore,
             
             transaction: coreController.transactionStore,
-            result: coreController.resultStore
+            result: coreController.resultStore,
+            
+            update: coreController.updateStore
         )
     )
 }

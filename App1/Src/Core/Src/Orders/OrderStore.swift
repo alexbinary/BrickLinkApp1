@@ -60,9 +60,9 @@ public class OrderStore {
     }
     
     
-    public func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    public func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await orderCoreController.loadOrders(refetchStrategy)
+        await orderCoreController.loadOrders(refetchStrategy, operationTag)
     }
     
     
@@ -87,9 +87,9 @@ public class OrderStore {
     }
     
     
-    public func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    public func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await orderCoreController.loadDetails(for: order, refetchStrategy)
+        await orderCoreController.loadDetails(for: order, refetchStrategy, operationTag)
     }
     
     
@@ -120,9 +120,9 @@ public class OrderStore {
     }
     
     
-    public func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    public func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await orderCoreController.loadItems(for: order, refetchStrategy)
+        await orderCoreController.loadItems(for: order, refetchStrategy, operationTag)
     }
     
     
@@ -210,15 +210,15 @@ public class OrderStore {
     // MARK: - Refresh
     
     
-    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await trackingMiddleController.loadLaPosteTrackingStatus(for: order, refetchStrategy)
+        await trackingMiddleController.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag)
     }
     
     
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy)
+        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     
@@ -244,9 +244,9 @@ public class OrderStore {
     }
     
     
-    func refreshOrders(_ refetchStrategy: RefetchStrategy) async {
+    func refreshOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await loadOrders(refetchStrategy)
+        await loadOrders(refetchStrategy, operationTag)
         
         await withTaskGroup { group in
             
@@ -254,16 +254,16 @@ public class OrderStore {
                 group.addTask {
                     
                     if !(await self.hasDetails(for: order)) {
-                        await self.loadDetails(for: order, .forceRefetch)
+                        await self.loadDetails(for: order, .forceRefetch, operationTag)
                     }
                     if !(await self.orderIsClosedForMoreThan30Days(order)) && refetchStrategy == .forceRefetch {
-                        await self.loadDetails(for: order, .forceRefetch)
+                        await self.loadDetails(for: order, .forceRefetch, operationTag)
                     }
                     if await self.orderNeedsRefreshLaPosteTrackingStatus(order) {
-                        Task { await self.loadLaPosteTrackingStatus(for: order, refetchStrategy) }
+                        Task { await self.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag) }
                     }
                     if await self.orderNeedsRefreshFeedback(order) {
-                        Task { await self.loadFeedbacks(for: order, refetchStrategy) }
+                        Task { await self.loadFeedbacks(for: order, refetchStrategy, operationTag) }
                     }
                 }
             }
@@ -277,21 +277,21 @@ public class OrderStore {
     }
     
     
-    public func hardRefreshOrders() async {
+    public func hardRefreshOrders(_ operationTag: OperationTag? = nil) async {
         
-        await refreshOrders(.forceRefetch)
+        await refreshOrders(.forceRefetch, operationTag)
     }
     
     
-    func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await loadOrders(refetchStrategy)
+        await loadOrders(refetchStrategy, operationTag)
     }
     
     
-    public func softRefresh(_ order: Order) async {
+    public func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
         
-        await refresh(order, .refetchOnlyIfInvalidated)
+        await refresh(order, .refetchOnlyIfInvalidated, operationTag)
     }
     
     
@@ -301,23 +301,23 @@ public class OrderStore {
     }
     
     
-    public func hardRefresh(_ order: Order) async {
+    public func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
         
-        await refresh(order, .forceRefetch)
+        await refresh(order, .forceRefetch, operationTag)
     }
     
     
-    public func hardRefresh(orderWithId orderId: Order.ID) async {
+    public func hardRefresh(orderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
-        await hardRefresh(order(withId: orderId)!)
+        await hardRefresh(order(withId: orderId)!, operationTag)
     }
     
     
-    func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasDetails(for: order) ? refetchStrategy : .forceRefetch
         
-        await loadDetails(for: order, strategy)
+        await loadDetails(for: order, strategy, operationTag)
     }
     
     
@@ -333,23 +333,23 @@ public class OrderStore {
     }
     
     
-    public func hardRefreshDetails(for order: Order) async {
+    public func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
         
-        await refreshDetails(for: order, .forceRefetch)
+        await refreshDetails(for: order, .forceRefetch, operationTag)
     }
 
 
-    public func hardRefreshDetails(forOrderWithId orderId: Order.ID) async {
+    public func hardRefreshDetails(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
-        await hardRefreshDetails(for: order(withId: orderId)!)
+        await hardRefreshDetails(for: order(withId: orderId)!, operationTag)
     }
     
     
-    func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasItems(for: order) ? refetchStrategy : .forceRefetch
         
-        await loadItems(for: order, strategy)
+        await loadItems(for: order, strategy, operationTag)
     }
     
     
@@ -365,15 +365,15 @@ public class OrderStore {
     }
     
     
-    public func hardRefreshItems(for order: Order) async {
+    public func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
         
-        await refreshItems(for: order, .forceRefetch)
+        await refreshItems(for: order, .forceRefetch, operationTag)
     }
     
     
-    public func hardRefreshItems(forOrderWithId orderId: Order.ID) async {
+    public func hardRefreshItems(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
-        await hardRefreshItems(for: order(withId: orderId)!)
+        await hardRefreshItems(for: order(withId: orderId)!, operationTag)
     }
     
     

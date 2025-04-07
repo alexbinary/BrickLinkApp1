@@ -34,10 +34,10 @@ class TrackingMiddleController {
     }
     
     
-    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         if let trackingNo = details(for: order)?.trackingNo {
-            await trackingCoreController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy)
+            await trackingCoreController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy, operationTag)
         }
     }
     

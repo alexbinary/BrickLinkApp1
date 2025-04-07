@@ -44,5 +44,7 @@ extension View {
         
             .environment(env.stores.transaction)
             .environment(env.stores.result)
+        
+            .environment(env.stores.update)
     }
 }

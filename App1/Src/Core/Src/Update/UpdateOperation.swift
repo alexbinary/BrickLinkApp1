@@ -5,6 +5,7 @@ import Foundation
 
 protocol UpdateOperation {
     
+    var operationTag: OperationTag? { get }
     var continuation: CheckedContinuation<(),Never> { get }
 }
 
@@ -22,6 +23,7 @@ extension UpdateOperation {
 
 struct LoadColorsOperation: UpdateOperation {
     
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -32,6 +34,7 @@ struct LoadColorsOperation: UpdateOperation {
 struct LoadInventoriesOperation: UpdateOperation {
     
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -40,6 +43,7 @@ struct LoadInventoryOperation: UpdateOperation {
     
     let inventoryId: InventoryItem.ID
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -50,6 +54,7 @@ struct LoadInventoryOperation: UpdateOperation {
 struct LoadOrdersOperation: UpdateOperation {
     
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -58,6 +63,7 @@ struct LoadOrderDetailsOperation: UpdateOperation {
     
     let order: Order
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -66,6 +72,7 @@ struct LoadOrderItemsOperation: UpdateOperation {
     
     let order: Order
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -77,6 +84,7 @@ struct UpdateOrderStatusOperation: UpdateOperation {
     
     let order: Order
     let status: OrderStatus
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -85,6 +93,7 @@ struct UpdateOrderTrackingNoOperation: UpdateOperation {
     
     let order: Order
     let trackingNo: TrackingNo
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -92,6 +101,7 @@ struct UpdateOrderTrackingNoOperation: UpdateOperation {
 struct SendDriveThruOperation: UpdateOperation {
     
     let order: Order
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -103,6 +113,7 @@ struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
     
     let trackingNo: TrackingNo
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -114,6 +125,7 @@ struct LoadOrderFeedbacksOperation: UpdateOperation {
     
     let order: Order
     let refetchStrategy: RefetchStrategy
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
 
@@ -123,5 +135,6 @@ struct PostOrderFeedbackOperation: UpdateOperation {
     let order: Order
     let rating: FeedbackRating
     let comment: String
+    let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
