@@ -319,15 +319,12 @@ class UpdateController {
     
 
     private var queuedOperations: [any UpdateOperation] = []
-    private var runningOperation: (any UpdateOperation)?
+    private var runningOperations: [any UpdateOperation] = []
     
     
     private func scheduledOrRunningOperation(matching predicate: (UpdateOperation) -> Bool) -> UpdateOperation? {
         
-        var ops = queuedOperations
-        if let op = runningOperation { ops.append(op) }
-        
-        return ops.first(where: { predicate($0) })
+        (queuedOperations + runningOperations).first(where: { predicate($0) })
     }
     
     
@@ -367,17 +364,22 @@ class UpdateController {
     
     private func dequeue() async {
             
-        guard runningOperation == nil, queuedOperations.count > 0 else {
+        guard runningOperations.isEmpty, queuedOperations.count > 0 else {
             return
         }
+        
+        let operation = queuedOperations.first!
             
-        let operation = queuedOperations.removeFirst()
+        queuedOperations.removeAll { $0.id == operation.id }
+        runningOperations.append(operation)
         
-        runningOperation = operation
-        await run(operation)
-        runningOperation = nil
-        
-        await dequeue()
+        Task {
+            
+            await run(operation)
+            runningOperations.removeAll { $0.id == operation.id }
+            
+            await dequeue()
+        }
     }
     
     

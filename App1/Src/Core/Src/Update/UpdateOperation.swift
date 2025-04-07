@@ -5,13 +5,14 @@ import Foundation
 
 protocol UpdateOperation {
     
+    var id: UUID { get }
     var operationTag: OperationTag? { get }
     var continuation: CheckedContinuation<(),Never> { get }
 }
 
 
 extension UpdateOperation {
-    
+
     func resumeContinuation() {
         continuation.resume()
     }
@@ -23,6 +24,7 @@ extension UpdateOperation {
 
 struct LoadColorsOperation: UpdateOperation {
     
+    let id = UUID()
     let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
 }
@@ -33,6 +35,7 @@ struct LoadColorsOperation: UpdateOperation {
 
 struct LoadInventoriesOperation: UpdateOperation {
     
+    let id = UUID()
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
@@ -41,6 +44,7 @@ struct LoadInventoriesOperation: UpdateOperation {
 
 struct LoadInventoryOperation: UpdateOperation {
     
+    let id = UUID()
     let inventoryId: InventoryItem.ID
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
@@ -53,6 +57,7 @@ struct LoadInventoryOperation: UpdateOperation {
 
 struct LoadOrdersOperation: UpdateOperation {
     
+    let id = UUID()
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
@@ -61,6 +66,7 @@ struct LoadOrdersOperation: UpdateOperation {
 
 struct LoadOrderDetailsOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
@@ -70,6 +76,7 @@ struct LoadOrderDetailsOperation: UpdateOperation {
 
 struct LoadOrderItemsOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
@@ -82,6 +89,7 @@ struct LoadOrderItemsOperation: UpdateOperation {
 
 struct UpdateOrderStatusOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let status: OrderStatus
     let operationTag: OperationTag?
@@ -91,6 +99,7 @@ struct UpdateOrderStatusOperation: UpdateOperation {
 
 struct UpdateOrderTrackingNoOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let trackingNo: TrackingNo
     let operationTag: OperationTag?
@@ -100,6 +109,7 @@ struct UpdateOrderTrackingNoOperation: UpdateOperation {
 
 struct SendDriveThruOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let operationTag: OperationTag?
     let continuation: CheckedContinuation<(),Never>
@@ -111,6 +121,7 @@ struct SendDriveThruOperation: UpdateOperation {
 
 struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
     
+    let id = UUID()
     let trackingNo: TrackingNo
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
@@ -123,6 +134,7 @@ struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
 
 struct LoadOrderFeedbacksOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
@@ -132,6 +144,7 @@ struct LoadOrderFeedbacksOperation: UpdateOperation {
 
 struct PostOrderFeedbackOperation: UpdateOperation {
     
+    let id = UUID()
     let order: Order
     let rating: FeedbackRating
     let comment: String
