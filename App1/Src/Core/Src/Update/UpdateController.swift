@@ -26,9 +26,7 @@ class UpdateController {
     
     func loadColors(_ operationTag: OperationTag? = nil) async {
      
-        await enqueue { continuation in
-            LoadColorsOperation(operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(LoadColorsOperation(operationTag: operationTag))
     }
     
     
@@ -43,9 +41,7 @@ class UpdateController {
     
     func loadInventories(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
             
-        await enqueue { continuation in
-            LoadInventoriesOperation(refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(LoadInventoriesOperation(refetchStrategy: refetchStrategy, operationTag: operationTag))
     }
     
     
@@ -59,9 +55,7 @@ class UpdateController {
     
     func loadInventory(withId inventoryId: InventoryItem.ID, _ refetchStrategy: RefetchStrategy) async {
         
-        await enqueue { continuation in
-            LoadInventoryOperation(inventoryId: inventoryId, refetchStrategy: refetchStrategy, operationTag: nil, continuation: continuation)
-        }
+        await enqueue(LoadInventoryOperation(inventoryId: inventoryId, refetchStrategy: refetchStrategy, operationTag: nil))
     }
     
     
@@ -87,9 +81,7 @@ class UpdateController {
     
     func loadOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await enqueue { continuation in
-            LoadOrdersOperation(refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(LoadOrdersOperation(refetchStrategy: refetchStrategy, operationTag: operationTag))
     }
     
     
@@ -103,9 +95,7 @@ class UpdateController {
     
     func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await enqueue { continuation in
-            LoadOrderDetailsOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(LoadOrderDetailsOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag))
     }
     
     
@@ -128,9 +118,7 @@ class UpdateController {
     
     func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await enqueue { continuation in
-            LoadOrderItemsOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(LoadOrderItemsOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag))
     }
     
     
@@ -156,9 +144,7 @@ class UpdateController {
     
     func updateStatus(of order: Order, to status: OrderStatus) async {
         
-        await enqueue { continuation in
-            UpdateOrderStatusOperation(order: order, status: status, operationTag: nil, continuation: continuation)
-        }
+        await enqueue(UpdateOrderStatusOperation(order: order, status: status, operationTag: nil))
     }
     
     
@@ -186,9 +172,7 @@ class UpdateController {
     
     func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
-        await enqueue { continuation in
-            UpdateOrderTrackingNoOperation(order: order, trackingNo: trackingNo, operationTag: nil, continuation: continuation)
-        }
+        await enqueue(UpdateOrderTrackingNoOperation(order: order, trackingNo: trackingNo, operationTag: nil))
     }
     
     
@@ -208,9 +192,7 @@ class UpdateController {
     
     func sendDriveThru(for order: Order) async {
         
-        await enqueue { continuation in
-            SendDriveThruOperation(order: order, operationTag: nil, continuation: continuation)
-        }
+        await enqueue(SendDriveThruOperation(order: order, operationTag: nil))
     }
     
     
@@ -233,9 +215,7 @@ class UpdateController {
     
     func loadLaPosteTrackingStatus(forTrackingNo trackingNo: TrackingNo, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await enqueue { continuation in
-            UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(UpdateLaPosteTrackingStatusOperation(trackingNo: trackingNo, refetchStrategy: refetchStrategy, operationTag: operationTag))
     }
     
     
@@ -261,9 +241,7 @@ class UpdateController {
     
     func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await enqueue { continuation in
-            LoadOrderFeedbacksOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag, continuation: continuation)
-        }
+        await enqueue(LoadOrderFeedbacksOperation(order: order, refetchStrategy: refetchStrategy, operationTag: operationTag))
     }
     
     
@@ -286,9 +264,7 @@ class UpdateController {
     
     func postFeedback(for order: Order, rating: FeedbackRating, comment: String) async {
         
-        await enqueue { continuation in
-            PostOrderFeedbackOperation(order: order, rating: rating, comment: comment, operationTag: nil, continuation: continuation)
-        }
+        await enqueue(PostOrderFeedbackOperation(order: order, rating: rating, comment: comment, operationTag: nil))
     }
     
     
@@ -321,6 +297,8 @@ class UpdateController {
     private var queuedOperations: [any UpdateOperation] = []
     private var runningOperations: [any UpdateOperation] = []
     
+    private var continuationsByOperationId: [UpdateOperationID: [CheckedContinuation<(),Never>]] = [:]
+    
     
     private func scheduledOrRunningOperation(matching predicate: (UpdateOperation) -> Bool) -> UpdateOperation? {
         
@@ -346,10 +324,12 @@ class UpdateController {
     }
     
     
-    private func enqueue(_ builder: (CheckedContinuation<(),Never>) -> UpdateOperation) async {
+    private func enqueue(_ operation: UpdateOperation) async {
         
         await withCheckedContinuation { continuation in
-            enqueue(builder(continuation))
+
+            continuationsByOperationId[operation.id] = [continuation]
+            enqueue(operation)
         }
     }
     
@@ -363,19 +343,41 @@ class UpdateController {
     
     
     private func dequeue() async {
-            
-        guard runningOperations.isEmpty, queuedOperations.count > 0 else {
-            return
-        }
         
-        let operation = queuedOperations.first!
+        // TODO: dequeue write operations first
+        
+        for candidateOperation in queuedOperations {
             
+            if let same = runningOperations.first(where: { operation(candidateOperation, isSameAs: $0) }) {
+             
+                drop(candidateOperation, giveContinuationToRunningOperationWithId: same.id)
+                continue
+            }
+            
+            if runningOperations.isEmpty || runningOperations.allSatisfy({ operation($0, canRunInParallelWith: candidateOperation) }) {
+                
+                start(candidateOperation)
+            }
+        }
+    }
+    
+    
+    private func drop(_ operation: any UpdateOperation, giveContinuationToRunningOperationWithId runningOperationId: UpdateOperationID) {
+        
+        queuedOperations.removeAll { $0.id == operation.id }
+        
+        continuationsByOperationId[runningOperationId]!.append(contentsOf: continuationsByOperationId[operation.id]!)
+    }
+    
+    
+    private func start(_ operation: any UpdateOperation) {
+        
         queuedOperations.removeAll { $0.id == operation.id }
         runningOperations.append(operation)
         
         Task {
             
-            await run(operation)
+            await runAction(for: operation)
             runningOperations.removeAll { $0.id == operation.id }
             
             await dequeue()
@@ -383,7 +385,23 @@ class UpdateController {
     }
     
     
-    private func run(_ operation: any UpdateOperation) async {
+    func operation(_ operationA: UpdateOperation, isSameAs operationB: UpdateOperation) -> Bool {
+        
+        if operationA is LoadOrdersOperation, operationB is LoadOrdersOperation {
+            return true
+        }
+            
+        return false
+    }
+    
+    
+    private func operation(_ operationA: UpdateOperation, canRunInParallelWith operationB: UpdateOperation) -> Bool {
+        
+        return true
+    }
+    
+    
+    private func runAction(for operation: any UpdateOperation) async {
         
         if operation is LoadColorsOperation {
             
@@ -452,7 +470,16 @@ class UpdateController {
             fatalError("Unknow update operation: \(operation)")
         }
         
-        operation.resumeContinuation()
+        resumeContinuations(for: operation)
+    }
+    
+    
+    private func resumeContinuations(for operation: UpdateOperation) {
+        
+        for continuation in continuationsByOperationId[operation.id] ?? [] {
+            continuation.resume()
+        }
+        continuationsByOperationId[operation.id]?.removeAll()
     }
     
     

@@ -3,19 +3,13 @@ import Foundation
 
 
 
+typealias UpdateOperationID = UUID
+
+
 protocol UpdateOperation {
     
-    var id: UUID { get }
+    var id: UpdateOperationID { get }
     var operationTag: OperationTag? { get }
-    var continuation: CheckedContinuation<(),Never> { get }
-}
-
-
-extension UpdateOperation {
-
-    func resumeContinuation() {
-        continuation.resume()
-    }
 }
 
 
@@ -24,9 +18,8 @@ extension UpdateOperation {
 
 struct LoadColorsOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
@@ -35,20 +28,18 @@ struct LoadColorsOperation: UpdateOperation {
 
 struct LoadInventoriesOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
 struct LoadInventoryOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let inventoryId: InventoryItem.ID
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
@@ -57,30 +48,27 @@ struct LoadInventoryOperation: UpdateOperation {
 
 struct LoadOrdersOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
 struct LoadOrderDetailsOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
 struct LoadOrderItemsOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
@@ -89,30 +77,27 @@ struct LoadOrderItemsOperation: UpdateOperation {
 
 struct UpdateOrderStatusOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let status: OrderStatus
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
 struct UpdateOrderTrackingNoOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let trackingNo: TrackingNo
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
 struct SendDriveThruOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
@@ -121,11 +106,10 @@ struct SendDriveThruOperation: UpdateOperation {
 
 struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let trackingNo: TrackingNo
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
@@ -134,20 +118,18 @@ struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
 
 struct LoadOrderFeedbacksOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
 
 
 struct PostOrderFeedbackOperation: UpdateOperation {
     
-    let id = UUID()
+    let id = UpdateOperationID()
     let order: Order
     let rating: FeedbackRating
     let comment: String
     let operationTag: OperationTag?
-    let continuation: CheckedContinuation<(),Never>
 }
