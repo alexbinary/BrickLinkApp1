@@ -139,7 +139,7 @@ class OrderCoreController {
         
         let items = items(for: order)
         
-        return itemsIds.map { id in items.first { $0.id == id }! }
+        return itemsIds.compactMap { id in items.first { $0.id == id } }
     }
     
     
