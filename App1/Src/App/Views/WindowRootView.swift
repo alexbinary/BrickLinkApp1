@@ -37,14 +37,15 @@ struct WindowRootView: View {
             
             WindowContentView()
         }
-        .environment(navigationController)
-        
         .toolbar {
             
             if isLoading {
                 Text("updating...")
             }
+            
+            ReloadButton()
         }
+        .environment(navigationController)
     }
     
     

@@ -10,14 +10,17 @@ public class FeedbackStore {
     
     private let feedbackCoreController: FeedbackCoreController
     private let feedbackPostController: FeedbackPostController
+    private let orderCoreController: OrderCoreController
     
     
     init(
         _ feedbackCoreController: FeedbackCoreController,
-        _ feedbackPostController: FeedbackPostController
+        _ feedbackPostController: FeedbackPostController,
+        _ orderCoreController: OrderCoreController
     ) {
         self.feedbackCoreController = feedbackCoreController
         self.feedbackPostController = feedbackPostController
+        self.orderCoreController = orderCoreController
     }
     
     
@@ -57,6 +60,12 @@ public class FeedbackStore {
     // MARK: - Refresh feedbacks
     
     
+    func order(withId orderId: Order.ID) -> Order? {
+        
+        orderCoreController.order(withId: orderId)
+    }
+    
+    
     func hasFeedbacks(for order: Order) -> Bool {
         
         feedbackCoreController.hasFeedbacks(for: order)
@@ -69,11 +78,35 @@ public class FeedbackStore {
     }
     
     
-    public func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
         let strategy = hasFeedbacks(for: order) ? refetchStrategy : .forceRefetch
         
         await loadFeedbacks(for: order, strategy)
+    }
+    
+    
+    public func softRefreshFeedbacks(for order: Order) async {
+        
+        await refreshFeedbacks(for: order, .refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func softRefreshFeedbacks(forOrderWithId orderId: Order.ID) async {
+        
+        await softRefreshFeedbacks(for: order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefreshFeedbacks(for order: Order) async {
+        
+        await refreshFeedbacks(for: order, .forceRefetch)
+    }
+    
+    
+    public func hardRefreshFeedbacks(forOrderWithId orderId: Order.ID) async {
+        
+        await hardRefreshFeedbacks(for: order(withId: orderId)!)
     }
     
     

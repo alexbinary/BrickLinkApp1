@@ -91,11 +91,23 @@ public class InventoryStore {
     // MARK: Refresh
     
     
-    public func refreshInventories(_ refetchStrategy: RefetchStrategy) async {
+    func refreshInventories(_ refetchStrategy: RefetchStrategy) async {
         
         let strategy = hasInventories ? refetchStrategy : .forceRefetch
         
         await loadInventories(strategy)
+    }
+    
+    
+    public func softRefreshInventories() async {
+     
+        await refreshInventories(.refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func hardRefreshInventories() async {
+     
+        await refreshInventories(.forceRefetch)
     }
     
     

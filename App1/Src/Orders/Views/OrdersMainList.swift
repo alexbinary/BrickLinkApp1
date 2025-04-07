@@ -14,10 +14,9 @@ struct OrdersMainList: View {
     var nav
     
     
-    @State var refreshing: Bool = false
     @State var actionPopoverPresented: Bool = false
     @State var searchText = ""
-    
+
     
     var body: some View {
         
@@ -39,9 +38,7 @@ struct OrdersMainList: View {
         .navigationDestination(for: Order.ID.self) { orderId in
             OrderDetailView(orderStore.order(withId: orderId)!)
         }
-        .task { softRefresh() }
         .toolbar {
-            
             Button {
                 actionPopoverPresented.toggle()
             } label: {
@@ -50,27 +47,8 @@ struct OrdersMainList: View {
             .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
                 OrdersActionsSheet(orders: orders)
             }
-            
-            Menu {
-                Button("Soft refresh orders") { softRefresh() }
-                Button("Hard refresh orders") { hardRefresh() }
-                Button("Reload inventory") { /*TODO*/ }
-            } label: { Text("􀅈").padding(.horizontal) }
-            primaryAction: { softRefresh() }
         }
-    }
-    
-    
-    func softRefresh() {
-        
-        // TODO: invalidate orders and related data
-        Task { await orderStore.refreshOrders(.refetchOnlyIfInvalidated) }
-    }
-    
-    
-    func hardRefresh() {
-        
-        Task { await orderStore.refreshOrders(.forceRefetch) }
+        .task { await orderStore.softRefreshOrders() }
     }
     
     

@@ -50,8 +50,6 @@ struct OrderDetailFeedbackView: View {
             }
         }
         .padding()
-        .task {
-            await feedbackStore.refreshFeedbacks(for: order, .refetchOnlyIfInvalidated)
-        }
+        .task { await feedbackStore.softRefreshFeedbacks(for: order) }
     }
 }

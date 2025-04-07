@@ -14,9 +14,7 @@ struct MainApp: App {
         WindowGroup {
             
             WindowRootView()
-                
                 .inject(env)
-
                 .task { await env.catalog.loadColors() }
         }
     }

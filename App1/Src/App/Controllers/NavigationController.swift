@@ -11,11 +11,18 @@ class NavigationController {
     var sidebar: SidebarItem = Secrets.Defaults.selectedSidebarItem
     
     
-    var orders: [Order.ID] = Secrets.Defaults.ordersActiveNavigationPath
+    var orderStack: [Order.ID] = Secrets.Defaults.ordersActiveNavigationPath {
+        didSet {
+            orderDetailTab = nil
+        }
+    }
     
     func push(_ order: Order) {
-        orders.append(order.id)
+        orderStack.append(order.id)
     }
+    
+    
+    var orderDetailTab: OrderDetailTab? = Secrets.Defaults.orderDetailActiveTab
     
     
     var resultSelectedOrderIds: Set<Order.ID> = Secrets.Defaults.resultSelectedOrderIds

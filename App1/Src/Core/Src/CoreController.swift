@@ -65,7 +65,7 @@ public class CoreController {
         pickingStore = PickingStore(pickingCoreController, pickingProgressCoreController, orderCoreController)
         shippingStore = ShippingStore(shippingCoreController, orderCoreController)
         trackingStore = TrackingStore(trackingCoreController, trackingMiddleController)
-        feedbackStore = FeedbackStore(feedbackCoreController, feedbackPostController)
+        feedbackStore = FeedbackStore(feedbackCoreController, feedbackPostController, orderCoreController)
         refundStore = RefundStore(refundCoreController)
         
         transactionStore = TransactionStore(transactionCoreController)

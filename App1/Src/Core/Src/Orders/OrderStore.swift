@@ -234,7 +234,7 @@ public class OrderStore {
     }
     
     
-    public func refreshOrders(_ refetchStrategy: RefetchStrategy) async {
+    func refreshOrders(_ refetchStrategy: RefetchStrategy) async {
         
         await loadOrders(refetchStrategy)
         
@@ -255,7 +255,49 @@ public class OrderStore {
     }
     
     
-    public func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    public func softRefreshOrders() async {
+        
+        await refreshOrders(.refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func hardRefreshOrders() async {
+        
+        await refreshOrders(.forceRefetch)
+    }
+    
+    
+    func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy) async {
+        
+        await loadOrders(refetchStrategy)
+    }
+    
+    
+    public func softRefresh(_ order: Order) async {
+        
+        await refresh(order, .refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func softRefresh(orderWithId orderId: Order.ID) async {
+        
+        await softRefresh(order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefresh(_ order: Order) async {
+        
+        await refresh(order, .forceRefetch)
+    }
+    
+    
+    public func hardRefresh(orderWithId orderId: Order.ID) async {
+        
+        await hardRefresh(order(withId: orderId)!)
+    }
+    
+    
+    func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
         let strategy = hasDetails(for: order) ? refetchStrategy : .forceRefetch
         
@@ -263,11 +305,59 @@ public class OrderStore {
     }
     
     
-    public func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy) async {
+    public func softRefreshDetails(for order: Order) async {
+        
+        await refreshDetails(for: order, .refetchOnlyIfInvalidated)
+    }
+
+
+    public func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
+        
+        await softRefreshDetails(for: order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefreshDetails(for order: Order) async {
+        
+        await refreshDetails(for: order, .forceRefetch)
+    }
+
+
+    public func hardRefreshDetails(forOrderWithId orderId: Order.ID) async {
+        
+        await hardRefreshDetails(for: order(withId: orderId)!)
+    }
+    
+    
+    func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy) async {
         
         let strategy = hasItems(for: order) ? refetchStrategy : .forceRefetch
         
         await loadItems(for: order, strategy)
+    }
+    
+    
+    public func softRefreshItems(for order: Order) async {
+        
+        await refreshItems(for: order, .refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func softRefreshItems(forOrderWithId orderId: Order.ID) async {
+        
+        await softRefreshItems(for: order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefreshItems(for order: Order) async {
+        
+        await refreshItems(for: order, .forceRefetch)
+    }
+    
+    
+    public func hardRefreshItems(forOrderWithId orderId: Order.ID) async {
+        
+        await hardRefreshItems(for: order(withId: orderId)!)
     }
     
     

@@ -13,12 +13,12 @@ struct WindowContentView: View {
     var body: some View {
         
         @Bindable var nav = nav
-        
+         
         switch nav.sidebar {
             
         case .orders:
             
-            NavigationStack(path: $nav.orders) {
+            NavigationStack(path: $nav.orderStack) {
                 OrdersMainList()
             }
             

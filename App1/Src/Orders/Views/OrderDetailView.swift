@@ -10,6 +10,9 @@ struct OrderDetailView: View {
     @Environment(OrderStore.self)
     var orderStore
     
+    @Environment(NavigationController.self)
+    var nav
+    
     
     let order: Order
     
@@ -18,62 +21,58 @@ struct OrderDetailView: View {
     }
     
     
-    @State private var columnWidth: CGFloat?
+    @State var columnWidth: CGFloat?
     
     
     var body: some View {
         
-        Group {
+        HStack(alignment: .top, spacing: 12) {
             
-            HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 12) {
                 
-                VStack(alignment: .leading, spacing: 12) {
-                    
-                    OrderIdentityView(order)
-                        .padding()
-                        .equalWidths()
-                        .frame(width: columnWidth, alignment: .leading)
-                        .roundedContainer(style: .primary)
-                        .padding(.top, 10)
-                    
-                    OrderChecklistView(order)
-                        .padding()
-                        .equalWidths()
-                        .frame(width: columnWidth, alignment: .leading)
-                        .roundedContainer(style: .primary)
-                }
-                .equalWidths($columnWidth)
+                OrderIdentityView(order)
+                    .padding()
+                    .equalWidths()
+                    .frame(width: columnWidth, alignment: .leading)
+                    .roundedContainer(style: .primary)
+                    .padding(.top, 10)
                 
-                TabView(
-//                        selection: .constant("shipping")
-                ) {
-                    ScrollView { OrderDetailGeneralView(order) }
-                        .padding()
-                        .tabItem { Text("􀅴 General") }.tag("general")
-                    
-                    OrderDetailPickingView(order)
-                        .tabItem { Text("􀈥 Picking") }.tag("picking")
-                    
-                    ScrollView { OrderDetailShippingView(order) }
-                        .tabItem { Text("􀐚 Shipping") }.tag("shipping")
-                    
-                    ScrollView { OrderDetailFeedbackView(order) }
-                        .tabItem { Text("􀉿 Feedback") }.tag("feedback")
-                    
-                    ScrollView { OrderDetailRefundView(order) }
-                        .padding()
-                        .tabItem { Text("􂈚 Refunds") }.tag("refunds")
-                    
-                    ScrollView { OrderDetailComptaView(order) }
-                        .padding()
-                        .tabItem { Text("􀖧 Compta") }.tag("compta")
-                }
+                OrderChecklistView(order)
+                    .padding()
+                    .equalWidths()
+                    .frame(width: columnWidth, alignment: .leading)
+                    .roundedContainer(style: .primary)
             }
+            .equalWidths($columnWidth)
+            
+            @Bindable var nav = nav
+            
+            TabView(selection: $nav.orderDetailTab) {
+                
+                ScrollView { OrderDetailGeneralView(order) }
+                    .padding()
+                    .tabItem { Text("􀅴 General") }.tag(OrderDetailTab.general)
+                
+                OrderDetailPickingView(order)
+                    .tabItem { Text("􀈥 Picking") }.tag(OrderDetailTab.picking)
+                
+                ScrollView { OrderDetailShippingView(order) }
+                    .tabItem { Text("􀐚 Shipping") }.tag(OrderDetailTab.shipping)
+                
+                ScrollView { OrderDetailFeedbackView(order) }
+                    .tabItem { Text("􀉿 Feedback") }.tag(OrderDetailTab.feedback)
+                
+                ScrollView { OrderDetailRefundView(order) }
+                    .padding()
+                    .tabItem { Text("􂈚 Refunds") }.tag(OrderDetailTab.refunds)
+                
+                ScrollView { OrderDetailComptaView(order) }
+                    .padding()
+                    .tabItem { Text("􀖧 Compta") }.tag(OrderDetailTab.compta)
+            }
+            
         }
         .padding()
-        .onChange(of: order.id, initial: true) {
-            Task { await orderStore.refreshDetails(for: order, .refetchOnlyIfInvalidated) }
-        }
         .navigationTitle("Order \(order.id)")
     }
 }

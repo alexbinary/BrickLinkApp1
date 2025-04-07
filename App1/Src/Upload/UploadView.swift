@@ -17,6 +17,7 @@ struct UploadView: View {
     var body: some View {
      
         TabView {
+            
             VStack {
                 if addViewVisible { UploadAddView().padding() }
                 ScrollView { UploadItemsView() }
@@ -31,8 +32,6 @@ struct UploadView: View {
             .tabItem { Text("􀐫 History") }.tag("history")
         }
         .navigationTitle("Upload")
-        .onAppear { Task {
-            await inventoryStore.reloadInventories()
-        }}
+        .task { await inventoryStore.softRefreshInventories() }
     }
 }
