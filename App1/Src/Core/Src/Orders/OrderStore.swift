@@ -222,6 +222,22 @@ public class OrderStore {
     }
     
     
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
+        
+        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy)
+    }
+    
+    
+    func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
+        
+        return (
+            order.status.isOneOf(.completed, .cancelled, .purged)
+            &&
+            order.dateStatusChanged.days(to: Date()) > 30
+        )
+    }
+    
+    
     func orderNeedsRefreshLaPosteTrackingStatus(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .inTransit
@@ -361,107 +377,6 @@ public class OrderStore {
     }
     
     
-    // MARK: - Reload
-    
-    
-    public func feedbacks(for order: Order) -> [Feedback] {
-        
-        feedbackCoreController.feedbacks(for: order)
-    }
-    
-    
-    public func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
-        
-        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy)
-    }
-    
-    
-    public func loadFeedbacksIfMissing(for order: Order) async {
-        
-        await feedbackCoreController.loadFeedbacksIfMissing(for: order)
-    }
-    
-    
-    public func forceRefresh(_ order: Order) async {
-        
-        await loadDetails(for: order)
-        await loadItems(for: order)
-        await loadFeedbacks(for: order)
-    }
-    
-    
-    public func loadMissingOrders() async {
-        
-        for order in orders {
-            
-            await loadDetailsIfMissing(for: order)
-            await loadItemsIfMissing(for: order)
-            await loadFeedbacksIfMissing(for: order)
-        }
-    }
-    
-    
-    public func refreshAllOrders() async {
-        
-        for order in orders {
-            
-            await refresh(order)
-        }
-    }
-    
-    
-    public func refresh(_ order: Order) async {
-        
-        if shouldRefresh(order) {
-            
-            await loadDetails(for: order)
-            await loadItems(for: order)
-            await loadFeedbacks(for: order)
-        }
-    }
-    
-    
-    public func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
-        
-        return (
-            order.status.isOneOf(.completed, .cancelled, .purged)
-            &&
-            order.dateStatusChanged.days(to: Date()) > 30
-        )
-    }
-    
-    
-    public func shouldRefresh(_ order: Order) -> Bool {
-        
-        if orderIsClosedForMoreThan30Days(order) {
-            
-            guard
-                let _ = details(for: order)
-            else {
-                return true
-            }
-            
-            let orderItems = items(for: order)
-            if orderItems.isEmpty {
-                
-                return true
-            }
-            
-            let feedbacks = feedbacks(for: order)
-            if !feedbacks.hasSellerFeedback() {
-                
-                return true
-            }
-            
-            return false
-            
-        } else {
-        
-            return true
-        }
-    }
-    
-    
     // MARK: - Macro status
     
     
@@ -545,46 +460,6 @@ public class OrderStore {
         })
         
         return sections
-    }
-    
-    
-    public func reloadOrders() async {
-        
-        await orderCoreController.reloadOrders()
-    }
-    
-    
-    public func reloadLaPosteTrackingStatus(for order: Order) async {
-        
-        await trackingMiddleController.reloadLaPosteTrackingStatus(for: order)
-    }
-    
-    
-    public func reloadFeedbacks(for order: Order) async {
-        
-        await feedbackCoreController.reloadFeedbacks(for: order)
-    }
-    
-    
-    public func refreshOrdersMainList() async {
-        
-        await reloadOrders()
-        
-        let allOrders = orders
-        
-        let ordersThatNeedRefreshLaPosteTrackingStatus = allOrders
-            .filter { macroStatus(for: $0) == .inTransit }
-        
-        for order in ordersThatNeedRefreshLaPosteTrackingStatus {
-            await reloadLaPosteTrackingStatus(for: order)
-        }
-        
-        let ordersThatNeedRefreshFeedback = allOrders
-            .filter { macroStatus(for: $0).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback) }
-        
-        for order in ordersThatNeedRefreshFeedback {
-            await reloadFeedbacks(for: order)
-        }
     }
     
     
