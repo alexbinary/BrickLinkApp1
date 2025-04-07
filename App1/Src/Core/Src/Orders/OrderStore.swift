@@ -93,12 +93,6 @@ public class OrderStore {
     }
     
     
-    public func loadDetailsIfMissing(for order: Order) async {
-        
-        await orderCoreController.loadDetailsIfMissing(for: order)
-    }
-    
-    
     public var isLoadingOrderDetails: Bool {
         
         orderCoreController.isLoadingOrderDetails

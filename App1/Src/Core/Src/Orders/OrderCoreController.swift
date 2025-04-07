@@ -39,24 +39,6 @@ class OrderCoreController {
     }
     
     
-    func loadOrdersIfMissing() async {
-        
-        if orders.isEmpty {
-        
-            await loadOrders()
-        }
-    }
-    
-    
-    func reloadOrders() async {
-        
-        if !orders.isEmpty {
-        
-            await loadOrders()
-        }
-    }
-    
-    
     var isLoadingOrders: Bool {
         
         updateController.isRunningOrIsScheduledToRun_loadOrders
@@ -87,24 +69,6 @@ class OrderCoreController {
     func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch) async {
         
         await updateController.loadDetails(for: order, refetchStrategy)
-    }
-    
-    
-    func loadDetailsIfMissing(for order: Order) async {
-        
-        if !orderDetails.contains(where: { $0.id == order.id }) {
-            
-            await loadDetails(for: order, .forceRefetch)
-        }
-    }
-    
-    
-    func reloadDetails(for order: Order) async {
-        
-        if orderDetails.contains(where: { $0.id == order.id }) {
-            
-            await loadDetails(for: order)
-        }
     }
     
     
