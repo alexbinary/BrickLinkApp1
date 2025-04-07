@@ -248,19 +248,25 @@ public class OrderStore {
         
         await loadOrders(refetchStrategy)
         
-        for order in orders where !hasDetails(for: order)
-        || refetchStrategy == .forceRefetch && !orderIsClosedForMoreThan30Days(order) {
-            Task { await loadDetails(for: order, .forceRefetch) }
-        }
-        // TODO: wait for all details to finish before continuing
-        // orderNeedsRefreshLaPosteTrackingStatus depends on it
-        
-        for order in orders where orderNeedsRefreshLaPosteTrackingStatus(order) {
-            Task { await loadLaPosteTrackingStatus(for: order, refetchStrategy) }
-        }
-
-        for order in orders where orderNeedsRefreshFeedback(order) {
-            Task { await loadFeedbacks(for: order, refetchStrategy) }
+        await withTaskGroup { group in
+            
+            for order in orders {
+                group.addTask {
+                    
+                    if !(await self.hasDetails(for: order)) {
+                        await self.loadDetails(for: order, .forceRefetch)
+                    }
+                    if !(await self.orderIsClosedForMoreThan30Days(order)) && refetchStrategy == .forceRefetch {
+                        await self.loadDetails(for: order, .forceRefetch)
+                    }
+                    if await self.orderNeedsRefreshLaPosteTrackingStatus(order) {
+                        Task { await self.loadLaPosteTrackingStatus(for: order, refetchStrategy) }
+                    }
+                    if await self.orderNeedsRefreshFeedback(order) {
+                        Task { await self.loadFeedbacks(for: order, refetchStrategy) }
+                    }
+                }
+            }
         }
     }
     
