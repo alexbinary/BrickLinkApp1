@@ -107,7 +107,7 @@ struct ReloadButton: View {
         
         case .inventoryAndColors:
             
-            Task { await inventoryStore.softRefreshInventories() }
+            Task { await inventoryStore.hardRefreshInventories() }
             Task { await catalog.loadColors() }
         
         case .orders:
