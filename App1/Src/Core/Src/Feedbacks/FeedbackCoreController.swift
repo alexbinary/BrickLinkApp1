@@ -60,15 +60,6 @@ class FeedbackCoreController {
     }
     
     
-    func reloadFeedbacks(for order: Order) async {
-        
-        if hasFeedbacks(for: order) {
-            
-            await loadFeedbacks(for: order)
-        }
-    }
-    
-    
     var isLoadingOrderFeedbacks: Bool {
         
         updateController.isRunningOrIsScheduledToRun_loadOrderFeedbacks

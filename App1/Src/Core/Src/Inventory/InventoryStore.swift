@@ -64,12 +64,6 @@ public class InventoryStore {
     }
     
     
-    public func reloadInventories() async {
-        
-        await inventoryCoreController.reloadInventories()
-    }
-    
-    
     public var isLoadingInventories: Bool {
         
         inventoryCoreController.isLoadingInventories

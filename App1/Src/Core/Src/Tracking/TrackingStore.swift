@@ -25,12 +25,6 @@ public class TrackingStore {
     }
     
     
-    public func reloadLaPosteTrackingStatus(for order: Order) async {
-        
-        await trackingMiddleController.reloadLaPosteTrackingStatus(for: order)
-    }
-    
-    
     public var isLoadingLaPosteTrackingStatus: Bool {
         
         trackingCoreController.isLoadingLaPosteTrackingStatus

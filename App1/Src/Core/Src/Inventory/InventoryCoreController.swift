@@ -101,24 +101,6 @@ class InventoryCoreController {
     }
     
     
-    func reloadInventories() async {
-        
-        if !dataStore.inventories.isEmpty {
-        
-            await loadInventories()
-        }
-    }
-    
-    
-    func reloadInventory(withId id: InventoryItem.ID) async {
-        
-        if dataStore.inventories.contains(where: { $0.id == id }) {
-            
-            await loadInventory(withId: id)
-        }
-    }
-    
-    
     var isLoadingInventories: Bool {
         
         updateController.isRunningOrIsScheduledToRun_loadInventories

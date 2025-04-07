@@ -49,10 +49,4 @@ class TrackingMiddleController {
         }
         return false
     }
-    
-    
-    func reloadLaPosteTrackingStatus(for order: Order) async {
-        
-        await loadLaPosteTrackingStatus(for: order, .forceRefetch)
-    }
 }
