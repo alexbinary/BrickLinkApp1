@@ -36,73 +36,73 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderIsValidatedWithoutIncomeTransaction(_ order: Order) -> Bool {
+    private func orderIsValidatedWithoutIncomeTransaction(_ order: Order) -> Bool {
         
         transactionCoreController.orderIsValidatedWithoutIncomeTransaction(order)
     }
     
     
-    func incomeTransactions(for order: Order) -> [Transaction] {
+    private func incomeTransactions(for order: Order) -> [Transaction] {
         
         transactionCoreController.incomeTransactions(for: order)
     }
     
     
-    func shippingTransactions(for order: Order) -> [Transaction] {
+    private func shippingTransactions(for order: Order) -> [Transaction] {
         
         transactionCoreController.shippingTransactions(for: order)
     }
     
     
-    func orderIsValidatedWithoutShippingTransaction(_ order: Order) -> Bool {
+    private func orderIsValidatedWithoutShippingTransaction(_ order: Order) -> Bool {
         
         transactionCoreController.orderIsValidatedWithoutShippingTransaction(order)
     }
     
     
-    func details(for order: Order) -> OrderDetails? {
+    private func details(for order: Order) -> OrderDetails? {
         
         orderCoreController.details(for: order)
     }
     
     
-    func stamping(for order: Order) -> String? {
+    private func stamping(for order: Order) -> String? {
         
         shippingCoreController.confirmedStamping(for: order)
     }
     
     
-    func orderIsValidatedWithoutStamping(_ order: Order) -> Bool {
+    private func orderIsValidatedWithoutStamping(_ order: Order) -> Bool {
         
         shippingCoreController.orderIsValidatedWithoutStamping(order)
     }
     
     
-    func items(for order: Order) -> [OrderItem] {
+    private func items(for order: Order) -> [OrderItem] {
         
         orderCoreController.items(for: order)
     }
     
     
-    func pickedItemIds(for order: Order) -> [OrderItem.ID] {
+    private func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
         pickingCoreController.pickedItemIds(for: order)
     }
     
     
-    func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
+    private func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
         pickingCoreController.verifiedItemIds(for: order)
     }
     
     
-    func feedbacks(for order: Order) -> [Feedback] {
+    private func feedbacks(for order: Order) -> [Feedback] {
         
         feedbackCoreController.feedbacks(for: order)
     }
     
     
-    func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
+    private func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
         feedbackCoreController.orderIsValidatedWithoutFeedback(order)
     }
