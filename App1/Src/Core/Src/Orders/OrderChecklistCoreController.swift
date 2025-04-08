@@ -235,47 +235,4 @@ class OrderChecklistCoreController {
         
         order.unchangedFor30Days
     }
-
-
-    func checklist(for order: Order) -> Checklist {
-        
-        Checklist(
-            payment: checklist_payment(order),
-            incomeTransaction: checklist_incomeTransaction(order),
-            shippingTransaction: checklist_shippingTransaction(order),
-            picking: checklist_picking(order),
-            verification: checklist_verification(order),
-            packed: checklist_packed(order),
-            shipped: checklist_shipped(order),
-            trackingNo: checklist_trackingNo(order),
-            driveThru: checklist_driveThru(order),
-            stamping: checklist_stamping(order),
-            received: checklist_received(order),
-            completed: checklist_completed(order),
-            buyerFeedback: checklist_buyerFeedback(order),
-            sellerFeedback: checklist_sellerFeedback(order),
-            unchangedFor30Days: checklist_unchangedFor30Days(order)
-        )
-    }
-}
-
-
-
-struct Checklist {
-    
-    let payment: Bool
-    let incomeTransaction: Bool
-    let shippingTransaction: Bool
-    let picking: Bool
-    let verification: Bool
-    let packed: Bool
-    let shipped: Bool
-    let trackingNo: Bool
-    let driveThru: Bool
-    let stamping: Bool
-    let received: Bool
-    let completed: Bool
-    let buyerFeedback: Bool
-    let sellerFeedback: Bool
-    let unchangedFor30Days: Bool
 }
