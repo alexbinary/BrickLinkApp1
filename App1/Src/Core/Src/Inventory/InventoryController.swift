@@ -4,7 +4,6 @@ import SwiftUI
 
 
 
-@Observable
 @MainActor
 class InventoryController {
     

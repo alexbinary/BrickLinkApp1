@@ -2,7 +2,6 @@ import Foundation
 
 
 
-@Observable
 @MainActor
 class MacroStatusController {
     

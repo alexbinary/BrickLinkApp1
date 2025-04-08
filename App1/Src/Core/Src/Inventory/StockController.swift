@@ -3,7 +3,6 @@ import Foundation
 
 
 
-@Observable
 @MainActor
 class StockController {
     
