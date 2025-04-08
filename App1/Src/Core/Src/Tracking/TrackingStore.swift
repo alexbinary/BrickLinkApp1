@@ -8,13 +8,13 @@ import Foundation
 public class TrackingStore {
     
     
-    private let trackingCoreController: TrackingCoreController
+    private let trackingController: TrackingController
     private let trackingMiddleController: TrackingMiddleController
     
     
-    init(_ trackingCoreController: TrackingCoreController, _ trackingMiddleController: TrackingMiddleController) {
+    init(_ trackingController: TrackingController, _ trackingMiddleController: TrackingMiddleController) {
         
-        self.trackingCoreController = trackingCoreController
+        self.trackingController = trackingController
         self.trackingMiddleController = trackingMiddleController
     }
     
@@ -27,7 +27,7 @@ public class TrackingStore {
     
     public var isLoadingLaPosteTrackingStatus: Bool {
         
-        trackingCoreController.isLoadingLaPosteTrackingStatus
+        trackingController.isLoadingLaPosteTrackingStatus
     }
     
     

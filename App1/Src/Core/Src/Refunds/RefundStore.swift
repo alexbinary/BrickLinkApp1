@@ -8,23 +8,23 @@ import Foundation
 public class RefundStore {
     
     
-    let refundCoreController: RefundCoreController
+    let refundController: RefundController
     
     
-    init(_ refundCoreController: RefundCoreController) {
+    init(_ refundController: RefundController) {
         
-        self.refundCoreController = refundCoreController
+        self.refundController = refundController
     }
     
     
     public func refunds(for order: Order) -> [OrderRefund] {
         
-        refundCoreController.refunds(for: order)
+        refundController.refunds(for: order)
     }
     
     
     public func create(_ refund: OrderRefund) {
         
-        refundCoreController.create(refund)
+        refundController.create(refund)
     }
 }

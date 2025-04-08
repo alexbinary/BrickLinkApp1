@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class PickingCoreController {
+class PickingController {
     
     
     private let dataStore: DataStore

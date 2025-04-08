@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class TrackingCoreController {
+class TrackingController {
     
     
     private let dataStore: DataStore

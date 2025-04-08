@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class RefundCoreController {
+class RefundController {
     
     
     private let dataStore: DataStore

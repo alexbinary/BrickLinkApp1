@@ -1,4 +1,3 @@
-
 import Foundation
 
 
@@ -8,22 +7,22 @@ import Foundation
 public class ShippingStore {
     
     
-    private let shippingCoreController: ShippingCoreController
-    private let orderCoreController: OrderCoreController
+    private let shippingController: ShippingController
+    private let orderController: OrderController
     
     
     init(
-        _ shippingCoreController: ShippingCoreController,
-        _ orderCoreController: OrderCoreController
+        _ shippingController: ShippingController,
+        _ orderController: OrderController
     ) {
-        self.shippingCoreController = shippingCoreController
-        self.orderCoreController = orderCoreController
+        self.shippingController = shippingController
+        self.orderController = orderController
     }
     
     
     public func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.details(for: order)
+        orderController.details(for: order)
     }
     
     
@@ -32,13 +31,13 @@ public class ShippingStore {
     
     public func confirmedShippingCost(for order: Order) -> Float? {
         
-        shippingCoreController.confirmedShippingCost(for: order)
+        shippingController.confirmedShippingCost(for: order)
     }
     
     
     public func confirmShippingCost(for order: Order, cost: Float) {
         
-        shippingCoreController.confirmShippingCost(for: order, cost: cost)
+        shippingController.confirmShippingCost(for: order, cost: cost)
     }
     
     
@@ -195,25 +194,25 @@ public class ShippingStore {
     
     public func confirmedStamping(for order: Order) -> String? {
         
-        shippingCoreController.confirmedStamping(for: order)
+        shippingController.confirmedStamping(for: order)
     }
     
     
     public func confirmStamping(for order: Order, stamping: String) {
         
-        shippingCoreController.confirmStamping(for: order, stamping: stamping)
+        shippingController.confirmStamping(for: order, stamping: stamping)
     }
     
     
     public func dateOrderValidatedWithoutStamping(_ order: Order) -> Date? {
         
-        shippingCoreController.dateOrderValidatedWithoutStamping(order)
+        shippingController.dateOrderValidatedWithoutStamping(order)
     }
     
     
     public func validateOrderWithoutStamping(_ order: Order) {
         
-        shippingCoreController.validateOrderWithoutStamping(order)
+        shippingController.validateOrderWithoutStamping(order)
     }
     
     

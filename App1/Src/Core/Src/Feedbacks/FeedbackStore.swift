@@ -8,19 +8,19 @@ import Foundation
 public class FeedbackStore {
     
     
-    private let feedbackCoreController: FeedbackCoreController
+    private let feedbackController: FeedbackController
     private let feedbackPostController: FeedbackPostController
-    private let orderCoreController: OrderCoreController
+    private let orderController: OrderController
     
     
     init(
-        _ feedbackCoreController: FeedbackCoreController,
+        _ feedbackController: FeedbackController,
         _ feedbackPostController: FeedbackPostController,
-        _ orderCoreController: OrderCoreController
+        _ orderController: OrderController
     ) {
-        self.feedbackCoreController = feedbackCoreController
+        self.feedbackController = feedbackController
         self.feedbackPostController = feedbackPostController
-        self.orderCoreController = orderCoreController
+        self.orderController = orderController
     }
     
     
@@ -29,31 +29,31 @@ public class FeedbackStore {
     
     public func feedbacks(for order: Order) -> [Feedback] {
         
-        feedbackCoreController.feedbacks(for: order)
+        feedbackController.feedbacks(for: order)
     }
     
     
     public func buyerFeedback(for order: Order) -> Feedback? {
         
-        feedbackCoreController.buyerFeedback(for: order)
+        feedbackController.buyerFeedback(for: order)
     }
     
     
     public func sellerFeedback(for order: Order) -> Feedback? {
         
-        feedbackCoreController.sellerFeedback(for: order)
+        feedbackController.sellerFeedback(for: order)
     }
     
     
     public var isLoadingOrderFeedbacks: Bool {
         
-        feedbackCoreController.isLoadingOrderFeedbacks
+        feedbackController.isLoadingOrderFeedbacks
     }
     
     
     public func isLoadingFeedbacks(for order: Order) -> Bool {
         
-        feedbackCoreController.isLoadingFeedbacks(for: order)
+        feedbackController.isLoadingFeedbacks(for: order)
     }
     
     
@@ -62,19 +62,19 @@ public class FeedbackStore {
     
     func order(withId orderId: Order.ID) -> Order? {
         
-        orderCoreController.order(withId: orderId)
+        orderController.order(withId: orderId)
     }
     
     
     func hasFeedbacks(for order: Order) -> Bool {
         
-        feedbackCoreController.hasFeedbacks(for: order)
+        feedbackController.hasFeedbacks(for: order)
     }
     
     
     func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
-        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy, operationTag)
+        await feedbackController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     
@@ -121,13 +121,13 @@ public class FeedbackStore {
     
     public var isPostingFeedback: Bool {
         
-        feedbackCoreController.isPostingFeedback
+        feedbackController.isPostingFeedback
     }
     
     
     public func isPostingFeedback(for order: Order) -> Bool {
         
-        feedbackCoreController.isPostingFeedback(for: order)
+        feedbackController.isPostingFeedback(for: order)
     }
     
     
@@ -136,18 +136,18 @@ public class FeedbackStore {
     
     public func dateOrderValidatedWithoutFeedback(_ order: Order) -> Date? {
         
-        feedbackCoreController.dateOrderValidatedWithoutFeedback(order)
+        feedbackController.dateOrderValidatedWithoutFeedback(order)
     }
     
     
     public func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
-        feedbackCoreController.orderIsValidatedWithoutFeedback(order)
+        feedbackController.orderIsValidatedWithoutFeedback(order)
     }
     
     
     public func validateOrderWithoutFeedback(_ order: Order) {
         
-        feedbackCoreController.validateOrderWithoutFeedback(order)
+        feedbackController.validateOrderWithoutFeedback(order)
     }
 }

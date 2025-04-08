@@ -5,50 +5,50 @@ import Foundation
 
 @Observable
 @MainActor
-class StockCoreController {
+class StockController {
     
     
-    private let inventoryCoreController: InventoryCoreController
-    private let pickingCoreController: PickingCoreController
-    private let orderCoreController: OrderCoreController
-    private let orderMacroStatusCoreController: OrderMacroStatusCoreController
+    private let inventoryController: InventoryController
+    private let pickingController: PickingController
+    private let orderController: OrderController
+    private let macroStatusController: MacroStatusController
     
     
     init(
-        _ inventoryCoreController: InventoryCoreController,
-        _ pickingCoreController: PickingCoreController,
-        _ orderCoreController: OrderCoreController,
-        _ orderMacroStatusCoreController: OrderMacroStatusCoreController
+        _ inventoryController: InventoryController,
+        _ pickingController: PickingController,
+        _ orderController: OrderController,
+        _ macroStatusController: MacroStatusController
     ) {
-        self.inventoryCoreController = inventoryCoreController
-        self.pickingCoreController = pickingCoreController
-        self.orderCoreController = orderCoreController
-        self.orderMacroStatusCoreController = orderMacroStatusCoreController
+        self.inventoryController = inventoryController
+        self.pickingController = pickingController
+        self.orderController = orderController
+        self.macroStatusController = macroStatusController
     }
     
     
     var orderSummaries: [Order] {
         
-        orderCoreController.orders
+        orderController.orders
     }
     
     
     func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.items(for: order)
+        orderController.items(for: order)
     }
     
     
     func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(for: order)
+        pickingController.pickedItemIds(for: order)
     }
     
     
     //
     func pickedItemIds(forOrderWithId orderId: Order.ID) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(forOrderWithId: orderId)
+        pickingController.pickedItemIds(forOrderWithId: orderId)
     }
     
     
@@ -62,13 +62,13 @@ class StockCoreController {
     
     ) -> InventoryItem? {
         
-        inventoryCoreController.inventory(forType: type, ref: ref, comment: comment, colorId: colorId, condition: condition)
+        inventoryController.inventory(forType: type, ref: ref, comment: comment, colorId: colorId, condition: condition)
     }
     
     
     func macroStatus(for order: Order) -> OrderMacroStatus {
         
-        orderMacroStatusCoreController.macroStatus(for: order)
+        macroStatusController.macroStatus(for: order)
     }
     
     

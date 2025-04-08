@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class ShippingCoreController {
+class ShippingController {
     
     
     private let dataStore: DataStore

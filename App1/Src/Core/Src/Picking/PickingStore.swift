@@ -8,31 +8,31 @@ import Foundation
 public class PickingStore {
     
     
-    private let pickingCoreController: PickingCoreController
-    private let pickingProgressCoreController: PickingProgressCoreController
-    private let orderCoreController: OrderCoreController
+    private let pickingController: PickingController
+    private let pickingProgressController: PickingProgressController
+    private let orderController: OrderController
     
     
     init(
-        _ pickingCoreController: PickingCoreController,
-        _ pickingProgressCoreController: PickingProgressCoreController,
-        _ orderCoreController: OrderCoreController
+        _ pickingController: PickingController,
+        _ pickingProgressController: PickingProgressController,
+        _ orderController: OrderController
     ) {
-        self.pickingCoreController = pickingCoreController
-        self.pickingProgressCoreController = pickingProgressCoreController
-        self.orderCoreController = orderCoreController
+        self.pickingController = pickingController
+        self.pickingProgressController = pickingProgressController
+        self.orderController = orderController
     }
     
     
     public func items(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
-        orderCoreController.items(for: order, fromItemIds: itemsIds)
+        orderController.items(for: order, fromItemIds: itemsIds)
     }
     
     
     public func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.items(for: order)
+        orderController.items(for: order)
     }
     
     
@@ -41,7 +41,7 @@ public class PickingStore {
     
     public func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(for: order)
+        pickingController.pickedItemIds(for: order)
     }
     
     
@@ -73,7 +73,7 @@ public class PickingStore {
     
     public func pickingProgress(for order: Order) -> Percent {
         
-        pickingProgressCoreController.pickingProgress(for: order)
+        pickingProgressController.pickingProgress(for: order)
     }
     
     
@@ -91,13 +91,13 @@ public class PickingStore {
     
     public func pick(_ item: OrderItem) {
         
-        pickingCoreController.pick(item)
+        pickingController.pick(item)
     }
     
     
     public func unpick(_ item: OrderItem) {
         
-        pickingCoreController.unpick(item)
+        pickingController.unpick(item)
     }
     
     
@@ -106,7 +106,7 @@ public class PickingStore {
     
     public func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.verifiedItemIds(for: order)
+        pickingController.verifiedItemIds(for: order)
     }
     
     
@@ -139,7 +139,7 @@ public class PickingStore {
     
     public func pickingVerificationProgress(for order: Order) -> Percent {
         
-        pickingProgressCoreController.pickingVerificationProgress(for: order)
+        pickingProgressController.pickingVerificationProgress(for: order)
     }
     
     
@@ -157,12 +157,12 @@ public class PickingStore {
     
     public func verify(_ item: OrderItem) {
         
-        pickingCoreController.verify(item)
+        pickingController.verify(item)
     }
     
     
     public func unverify(_ item: OrderItem) {
         
-        pickingCoreController.unverify(item)
+        pickingController.unverify(item)
     }
 }

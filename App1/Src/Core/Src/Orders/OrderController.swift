@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class OrderCoreController {
+class OrderController {
     
     
     private let dataStore: DataStore

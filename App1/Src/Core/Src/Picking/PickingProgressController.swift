@@ -5,37 +5,37 @@ import Foundation
 
 @Observable
 @MainActor
-class PickingProgressCoreController {
+class PickingProgressController {
     
     
-    private let pickingCoreController: PickingCoreController
-    private let orderCoreController: OrderCoreController
+    private let pickingController: PickingController
+    private let orderController: OrderController
     
     
     init(
-        _ pickingCoreController: PickingCoreController,
-        _ orderCoreController: OrderCoreController
+        _ pickingController: PickingController,
+        _ orderController: OrderController
     ) {
-        self.pickingCoreController = pickingCoreController
-        self.orderCoreController = orderCoreController
+        self.pickingController = pickingController
+        self.orderController = orderController
     }
     
     
     func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.items(for: order)
+        orderController.items(for: order)
     }
     
     
     func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(for: order)
+        pickingController.pickedItemIds(for: order)
     }
     
     
     func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.verifiedItemIds(for: order)
+        pickingController.verifiedItemIds(for: order)
     }
     
 

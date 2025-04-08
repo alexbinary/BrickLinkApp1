@@ -8,52 +8,52 @@ import Foundation
 public class ResultStore {
     
     
-    private let orderCoreController: OrderCoreController
-    private let shippingCoreController: ShippingCoreController
-    private let refundCoreController: RefundCoreController
-    private let transactionCoreController: TransactionCoreController
+    private let orderController: OrderController
+    private let shippingController: ShippingController
+    private let refundController: RefundController
+    private let transactionController: TransactionController
     
     
     init(
-        _ orderCoreController: OrderCoreController,
-        _ shippingCoreController: ShippingCoreController,
-        _ refundCoreController: RefundCoreController,
-        _ transactionCoreController: TransactionCoreController
+        _ orderController: OrderController,
+        _ shippingController: ShippingController,
+        _ refundController: RefundController,
+        _ transactionController: TransactionController
     ) {
-        self.orderCoreController = orderCoreController
-        self.shippingCoreController = shippingCoreController
-        self.refundCoreController = refundCoreController
-        self.transactionCoreController = transactionCoreController
+        self.orderController = orderController
+        self.shippingController = shippingController
+        self.refundController = refundController
+        self.transactionController = transactionController
     }
     
     
     public var orders: [Order] {
         
-        orderCoreController.orders
+        orderController.orders
     }
     
     
     public func shippingCost(for order: Order) -> Float? {
         
-        shippingCoreController.confirmedShippingCost(for: order)
+        shippingController.confirmedShippingCost(for: order)
     }
     
     
     public func refunds(for order: Order) -> [OrderRefund] {
         
-        refundCoreController.refunds(for: order)
+        refundController.refunds(for: order)
     }
     
     
     public func incomeTransactions(for order: Order) -> [Transaction] {
         
-        transactionCoreController.incomeTransactions(for: order)
+        transactionController.incomeTransactions(for: order)
     }
     
     
     public func refundTransactions(for order: Order) -> [Transaction] {
         
-        transactionCoreController.refundTransactions(for: order)
+        transactionController.refundTransactions(for: order)
     }
     
     
@@ -103,7 +103,7 @@ public class ResultStore {
     
     public func profitMargin(for order: Order) -> Float? {
         
-        if let orderDetails = orderCoreController.details(for: order) {
+        if let orderDetails = orderController.details(for: order) {
             
             return profitMargin(
                 
@@ -132,7 +132,7 @@ public class ResultStore {
             .sorted { (self.profitMargin(for: $0) ?? 0) > (self.profitMargin(for: $1) ?? 0) }
         
         let totalItems = orders.reduce(0) { $0 + $1.subTotal }
-        let totalShipping = orders.compactMap { orderCoreController.details(for: $0) }.reduce(0) { $0 + $1.shippingCost }
+        let totalShipping = orders.compactMap { orderController.details(for: $0) }.reduce(0) { $0 + $1.shippingCost }
         
         let totalItemCost: Float = 0
         let totalShippingCost = orders.reduce(0) { $0 + (shippingCost(for: $1) ?? 0) }

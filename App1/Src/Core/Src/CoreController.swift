@@ -37,41 +37,41 @@ public class CoreController {
         
         let updateController = UpdateController(dataStore, brickLinkAPIClient, laPosteTrackingClient)
         
-        let inventoryCoreController = InventoryCoreController(dataStore, updateController, brickLinkAPIClient)
-        let uploadCoreController = UploadCoreController(dataStore)
+        let inventoryController = InventoryController(dataStore, updateController, brickLinkAPIClient)
+        let uploadController = UploadController(dataStore)
         
-        let orderCoreController = OrderCoreController(dataStore, updateController)
-        let pickingCoreController = PickingCoreController(dataStore)
-        let shippingCoreController = ShippingCoreController(dataStore)
-        let trackingCoreController = TrackingCoreController(dataStore, updateController)
-        let feedbackCoreController = FeedbackCoreController(dataStore, updateController)
-        let refundCoreController = RefundCoreController(dataStore)
-        let transactionCoreController = TransactionCoreController(dataStore)
+        let orderController = OrderController(dataStore, updateController)
+        let pickingController = PickingController(dataStore)
+        let shippingController = ShippingController(dataStore)
+        let trackingController = TrackingController(dataStore, updateController)
+        let feedbackController = FeedbackController(dataStore, updateController)
+        let refundController = RefundController(dataStore)
+        let transactionController = TransactionController(dataStore)
         
-        let trackingMiddleController = TrackingMiddleController(trackingCoreController, orderCoreController)
-        let feedbackPostController = FeedbackPostController(feedbackCoreController, orderCoreController)
+        let trackingMiddleController = TrackingMiddleController(trackingController, orderController)
+        let feedbackPostController = FeedbackPostController(feedbackController, orderController)
         
-        let pickingProgressCoreController = PickingProgressCoreController(pickingCoreController, orderCoreController)
-        let orderChecklistCoreController = OrderChecklistCoreController(orderCoreController, pickingCoreController, shippingCoreController, feedbackCoreController, transactionCoreController, trackingMiddleController, pickingProgressCoreController)
-        let orderMacroStatusCoreController = OrderMacroStatusCoreController(orderCoreController, orderChecklistCoreController)
-        let stockCoreController = StockCoreController(inventoryCoreController, pickingCoreController, orderCoreController, orderMacroStatusCoreController)
+        let pickingProgressController = PickingProgressController(pickingController, orderController)
+        let checklistController = ChecklistController(orderController, pickingController, shippingController, feedbackController, transactionController, trackingMiddleController, pickingProgressController)
+        let macroStatusController = MacroStatusController(orderController, checklistController)
+        let stockController = StockController(inventoryController, pickingController, orderController, macroStatusController)
         
         // User Stores
         
         catalog = Catalog(dataStore, updateController, brickLinkAPIClient)
         
-        inventoryStore = InventoryStore(inventoryCoreController, stockCoreController)
-        uploadStore = UploadStore(uploadCoreController, inventoryCoreController, catalog)
+        inventoryStore = InventoryStore(inventoryController, stockController)
+        uploadStore = UploadStore(uploadController, inventoryController, catalog)
         
-        orderStore = OrderStore(orderCoreController, orderChecklistCoreController, orderMacroStatusCoreController, pickingProgressCoreController, trackingMiddleController, feedbackCoreController, feedbackPostController)
-        pickingStore = PickingStore(pickingCoreController, pickingProgressCoreController, orderCoreController)
-        shippingStore = ShippingStore(shippingCoreController, orderCoreController)
-        trackingStore = TrackingStore(trackingCoreController, trackingMiddleController)
-        feedbackStore = FeedbackStore(feedbackCoreController, feedbackPostController, orderCoreController)
-        refundStore = RefundStore(refundCoreController)
+        orderStore = OrderStore(orderController, checklistController, macroStatusController, pickingProgressController, trackingMiddleController, feedbackController, feedbackPostController)
+        pickingStore = PickingStore(pickingController, pickingProgressController, orderController)
+        shippingStore = ShippingStore(shippingController, orderController)
+        trackingStore = TrackingStore(trackingController, trackingMiddleController)
+        feedbackStore = FeedbackStore(feedbackController, feedbackPostController, orderController)
+        refundStore = RefundStore(refundController)
         
-        transactionStore = TransactionStore(transactionCoreController)
-        resultStore = ResultStore(orderCoreController, shippingCoreController, refundCoreController, transactionCoreController)
+        transactionStore = TransactionStore(transactionController)
+        resultStore = ResultStore(orderController, shippingController, refundController, transactionController)
         
         updateStore = UpdateStore(updateController)
     }

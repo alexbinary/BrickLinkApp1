@@ -5,106 +5,106 @@ import Foundation
 
 @Observable
 @MainActor
-class OrderChecklistCoreController {
+class ChecklistController {
     
     
-    private let orderCoreController: OrderCoreController
-    private let pickingCoreController: PickingCoreController
-    private let shippingCoreController: ShippingCoreController
-    private let feedbackCoreController: FeedbackCoreController
-    private let transactionCoreController: TransactionCoreController
+    private let orderController: OrderController
+    private let pickingController: PickingController
+    private let shippingController: ShippingController
+    private let feedbackController: FeedbackController
+    private let transactionController: TransactionController
     private let trackingMiddleController: TrackingMiddleController
-    private let pickingProgressCoreController: PickingProgressCoreController
+    private let pickingProgressController: PickingProgressController
     
     
     init(
-        _ orderCoreController: OrderCoreController,
-        _ pickingCoreController: PickingCoreController,
-        _ shippingCoreController: ShippingCoreController,
-        _ feedbackCoreController: FeedbackCoreController,
-        _ transactionCoreController: TransactionCoreController,
+        _ orderController: OrderController,
+        _ pickingController: PickingController,
+        _ shippingController: ShippingController,
+        _ feedbackController: FeedbackController,
+        _ transactionController: TransactionController,
         _ trackingMiddleController: TrackingMiddleController,
-        _ pickingProgressCoreController: PickingProgressCoreController
+        _ pickingProgressController: PickingProgressController
     ) {
-        self.orderCoreController = orderCoreController
-        self.pickingCoreController = pickingCoreController
-        self.shippingCoreController = shippingCoreController
-        self.feedbackCoreController = feedbackCoreController
-        self.transactionCoreController = transactionCoreController
+        self.orderController = orderController
+        self.pickingController = pickingController
+        self.shippingController = shippingController
+        self.feedbackController = feedbackController
+        self.transactionController = transactionController
         self.trackingMiddleController = trackingMiddleController
-        self.pickingProgressCoreController = pickingProgressCoreController
+        self.pickingProgressController = pickingProgressController
     }
     
     
     private func orderIsValidatedWithoutIncomeTransaction(_ order: Order) -> Bool {
         
-        transactionCoreController.orderIsValidatedWithoutIncomeTransaction(order)
+        transactionController.orderIsValidatedWithoutIncomeTransaction(order)
     }
     
     
     private func incomeTransactions(for order: Order) -> [Transaction] {
         
-        transactionCoreController.incomeTransactions(for: order)
+        transactionController.incomeTransactions(for: order)
     }
     
     
     private func shippingTransactions(for order: Order) -> [Transaction] {
         
-        transactionCoreController.shippingTransactions(for: order)
+        transactionController.shippingTransactions(for: order)
     }
     
     
     private func orderIsValidatedWithoutShippingTransaction(_ order: Order) -> Bool {
         
-        transactionCoreController.orderIsValidatedWithoutShippingTransaction(order)
+        transactionController.orderIsValidatedWithoutShippingTransaction(order)
     }
     
     
     private func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.details(for: order)
+        orderController.details(for: order)
     }
     
     
     private func stamping(for order: Order) -> String? {
         
-        shippingCoreController.confirmedStamping(for: order)
+        shippingController.confirmedStamping(for: order)
     }
     
     
     private func orderIsValidatedWithoutStamping(_ order: Order) -> Bool {
         
-        shippingCoreController.orderIsValidatedWithoutStamping(order)
+        shippingController.orderIsValidatedWithoutStamping(order)
     }
     
     
     private func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.items(for: order)
+        orderController.items(for: order)
     }
     
     
     private func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.pickedItemIds(for: order)
+        pickingController.pickedItemIds(for: order)
     }
     
     
     private func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
-        pickingCoreController.verifiedItemIds(for: order)
+        pickingController.verifiedItemIds(for: order)
     }
     
     
     private func feedbacks(for order: Order) -> [Feedback] {
         
-        feedbackCoreController.feedbacks(for: order)
+        feedbackController.feedbacks(for: order)
     }
     
     
     private func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
-        feedbackCoreController.orderIsValidatedWithoutFeedback(order)
+        feedbackController.orderIsValidatedWithoutFeedback(order)
     }
     
     
@@ -152,13 +152,13 @@ class OrderChecklistCoreController {
     
     func checklist_picking(_ order: Order) -> Bool {
         
-        pickingProgressCoreController.pickingProgress(for: order) == 100%
+        pickingProgressController.pickingProgress(for: order) == 100%
     }
     
     
     func checklist_verification(_ order: Order) -> Bool {
         
-        pickingProgressCoreController.pickingVerificationProgress(for: order) == 100%
+        pickingProgressController.pickingVerificationProgress(for: order) == 100%
     }
     
     

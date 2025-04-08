@@ -8,24 +8,24 @@ import Foundation
 class FeedbackPostController {
     
     
-    private let feedbackCoreController: FeedbackCoreController
-    private let orderCoreController: OrderCoreController
+    private let feedbackController: FeedbackController
+    private let orderController: OrderController
     
     
     init(
-        _ feedbackCoreController: FeedbackCoreController,
-        _ orderCoreController: OrderCoreController
+        _ feedbackController: FeedbackController,
+        _ orderController: OrderController
     ) {
-        self.orderCoreController = orderCoreController
-        self.feedbackCoreController = feedbackCoreController
+        self.orderController = orderController
+        self.feedbackController = feedbackController
     }
     
     
     func postPraiseFeedback(for order: Order) async {
         
-        let orderDetails = orderCoreController.details(for: order)!
+        let orderDetails = orderController.details(for: order)!
         
-        await feedbackCoreController.postFeedback(
+        await feedbackController.postFeedback(
             for: order, rating: .praise,
             comment: orderDetails.shippingAddressCountryCode == "FR" ? "Merci pour votre commande !" : "Thanks for your order!"
         )

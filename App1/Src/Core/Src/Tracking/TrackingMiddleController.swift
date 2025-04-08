@@ -8,27 +8,27 @@ import Foundation
 class TrackingMiddleController {
     
     
-    private let trackingCoreController: TrackingCoreController
-    private let orderCoreController: OrderCoreController
+    private let trackingController: TrackingController
+    private let orderController: OrderController
     
     
-    init(_ trackingCoreController: TrackingCoreController, _ orderCoreController: OrderCoreController) {
+    init(_ trackingController: TrackingController, _ orderController: OrderController) {
         
-        self.trackingCoreController = trackingCoreController
-        self.orderCoreController = orderCoreController
+        self.trackingController = trackingController
+        self.orderController = orderController
     }
     
     
     func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.details(for: order)
+        orderController.details(for: order)
     }
     
     
     func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
         if let trackingNo = details(for: order)?.trackingNo {
-            return trackingCoreController.laPosteTrackingStatus(forTrackingNo: trackingNo)
+            return trackingController.laPosteTrackingStatus(forTrackingNo: trackingNo)
         }
         return nil
     }
@@ -37,7 +37,7 @@ class TrackingMiddleController {
     func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         if let trackingNo = details(for: order)?.trackingNo {
-            await trackingCoreController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy, operationTag)
+            await trackingController.loadLaPosteTrackingStatus(forTrackingNo: trackingNo, refetchStrategy, operationTag)
         }
     }
     
@@ -45,7 +45,7 @@ class TrackingMiddleController {
     func isLoadingLaPosteTrackingStatus(for order: Order) -> Bool {
         
         if let trackingNo = details(for: order)?.trackingNo {
-            return trackingCoreController.isLoadingLaPosteTrackingStatus(forTrackingNo: trackingNo)
+            return trackingController.isLoadingLaPosteTrackingStatus(forTrackingNo: trackingNo)
         }
         return false
     }

@@ -8,31 +8,31 @@ import Foundation
 public class UploadStore {
     
     
-    private let uploadCoreController: UploadCoreController
-    private let inventoryCoreController: InventoryCoreController
+    private let uploadController: UploadController
+    private let inventoryController: InventoryController
     private let catalog: Catalog
 
     
     init(
-        _ uploadCoreController: UploadCoreController,
-        _ inventoryCoreController: InventoryCoreController,
+        _ uploadController: UploadController,
+        _ inventoryController: InventoryController,
         _ catalog: Catalog
     ) {
-        self.uploadCoreController = uploadCoreController
-        self.inventoryCoreController = inventoryCoreController
+        self.uploadController = uploadController
+        self.inventoryController = inventoryController
         self.catalog = catalog
     }
     
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        inventoryCoreController.inventory(for: uploadItem)
+        inventoryController.inventory(for: uploadItem)
     }
     
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        inventoryCoreController.inventories(forAllColorsOf: uploadItem)
+        inventoryController.inventories(forAllColorsOf: uploadItem)
     }
     
     
@@ -41,7 +41,7 @@ public class UploadStore {
     
     public var uploadItems: [UploadItem] {
         
-        uploadCoreController.uploadItems
+        uploadController.uploadItems
     }
     
     
@@ -72,25 +72,25 @@ public class UploadStore {
     
     public func add(_ uploadItem: UploadItem) {
         
-        uploadCoreController.add(uploadItem)
+        uploadController.add(uploadItem)
     }
     
     
     public func delete(_ uploadItem: UploadItem) {
         
-        uploadCoreController.delete(uploadItem)
+        uploadController.delete(uploadItem)
     }
     
     
     public func update(_ uploadItem: UploadItem) {
         
-        uploadCoreController.update(uploadItem)
+        uploadController.update(uploadItem)
     }
     
     
     public func importUploadList(fromXml xml: String) {
         
-        uploadCoreController.importUploadList(fromXml: xml)
+        uploadController.importUploadList(fromXml: xml)
     }
     
     
@@ -105,13 +105,13 @@ public class UploadStore {
     
     public var uploadedItems: [UploadedItem] {
         
-        uploadCoreController.uploadedItems
+        uploadController.uploadedItems
     }
     
     
     public func add(_ uploadedItem: UploadedItem) {
         
-        uploadCoreController.add(uploadedItem)
+        uploadController.add(uploadedItem)
     }
     
     

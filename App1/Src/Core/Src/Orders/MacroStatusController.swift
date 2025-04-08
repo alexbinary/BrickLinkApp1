@@ -4,19 +4,19 @@ import Foundation
 
 @Observable
 @MainActor
-class OrderMacroStatusCoreController {
+class MacroStatusController {
     
     
-    private let orderCoreController: OrderCoreController
-    private let orderChecklistCoreController: OrderChecklistCoreController
+    private let orderController: OrderController
+    private let checklistController: ChecklistController
     
     
     init(
-        _ orderCoreController: OrderCoreController,
-        _ orderChecklistCoreController: OrderChecklistCoreController
+        _ orderController: OrderController,
+        _ checklistController: ChecklistController
     ) {
-        self.orderCoreController = orderCoreController
-        self.orderChecklistCoreController = orderChecklistCoreController
+        self.orderController = orderController
+        self.checklistController = checklistController
     }
     
     
@@ -25,85 +25,85 @@ class OrderMacroStatusCoreController {
     
     func checklist_incomeTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_incomeTransaction(order)
+        checklistController.checklist_incomeTransaction(order)
     }
     
     
     func checklist_shippingTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_shippingTransaction(order)
+        checklistController.checklist_shippingTransaction(order)
     }
     
     
     func checklist_picking(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_picking(order)
+        checklistController.checklist_picking(order)
     }
     
     
     func checklist_verification(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_verification(order)
+        checklistController.checklist_verification(order)
     }
     
     
     func checklist_packed(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_packed(order)
+        checklistController.checklist_packed(order)
     }
     
     
     func checklist_shipped(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_shipped(order)
+        checklistController.checklist_shipped(order)
     }
     
     
     func checklist_trackingNo(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_trackingNo(order)
+        checklistController.checklist_trackingNo(order)
     }
     
     
     func checklist_driveThru(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_driveThru(order)
+        checklistController.checklist_driveThru(order)
     }
     
     
     func checklist_stamping(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_stamping(order)
+        checklistController.checklist_stamping(order)
     }
     
     
     func checklist_received(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_received(order)
+        checklistController.checklist_received(order)
     }
     
     
     func checklist_completed(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_completed(order)
+        checklistController.checklist_completed(order)
     }
     
     
     func checklist_buyerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_buyerFeedback(order)
+        checklistController.checklist_buyerFeedback(order)
     }
     
     
     func checklist_sellerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_sellerFeedback(order)
+        checklistController.checklist_sellerFeedback(order)
     }
     
     
     func checklist_unchangedFor30Days(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_unchangedFor30Days(order)
+        checklistController.checklist_unchangedFor30Days(order)
     }
     
     

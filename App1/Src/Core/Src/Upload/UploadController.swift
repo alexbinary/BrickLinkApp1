@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class UploadCoreController {
+class UploadController {
     
 
     private let dataStore: DataStore

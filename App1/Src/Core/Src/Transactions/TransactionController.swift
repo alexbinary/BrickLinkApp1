@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class TransactionCoreController {
+class TransactionController {
     
     
     private let dataStore: DataStore

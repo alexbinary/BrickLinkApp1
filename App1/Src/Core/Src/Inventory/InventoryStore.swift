@@ -9,16 +9,16 @@ import SwiftUI
 public class InventoryStore {
     
     
-    private let inventoryCoreController: InventoryCoreController
-    private let stockCoreController: StockCoreController
+    private let inventoryController: InventoryController
+    private let stockController: StockController
     
     
     init(
-        _ inventoryCoreController: InventoryCoreController,
-        _ stockCoreController: StockCoreController
+        _ inventoryController: InventoryController,
+        _ stockController: StockController
     ) {
-        self.inventoryCoreController = inventoryCoreController
-        self.stockCoreController = stockCoreController
+        self.inventoryController = inventoryController
+        self.stockController = stockController
     }
     
     
@@ -36,49 +36,49 @@ public class InventoryStore {
     
     public var allInventories: [InventoryItem] {
         
-        inventoryCoreController.allInventories
+        inventoryController.allInventories
     }
     
     
     public var hasInventories: Bool {
         
-        inventoryCoreController.hasInventories
+        inventoryController.hasInventories
     }
     
     
     public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
-        inventoryCoreController.inventory(for: uploadItem)
+        inventoryController.inventory(for: uploadItem)
     }
     
     
     public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
-        inventoryCoreController.inventories(forAllColorsOf: uploadItem)
+        inventoryController.inventories(forAllColorsOf: uploadItem)
     }
     
     
     public func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await inventoryCoreController.loadInventories(refetchStrategy, operationTag)
+        await inventoryController.loadInventories(refetchStrategy, operationTag)
     }
     
     
     public var isLoadingInventories: Bool {
         
-        inventoryCoreController.isLoadingInventories
+        inventoryController.isLoadingInventories
     }
     
     
     public var isLoadingInventory: Bool {
      
-        inventoryCoreController.isLoadingInventory
+        inventoryController.isLoadingInventory
     }
     
     
     public func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
      
-        inventoryCoreController.isLoadingInventory(withId: inventoryId)
+        inventoryController.isLoadingInventory(withId: inventoryId)
     }
     
     
@@ -110,13 +110,13 @@ public class InventoryStore {
     
     public func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem? {
         
-        await inventoryCoreController.createInventory(ref: ref, type: type, colorId: colorId, quantity: quantity, unitPrice: unitPrice, condition: condition, description: description, remarks: remarks)
+        await inventoryController.createInventory(ref: ref, type: type, colorId: colorId, quantity: quantity, unitPrice: unitPrice, condition: condition, description: description, remarks: remarks)
     }
     
     
     public func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
-        await inventoryCoreController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        await inventoryController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
     
     
@@ -125,6 +125,6 @@ public class InventoryStore {
     
     public func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
         
-        stockCoreController.inStockQuantityBeforeAfter(for: orderItem)
+        stockController.inStockQuantityBeforeAfter(for: orderItem)
     }
 }

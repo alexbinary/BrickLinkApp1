@@ -4,7 +4,7 @@ import Foundation
 
 
 @MainActor
-class FeedbackCoreController {
+class FeedbackController {
     
     
     private let dataStore: DataStore

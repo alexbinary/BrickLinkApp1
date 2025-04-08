@@ -1,4 +1,3 @@
-
 import Foundation
 
 
@@ -8,30 +7,30 @@ import Foundation
 public class OrderStore {
     
     
-    private let orderCoreController: OrderCoreController
-    private let orderChecklistCoreController: OrderChecklistCoreController
-    private let orderMacroStatusCoreController: OrderMacroStatusCoreController
-    private let pickingProgressCoreController: PickingProgressCoreController
+    private let orderController: OrderController
+    private let checklistController: ChecklistController
+    private let macroStatusController: MacroStatusController
+    private let pickingProgressController: PickingProgressController
     private let trackingMiddleController: TrackingMiddleController
-    private let feedbackCoreController: FeedbackCoreController
+    private let feedbackController: FeedbackController
     private let feedbackPostController: FeedbackPostController
     
     
     init(
-        _ orderCoreController: OrderCoreController,
-        _ orderChecklistCoreController: OrderChecklistCoreController,
-        _ orderMacroStatusCoreController: OrderMacroStatusCoreController,
-        _ pickingProgressCoreController: PickingProgressCoreController,
+        _ orderController: OrderController,
+        _ checklistController: ChecklistController,
+        _ macroStatusController: MacroStatusController,
+        _ pickingProgressController: PickingProgressController,
         _ trackingMiddleController: TrackingMiddleController,
-        _ feedbackCoreController: FeedbackCoreController,
+        _ feedbackController: FeedbackController,
         _ feedbackPostController: FeedbackPostController
     ) {
-        self.orderCoreController = orderCoreController
-        self.orderChecklistCoreController = orderChecklistCoreController
-        self.orderMacroStatusCoreController = orderMacroStatusCoreController
-        self.pickingProgressCoreController = pickingProgressCoreController
+        self.orderController = orderController
+        self.checklistController = checklistController
+        self.macroStatusController = macroStatusController
+        self.pickingProgressController = pickingProgressController
         self.trackingMiddleController = trackingMiddleController
-        self.feedbackCoreController = feedbackCoreController
+        self.feedbackController = feedbackController
         self.feedbackPostController = feedbackPostController
     }
     
@@ -50,25 +49,25 @@ public class OrderStore {
     
     public var orders: [Order] {
         
-        orderCoreController.orders
+        orderController.orders
     }
     
     
     public func order(withId orderId: Order.ID) -> Order? {
         
-        orderCoreController.order(withId: orderId)
+        orderController.order(withId: orderId)
     }
     
     
     public func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await orderCoreController.loadOrders(refetchStrategy, operationTag)
+        await orderController.loadOrders(refetchStrategy, operationTag)
     }
     
     
     public var isLoadingOrders: Bool {
      
-        orderCoreController.isLoadingOrders
+        orderController.isLoadingOrders
     }
     
     
@@ -77,31 +76,31 @@ public class OrderStore {
     
     public func hasDetails(for order: Order) -> Bool {
         
-        orderCoreController.hasDetails(for: order)
+        orderController.hasDetails(for: order)
     }
     
     
     public func details(for order: Order) -> OrderDetails? {
         
-        orderCoreController.details(for: order)
+        orderController.details(for: order)
     }
     
     
     public func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await orderCoreController.loadDetails(for: order, refetchStrategy, operationTag)
+        await orderController.loadDetails(for: order, refetchStrategy, operationTag)
     }
     
     
     public var isLoadingOrderDetails: Bool {
         
-        orderCoreController.isLoadingOrderDetails
+        orderController.isLoadingOrderDetails
     }
     
     
     public func isLoadingDetails(for order: Order) -> Bool {
         
-        orderCoreController.isLoadingDetails(for: order)
+        orderController.isLoadingDetails(for: order)
     }
     
     
@@ -110,37 +109,37 @@ public class OrderStore {
     
     public func hasItems(for order: Order) -> Bool {
         
-        orderCoreController.hasItems(for: order)
+        orderController.hasItems(for: order)
     }
     
     
     public func items(for order: Order) -> [OrderItem] {
         
-        orderCoreController.items(for: order)
+        orderController.items(for: order)
     }
     
     
     public func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await orderCoreController.loadItems(for: order, refetchStrategy, operationTag)
+        await orderController.loadItems(for: order, refetchStrategy, operationTag)
     }
     
     
     public func loadItemsIfMissing(for order: Order) async {
         
-        await orderCoreController.loadItemsIfMissing(for: order)
+        await orderController.loadItemsIfMissing(for: order)
     }
     
     
     public var isLoadingOrderItems: Bool {
         
-        orderCoreController.isLoadingOrderItems
+        orderController.isLoadingOrderItems
     }
     
     
     public func isLoadingItems(for order: Order) -> Bool {
         
-        orderCoreController.isLoadingItems(for: order)
+        orderController.isLoadingItems(for: order)
     }
     
     
@@ -149,61 +148,61 @@ public class OrderStore {
     
     public func updateStatus(of order: Order, to status: OrderStatus) async {
         
-        await orderCoreController.updateStatus(of: order, to: status)
+        await orderController.updateStatus(of: order, to: status)
     }
     
     
     public var isUpdatingOrderStatus: Bool {
         
-        orderCoreController.isUpdatingOrderStatus
+        orderController.isUpdatingOrderStatus
     }
     
     
     public func isUpdatingStatus(of order: Order) -> Bool {
         
-        orderCoreController.isUpdatingStatus(of: order)
+        orderController.isUpdatingStatus(of: order)
     }
     
     
     public func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool {
         
-        orderCoreController.isUpdatingStatus(of: order, to: status)
+        orderController.isUpdatingStatus(of: order, to: status)
     }
     
     
     public func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
-        await orderCoreController.updateTrackingNo(of: order, to: trackingNo)
+        await orderController.updateTrackingNo(of: order, to: trackingNo)
     }
     
     
     public var isUpdatingOrderTrackingNo: Bool {
         
-        orderCoreController.isUpdatingOrderTrackingNo
+        orderController.isUpdatingOrderTrackingNo
     }
     
     
     public func isUpdatingTrackingNo(of order: Order) -> Bool {
         
-        orderCoreController.isUpdatingTrackingNo(of: order)
+        orderController.isUpdatingTrackingNo(of: order)
     }
     
     
     public func sendDriveThru(for order: Order) async {
         
-        await orderCoreController.sendDriveThru(for: order)
+        await orderController.sendDriveThru(for: order)
     }
     
     
     public var isSendingDriveThru: Bool {
         
-        orderCoreController.isSendingDriveThru
+        orderController.isSendingDriveThru
     }
     
     
     public func isSendingDriveThru(for order: Order) -> Bool {
         
-        orderCoreController.isSendingDriveThru(for: order)
+        orderController.isSendingDriveThru(for: order)
     }
     
     
@@ -212,97 +211,97 @@ public class OrderStore {
     
     public func checklist_payment(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_payment(order)
+        checklistController.checklist_payment(order)
     }
     
     
     public func checklist_incomeTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_incomeTransaction(order)
+        checklistController.checklist_incomeTransaction(order)
     }
     
     
     public func checklist_picking(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_picking(order)
+        checklistController.checklist_picking(order)
     }
     
     
     public func checklist_verification(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_verification(order)
+        checklistController.checklist_verification(order)
     }
     
     
     public func checklist_packed(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_packed(order)
+        checklistController.checklist_packed(order)
     }
     
     
     public func checklist_stamping(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_stamping(order)
+        checklistController.checklist_stamping(order)
     }
     
     
     public func checklist_shippingTransaction(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_shippingTransaction(order)
+        checklistController.checklist_shippingTransaction(order)
     }
     
     
     public func checklist_trackingNo(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_trackingNo(order)
+        checklistController.checklist_trackingNo(order)
     }
     
     
     public func checklist_shipped(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_shipped(order)
+        checklistController.checklist_shipped(order)
     }
     
         
     public func checklist_driveThru(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_driveThru(order)
+        checklistController.checklist_driveThru(order)
     }
     
     
     public func checklist_received(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_received(order)
+        checklistController.checklist_received(order)
     }
     
     
     public func checklist_completed(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_completed(order)
+        checklistController.checklist_completed(order)
     }
     
     
     public func checklist_buyerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_buyerFeedback(order)
+        checklistController.checklist_buyerFeedback(order)
     }
 
     
     public func checklist_sellerFeedback(_ order: Order) -> Bool {
         
-        orderChecklistCoreController.checklist_sellerFeedback(order)
+        checklistController.checklist_sellerFeedback(order)
     }
     
     
     public func pickingProgress(for order: Order) -> Percent {
         
-        pickingProgressCoreController.pickingProgress(for: order)
+        pickingProgressController.pickingProgress(for: order)
     }
     
     
     public func pickingVerificationProgress(for order: Order) -> Percent {
         
-        pickingProgressCoreController.pickingVerificationProgress(for: order)
+        pickingProgressController.pickingVerificationProgress(for: order)
     }
     
     
@@ -344,7 +343,7 @@ public class OrderStore {
                     ),
                     .init(
                         label: {
-                            let progress = pickingProgressCoreController.pickingVerificationProgress(for: order)
+                            let progress = pickingProgressController.pickingVerificationProgress(for: order)
                             if progress == 0% || progress == 100% {
                                 return "Verify items"
                             } else {
@@ -438,7 +437,7 @@ public class OrderStore {
     
     public func macroStatus(for order: Order) -> OrderMacroStatus {
         
-        orderMacroStatusCoreController.macroStatus(for: order)
+        macroStatusController.macroStatus(for: order)
     }
     
     
@@ -530,7 +529,7 @@ public class OrderStore {
     
     func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
-        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy, operationTag)
+        await feedbackController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     
