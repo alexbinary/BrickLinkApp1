@@ -377,92 +377,6 @@ public class OrderStore {
     }
     
     
-    // MARK: - Macro status
-    
-    
-    public func macroStatus(for order: Order) -> OrderMacroStatus {
-        
-        orderMacroStatusCoreController.macroStatus(for: order)
-    }
-    
-    
-    public func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection] {
-        
-        let orders = orders.filter { $0.matches(searchText) }
-        
-        var sections: [OrdersMainListSection] = [
-            
-            .init(
-                header: OrderMacroStatus.inTransitFor30PlusDays.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .inTransitFor30PlusDays }
-                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            ),
-            .init(
-                header: OrderMacroStatus.giveFeedback.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .giveFeedback }
-                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            ),
-            .init(
-                header: OrderMacroStatus.validatePayment.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .validatePayment }
-                    .sorted { $0.date > $1.date }
-            ),
-            .init(
-                header: OrderMacroStatus.pickAndPack.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .pickAndPack }
-                    .sorted {
-                        orderChecklistVerification($0) != orderChecklistVerification($1)
-                        && orderChecklistVerification($0)
-                        ||
-                        orderChecklistVerification($0) != orderChecklistVerification($1)
-                        && $0.lots < $1.lots
-                    }
-            ),
-            .init(
-                header: OrderMacroStatus.ship.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .ship }
-                    .sorted { $0.date > $1.date }
-            ),
-            .init(
-                header: OrderMacroStatus.received.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .received }
-                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            ),
-            .init(
-                header: OrderMacroStatus.inTransit.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .inTransit }
-                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            ),
-            .init(
-                header: OrderMacroStatus.recentlyClosed.descriptionWithPicto,
-                orders: orders
-                    .filter { macroStatus(for: $0) == .recentlyClosed }
-                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-            ),
-        ]
-        
-        let closedOrders = orders
-            .filter { macroStatus(for: $0) == .closed }
-            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
-        
-        sections.append(contentsOf: closedOrders.grouppedByMonth.map { item in
-            .init(
-                header: "􀤟 \(item.month)",
-                orders: item.elements
-            )
-        })
-        
-        return sections
-    }
-    
-    
     // MARK: - Checklist
     
     
@@ -692,6 +606,92 @@ public class OrderStore {
                 items: []
             ),
         ])
+    }
+
+
+    // MARK: - Macro status
+    
+    
+    public func macroStatus(for order: Order) -> OrderMacroStatus {
+        
+        orderMacroStatusCoreController.macroStatus(for: order)
+    }
+    
+    
+    public func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection] {
+        
+        let orders = orders.filter { $0.matches(searchText) }
+        
+        var sections: [OrdersMainListSection] = [
+            
+            .init(
+                header: OrderMacroStatus.inTransitFor30PlusDays.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .inTransitFor30PlusDays }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+            ),
+            .init(
+                header: OrderMacroStatus.giveFeedback.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .giveFeedback }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+            ),
+            .init(
+                header: OrderMacroStatus.validatePayment.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .validatePayment }
+                    .sorted { $0.date > $1.date }
+            ),
+            .init(
+                header: OrderMacroStatus.pickAndPack.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .pickAndPack }
+                    .sorted {
+                        orderChecklistVerification($0) != orderChecklistVerification($1)
+                        && orderChecklistVerification($0)
+                        ||
+                        orderChecklistVerification($0) != orderChecklistVerification($1)
+                        && $0.lots < $1.lots
+                    }
+            ),
+            .init(
+                header: OrderMacroStatus.ship.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .ship }
+                    .sorted { $0.date > $1.date }
+            ),
+            .init(
+                header: OrderMacroStatus.received.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .received }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+            ),
+            .init(
+                header: OrderMacroStatus.inTransit.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .inTransit }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+            ),
+            .init(
+                header: OrderMacroStatus.recentlyClosed.descriptionWithPicto,
+                orders: orders
+                    .filter { macroStatus(for: $0) == .recentlyClosed }
+                    .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+            ),
+        ]
+        
+        let closedOrders = orders
+            .filter { macroStatus(for: $0) == .closed }
+            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+        
+        sections.append(contentsOf: closedOrders.grouppedByMonth.map { item in
+            .init(
+                header: "􀤟 \(item.month)",
+                orders: item.elements
+            )
+        })
+        
+        return sections
     }
     
     
