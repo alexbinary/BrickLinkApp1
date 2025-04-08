@@ -207,176 +207,6 @@ public class OrderStore {
     }
     
     
-    // MARK: - Refresh
-    
-    
-    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
-        
-        await trackingMiddleController.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag)
-    }
-    
-    
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
-        
-        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy, operationTag)
-    }
-    
-    
-    func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
-        
-        return (
-            order.status.isOneOf(.completed, .cancelled, .purged)
-            &&
-            order.dateStatusChanged.days(to: Date()) > 30
-        )
-    }
-    
-    
-    func orderNeedsRefreshLaPosteTrackingStatus(_ order: Order) -> Bool {
-        
-        macroStatus(for: order) == .inTransit
-    }
-    
-    
-    func orderNeedsRefreshFeedback(_ order: Order) -> Bool {
-        
-        macroStatus(for: order).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback)
-    }
-    
-    
-    func refreshOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
-        
-        await loadOrders(refetchStrategy, operationTag)
-        
-        await withTaskGroup { group in
-            
-            for order in orders {
-                group.addTask {
-                    
-                    if !(await self.hasDetails(for: order)) {
-                        await self.loadDetails(for: order, .forceRefetch, operationTag)
-                    }
-                    if !(await self.orderIsClosedForMoreThan30Days(order)) && refetchStrategy == .forceRefetch {
-                        await self.loadDetails(for: order, .forceRefetch, operationTag)
-                    }
-                    if await self.orderNeedsRefreshLaPosteTrackingStatus(order) {
-                        Task { await self.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag) }
-                    }
-                    if await self.orderNeedsRefreshFeedback(order) {
-                        Task { await self.loadFeedbacks(for: order, refetchStrategy, operationTag) }
-                    }
-                }
-            }
-        }
-    }
-    
-    
-    public func softRefreshOrders() async {
-        
-        await refreshOrders(.refetchOnlyIfInvalidated)
-    }
-    
-    
-    public func hardRefreshOrders(_ operationTag: OperationTag? = nil) async {
-        
-        await refreshOrders(.forceRefetch, operationTag)
-    }
-    
-    
-    func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
-        
-        await loadOrders(refetchStrategy, operationTag)
-    }
-    
-    
-    public func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
-        
-        await refresh(order, .refetchOnlyIfInvalidated, operationTag)
-    }
-    
-    
-    public func softRefresh(orderWithId orderId: Order.ID) async {
-        
-        await softRefresh(order(withId: orderId)!)
-    }
-    
-    
-    public func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
-        
-        await refresh(order, .forceRefetch, operationTag)
-    }
-    
-    
-    public func hardRefresh(orderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
-        
-        await hardRefresh(order(withId: orderId)!, operationTag)
-    }
-    
-    
-    func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
-        
-        let strategy = hasDetails(for: order) ? refetchStrategy : .forceRefetch
-        
-        await loadDetails(for: order, strategy, operationTag)
-    }
-    
-    
-    public func softRefreshDetails(for order: Order) async {
-        
-        await refreshDetails(for: order, .refetchOnlyIfInvalidated)
-    }
-
-
-    public func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
-        
-        await softRefreshDetails(for: order(withId: orderId)!)
-    }
-    
-    
-    public func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
-        
-        await refreshDetails(for: order, .forceRefetch, operationTag)
-    }
-
-
-    public func hardRefreshDetails(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
-        
-        await hardRefreshDetails(for: order(withId: orderId)!, operationTag)
-    }
-    
-    
-    func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
-        
-        let strategy = hasItems(for: order) ? refetchStrategy : .forceRefetch
-        
-        await loadItems(for: order, strategy, operationTag)
-    }
-    
-    
-    public func softRefreshItems(for order: Order) async {
-        
-        await refreshItems(for: order, .refetchOnlyIfInvalidated)
-    }
-    
-    
-    public func softRefreshItems(forOrderWithId orderId: Order.ID) async {
-        
-        await softRefreshItems(for: order(withId: orderId)!)
-    }
-    
-    
-    public func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
-        
-        await refreshItems(for: order, .forceRefetch, operationTag)
-    }
-    
-    
-    public func hardRefreshItems(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
-        
-        await hardRefreshItems(for: order(withId: orderId)!, operationTag)
-    }
-    
-    
     // MARK: - Checklist
     
     
@@ -692,6 +522,176 @@ public class OrderStore {
         })
         
         return sections
+    }
+    
+    
+    // MARK: - Refresh
+    
+    
+    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+        
+        await trackingMiddleController.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag)
+    }
+    
+    
+    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+        
+        await feedbackCoreController.loadFeedbacks(for: order, refetchStrategy, operationTag)
+    }
+    
+    
+    func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
+        
+        return (
+            order.status.isOneOf(.completed, .cancelled, .purged)
+            &&
+            order.dateStatusChanged.days(to: Date()) > 30
+        )
+    }
+    
+    
+    func orderNeedsRefreshLaPosteTrackingStatus(_ order: Order) -> Bool {
+        
+        macroStatus(for: order) == .inTransit
+    }
+    
+    
+    func orderNeedsRefreshFeedback(_ order: Order) -> Bool {
+        
+        macroStatus(for: order).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback)
+    }
+    
+    
+    func refreshOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+        
+        await loadOrders(refetchStrategy, operationTag)
+        
+        await withTaskGroup { group in
+            
+            for order in orders {
+                group.addTask {
+                    
+                    if !(await self.hasDetails(for: order)) {
+                        await self.loadDetails(for: order, .forceRefetch, operationTag)
+                    }
+                    if !(await self.orderIsClosedForMoreThan30Days(order)) && refetchStrategy == .forceRefetch {
+                        await self.loadDetails(for: order, .forceRefetch, operationTag)
+                    }
+                    if await self.orderNeedsRefreshLaPosteTrackingStatus(order) {
+                        Task { await self.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag) }
+                    }
+                    if await self.orderNeedsRefreshFeedback(order) {
+                        Task { await self.loadFeedbacks(for: order, refetchStrategy, operationTag) }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    public func softRefreshOrders() async {
+        
+        await refreshOrders(.refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func hardRefreshOrders(_ operationTag: OperationTag? = nil) async {
+        
+        await refreshOrders(.forceRefetch, operationTag)
+    }
+    
+    
+    func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+        
+        await loadOrders(refetchStrategy, operationTag)
+    }
+    
+    
+    public func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
+        
+        await refresh(order, .refetchOnlyIfInvalidated, operationTag)
+    }
+    
+    
+    public func softRefresh(orderWithId orderId: Order.ID) async {
+        
+        await softRefresh(order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
+        
+        await refresh(order, .forceRefetch, operationTag)
+    }
+    
+    
+    public func hardRefresh(orderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+        
+        await hardRefresh(order(withId: orderId)!, operationTag)
+    }
+    
+    
+    func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+        
+        let strategy = hasDetails(for: order) ? refetchStrategy : .forceRefetch
+        
+        await loadDetails(for: order, strategy, operationTag)
+    }
+    
+    
+    public func softRefreshDetails(for order: Order) async {
+        
+        await refreshDetails(for: order, .refetchOnlyIfInvalidated)
+    }
+
+
+    public func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
+        
+        await softRefreshDetails(for: order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
+        
+        await refreshDetails(for: order, .forceRefetch, operationTag)
+    }
+
+
+    public func hardRefreshDetails(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+        
+        await hardRefreshDetails(for: order(withId: orderId)!, operationTag)
+    }
+    
+    
+    func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+        
+        let strategy = hasItems(for: order) ? refetchStrategy : .forceRefetch
+        
+        await loadItems(for: order, strategy, operationTag)
+    }
+    
+    
+    public func softRefreshItems(for order: Order) async {
+        
+        await refreshItems(for: order, .refetchOnlyIfInvalidated)
+    }
+    
+    
+    public func softRefreshItems(forOrderWithId orderId: Order.ID) async {
+        
+        await softRefreshItems(for: order(withId: orderId)!)
+    }
+    
+    
+    public func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
+        
+        await refreshItems(for: order, .forceRefetch, operationTag)
+    }
+    
+    
+    public func hardRefreshItems(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+        
+        await hardRefreshItems(for: order(withId: orderId)!, operationTag)
     }
     
     
