@@ -691,40 +691,63 @@ public class OrderStore {
     // MARK: - Actions
     
     
-    public var ordersThatNeedCompletedAndGiveFeedback: [Order] {
+    public func orderNeedsCompletedAndGiveFeedback(_ order: Order) -> Bool {
         
-        orders
-            .filter { macroStatus(for: $0) == .inTransitFor30PlusDays }
-            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+        macroStatus(for: order) == .inTransitFor30PlusDays
     }
     
     
-    public var ordersThatNeedGiveFeedback: [Order] {
+    public func ordersThatNeedCompletedAndGiveFeedback(_ orders: [Order]) -> [Order] {
         
-        orders
-            .filter { macroStatus(for: $0) == .giveFeedback }
-            .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+        orders.filter { orderNeedsCompletedAndGiveFeedback($0) }
+              .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
     
     
-    public var ordersToShipAndSendDriveThru: [Order] {
+    public func orderNeedsGiveFeedback(_ order: Order) -> Bool {
         
-        orders
-            .filter {
-                macroStatus(for: $0) == .ship
-                && checklist_stamping($0)
-                && checklist_shippingTransaction($0)
-                && checklist_trackingNo($0)
-            }
-            .sorted { $0.date > $1.date }
+        macroStatus(for: order) == .giveFeedback
     }
     
     
-    public var ordersThatNeedAction: [Order] {
+    public func ordersThatNeedGiveFeedback(_ orders: [Order]) -> [Order] {
         
-        ordersThatNeedCompletedAndGiveFeedback
-        + ordersThatNeedGiveFeedback
-        + ordersToShipAndSendDriveThru
+        orders.filter { orderNeedsGiveFeedback($0) }
+              .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
+    }
+    
+    
+    public func orderNeedsShipAndSendDriveThru(_ order: Order) -> Bool {
+        
+        macroStatus(for: order) == .ship
+        && checklist_stamping(order)
+        && checklist_shippingTransaction(order)
+        && checklist_trackingNo(order)
+    }
+    
+    
+    public func ordersToShipAndSendDriveThru(_ orders: [Order]) -> [Order] {
+        
+        orders.filter { orderNeedsShipAndSendDriveThru($0) }
+              .sorted { $0.date > $1.date }
+    }
+    
+    
+    public func orderNeedsAction(_ order: Order) -> Bool {
+        
+        orderNeedsCompletedAndGiveFeedback(order)
+        ||
+        orderNeedsGiveFeedback(order)
+        ||
+        orderNeedsShipAndSendDriveThru(order)
+    }
+    
+    
+    public func ordersThatNeedAction(_ orders: [Order]) -> [Order] {
+        
+        ordersThatNeedCompletedAndGiveFeedback(orders)
+        + ordersThatNeedGiveFeedback(orders)
+        + ordersToShipAndSendDriveThru(orders)
     }
     
     
@@ -734,20 +757,20 @@ public class OrderStore {
     }
     
     
-    public func performActionForAllOrders() async {
+    public func performActions(for orders: [Order]) async {
         
-        for order in ordersThatNeedCompletedAndGiveFeedback {
+        for order in ordersThatNeedCompletedAndGiveFeedback(orders) {
         
             await updateStatus(of: order, to: .completed)
             await postPraiseOrderFeedback(for: order)
         }
         
-        for order in ordersThatNeedGiveFeedback {
+        for order in ordersThatNeedGiveFeedback(orders) {
             
             await postPraiseOrderFeedback(for: order)
         }
         
-        for order in ordersToShipAndSendDriveThru {
+        for order in ordersToShipAndSendDriveThru(orders) {
             
             await updateStatus(of: order, to: .shipped)
             await sendDriveThru(for: order)

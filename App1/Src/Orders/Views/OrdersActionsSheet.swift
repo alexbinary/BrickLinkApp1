@@ -12,12 +12,32 @@ struct OrdersActionsSheet: View {
     
     let orders: [Order]
     
+    var ordersThatNeedAction: [Order] {
+        
+        orderStore.ordersThatNeedAction(orders)
+    }
+    
+    var ordersThatNeedCompletedAndGiveFeedback: [Order] {
+        
+        orderStore.ordersThatNeedCompletedAndGiveFeedback(orders)
+    }
+    
+    var ordersThatNeedGiveFeedback: [Order] {
+        
+        orderStore.ordersThatNeedGiveFeedback(orders)
+    }
+    
+    var ordersToShipAndSendDriveThru: [Order] {
+        
+        orderStore.ordersToShipAndSendDriveThru(orders)
+    }
+    
     
     var body: some View {
         
         Group {
             
-            if orderStore.ordersThatNeedAction.isEmpty {
+            if ordersThatNeedAction.isEmpty {
                 
                 Text("All orders ok")
                 
@@ -25,7 +45,7 @@ struct OrdersActionsSheet: View {
                 
                 Grid(alignment: .leading, verticalSpacing: 12) {
                     
-                    sectionView(orders: orderStore.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
+                    sectionView(orders: ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
                             CheckView(checked: orderStore.checklist_completed(order))
                             Text("Mark completed")
@@ -36,14 +56,14 @@ struct OrdersActionsSheet: View {
                         }
                     }
                     
-                    sectionView(orders: orderStore.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
+                    sectionView(orders: ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
                             CheckView(checked: orderStore.checklist_sellerFeedback(order))
                             Text("Give feedback")
                         }
                     }
                     
-                    sectionView(orders: orderStore.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
+                    sectionView(orders: ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
                             CheckView(checked: orderStore.checklist_shipped(order))
                             Text("Mark shipped")
@@ -61,7 +81,7 @@ struct OrdersActionsSheet: View {
                     }
                     
                     Button {
-                        Task { await orderStore.performActionForAllOrders() }
+                        Task { await orderStore.performActions(for: orders) }
                     } label: {
                         Text("Do all").padding(.horizontal)
                     }
