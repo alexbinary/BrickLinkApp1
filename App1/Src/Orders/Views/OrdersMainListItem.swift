@@ -194,44 +194,44 @@ struct OrdersMainListItem: View {
         
         case .validatePayment:
             
-            if !orderStore.orderChecklistPayment(order) {
+            if !orderStore.checklist_payment(order) {
                 items.append(OrderStatusTag(text: "Payment pending", status: .waitingOnExternalAction))
                 
-            } else if !orderStore.orderChecklistIncomeTransaction(order) {
+            } else if !orderStore.checklist_incomeTransaction(order) {
                 items.append(OrderStatusTag(text: "Register payment transaction", status: .actionRequired))
             }
             
         case .pickAndPack:
             
-            if !orderStore.orderChecklistPicking(order) {
+            if !orderStore.checklist_picking(order) {
                 
                 let progress = pickingStore.pickingProgress(for: order)
                 let text = progress == 0% ? "Start picking" : "\(progress) picked"
                 items.append(OrderStatusTag(text: text, status: .actionRequired))
                 
-            } else if !orderStore.orderChecklistVerification(order) {
+            } else if !orderStore.checklist_verification(order) {
                 
                 let progress = pickingStore.pickingVerificationProgress(for: order)
                 let text = progress == 0% ? "Start verification" : "\(progress) verified"
                 items.append(OrderStatusTag(text: text, status: .actionRequired))
                 
-            } else if !orderStore.orderChecklistPacked(order) {
+            } else if !orderStore.checklist_packed(order) {
                 items.append(OrderStatusTag(text: "Not packed yet", status: .actionRequired))
             }
             
         case .ship:
             
-            if !orderStore.orderChecklistStamping(order) {
+            if !orderStore.checklist_stamping(order) {
                 items.append(OrderStatusTag(text: "Stamping not validated", status: .actionRequired))
             }
-            if !orderStore.orderChecklistShippingTransaction(order) {
+            if !orderStore.checklist_shippingTransaction(order) {
                 items.append(OrderStatusTag(text: "No shipping transaction", status: .actionRequired))
             }
-            if !orderStore.orderChecklistTrackingNo(order) {
+            if !orderStore.checklist_trackingNo(order) {
                 items.append(OrderStatusTag(text: "Missing tracking no", status: .actionRequired))
             }
             
-            if !orderStore.orderChecklistShipped(order) && !orderStore.orderChecklistDriveThru(order) {
+            if !orderStore.checklist_shipped(order) && !orderStore.checklist_driveThru(order) {
                 
                 var text = "Ship and send Drive thru"
                 if orderStore.isUpdatingStatus(of: order, to: .shipped) {
@@ -247,10 +247,10 @@ struct OrdersMainListItem: View {
                     }
                 }))
             } else {
-                if !orderStore.orderChecklistShipped(order) {
+                if !orderStore.checklist_shipped(order) {
                     items.append(OrderStatusTag(text: "Mark Shipped", status: .actionRequired))
                 }
-                if !orderStore.orderChecklistDriveThru(order) {
+                if !orderStore.checklist_driveThru(order) {
                     items.append(OrderStatusTag(text: "Send Drive thru", status: .actionRequired))
                 }
             }
@@ -260,7 +260,7 @@ struct OrdersMainListItem: View {
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(OrderStatusTag(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
             
-            if orderStore.orderChecklistUnchangedFor30Days(order) {
+            if orderStore.checklist_unchangedFor30Days(order) {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateStatus(of: order, to: .completed)

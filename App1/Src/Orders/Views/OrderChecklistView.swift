@@ -20,7 +20,7 @@ struct OrderChecklistView: View {
     
     var body: some View {
 
-        let checklist = orderStore.checklist(for: order)
+        let checklist = orderStore.checklistData(for: order)
         
         VStack(alignment: .leading, spacing: 12) {
             

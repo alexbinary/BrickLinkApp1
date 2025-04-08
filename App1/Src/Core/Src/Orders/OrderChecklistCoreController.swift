@@ -108,16 +108,13 @@ class OrderChecklistCoreController {
     }
     
     
-    // -
-    
-    
-    func orderChecklistPayment(_ order: Order) -> Bool {
+    func checklist_payment(_ order: Order) -> Bool {
         
         return order.paymentStatus.isOneOf(.completed, .received)
     }
     
     
-    func orderChecklistIncomeTransaction(_ order: Order) -> Bool {
+    func checklist_incomeTransaction(_ order: Order) -> Bool {
         
         if orderIsValidatedWithoutIncomeTransaction(order) {
             
@@ -128,7 +125,7 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderChecklistShippingTransaction(_ order: Order) -> Bool {
+    func checklist_shippingTransaction(_ order: Order) -> Bool {
         
         if !shippingTransactions(for: order).isEmpty {
             
@@ -153,43 +150,43 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderChecklistPicking(_ order: Order) -> Bool {
+    func checklist_picking(_ order: Order) -> Bool {
         
         pickingProgressCoreController.pickingProgress(for: order) == 100%
     }
     
     
-    func orderChecklistVerification(_ order: Order) -> Bool {
+    func checklist_verification(_ order: Order) -> Bool {
         
         pickingProgressCoreController.pickingVerificationProgress(for: order) == 100%
     }
     
     
-    func orderChecklistPacked(_ order: Order) -> Bool {
+    func checklist_packed(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.packed, .shipped, .received, .completed)
     }
     
     
-    func orderChecklistShipped(_ order: Order) -> Bool {
+    func checklist_shipped(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.shipped, .received, .completed)
     }
     
     
-    func orderChecklistTrackingNo(_ order: Order) -> Bool {
+    func checklist_trackingNo(_ order: Order) -> Bool {
             
         return (details(for: order)?.trackingNo ?? "").isEmpty ? false : true
     }
     
     
-    func orderChecklistDriveThru(_ order: Order) -> Bool {
+    func checklist_driveThru(_ order: Order) -> Bool {
         
         details(for: order)?.driveThruSent ?? false
     }
     
     
-    func orderChecklistStamping(_ order: Order) -> Bool {
+    func checklist_stamping(_ order: Order) -> Bool {
         
         if let orderDetails = details(for: order), orderDetails.shipsWithMondialRelay {
             
@@ -205,25 +202,25 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderChecklistReceived(_ order: Order) -> Bool {
+    func checklist_received(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.received, .completed)
     }
     
     
-    func orderChecklistCompleted(_ order: Order) -> Bool {
+    func checklist_completed(_ order: Order) -> Bool {
         
         return order.status == .completed
     }
     
     
-    func orderChecklistBuyerFeedback(_ order: Order) -> Bool {
+    func checklist_buyerFeedback(_ order: Order) -> Bool {
         
         return feedbacks(for: order).buyerFeedback() != nil
     }
     
     
-    func orderChecklistSellerFeedback(_ order: Order) -> Bool {
+    func checklist_sellerFeedback(_ order: Order) -> Bool {
         
         if orderIsValidatedWithoutFeedback(order) {
             
@@ -234,8 +231,51 @@ class OrderChecklistCoreController {
     }
     
     
-    func orderChecklistUnchangedFor30Days(_ order: Order) -> Bool {
+    func checklist_unchangedFor30Days(_ order: Order) -> Bool {
         
         return order.dateStatusChanged.days(to: Date()) > 30
     }
+
+
+    func checklist(for order: Order) -> Checklist {
+        
+        Checklist(
+            payment: checklist_payment(order),
+            incomeTransaction: checklist_incomeTransaction(order),
+            shippingTransaction: checklist_shippingTransaction(order),
+            picking: checklist_picking(order),
+            verification: checklist_verification(order),
+            packed: checklist_packed(order),
+            shipped: checklist_shipped(order),
+            trackingNo: checklist_trackingNo(order),
+            driveThru: checklist_driveThru(order),
+            stamping: checklist_stamping(order),
+            received: checklist_received(order),
+            completed: checklist_completed(order),
+            buyerFeedback: checklist_buyerFeedback(order),
+            sellerFeedback: checklist_sellerFeedback(order),
+            unchangedFor30Days: checklist_unchangedFor30Days(order)
+        )
+    }
+}
+
+
+
+struct Checklist {
+    
+    let payment: Bool
+    let incomeTransaction: Bool
+    let shippingTransaction: Bool
+    let picking: Bool
+    let verification: Bool
+    let packed: Bool
+    let shipped: Bool
+    let trackingNo: Bool
+    let driveThru: Bool
+    let stamping: Bool
+    let received: Bool
+    let completed: Bool
+    let buyerFeedback: Bool
+    let sellerFeedback: Bool
+    let unchangedFor30Days: Bool
 }

@@ -27,32 +27,32 @@ struct OrdersActionsSheet: View {
                     
                     sectionView(orders: orderStore.ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistCompleted(order))
+                            CheckView(checked: orderStore.checklist_completed(order))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order))
+                            CheckView(checked: orderStore.checklist_sellerFeedback(order))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: orderStore.ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistSellerFeedback(order))
+                            CheckView(checked: orderStore.checklist_sellerFeedback(order))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: orderStore.ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistShipped(order))
+                            CheckView(checked: orderStore.checklist_shipped(order))
                             Text("Mark shipped")
                             if orderStore.isUpdatingStatus(of: order, to: .shipped) {
                                 Text("updating...")
                             }
                         }
                         HStack {
-                            CheckView(checked: orderStore.orderChecklistDriveThru(order))
+                            CheckView(checked: orderStore.checklist_driveThru(order))
                             Text("Send drive thru")
                             if orderStore.isSendingDriveThru(for: order) {
                                 Text("updating...")
