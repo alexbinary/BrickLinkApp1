@@ -9,6 +9,7 @@ public struct Order: Identifiable, Equatable, Codable, Datable, Sendable {
     public let id: String
     public let date: Date
     public let dateStatusChanged: Date
+    public var unchangedFor30Days: Bool { dateStatusChanged.days(to: Date()) > 30 }
     public let buyer: String
     public let status: OrderStatus
     

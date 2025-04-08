@@ -110,7 +110,7 @@ class OrderMacroStatusCoreController {
     func macroStatus(for order: Order) -> OrderMacroStatus {
         
         if order.status.isOneOf(.cancelled, .purged) {
-            return checklist_unchangedFor30Days(order) ? .closed : .recentlyClosed
+            return order.unchangedFor30Days ? .closed : .recentlyClosed
         }
         
         let initialStatus: OrderMacroStatus = .validatePayment
@@ -172,11 +172,11 @@ class OrderMacroStatusCoreController {
             return validatedStatus
         }()
         
-        if status == .inTransit, checklist_unchangedFor30Days(order) {
+        if status == .inTransit, order.unchangedFor30Days {
             status = .inTransitFor30PlusDays
         }
         
-        if status == .closed, !checklist_unchangedFor30Days(order) {
+        if status == .closed, !order.unchangedFor30Days {
             status = .recentlyClosed
         }
         

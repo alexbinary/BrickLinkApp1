@@ -260,7 +260,7 @@ struct OrdersMainListItem: View {
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             items.append(OrderStatusTag(text: "Shipped \(formattedDate)", status: .waitingOnExternalAction))
             
-            if orderStore.checklist_unchangedFor30Days(order) {
+            if order.unchangedFor30Days {
                 items.append(OrderStatusTag(text: "Mark Completed and give feedback", status: .actionRequired, action: {
                     Task {
                         await orderStore.updateStatus(of: order, to: .completed)

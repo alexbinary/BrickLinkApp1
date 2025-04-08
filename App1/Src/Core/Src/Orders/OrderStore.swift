@@ -293,12 +293,6 @@ public class OrderStore {
         orderChecklistCoreController.checklist_sellerFeedback(order)
     }
     
-
-    public func checklist_unchangedFor30Days(_ order: Order) -> Bool {
-        
-        orderChecklistCoreController.checklist_unchangedFor30Days(order)
-    }
-    
     
     public func pickingProgress(for order: Order) -> Percent {
         

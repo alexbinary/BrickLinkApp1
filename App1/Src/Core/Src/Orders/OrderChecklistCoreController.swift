@@ -233,7 +233,7 @@ class OrderChecklistCoreController {
     
     func checklist_unchangedFor30Days(_ order: Order) -> Bool {
         
-        return order.dateStatusChanged.days(to: Date()) > 30
+        order.unchangedFor30Days
     }
 
 
