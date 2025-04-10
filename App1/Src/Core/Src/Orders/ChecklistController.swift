@@ -106,33 +106,33 @@ class ChecklistController {
     }
     
     
-    private func checklist_payment(_ order: Order) -> Bool {
+    private func checklistState_payment(_ order: Order) -> ChecklistState {
         
-        return order.paymentStatus.isOneOf(.completed, .received)
+        order.paymentStatus.isOneOf(.completed, .received) ? .validated : .pending
     }
     
     
-    private func checklist_incomeTransaction(_ order: Order) -> Bool {
+    private func checklistState_incomeTransaction(_ order: Order) -> ChecklistState {
         
         if orderIsValidatedWithoutIncomeTransaction(order) {
             
-            return true
+            return .validated
         }
         
-        return !incomeTransactions(for: order).isEmpty
+        return incomeTransactions(for: order).isEmpty ? .pending : .validated
     }
     
     
-    private func checklist_shippingTransaction(_ order: Order) -> Bool {
+    private func checklistState_shippingTransaction(_ order: Order) -> ChecklistState {
         
         if !shippingTransactions(for: order).isEmpty {
             
-            return true
+            return .validated
         }
         
         if orderIsValidatedWithoutShippingTransaction(order) {
             
-            return true
+            return .validated
         }
         
         if let orderDetails = details(for: order), orderDetails.shipsWithLaPoste {
@@ -140,150 +140,156 @@ class ChecklistController {
             let stamping = stamping(for: order)
             if !(stamping ?? "").isEmpty, stamping != "Bureau de poste" {
                 
-                return true
+                return .validated
             }
         }
         
-        return false
+        return .pending
     }
     
     
-    private func checklist_picking(_ order: Order) -> Bool {
+    private func checklistState_picking(_ order: Order) -> ChecklistState {
         
-        pickingProgressController.pickingProgress(for: order) == 100%
+        pickingProgressController.pickingProgress(for: order) == 100% ? .validated : .pending
     }
     
     
-    private func checklist_verification(_ order: Order) -> Bool {
+    private func checklistState_verification(_ order: Order) -> ChecklistState {
         
-        pickingProgressController.pickingVerificationProgress(for: order) == 100%
+        pickingProgressController.pickingVerificationProgress(for: order) == 100% ? .validated : .pending
     }
     
     
-    private func checklist_packed(_ order: Order) -> Bool {
+    private func checklistState_packed(_ order: Order) -> ChecklistState {
         
-        return order.status.isOneOf(.packed, .shipped, .received, .completed)
+        order.status.isOneOf(.packed, .shipped, .received, .completed) ? .validated : .pending
     }
     
     
-    private func checklist_shipped(_ order: Order) -> Bool {
+    private func checklistState_shipped(_ order: Order) -> ChecklistState {
         
-        return order.status.isOneOf(.shipped, .received, .completed)
+        order.status.isOneOf(.shipped, .received, .completed) ? .validated : .pending
     }
     
     
-    private func checklist_trackingNo(_ order: Order) -> Bool {
+    private func checklistState_trackingNo(_ order: Order) -> ChecklistState {
             
-        return (details(for: order)?.trackingNo ?? "").isEmpty ? false : true
+        (details(for: order)?.trackingNo ?? "").isEmpty ? .pending : .validated
     }
     
     
-    private func checklist_driveThru(_ order: Order) -> Bool {
+    private func checklistState_driveThru(_ order: Order) -> ChecklistState {
         
-        details(for: order)?.driveThruSent ?? false
+        details(for: order)?.driveThruSent ?? false ? .validated : .pending
     }
     
     
-    private func checklist_stamping(_ order: Order) -> Bool {
+    private func checklistState_stamping(_ order: Order) -> ChecklistState {
         
         if let orderDetails = details(for: order), orderDetails.shipsWithMondialRelay {
             
-            return true
+            return .validated
         }
         
         if orderIsValidatedWithoutStamping(order) {
             
-            return true
+            return .validated
         }
         
-        return (stamping(for: order) ?? "").isEmpty ? false : true
+        return (stamping(for: order) ?? "").isEmpty ? .pending : .validated
     }
     
     
-    private func checklist_received(_ order: Order) -> Bool {
+    private func checklistState_received(_ order: Order) -> ChecklistState {
         
-        return order.status.isOneOf(.received, .completed)
+        order.status.isOneOf(.received, .completed) ? .validated : .pending
     }
     
     
-    private func checklist_completed(_ order: Order) -> Bool {
+    private func checklistState_completed(_ order: Order) -> ChecklistState {
         
-        return order.status == .completed
+        order.status == .completed ? .validated : .pending
     }
     
     
-    private func checklist_buyerFeedback(_ order: Order) -> Bool {
+    private func checklistState_buyerFeedback(_ order: Order) -> ChecklistState {
         
-        return feedbacks(for: order).buyerFeedback() != nil
+        feedbacks(for: order).buyerFeedback() != nil ? .validated : .pending
     }
     
     
-    private func checklist_sellerFeedback(_ order: Order) -> Bool {
+    private func checklistState_sellerFeedback(_ order: Order) -> ChecklistState {
         
         if orderIsValidatedWithoutFeedback(order) {
             
-            return true
+            return .validated
         }
         
-        return feedbacks(for: order).sellerFeedback() != nil
+        return feedbacks(for: order).sellerFeedback() != nil ? .validated : .pending
     }
     
     
-    private func checklist_unchangedFor30Days(_ order: Order) -> Bool {
+    private func checklistState_unchangedFor30Days(_ order: Order) -> ChecklistState {
         
-        order.unchangedFor30Days
+        order.unchangedFor30Days ? .validated : .pending
+    }
+    
+    
+    private func state(of item: ChecklistItem, for order: Order) -> ChecklistState {
+        
+        switch item {
+            
+        case .payment:
+            return checklistState_payment(order)
+            
+        case .incomeTransaction:
+            return checklistState_incomeTransaction(order)
+            
+        case .shippingTransaction:
+            return checklistState_shippingTransaction(order)
+            
+        case .picking:
+            return checklistState_picking(order)
+            
+        case .verification:
+            return checklistState_verification(order)
+            
+        case .packed:
+            return checklistState_packed(order)
+            
+        case .shipped:
+            return checklistState_shipped(order)
+            
+        case .trackingNo:
+            return checklistState_trackingNo(order)
+            
+        case .driveThru:
+            return checklistState_driveThru(order)
+            
+        case .stamping:
+            return checklistState_stamping(order)
+            
+        case .received:
+            return checklistState_received(order)
+            
+        case .completed:
+            return checklistState_completed(order)
+            
+        case .buyerFeedback:
+            return checklistState_buyerFeedback(order)
+            
+        case .sellerFeedback:
+            return checklistState_sellerFeedback(order)
+            
+        case .unchangedFor30Days:
+            return checklistState_unchangedFor30Days(order)
+        }
     }
     
     
     func order(_ order: Order, validates item: ChecklistItem) -> Bool {
         
-        switch item {
-            
-        case .payment:
-            return checklist_payment(order)
-            
-        case .incomeTransaction:
-            return checklist_incomeTransaction(order)
-            
-        case .shippingTransaction:
-            return checklist_shippingTransaction(order)
-            
-        case .picking:
-            return checklist_picking(order)
-            
-        case .verification:
-            return checklist_verification(order)
-            
-        case .packed:
-            return checklist_packed(order)
-            
-        case .shipped:
-            return checklist_shipped(order)
-            
-        case .trackingNo:
-            return checklist_trackingNo(order)
-            
-        case .driveThru:
-            return checklist_driveThru(order)
-            
-        case .stamping:
-            return checklist_stamping(order)
-            
-        case .received:
-            return checklist_received(order)
-            
-        case .completed:
-            return checklist_completed(order)
-            
-        case .buyerFeedback:
-            return checklist_buyerFeedback(order)
-            
-        case .sellerFeedback:
-            return checklist_sellerFeedback(order)
-            
-        case .unchangedFor30Days:
-            return checklist_unchangedFor30Days(order)
-        }
+        state(of: item, for: order) == .validated
     }
 }
 
@@ -305,4 +311,12 @@ public enum ChecklistItem {
     case buyerFeedback
     case sellerFeedback
     case unchangedFor30Days
+}
+
+
+public enum ChecklistState {
+    
+    case validated
+    case pending
+    case notApplicable
 }
