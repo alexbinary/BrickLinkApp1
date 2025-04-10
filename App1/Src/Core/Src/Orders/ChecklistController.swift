@@ -289,7 +289,7 @@ class ChecklistController {
     
     func order(_ order: Order, validates item: ChecklistItem) -> Bool {
         
-        state(of: item, for: order) == .validated
+        state(of: item, for: order).isOneOf(.validated, .notApplicable)
     }
 }
 
@@ -314,7 +314,7 @@ public enum ChecklistItem {
 }
 
 
-public enum ChecklistState {
+public enum ChecklistState: IsOneOfAble {
     
     case validated
     case pending
