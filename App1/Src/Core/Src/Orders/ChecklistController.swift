@@ -116,7 +116,7 @@ class ChecklistController {
         
         if orderIsValidatedWithoutIncomeTransaction(order) {
             
-            return .validated
+            return .notApplicable
         }
         
         return incomeTransactions(for: order).isEmpty ? .pending : .validated
@@ -132,7 +132,7 @@ class ChecklistController {
         
         if orderIsValidatedWithoutShippingTransaction(order) {
             
-            return .validated
+            return .notApplicable
         }
         
         if let orderDetails = details(for: order), orderDetails.shipsWithLaPoste {
@@ -140,7 +140,7 @@ class ChecklistController {
             let stamping = stamping(for: order)
             if !(stamping ?? "").isEmpty, stamping != "Bureau de poste" {
                 
-                return .validated
+                return .notApplicable
             }
         }
         
@@ -188,12 +188,12 @@ class ChecklistController {
         
         if let orderDetails = details(for: order), orderDetails.shipsWithMondialRelay {
             
-            return .validated
+            return .notApplicable
         }
         
         if orderIsValidatedWithoutStamping(order) {
             
-            return .validated
+            return .notApplicable
         }
         
         return (stamping(for: order) ?? "").isEmpty ? .pending : .validated
