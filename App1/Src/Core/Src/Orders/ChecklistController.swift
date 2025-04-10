@@ -1,4 +1,3 @@
-
 import Foundation
 
 
@@ -107,13 +106,13 @@ class ChecklistController {
     }
     
     
-    func checklist_payment(_ order: Order) -> Bool {
+    private func checklist_payment(_ order: Order) -> Bool {
         
         return order.paymentStatus.isOneOf(.completed, .received)
     }
     
     
-    func checklist_incomeTransaction(_ order: Order) -> Bool {
+    private func checklist_incomeTransaction(_ order: Order) -> Bool {
         
         if orderIsValidatedWithoutIncomeTransaction(order) {
             
@@ -124,7 +123,7 @@ class ChecklistController {
     }
     
     
-    func checklist_shippingTransaction(_ order: Order) -> Bool {
+    private func checklist_shippingTransaction(_ order: Order) -> Bool {
         
         if !shippingTransactions(for: order).isEmpty {
             
@@ -149,43 +148,43 @@ class ChecklistController {
     }
     
     
-    func checklist_picking(_ order: Order) -> Bool {
+    private func checklist_picking(_ order: Order) -> Bool {
         
         pickingProgressController.pickingProgress(for: order) == 100%
     }
     
     
-    func checklist_verification(_ order: Order) -> Bool {
+    private func checklist_verification(_ order: Order) -> Bool {
         
         pickingProgressController.pickingVerificationProgress(for: order) == 100%
     }
     
     
-    func checklist_packed(_ order: Order) -> Bool {
+    private func checklist_packed(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.packed, .shipped, .received, .completed)
     }
     
     
-    func checklist_shipped(_ order: Order) -> Bool {
+    private func checklist_shipped(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.shipped, .received, .completed)
     }
     
     
-    func checklist_trackingNo(_ order: Order) -> Bool {
+    private func checklist_trackingNo(_ order: Order) -> Bool {
             
         return (details(for: order)?.trackingNo ?? "").isEmpty ? false : true
     }
     
     
-    func checklist_driveThru(_ order: Order) -> Bool {
+    private func checklist_driveThru(_ order: Order) -> Bool {
         
         details(for: order)?.driveThruSent ?? false
     }
     
     
-    func checklist_stamping(_ order: Order) -> Bool {
+    private func checklist_stamping(_ order: Order) -> Bool {
         
         if let orderDetails = details(for: order), orderDetails.shipsWithMondialRelay {
             
@@ -201,25 +200,25 @@ class ChecklistController {
     }
     
     
-    func checklist_received(_ order: Order) -> Bool {
+    private func checklist_received(_ order: Order) -> Bool {
         
         return order.status.isOneOf(.received, .completed)
     }
     
     
-    func checklist_completed(_ order: Order) -> Bool {
+    private func checklist_completed(_ order: Order) -> Bool {
         
         return order.status == .completed
     }
     
     
-    func checklist_buyerFeedback(_ order: Order) -> Bool {
+    private func checklist_buyerFeedback(_ order: Order) -> Bool {
         
         return feedbacks(for: order).buyerFeedback() != nil
     }
     
     
-    func checklist_sellerFeedback(_ order: Order) -> Bool {
+    private func checklist_sellerFeedback(_ order: Order) -> Bool {
         
         if orderIsValidatedWithoutFeedback(order) {
             
@@ -230,8 +229,80 @@ class ChecklistController {
     }
     
     
-    func checklist_unchangedFor30Days(_ order: Order) -> Bool {
+    private func checklist_unchangedFor30Days(_ order: Order) -> Bool {
         
         order.unchangedFor30Days
     }
+    
+    
+    func order(_ order: Order, validates item: ChecklistItem) -> Bool {
+        
+        switch item {
+            
+        case .payment:
+            return checklist_payment(order)
+            
+        case .incomeTransaction:
+            return checklist_incomeTransaction(order)
+            
+        case .shippingTransaction:
+            return checklist_shippingTransaction(order)
+            
+        case .picking:
+            return checklist_picking(order)
+            
+        case .verification:
+            return checklist_verification(order)
+            
+        case .packed:
+            return checklist_packed(order)
+            
+        case .shipped:
+            return checklist_shipped(order)
+            
+        case .trackingNo:
+            return checklist_trackingNo(order)
+            
+        case .driveThru:
+            return checklist_driveThru(order)
+            
+        case .stamping:
+            return checklist_stamping(order)
+            
+        case .received:
+            return checklist_received(order)
+            
+        case .completed:
+            return checklist_completed(order)
+            
+        case .buyerFeedback:
+            return checklist_buyerFeedback(order)
+            
+        case .sellerFeedback:
+            return checklist_sellerFeedback(order)
+            
+        case .unchangedFor30Days:
+            return checklist_unchangedFor30Days(order)
+        }
+    }
+}
+
+
+public enum ChecklistItem {
+    
+    case payment
+    case incomeTransaction
+    case shippingTransaction
+    case picking
+    case verification
+    case packed
+    case shipped
+    case trackingNo
+    case driveThru
+    case stamping
+    case received
+    case completed
+    case buyerFeedback
+    case sellerFeedback
+    case unchangedFor30Days
 }

@@ -22,87 +22,9 @@ class MacroStatusController {
     // MARK: - Order macro status
     
     
-    func checklist_incomeTransaction(_ order: Order) -> Bool {
+    func order(_ order: Order, validates item: ChecklistItem) -> Bool {
         
-        checklistController.checklist_incomeTransaction(order)
-    }
-    
-    
-    func checklist_shippingTransaction(_ order: Order) -> Bool {
-        
-        checklistController.checklist_shippingTransaction(order)
-    }
-    
-    
-    func checklist_picking(_ order: Order) -> Bool {
-        
-        checklistController.checklist_picking(order)
-    }
-    
-    
-    func checklist_verification(_ order: Order) -> Bool {
-        
-        checklistController.checklist_verification(order)
-    }
-    
-    
-    func checklist_packed(_ order: Order) -> Bool {
-        
-        checklistController.checklist_packed(order)
-    }
-    
-    
-    func checklist_shipped(_ order: Order) -> Bool {
-        
-        checklistController.checklist_shipped(order)
-    }
-    
-    
-    func checklist_trackingNo(_ order: Order) -> Bool {
-        
-        checklistController.checklist_trackingNo(order)
-    }
-    
-    
-    func checklist_driveThru(_ order: Order) -> Bool {
-        
-        checklistController.checklist_driveThru(order)
-    }
-    
-    
-    func checklist_stamping(_ order: Order) -> Bool {
-        
-        checklistController.checklist_stamping(order)
-    }
-    
-    
-    func checklist_received(_ order: Order) -> Bool {
-        
-        checklistController.checklist_received(order)
-    }
-    
-    
-    func checklist_completed(_ order: Order) -> Bool {
-        
-        checklistController.checklist_completed(order)
-    }
-    
-    
-    func checklist_buyerFeedback(_ order: Order) -> Bool {
-        
-        checklistController.checklist_buyerFeedback(order)
-    }
-    
-    
-    func checklist_sellerFeedback(_ order: Order) -> Bool {
-        
-        checklistController.checklist_sellerFeedback(order)
-    }
-    
-    
-    func checklist_unchangedFor30Days(_ order: Order) -> Bool {
-        
-        checklistController.checklist_unchangedFor30Days(order)
+        checklistController.order(order, validates: item)
     }
     
     
@@ -118,40 +40,40 @@ class MacroStatusController {
             (condition: () -> Bool, status: OrderMacroStatus)
         ] = [
             (condition: {
-                self.checklist_incomeTransaction(order)
+                self.order(order, validates: .incomeTransaction)
                 
             }, status: .pickAndPack
             ),
             (condition: {
-                self.checklist_picking(order)
-                && self.checklist_verification(order)
-                && self.checklist_packed(order)
+                self.order(order, validates: .picking)
+                && self.order(order, validates: .verification)
+                && self.order(order, validates: .packed)
                 
             }, status: .ship
             ),
             (condition: {
-                self.checklist_stamping(order)
-                && self.checklist_shippingTransaction(order)
-                && self.checklist_trackingNo(order)
-                && self.checklist_shipped(order)
-                && self.checklist_driveThru(order)
+                self.order(order, validates: .stamping)
+                && self.order(order, validates: .shippingTransaction)
+                && self.order(order, validates: .trackingNo)
+                && self.order(order, validates: .shipped)
+                && self.order(order, validates: .driveThru)
                 
             }, status: .inTransit
             ),
             (condition: {
-                self.checklist_received(order)
+                self.order(order, validates: .received)
                 
             }, status: .received
             ),
             (condition: {
-                self.checklist_completed(order)
-                || self.checklist_buyerFeedback(order)
-                || self.checklist_unchangedFor30Days(order)
+                self.order(order, validates: .completed)
+                || self.order(order, validates: .buyerFeedback)
+                || self.order(order, validates: .unchangedFor30Days)
                 
             }, status: .giveFeedback
             ),
             (condition: {
-                self.checklist_sellerFeedback(order)
+                self.order(order, validates: .sellerFeedback)
                 
             }, status: .closed
             )

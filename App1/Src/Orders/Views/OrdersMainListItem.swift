@@ -1,4 +1,3 @@
-
 import SwiftUI
 import Core
 
@@ -194,44 +193,44 @@ struct OrdersMainListItem: View {
         
         case .validatePayment:
             
-            if !orderStore.checklist_payment(order) {
+            if !orderStore.order(order, validates: .payment) {
                 items.append(OrderStatusTag(text: "Payment pending", status: .waitingOnExternalAction))
                 
-            } else if !orderStore.checklist_incomeTransaction(order) {
+            } else if !orderStore.order(order, validates: .incomeTransaction) {
                 items.append(OrderStatusTag(text: "Register payment transaction", status: .actionRequired))
             }
             
         case .pickAndPack:
             
-            if !orderStore.checklist_picking(order) {
+            if !orderStore.order(order, validates: .picking) {
                 
                 let progress = pickingStore.pickingProgress(for: order)
                 let text = progress == 0% ? "Start picking" : "\(progress) picked"
                 items.append(OrderStatusTag(text: text, status: .actionRequired))
                 
-            } else if !orderStore.checklist_verification(order) {
+            } else if !orderStore.order(order, validates: .verification) {
                 
                 let progress = pickingStore.pickingVerificationProgress(for: order)
                 let text = progress == 0% ? "Start verification" : "\(progress) verified"
                 items.append(OrderStatusTag(text: text, status: .actionRequired))
                 
-            } else if !orderStore.checklist_packed(order) {
+            } else if !orderStore.order(order, validates: .packed) {
                 items.append(OrderStatusTag(text: "Not packed yet", status: .actionRequired))
             }
             
         case .ship:
             
-            if !orderStore.checklist_stamping(order) {
+            if !orderStore.order(order, validates: .stamping) {
                 items.append(OrderStatusTag(text: "Stamping not validated", status: .actionRequired))
             }
-            if !orderStore.checklist_shippingTransaction(order) {
+            if !orderStore.order(order, validates: .shippingTransaction) {
                 items.append(OrderStatusTag(text: "No shipping transaction", status: .actionRequired))
             }
-            if !orderStore.checklist_trackingNo(order) {
+            if !orderStore.order(order, validates: .trackingNo) {
                 items.append(OrderStatusTag(text: "Missing tracking no", status: .actionRequired))
             }
             
-            if !orderStore.checklist_shipped(order) && !orderStore.checklist_driveThru(order) {
+            if !orderStore.order(order, validates: .shipped) && !orderStore.order(order, validates: .driveThru) {
                 
                 var text = "Ship and send Drive thru"
                 if orderStore.isUpdatingStatus(of: order, to: .shipped) {
@@ -247,10 +246,10 @@ struct OrdersMainListItem: View {
                     }
                 }))
             } else {
-                if !orderStore.checklist_shipped(order) {
+                if !orderStore.order(order, validates: .shipped) {
                     items.append(OrderStatusTag(text: "Mark Shipped", status: .actionRequired))
                 }
-                if !orderStore.checklist_driveThru(order) {
+                if !orderStore.order(order, validates: .driveThru) {
                     items.append(OrderStatusTag(text: "Send Drive thru", status: .actionRequired))
                 }
             }

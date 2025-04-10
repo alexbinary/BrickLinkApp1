@@ -209,87 +209,9 @@ public class OrderStore {
     // MARK: - Checklist
     
     
-    public func checklist_payment(_ order: Order) -> Bool {
+    public func order(_ order: Order, validates item: ChecklistItem) -> Bool {
         
-        checklistController.checklist_payment(order)
-    }
-    
-    
-    public func checklist_incomeTransaction(_ order: Order) -> Bool {
-        
-        checklistController.checklist_incomeTransaction(order)
-    }
-    
-    
-    public func checklist_picking(_ order: Order) -> Bool {
-        
-        checklistController.checklist_picking(order)
-    }
-    
-    
-    public func checklist_verification(_ order: Order) -> Bool {
-        
-        checklistController.checklist_verification(order)
-    }
-    
-    
-    public func checklist_packed(_ order: Order) -> Bool {
-        
-        checklistController.checklist_packed(order)
-    }
-    
-    
-    public func checklist_stamping(_ order: Order) -> Bool {
-        
-        checklistController.checklist_stamping(order)
-    }
-    
-    
-    public func checklist_shippingTransaction(_ order: Order) -> Bool {
-        
-        checklistController.checklist_shippingTransaction(order)
-    }
-    
-    
-    public func checklist_trackingNo(_ order: Order) -> Bool {
-        
-        checklistController.checklist_trackingNo(order)
-    }
-    
-    
-    public func checklist_shipped(_ order: Order) -> Bool {
-        
-        checklistController.checklist_shipped(order)
-    }
-    
-        
-    public func checklist_driveThru(_ order: Order) -> Bool {
-        
-        checklistController.checklist_driveThru(order)
-    }
-    
-    
-    public func checklist_received(_ order: Order) -> Bool {
-        
-        checklistController.checklist_received(order)
-    }
-    
-    
-    public func checklist_completed(_ order: Order) -> Bool {
-        
-        checklistController.checklist_completed(order)
-    }
-    
-    
-    public func checklist_buyerFeedback(_ order: Order) -> Bool {
-        
-        checklistController.checklist_buyerFeedback(order)
-    }
-
-    
-    public func checklist_sellerFeedback(_ order: Order) -> Bool {
-        
-        checklistController.checklist_sellerFeedback(order)
+        checklistController.order(order, validates: item)
     }
     
     
@@ -319,11 +241,11 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Payment received",
-                        checked: checklist_payment(order)
+                        checked: self.order(order, validates: .payment)
                     ),
                     .init(
                         label: "Register transaction",
-                        checked: checklist_incomeTransaction(order)
+                        checked: self.order(order, validates: .incomeTransaction)
                     ),
                 ]
             ),
@@ -339,22 +261,22 @@ public class OrderStore {
                                 return "Pick items - \(progress) complete"
                             }
                         }(),
-                        checked: checklist_picking(order)
+                        checked: self.order(order, validates: .picking)
                     ),
                     .init(
                         label: {
-                            let progress = pickingProgressController.pickingVerificationProgress(for: order)
+                            let progress = pickingVerificationProgress(for: order)
                             if progress == 0% || progress == 100% {
                                 return "Verify items"
                             } else {
                                 return "Verify items - \(progress) complete"
                             }
                         }(),
-                        checked: checklist_verification(order)
+                        checked: self.order(order, validates: .verification)
                     ),
                     .init(
                         label: "Pack order",
-                        checked: checklist_packed(order)
+                        checked: self.order(order, validates: .packed)
                     ),
                 ]
             ),
@@ -363,23 +285,23 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Validate stamping",
-                        checked: checklist_stamping(order)
+                        checked: self.order(order, validates: .stamping)
                     ),
                     .init(
                         label: "Register transaction",
-                        checked: checklist_shippingTransaction(order)
+                        checked: self.order(order, validates: .shippingTransaction)
                     ),
                     .init(
                         label: "Input tracking no",
-                        checked: checklist_trackingNo(order)
+                        checked: self.order(order, validates: .trackingNo)
                     ),
                     .init(
                         label: "Mark Shipped",
-                        checked: checklist_shipped(order)
+                        checked: self.order(order, validates: .shipped)
                     ),
                     .init(
                         label: "Send drive thru",
-                        checked: checklist_driveThru(order)
+                        checked: self.order(order, validates: .driveThru)
                     ),
                 ]
             ),
@@ -398,7 +320,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Received",
-                        checked: checklist_received(order)
+                        checked: self.order(order, validates: .received)
                     ),
                 ]
             ),
@@ -407,11 +329,11 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Completed",
-                        checked: checklist_completed(order)
+                        checked: self.order(order, validates: .completed)
                     ),
                     .init(
                         label: "Buyer feedback",
-                        checked: checklist_buyerFeedback(order)
+                        checked: self.order(order, validates: .buyerFeedback)
                     ),
                 ]
             ),
@@ -420,7 +342,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Give feedback",
-                        checked: checklist_sellerFeedback(order)
+                        checked: self.order(order, validates: .sellerFeedback)
                     ),
                 ]
             ),
@@ -470,10 +392,10 @@ public class OrderStore {
                 orders: orders
                     .filter { macroStatus(for: $0) == .pickAndPack }
                     .sorted {
-                        checklist_verification($0) != checklist_verification($1)
-                        && checklist_verification($0)
+                        self.order($0, validates: .verification) != self.order($1, validates: .verification)
+                        && self.order($0, validates: .verification)
                         ||
-                        checklist_verification($0) != checklist_verification($1)
+                        self.order($0, validates: .verification) != self.order($1, validates: .verification)
                         && $0.lots < $1.lots
                     }
             ),
@@ -720,9 +642,9 @@ public class OrderStore {
     public func orderNeedsShipAndSendDriveThru(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .ship
-        && checklist_stamping(order)
-        && checklist_shippingTransaction(order)
-        && checklist_trackingNo(order)
+        && self.order(order, validates: .stamping)
+        && self.order(order, validates: .shippingTransaction)
+        && self.order(order, validates: .trackingNo)
     }
     
     
