@@ -209,6 +209,12 @@ public class OrderStore {
     // MARK: - Checklist
     
     
+    public func state(of item: ChecklistItem, for order: Order) -> ChecklistState {
+        
+        checklistController.state(of: item, for: order)
+    }
+    
+    
     public func order(_ order: Order, validates item: ChecklistItem) -> Bool {
         
         checklistController.order(order, validates: item)
@@ -241,11 +247,11 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Payment received",
-                        checked: self.order(order, validates: .payment)
+                        state: state(of: .payment, for: order)
                     ),
                     .init(
                         label: "Register transaction",
-                        checked: self.order(order, validates: .incomeTransaction)
+                        state: state(of: .incomeTransaction, for: order)
                     ),
                 ]
             ),
@@ -261,7 +267,7 @@ public class OrderStore {
                                 return "Pick items - \(progress) complete"
                             }
                         }(),
-                        checked: self.order(order, validates: .picking)
+                        state: state(of: .picking, for: order)
                     ),
                     .init(
                         label: {
@@ -272,11 +278,11 @@ public class OrderStore {
                                 return "Verify items - \(progress) complete"
                             }
                         }(),
-                        checked: self.order(order, validates: .verification)
+                        state: state(of: .verification, for: order)
                     ),
                     .init(
                         label: "Pack order",
-                        checked: self.order(order, validates: .packed)
+                        state: state(of: .packed, for: order)
                     ),
                 ]
             ),
@@ -285,23 +291,23 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Validate stamping",
-                        checked: self.order(order, validates: .stamping)
+                        state: state(of: .stamping, for: order)
                     ),
                     .init(
                         label: "Register transaction",
-                        checked: self.order(order, validates: .shippingTransaction)
+                        state: state(of: .shippingTransaction, for: order)
                     ),
                     .init(
                         label: "Input tracking no",
-                        checked: self.order(order, validates: .trackingNo)
+                        state: state(of: .trackingNo, for: order)
                     ),
                     .init(
                         label: "Mark Shipped",
-                        checked: self.order(order, validates: .shipped)
+                        state: state(of: .shipped, for: order)
                     ),
                     .init(
                         label: "Send drive thru",
-                        checked: self.order(order, validates: .driveThru)
+                        state: state(of: .driveThru, for: order)
                     ),
                 ]
             ),
@@ -310,7 +316,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Picked up by transporter",
-                        checked: laPosteTrackingStatus(for: order)?.isOneOf(.inTransit, .delivered) ?? false,
+                        state: laPosteTrackingStatus(for: order)?.isOneOf(.inTransit, .delivered) ?? false ? .validated : .pending,
                         mandatory: false
                     ),
                 ]
@@ -320,7 +326,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Received",
-                        checked: self.order(order, validates: .received)
+                        state: state(of: .received, for: order)
                     ),
                 ]
             ),
@@ -329,11 +335,11 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Completed",
-                        checked: self.order(order, validates: .completed)
+                        state: state(of: .completed, for: order)
                     ),
                     .init(
                         label: "Buyer feedback",
-                        checked: self.order(order, validates: .buyerFeedback)
+                        state: state(of: .buyerFeedback, for: order)
                     ),
                 ]
             ),
@@ -342,7 +348,7 @@ public class OrderStore {
                 items: [
                     .init(
                         label: "Give feedback",
-                        checked: self.order(order, validates: .sellerFeedback)
+                        state: state(of: .sellerFeedback, for: order)
                     ),
                 ]
             ),
@@ -730,12 +736,12 @@ public struct ChecklistData {
         
         public var id: String { label }
         public let label: String
-        public let checked: Bool
+        public let state: ChecklistState
         public let mandatory: Bool
         
-        public init(label: String, checked: Bool, mandatory: Bool = true) {
+        public init(label: String, state: ChecklistState, mandatory: Bool = true) {
             self.label = label
-            self.checked = checked
+            self.state = state
             self.mandatory = mandatory
         }
     }

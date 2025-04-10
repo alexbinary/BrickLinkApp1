@@ -46,32 +46,32 @@ struct OrdersActionsSheet: View {
                     
                     sectionView(orders: ordersThatNeedCompletedAndGiveFeedback, title: "Complete & Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderStore.order(order, validates: .completed))
+                            CheckView(state: orderStore.state(of: .completed, for: order))
                             Text("Mark completed")
                         }
                         HStack {
-                            CheckView(checked: orderStore.order(order, validates: .sellerFeedback))
+                            CheckView(state: orderStore.state(of: .sellerFeedback, for: order))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: ordersThatNeedGiveFeedback, title: "Give feedback") { order in
                         HStack {
-                            CheckView(checked: orderStore.order(order, validates: .sellerFeedback))
+                            CheckView(state: orderStore.state(of: .sellerFeedback, for: order))
                             Text("Give feedback")
                         }
                     }
                     
                     sectionView(orders: ordersToShipAndSendDriveThru, title: "Ship and send DT") { order in
                         HStack {
-                            CheckView(checked: orderStore.order(order, validates: .shipped))
+                            CheckView(state: orderStore.state(of: .shipped, for: order))
                             Text("Mark shipped")
                             if orderStore.isUpdatingStatus(of: order, to: .shipped) {
                                 Text("updating...")
                             }
                         }
                         HStack {
-                            CheckView(checked: orderStore.order(order, validates: .driveThru))
+                            CheckView(state: orderStore.state(of: .driveThru, for: order))
                             Text("Send drive thru")
                             if orderStore.isSendingDriveThru(for: order) {
                                 Text("updating...")

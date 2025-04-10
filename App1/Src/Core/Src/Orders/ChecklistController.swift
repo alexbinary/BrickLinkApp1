@@ -235,7 +235,7 @@ class ChecklistController {
     }
     
     
-    private func state(of item: ChecklistItem, for order: Order) -> ChecklistState {
+    func state(of item: ChecklistItem, for order: Order) -> ChecklistState {
         
         switch item {
             

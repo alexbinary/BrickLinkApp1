@@ -1,27 +1,33 @@
-
 import SwiftUI
+import Core
 
 
 
 struct CheckView: View {
     
     
-    let checked: Bool
+    let state: ChecklistState
     let mandatory: Bool
     
     
-    init(checked: Bool, mandatory: Bool = true) {
-        self.checked = checked
+    init(state: ChecklistState, mandatory: Bool = true) {
+        self.state = state
         self.mandatory = mandatory
     }
     
 
     var body: some View {
-
-        if checked {
+        
+        switch state {
+        
+        case .validated:
             Text("􀁣").foregroundStyle(green)
-        } else {
+        
+        case .pending:
             Text("􀀀").foregroundStyle(mandatory ? red : .gray)
+        
+        case .notApplicable:
+            Text("􀀁").foregroundStyle(.gray)
         }
     }
 }
@@ -31,8 +37,10 @@ struct CheckView: View {
 #Preview {
     VStack {
         Group {
-            CheckView(checked: true)
-            CheckView(checked: false)
+            CheckView(state: .validated)
+            CheckView(state: .pending)
+            CheckView(state: .pending, mandatory: false)
+            CheckView(state: .notApplicable)
         }.padding()
     }
 }

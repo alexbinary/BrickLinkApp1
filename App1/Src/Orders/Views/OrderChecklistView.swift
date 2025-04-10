@@ -1,4 +1,3 @@
-
 import SwiftUI
 import Core
 
@@ -37,7 +36,7 @@ struct OrderChecklistView: View {
                         ForEach(section.items) { item in
                             
                             GridRow {
-                                CheckView(checked: item.checked, mandatory: item.mandatory)
+                                CheckView(state: item.state, mandatory: item.mandatory)
                                 Text(item.label)
                             }
                         }
