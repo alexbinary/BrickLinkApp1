@@ -156,9 +156,10 @@ class InventoryController {
         
         let inventory = InventoryItem(fromBl: blInventory)
         
-        invalidateInventories()
+        updateController.validateInventory(inventory.id)
         
-        Task { await loadInventories(.refetchOnlyIfInvalidated) }
+        try! dataStore.setInventory(inventory)
+        try! dataStore.save()
         
         return inventory
     }
