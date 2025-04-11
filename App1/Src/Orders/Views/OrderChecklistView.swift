@@ -75,6 +75,10 @@ struct OrderChecklistView: View {
             }
             .scrollIndicators(.hidden)
         }
+        .onAppear {
+            let completedSections = checklist.sections.filter { sectionState(for: $0).state != .pending }
+            collapsedSections = Set(completedSections.map(\.id))
+        }
     }
     
     
