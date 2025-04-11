@@ -351,11 +351,7 @@ public class OrderStore {
                         state: state(of: .sellerFeedback, for: order)
                     ),
                 ]
-            ),
-            .init(
-                title: OrderMacroStatus.closed.descriptionWithPicto,
-                items: []
-            ),
+            )
         ])
     }
 
