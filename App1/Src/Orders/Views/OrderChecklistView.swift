@@ -59,7 +59,14 @@ struct OrderChecklistView: View {
                                 .padding(.horizontal, 12)
                             },
                             label: {
-                                Text(section.title).checklistTitle()
+                                HStack {
+                                    Text(section.title).checklistTitle()
+                                    Spacer()
+                                    if !isExpandedBinding.wrappedValue {
+                                        let state = sectionState(for: section)
+                                        CheckView(state: state.state, mandatory: state.mandatory)
+                                    }
+                                }
                             }
                         )
                         .fixedSize()
@@ -68,6 +75,23 @@ struct OrderChecklistView: View {
             }
             .scrollIndicators(.hidden)
         }
+    }
+    
+    
+    private func sectionState(for section: ChecklistData.SectionData) -> (state: ChecklistState, mandatory: Bool) {
+        
+        let states = section.items.map(\.state)
+        let mandatory = section.items.map(\.mandatory).contains(true)
+        
+        if states.contains(.pending) {
+            return (state: .pending, mandatory: mandatory)
+        }
+        
+        if states.contains(.validated) {
+            return (state: .validated, mandatory: mandatory)
+        }
+        
+        return (state: .notApplicable, mandatory: mandatory)
     }
 }
 
