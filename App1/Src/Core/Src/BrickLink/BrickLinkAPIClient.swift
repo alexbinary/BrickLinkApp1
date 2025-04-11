@@ -1,4 +1,3 @@
-
 import Foundation
 
 
@@ -246,9 +245,9 @@ struct BrickLinkAPIClient {
         unitPrice: Float? = nil,
         remarks: String? = nil
         
-    ) async {
+    ) async -> BrickLinkInventoryItem {
         
-        try! await send(withMethod: .PUT, to: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(inventoryId)")!) {
+        return try! await fetchAndDecodeData(from: URL(string: "https://api.bricklink.com/api/store/v1/inventories/\(inventoryId)")!, withMethod: .PUT) {
             
             var body = """
             {

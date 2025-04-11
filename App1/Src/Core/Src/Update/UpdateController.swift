@@ -711,13 +711,15 @@ class UpdateController {
         
         print("Updating inventory \(inventoryId)...")
         
-        await brickLinkAPIClient.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        let blInventory = await brickLinkAPIClient.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        let inventory = InventoryItem(fromBl: blInventory)
         
         print("updated inventory \(inventoryId)")
         
-        invalidateInventory(inventoryId)
+        validateInventory(inventoryId)
         
-        Task { await loadInventory(withId: inventoryId, .refetchOnlyIfInvalidated) }
+        try! dataStore.setInventory(inventory)
+        try! dataStore.save()
     }
     
     
