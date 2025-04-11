@@ -43,6 +43,17 @@ struct LoadInventoryOperation: UpdateOperation {
 }
 
 
+struct UpdateInventoryOperation: UpdateOperation {
+    
+    let id = UpdateOperationID()
+    let inventoryId: InventoryItem.ID
+    let addQuantity: Int
+    let unitPrice: Float?
+    let remarks: String?
+    let operationTag: OperationTag?
+}
+
+
 // MARK: - Orders
 
 

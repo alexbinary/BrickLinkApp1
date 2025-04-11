@@ -1,4 +1,3 @@
-
 import Foundation
 
 
@@ -72,6 +71,26 @@ class UpdateController {
         hasScheduledOrRunningOperation(ofType: LoadInventoryOperation.self, matching: {
             $0.inventoryId == inventoryId &&
             $0.refetchStrategy == .forceRefetch || self.inventoryInvalidated($0.inventoryId)
+        })
+    }
+    
+    
+    func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
+        
+        await enqueue(UpdateInventoryOperation(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks, operationTag: nil))
+    }
+    
+    
+    var isRunningOrIsScheduledToRun_updateInventory: Bool {
+        
+        hasScheduledOrRunningOperation(ofType: UpdateInventoryOperation.self)
+    }
+    
+    
+    func isRunningOrIsScheduledToRun_updateInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+        
+        hasScheduledOrRunningOperation(ofType: UpdateInventoryOperation.self, matching: {
+            $0.inventoryId == inventoryId
         })
     }
     
@@ -419,6 +438,10 @@ class UpdateController {
                 await run_loadInventory(withId: op.inventoryId)
             }
             
+        } else if let op = operation as? UpdateInventoryOperation {
+            
+            await run_updateInventory(withId: op.inventoryId, addQuantity: op.addQuantity, unitPrice: op.unitPrice, remarks: op.remarks)
+            
         } else if let op = operation as? LoadOrdersOperation {
             
             if ordersInvalidated || op.refetchStrategy == .forceRefetch {
@@ -681,6 +704,20 @@ class UpdateController {
         
         try! dataStore.setInventory(inventory)
         try! dataStore.save()
+    }
+    
+    
+    private func run_updateInventory(withId inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float?, remarks: String?) async {
+        
+        print("Updating inventory \(inventoryId)...")
+        
+        await brickLinkAPIClient.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        
+        print("updated inventory \(inventoryId)")
+        
+        invalidateInventory(inventoryId)
+        
+        Task { await loadInventory(withId: inventoryId, .refetchOnlyIfInvalidated) }
     }
     
     

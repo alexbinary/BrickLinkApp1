@@ -1,4 +1,3 @@
-
 import Foundation
 import SwiftUI
 
@@ -167,10 +166,6 @@ class InventoryController {
     
     func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
-        await brickLinkAPIClient.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
-        
-        invalidateInventory(inventoryId)
-        
-        Task { await loadInventory(withId: inventoryId, .refetchOnlyIfInvalidated) }
+        await updateController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
 }
