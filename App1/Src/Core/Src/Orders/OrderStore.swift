@@ -717,18 +717,18 @@ public class OrderStore {
 
 
 
-public struct ChecklistData {
+public struct ChecklistData: Equatable {
     
     public let sections: [SectionData]
     
-    public struct SectionData: Identifiable {
+    public struct SectionData: Identifiable, Equatable {
         
         public var id: String { title }
         public let title: String
         public let items: [ItemData]
     }
     
-    public struct ItemData: Identifiable {
+    public struct ItemData: Identifiable, Equatable {
         
         public var id: String { label }
         public let label: String
