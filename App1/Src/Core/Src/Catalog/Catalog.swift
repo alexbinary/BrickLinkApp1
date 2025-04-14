@@ -1,4 +1,3 @@
-
 import Foundation
 import HTMLEntities
 import SwiftUI
@@ -83,5 +82,11 @@ public class Catalog {
     public func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
         
         BrickLinkUtility.url(forCatalogImageOfItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
+    }
+    
+
+    public func url(forRebrickableLengthOverlayForItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+        
+        URL(string: "https://rebrickable.com/static/img/overlays/ov_6.png")
     }
 }

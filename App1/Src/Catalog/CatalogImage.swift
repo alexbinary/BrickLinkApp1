@@ -1,4 +1,3 @@
-
 import SwiftUI
 import Core
 
@@ -41,10 +40,24 @@ struct CatalogImage: View {
     
 
     var body: some View {
+        
+        let width: CGFloat = 90
+        let height: CGFloat = 70
 
-        AsyncImage(url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId))
-            .frame(minHeight: 70, maxHeight: 70, alignment: .top)
-            .frame(minWidth: 90, maxWidth: 90, alignment: .top)
+        ZStack {
+            AsyncImage(url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId)) { image in
+                image
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: width, height: height, alignment: .top)
+            } placeholder: { Color.clear }
+            
+            AsyncImage(url: catalog.url(forRebrickableLengthOverlayForItemOfType: type, ref: ref, colorId: colorId)) { image in
+                image
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: width, height: height, alignment: .topTrailing)
+            } placeholder: { Color.clear }
+        }
+        .frame(width: width, height: height, alignment: .top)
     }
 }
 
