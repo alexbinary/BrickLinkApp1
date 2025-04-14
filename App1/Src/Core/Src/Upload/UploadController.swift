@@ -48,6 +48,8 @@ class UploadController {
     
     func importUploadList(fromXml xml: String) {
         
+        print("Starting XML inventory import...")
+        
         let parser = XMLParser(data: Data(xml.utf8))
         let parserDelegate = UploadListXMLParserDelegate()
         parser.delegate = parserDelegate
@@ -57,7 +59,11 @@ class UploadController {
             return
         }
         
-        try! dataStore.addUploadItems(parserDelegate.decodedUploadItems)
+        let items = parserDelegate.decodedUploadItems
+        
+        print("imported \(items.count) items")
+        
+        try! dataStore.addUploadItems(items)
         try! dataStore.save()
     }
     

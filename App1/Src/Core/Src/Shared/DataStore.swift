@@ -449,13 +449,13 @@ class DataStore {
     }
     
     
-    func addUploadItems(_ uploadItems: [UploadItem]) throws {
+    func addUploadItems(_ addedUploadItems: [UploadItem]) throws {
         
-        var uploadItems = self.uploadItems
+        var newUploadItems = self.uploadItems
         
-        uploadItems.append(contentsOf: uploadItems)
+        newUploadItems.append(contentsOf: addedUploadItems)
         
-        try setUploadItems(uploadItems)
+        try setUploadItems(newUploadItems)
     }
     
     
