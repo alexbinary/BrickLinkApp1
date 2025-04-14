@@ -84,6 +84,12 @@ public class Catalog {
         BrickLinkUtility.url(forCatalogImageOfItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
     }
     
+    
+    public func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+        
+        BrickLinkUtility.url(forItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
+    }
+    
 
     public func url(forRebrickableLengthOverlayForItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
         

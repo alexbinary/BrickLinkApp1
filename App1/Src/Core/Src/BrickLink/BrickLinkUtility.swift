@@ -15,6 +15,17 @@ enum BrickLinkUtility {
             return URL(string: "https://img.bricklink.com/M/\(ref).jpg")
         }
     }
+
+
+    static func url(forItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+        
+        switch type {
+        case .part:
+            return URL(string: "https://www.bricklink.com/v2/catalog/catalogitem.page?P=\(ref)&C=\(colorId)")
+        case .minifig:
+            return URL(string: "https://www.bricklink.com/v2/catalog/catalogitem.page?M=\(ref)")
+        }
+    }
     
     
     static func url(forDetailsOfOrderWithId orderId: String) -> URL? {

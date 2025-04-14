@@ -13,6 +13,9 @@ struct PickingItemView: View {
     @Environment(InventoryStore.self)
     var inventoryStore
     
+    @Environment(Catalog.self)
+    var catalog
+    
     
     let item: OrderItem
     let button: ButtonType
@@ -34,7 +37,9 @@ struct PickingItemView: View {
                     CatalogImage(orderItem: item)
                     
                     VStack(alignment: .leading) {
-                        Text(item.ref).captionStyle()
+                        Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
+                            Text(item.ref).captionStyle()
+                        }
                         Text(item.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
                         if !item.comment.isEmpty { Text(item.comment) }
                     }
