@@ -12,7 +12,7 @@ public class Catalog {
     private let dataStore: DataStore
     private let updateController: UpdateController
     private let brickLinkAPIClient: BrickLinkAPIClient
-    
+
     
     init(_ dataStore: DataStore, _ updateController: UpdateController, _ brickLinkAPIClient: BrickLinkAPIClient) {
         
@@ -91,8 +91,14 @@ public class Catalog {
     }
     
 
+    // MARK: - Lengths overlay
+    
+
     public func url(forRebrickableLengthOverlayForItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
-        
-        URL(string: "https://rebrickable.com/static/img/overlays/ov_6.png")
+     
+        if type == .part, let length = overlayLengthByPartRef[ref] {
+            return URL(string: "https://rebrickable.com/static/img/overlays/ov_\(length).png")
+        }
+        return nil
     }
 }
