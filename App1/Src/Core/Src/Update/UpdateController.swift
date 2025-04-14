@@ -362,8 +362,8 @@ class UpdateController {
     
     
     private func dequeue() async {
-        
-        // TODO: dequeue write operations first
+
+        queuedOperations = queuedOperations.filter { $0.isWriteOperation } + queuedOperations.filter { $0.isReadOperation }
         
         for candidateOperation in queuedOperations {
             
@@ -373,7 +373,7 @@ class UpdateController {
                 continue
             }
             
-            if runningOperations.isEmpty || runningOperations.allSatisfy({ operation($0, canRunInParallelWith: candidateOperation) }) {
+            if runningOperations.isEmpty || runningOperations.allSatisfy({ operation(candidateOperation, canStartInParallelWithRunningOperation: $0) }) {
                 
                 start(candidateOperation)
             }
@@ -404,7 +404,7 @@ class UpdateController {
     }
     
     
-    func operation(_ operationA: UpdateOperation, isSameAs operationB: UpdateOperation) -> Bool {
+    private func operation(_ operationA: UpdateOperation, isSameAs operationB: UpdateOperation) -> Bool {
         
         if operationA is LoadOrdersOperation, operationB is LoadOrdersOperation {
             return true
@@ -414,9 +414,52 @@ class UpdateController {
     }
     
     
-    private func operation(_ operationA: UpdateOperation, canRunInParallelWith operationB: UpdateOperation) -> Bool {
+    private func operation(_ candidateOperation: UpdateOperation, canStartInParallelWithRunningOperation runningOperation: UpdateOperation) -> Bool {
         
+        if operation(candidateOperation, readsDataWrittenBy: runningOperation) {
+            return false
+        }
+
         return true
+    }
+
+
+    private func operation(_ readOperation: UpdateOperation, readsDataWrittenBy writeOperation: UpdateOperation) -> Bool {
+
+        if readOperation is LoadInventoriesOperation {
+            if writeOperation is UpdateInventoryOperation {
+                return true
+            }
+        }
+        
+        if let readOp = readOperation as? LoadInventoryOperation {
+            if let writeOp = writeOperation as? UpdateInventoryOperation, readOp.inventoryId == writeOp.inventoryId {
+                return true
+            }
+        }
+        
+        if readOperation is LoadOrdersOperation {
+            if writeOperation is UpdateOrderStatusOperation {
+                return true
+            }
+        }
+        
+        if let readOp = readOperation as? LoadOrderDetailsOperation {
+            if let writeOp = writeOperation as? UpdateOrderTrackingNoOperation, readOp.order.id == writeOp.order.id {
+                return true
+            }
+            if let writeOp = writeOperation as? SendDriveThruOperation, readOp.order.id == writeOp.order.id {
+                return true
+            }
+        }
+        
+        if let readOp = readOperation as? LoadOrderFeedbacksOperation {
+            if let writeOp = writeOperation as? PostOrderFeedbackOperation, readOp.order.id == writeOp.order.id {
+                return true
+            }
+        }
+        
+        return false
     }
     
     

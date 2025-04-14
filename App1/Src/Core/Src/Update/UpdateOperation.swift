@@ -10,6 +10,48 @@ protocol UpdateOperation {
     
     var id: UpdateOperationID { get }
     var operationTag: OperationTag? { get }
+    var type: OperationType { get }
+    var isWriteOperation: Bool { get }
+    var isReadOperation: Bool { get }
+}
+
+
+enum OperationType {
+    
+    case read
+    case write
+}
+
+
+extension UpdateOperation {
+    
+    var type: OperationType {
+
+        if self is UpdateInventoryOperation {
+            return .write
+        }
+        if self is UpdateOrderStatusOperation {
+            return .write
+        }
+        if self is UpdateOrderTrackingNoOperation {
+            return .write
+        }
+        if self is SendDriveThruOperation {
+            return .write
+        }
+        if self is PostOrderFeedbackOperation {
+            return .write
+        }
+        return .read
+    }
+
+    var isWriteOperation: Bool {
+        return type == .write
+    }
+    
+    var isReadOperation: Bool {
+        return type == .read
+    }
 }
 
 
