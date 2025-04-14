@@ -60,10 +60,10 @@ struct OrderChecklistView: View {
                             },
                             label: {
                                 HStack {
+                                    let state = sectionState(for: section)
                                     Text(section.title).checklistTitle()
-                                    Spacer()
-                                    if !isExpandedBinding.wrappedValue {
-                                        let state = sectionState(for: section)
+                                        .strikethrough(state.state != .pending)
+                                    if !isExpandedBinding.wrappedValue {                                        
                                         CheckView(state: state.state, mandatory: state.mandatory)
                                     }
                                 }
