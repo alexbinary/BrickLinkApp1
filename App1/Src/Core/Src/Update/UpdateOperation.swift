@@ -13,6 +13,7 @@ protocol UpdateOperation {
     var type: OperationType { get }
     var isWriteOperation: Bool { get }
     var isReadOperation: Bool { get }
+    func isSame(as other: UpdateOperation) -> Bool
 }
 
 
@@ -62,6 +63,10 @@ struct LoadColorsOperation: UpdateOperation {
     
     let id = UpdateOperationID()
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        return other is LoadColorsOperation
+    }
 }
 
 
@@ -73,6 +78,10 @@ struct LoadInventoriesOperation: UpdateOperation {
     let id = UpdateOperationID()
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        return other is LoadInventoriesOperation
+    }
 }
 
 
@@ -82,6 +91,13 @@ struct LoadInventoryOperation: UpdateOperation {
     let inventoryId: InventoryItem.ID
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? LoadInventoryOperation, otherOp.inventoryId == inventoryId {
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -93,6 +109,16 @@ struct UpdateInventoryOperation: UpdateOperation {
     let unitPrice: Float?
     let remarks: String?
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? UpdateInventoryOperation {
+            return otherOp.inventoryId == inventoryId && 
+                   otherOp.addQuantity == addQuantity && 
+                   otherOp.unitPrice == unitPrice && 
+                   otherOp.remarks == remarks
+        }
+        return false
+    }
 }
 
 
@@ -104,6 +130,10 @@ struct LoadOrdersOperation: UpdateOperation {
     let id = UpdateOperationID()
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        return other is LoadOrdersOperation
+    }
 }
 
 
@@ -113,6 +143,13 @@ struct LoadOrderDetailsOperation: UpdateOperation {
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? LoadOrderDetailsOperation, otherOp.order.id == order.id {
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -122,6 +159,13 @@ struct LoadOrderItemsOperation: UpdateOperation {
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? LoadOrderItemsOperation, otherOp.order.id == order.id {
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -134,6 +178,13 @@ struct UpdateOrderStatusOperation: UpdateOperation {
     let order: Order
     let status: OrderStatus
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? UpdateOrderStatusOperation {
+            return otherOp.order.id == order.id && otherOp.status == status
+        }
+        return false
+    }
 }
 
 
@@ -143,6 +194,13 @@ struct UpdateOrderTrackingNoOperation: UpdateOperation {
     let order: Order
     let trackingNo: TrackingNo
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? UpdateOrderTrackingNoOperation {
+            return otherOp.order.id == order.id && otherOp.trackingNo == trackingNo
+        }
+        return false
+    }
 }
 
 
@@ -151,6 +209,13 @@ struct SendDriveThruOperation: UpdateOperation {
     let id = UpdateOperationID()
     let order: Order
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? SendDriveThruOperation, otherOp.order.id == order.id {
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -163,6 +228,13 @@ struct UpdateLaPosteTrackingStatusOperation: UpdateOperation {
     let trackingNo: TrackingNo
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? UpdateLaPosteTrackingStatusOperation, otherOp.trackingNo == trackingNo {
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -175,6 +247,13 @@ struct LoadOrderFeedbacksOperation: UpdateOperation {
     let order: Order
     let refetchStrategy: RefetchStrategy
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? LoadOrderFeedbacksOperation, otherOp.order.id == order.id {
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -185,4 +264,13 @@ struct PostOrderFeedbackOperation: UpdateOperation {
     let rating: FeedbackRating
     let comment: String
     let operationTag: OperationTag?
+    
+    func isSame(as other: UpdateOperation) -> Bool {
+        if let otherOp = other as? PostOrderFeedbackOperation {
+            return otherOp.order.id == order.id && 
+                   otherOp.rating == rating && 
+                   otherOp.comment == comment
+        }
+        return false
+    }
 }

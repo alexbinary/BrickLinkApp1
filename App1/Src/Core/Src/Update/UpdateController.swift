@@ -367,7 +367,7 @@ class UpdateController {
         
         for candidateOperation in queuedOperations {
             
-            if let same = runningOperations.first(where: { operation(candidateOperation, isSameAs: $0) }) {
+            if candidateOperation.isReadOperation, let same = runningOperations.first(where: { $0.isSame(as: candidateOperation) }) {
              
                 drop(candidateOperation, giveContinuationToRunningOperationWithId: same.id)
                 continue
@@ -401,16 +401,6 @@ class UpdateController {
             
             await dequeue()
         }
-    }
-    
-    
-    private func operation(_ operationA: UpdateOperation, isSameAs operationB: UpdateOperation) -> Bool {
-        
-        if operationA is LoadOrdersOperation, operationB is LoadOrdersOperation {
-            return true
-        }
-            
-        return false
     }
     
     
