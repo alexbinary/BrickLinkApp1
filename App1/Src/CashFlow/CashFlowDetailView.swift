@@ -1,7 +1,6 @@
 
 import SwiftUI
 import Charts
-import Core
 
 
 
@@ -18,10 +17,10 @@ struct CashFlowDetailView: View {
     @State private var selectedMonth: String? = nil
     @State private var monthPositionRangesByMonth: [String: ClosedRange<CGFloat>] = [:]
     
-    @State private var selectedTransaction: Core.Transaction? = nil
+    @State private var selectedTransaction: Transaction? = nil
     
     
-    var selectedTransactions: Set<Core.Transaction.ID> { nav.selectedTransactions }
+    var selectedTransactions: Set<Transaction.ID> { nav.selectedTransactions }
     
     
     var body: some View {
@@ -209,7 +208,7 @@ struct CashFlowDetailView: View {
                     let transactions = allTransactions.sorted { $0.date < $1.date }
                     
                     let accumulatedTotals: [(
-                        transaction: Core.Transaction?,
+                        transaction: Transaction?,
                         date: Date,
                         totalIncome: Float,
                         totalExpense: Float,
@@ -217,7 +216,7 @@ struct CashFlowDetailView: View {
                     )] = {
                         
                         var values: [(
-                            transaction: Core.Transaction?,
+                            transaction: Transaction?,
                             date: Date,
                             totalIncome: Float,
                             totalExpense: Float,

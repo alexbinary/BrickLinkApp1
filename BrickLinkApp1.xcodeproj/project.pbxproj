@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2967A80B2D92E5890025F16B /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 2967A80A2D92E5890025F16B /* Core */; };
+		2986FEA72DAE5F140000D2E9 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2986FEA62DAE5F140000D2E9 /* CryptoSwift */; };
+		2986FEA92DAE5F140000D2E9 /* HTMLEntities in Frameworks */ = {isa = PBXBuildFile; productRef = 2986FEA82DAE5F140000D2E9 /* HTMLEntities */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -15,19 +16,9 @@
 		29D758EA2D552014001C369F /* Experimental1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Experimental1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2967A8082D92E42E0025F16B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Src/Core,
-			);
-			target = 29BB308B2C77B0CA000525CB /* App1 */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		29F915F42D7B3D4D00A6165D /* Experimental1 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Experimental1; sourceTree = "<group>"; };
-		29F916542D7B3D8B00A6165D /* App1 */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2967A8082D92E42E0025F16B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = App1; sourceTree = "<group>"; };
+		29F916542D7B3D8B00A6165D /* App1 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App1; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +26,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2967A80B2D92E5890025F16B /* Core in Frameworks */,
+				2986FEA92DAE5F140000D2E9 /* HTMLEntities in Frameworks */,
+				2986FEA72DAE5F140000D2E9 /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,11 +41,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2986FEA52DAE5F140000D2E9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		29BB30832C77B0CA000525CB = {
 			isa = PBXGroup;
 			children = (
 				29F915F42D7B3D4D00A6165D /* Experimental1 */,
 				29F916542D7B3D8B00A6165D /* App1 */,
+				2986FEA52DAE5F140000D2E9 /* Frameworks */,
 				29BB308D2C77B0CA000525CB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +87,8 @@
 			);
 			name = App1;
 			packageProductDependencies = (
-				2967A80A2D92E5890025F16B /* Core */,
+				2986FEA62DAE5F140000D2E9 /* CryptoSwift */,
+				2986FEA82DAE5F140000D2E9 /* HTMLEntities */,
 			);
 			productName = BrickLinkApp1;
 			productReference = 29BB308C2C77B0CA000525CB /* App1.app */;
@@ -481,9 +482,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2967A80A2D92E5890025F16B /* Core */ = {
+		2986FEA62DAE5F140000D2E9 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Core;
+			package = 29941FDD2D9442800083B00C /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+		2986FEA82DAE5F140000D2E9 /* HTMLEntities */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29BBFF872D944B110019035C /* XCRemoteSwiftPackageReference "swift-html-entities" */;
+			productName = HTMLEntities;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

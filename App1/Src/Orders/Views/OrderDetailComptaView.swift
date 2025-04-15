@@ -1,6 +1,5 @@
 
 import SwiftUI
-import Core
 
 
 
@@ -197,7 +196,7 @@ struct OrderDetailComptaView: View {
 
     func submitIncomeTransaction() {
         
-        transactionStore.register(Core.Transaction(
+        transactionStore.register(Transaction(
             date: incomeDate,
             createdAt: Date(),
             type: .orderIncome,
@@ -212,7 +211,7 @@ struct OrderDetailComptaView: View {
     
     func submitShippingTransaction() {
      
-        transactionStore.register(Core.Transaction(
+        transactionStore.register(Transaction(
             date: shippingDate,
             createdAt: Date(),
             type: .orderShipping,
@@ -227,7 +226,7 @@ struct OrderDetailComptaView: View {
     
     func submitRefundTransaction() {
      
-        transactionStore.register(Core.Transaction(
+        transactionStore.register(Transaction(
             date: refundDate,
             createdAt: Date(),
             type: .orderRefund,
