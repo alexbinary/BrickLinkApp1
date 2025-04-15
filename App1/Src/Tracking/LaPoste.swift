@@ -16,7 +16,6 @@ public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
 
 
 
-@MainActor
 public struct LaPosteTrackingClient {
     
     

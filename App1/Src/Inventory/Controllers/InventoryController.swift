@@ -3,7 +3,6 @@ import SwiftUI
 
 
 
-@MainActor
 class InventoryController {
     
     

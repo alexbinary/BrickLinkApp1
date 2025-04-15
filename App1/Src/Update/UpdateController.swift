@@ -2,7 +2,6 @@ import Foundation
 
 
 
-@MainActor
 @Observable
 class UpdateController {
     

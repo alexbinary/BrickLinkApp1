@@ -2,7 +2,6 @@ import Foundation
 
 
 
-@MainActor
 class ChecklistController {
     
     

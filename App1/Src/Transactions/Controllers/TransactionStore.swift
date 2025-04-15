@@ -5,7 +5,6 @@ import SwiftUI
 
 
 @Observable
-@MainActor
 public class TransactionStore {
     
     

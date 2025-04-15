@@ -4,7 +4,6 @@ import Foundation
 
 
 @Observable
-@MainActor
 public class TrackingStore {
     
     
