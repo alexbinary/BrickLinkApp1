@@ -3,18 +3,18 @@ import Foundation
 
 
 
-public struct Feedback: Identifiable, Codable {
+struct Feedback: Identifiable, Codable {
     
-    public let id: Int
-    public let orderId: String
-    public let from: String
-    public let to: String
-    public let dateRated: Date
-    public let rating: FeedbackRating
-    public let author: FeedbackAuthor
-    public let comment: String
+    let id: Int
+    let orderId: String
+    let from: String
+    let to: String
+    let dateRated: Date
+    let rating: FeedbackRating
+    let author: FeedbackAuthor
+    let comment: String
     
-    public init(id: Int, orderId: String, from: String, to: String, dateRated: Date, rating: FeedbackRating, author: FeedbackAuthor, comment: String) {
+    init(id: Int, orderId: String, from: String, to: String, dateRated: Date, rating: FeedbackRating, author: FeedbackAuthor, comment: String) {
         
         self.id = id
         self.orderId = orderId
@@ -48,7 +48,7 @@ extension Feedback {
 
 
 
-public enum FeedbackAuthor: String, Codable {
+enum FeedbackAuthor: String, Codable {
     
     
     case buyer
@@ -72,32 +72,32 @@ extension FeedbackAuthor {
 
 extension Array where Element == Feedback {
     
-    
-    public func sellerFeedback() -> Feedback? {
+
+    func sellerFeedback() -> Feedback? {
         
         return self.first { $0.author == .seller }
     }
+
     
-    
-    public func buyerFeedback() -> Feedback? {
+    func buyerFeedback() -> Feedback? {
         
         return self.first { $0.author == .buyer }
     }
+
     
-    
-    public func hasSellerFeedback() -> Bool {
+    func hasSellerFeedback() -> Bool {
         
         return self.sellerFeedback() != nil
     }
+
     
-    
-    public func hasBuyerFeedback() -> Bool {
+    func hasBuyerFeedback() -> Bool {
         
         return self.buyerFeedback() != nil
     }
     
     
-    public func hasBothSellerAndBuyerFeedback() -> Bool {
+    func hasBothSellerAndBuyerFeedback() -> Bool {
         
         return hasSellerFeedback() && self.hasBuyerFeedback()
     }

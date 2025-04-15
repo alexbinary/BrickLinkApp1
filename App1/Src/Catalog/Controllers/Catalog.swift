@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-public class Catalog {
+class Catalog {
     
     
     private let dataStore: DataStore
@@ -24,13 +24,13 @@ public class Catalog {
     // MARK: - Colors
     
     
-    public var allColors: [LegoColor] {
+    var allColors: [LegoColor] {
         
         dataStore.colors
     }
     
     
-    public func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
+    func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
         
         if let c = dataStore.colors.first(where: { $0.id == colorId }) {
             return Color(fromBLCode: c.colorCode)
@@ -40,25 +40,25 @@ public class Catalog {
     }
     
     
-    public func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
+    func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
         
         dataStore.colors.first(where: { $0.id == colorId })?.name ?? "\(colorId)"
     }
     
     
-    public func colorAndName(forLegoColorId colorId: LegoColor.ID) -> (color: Color?, name: String) {
+    func colorAndName(forLegoColorId colorId: LegoColor.ID) -> (color: Color?, name: String) {
         
         (color: color(forLegoColorId: colorId), name: colorName(forLegoColorId: colorId))
     }
     
     
-    public func loadColors(_ operationTag: OperationTag? = nil) async {
+    func loadColors(_ operationTag: OperationTag? = nil) async {
         
         await updateController.loadColors(operationTag)
     }
     
     
-    public var isLoadingColors: Bool {
+    var isLoadingColors: Bool {
         
         updateController.isRunningOrIsScheduledToRun_loadColors
     }
@@ -67,7 +67,7 @@ public class Catalog {
     // MARK: - Items
     
     
-    public func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
+    func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
         
         if let entry = await brickLinkAPIClient.fetchCatalogEntry(itemType: type.brickLinkItemType, ref: ref) {
             
@@ -78,13 +78,13 @@ public class Catalog {
     }
     
     
-    public func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+    func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
         
         BrickLinkUtility.url(forCatalogImageOfItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
     }
     
     
-    public func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+    func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
         
         BrickLinkUtility.url(forItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
     }
@@ -93,7 +93,7 @@ public class Catalog {
     // MARK: - Lengths overlay
     
 
-    public func url(forRebrickableLengthOverlayForItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+    func url(forRebrickableLengthOverlayForItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
      
         if type == .part, let length = overlayLengthByPartRef[ref] {
             return URL(string: "https://rebrickable.com/static/img/overlays/ov_\(length).png")

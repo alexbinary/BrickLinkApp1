@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class RefundStore {
+class RefundStore {
     
     
     let refundController: RefundController
@@ -14,15 +14,15 @@ public class RefundStore {
         
         self.refundController = refundController
     }
+
     
-    
-    public func refunds(for order: Order) -> [OrderRefund] {
+    func refunds(for order: Order) -> [OrderRefund] {
         
         refundController.refunds(for: order)
     }
+
     
-    
-    public func create(_ refund: OrderRefund) {
+    func create(_ refund: OrderRefund) {
         
         refundController.create(refund)
     }

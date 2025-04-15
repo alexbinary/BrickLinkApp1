@@ -293,7 +293,7 @@ class ChecklistController {
 }
 
 
-public enum ChecklistItem {
+enum ChecklistItem {
     
     case payment
     case incomeTransaction
@@ -313,7 +313,7 @@ public enum ChecklistItem {
 }
 
 
-public enum ChecklistState: IsOneOfAble {
+enum ChecklistState: IsOneOfAble {
     
     case validated
     case pending

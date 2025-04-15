@@ -3,28 +3,27 @@ import Foundation
 
 
 
-public struct OrderDetails: Identifiable, Equatable, Codable {
+struct OrderDetails: Identifiable, Equatable, Codable {
     
+    let id: String
+    let remarks: String?
     
-    public let id: String
-    public let remarks: String?
+    let totalWeight: Float
+    let driveThruSent: Bool
+    let trackingNo: TrackingNo?
     
-    public let totalWeight: Float
-    public let driveThruSent: Bool
-    public let trackingNo: TrackingNo?
+    let shippingMethodId: Int
+    let shippingMethodName: String?
+    let shippingAddress: String
+    let shippingAddressCountryCode: String
+    let shippingAddressName: String
     
-    public let shippingMethodId: Int
-    public let shippingMethodName: String?
-    public let shippingAddress: String
-    public let shippingAddressCountryCode: String
-    public let shippingAddressName: String
+    let shippingCost: Float
+    let dispShippingCost: Float
     
-    public let shippingCost: Float
-    public let dispShippingCost: Float
-    
-    public var shipsToFrance: Bool { shippingMethodId.isOneOf(shippingMethodIds_France) }
-    public var shipsWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
-    public var shipsWithMondialRelay: Bool { shippingMethodId.isOneOf(shippingMethodIds_MondialRelay) }
+    var shipsToFrance: Bool { shippingMethodId.isOneOf(shippingMethodIds_France) }
+    var shipsWithLaPoste: Bool { shippingMethodId.isOneOf(shippingMethodIds_LaPoste) }
+    var shipsWithMondialRelay: Bool { shippingMethodId.isOneOf(shippingMethodIds_MondialRelay) }
 }
 
 

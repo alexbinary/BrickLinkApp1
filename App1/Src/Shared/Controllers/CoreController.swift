@@ -3,28 +3,28 @@ import Foundation
 
 
 
-public class CoreController {
+class CoreController {
     
     
-    public let catalog: Catalog
+    let catalog: Catalog
         
-    public let inventoryStore: InventoryStore
-    public let uploadStore: UploadStore
+    let inventoryStore: InventoryStore
+    let uploadStore: UploadStore
     
-    public let orderStore: OrderStore
-    public let pickingStore: PickingStore
-    public let shippingStore: ShippingStore
-    public let trackingStore: TrackingStore
-    public let feedbackStore: FeedbackStore
-    public let refundStore: RefundStore
+    let orderStore: OrderStore
+    let pickingStore: PickingStore
+    let shippingStore: ShippingStore
+    let trackingStore: TrackingStore
+    let feedbackStore: FeedbackStore
+    let refundStore: RefundStore
     
-    public let transactionStore: TransactionStore
-    public let resultStore: ResultStore
+    let transactionStore: TransactionStore
+    let resultStore: ResultStore
     
-    public let updateStore: UpdateStore
+    let updateStore: UpdateStore
     
     
-    public init(brickLinkCredentials: BrickLinkAPICredentials, debug: Debug) {
+    init(brickLinkCredentials: BrickLinkAPICredentials, debug: Debug) {
         
         let dataStore: DataStore = {
             let path = FileManager.default.currentDirectoryPath.appending("/data/data.json5")

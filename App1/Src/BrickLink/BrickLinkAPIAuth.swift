@@ -9,7 +9,7 @@ import CryptoSwift
 
 
 
-public struct BrickLinkAPICredentials {
+struct BrickLinkAPICredentials {
 
     
     let consumerKey: String
@@ -19,7 +19,7 @@ public struct BrickLinkAPICredentials {
     let tokenSecret: String
     
     
-    public init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
+    init(consumerKey: String, consumerSecret: String, tokenValue: String, tokenSecret: String) {
      
         self.consumerKey = consumerKey
         self.consumerSecret = consumerSecret

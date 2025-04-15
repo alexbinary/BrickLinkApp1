@@ -3,41 +3,41 @@ import Foundation
 
 
 
-public struct ShippingCostBand: Identifiable, Sendable {
+struct ShippingCostBand: Identifiable, Sendable {
     
-    public var id: Int { maxWeight }
+    var id: Int { maxWeight }
     
-    public let minWeight: Int
-    public let maxWeight: Int
+    let minWeight: Int
+    let maxWeight: Int
     
-    public let letter: LetterCost?
+    let letter: LetterCost?
     
-    public var priceParcel: Decimal? = nil
-    public var priceParcelZB: Decimal? = nil
-    public var priceParcelZC: Decimal? = nil
+    var priceParcel: Decimal? = nil
+    var priceParcelZB: Decimal? = nil
+    var priceParcelZC: Decimal? = nil
 }
 
 
-public struct LetterCost: Sendable {
+struct LetterCost: Sendable {
     
-    public let refPrice: Decimal
+    let refPrice: Decimal
     
-    public let priceTimbre: Decimal
-    public let priceTracking: Decimal
+    let priceTimbre: Decimal
+    let priceTracking: Decimal
     
     
-    public var minNbTimbresToCoverRefPrice: Int {
+    var minNbTimbresToCoverRefPrice: Int {
         let raw = (self.refPrice - priceTracking)/priceTimbre
         return Int(ceilf(NSDecimalNumber(decimal: raw).floatValue))
     }
-    public var priceTimbresToCoverRefPrice: Decimal {
+    var priceTimbresToCoverRefPrice: Decimal {
         Decimal(minNbTimbresToCoverRefPrice) * priceTimbre + priceTracking
     }
     
     
-    public let timbresParMultiples: Int?
+    let timbresParMultiples: Int?
     
-    public var priceTimbresParMultiples: Decimal? {
+    var priceTimbresParMultiples: Decimal? {
         if let n = self.timbresParMultiples {
             return Decimal(n) * priceTimbre + priceTracking
         } else {
@@ -46,21 +46,21 @@ public struct LetterCost: Sendable {
     }
     
     
-    public var preferTimbresParMultiples: Bool {
+    var preferTimbresParMultiples: Bool {
         if let n = priceTimbresParMultiples {
             return n < refPrice
         } else {
             return false
         }
     }
-    public var preferCoverRefPriceWithTimbres: Bool {
+    var preferCoverRefPriceWithTimbres: Bool {
         priceTimbresToCoverRefPrice <= refPrice
     }
-    public var preferPostOffice: Bool {
+    var preferPostOffice: Bool {
         !preferTimbresParMultiples && !preferCoverRefPriceWithTimbres
     }
 
-    public var bestPrice: Decimal {
+    var bestPrice: Decimal {
         if preferTimbresParMultiples, let p = priceTimbresParMultiples {
             return p
         }
@@ -69,7 +69,7 @@ public struct LetterCost: Sendable {
         }
         return refPrice
     }
-    public var nbTimbres: Int? {
+    var nbTimbres: Int? {
         if preferTimbresParMultiples, let n = timbresParMultiples {
             return n
         }
@@ -82,21 +82,21 @@ public struct LetterCost: Sendable {
 
 
 
-public struct SelectedShippingCost {
+struct SelectedShippingCost {
     
-    public let maxWeight: Int
+    let maxWeight: Int
     
-    public var preferLetter: Bool
-    public var preferParcel: Bool
-    public var preferParcelZB: Bool
-    public var preferParcelZC: Bool
+    var preferLetter: Bool
+    var preferParcel: Bool
+    var preferParcelZB: Bool
+    var preferParcelZC: Bool
     
-    public let letterStamping: LetterStamping?
+    let letterStamping: LetterStamping?
     
-    public let value: Decimal?
+    let value: Decimal?
     
     
-    public init(maxWeight: Int, preferLetter: Bool = false, preferParcel: Bool = false, preferParcelZB: Bool = false, preferParcelZC: Bool = false, letterStamping: LetterStamping?, value: Decimal?) {
+    init(maxWeight: Int, preferLetter: Bool = false, preferParcel: Bool = false, preferParcelZB: Bool = false, preferParcelZC: Bool = false, letterStamping: LetterStamping?, value: Decimal?) {
         self.maxWeight = maxWeight
         self.preferLetter = preferLetter
         self.preferParcel = preferParcel
@@ -108,15 +108,15 @@ public struct SelectedShippingCost {
 }
 
 
-public struct LetterStamping {
+struct LetterStamping {
     
-    public let useTimbresParMultiples: Bool
-    public let useTimbres: Bool
-    public let usePostOffice: Bool
+    let useTimbresParMultiples: Bool
+    let useTimbres: Bool
+    let usePostOffice: Bool
     
-    public let nbTimbres: Int?
+    let nbTimbres: Int?
     
-    public init(useTimbresParMultiples: Bool, useTimbres: Bool, usePostOffice: Bool, nbTimbres: Int?) {
+    init(useTimbresParMultiples: Bool, useTimbres: Bool, usePostOffice: Bool, nbTimbres: Int?) {
         self.useTimbresParMultiples = useTimbresParMultiples
         self.useTimbres = useTimbres
         self.usePostOffice = usePostOffice
@@ -126,34 +126,34 @@ public struct LetterStamping {
 
 
 
-public let shippingMethodId_France_LaPoste = 289751
-public let shippingMethodId_France_MondialRelay = 330666
-public let shippingMethodId_Europe_LaPoste = 290360
-public let shippingMethodId_World_LaPoste = 185519
+let shippingMethodId_France_LaPoste = 289751
+let shippingMethodId_France_MondialRelay = 330666
+let shippingMethodId_Europe_LaPoste = 290360
+let shippingMethodId_World_LaPoste = 185519
 
-public let shippingMethodIds_LaPoste = [
+let shippingMethodIds_LaPoste = [
     shippingMethodId_France_LaPoste,
     shippingMethodId_Europe_LaPoste,
     shippingMethodId_World_LaPoste,
 ]
-public let shippingMethodIds_MondialRelay = [
+let shippingMethodIds_MondialRelay = [
     shippingMethodId_France_MondialRelay,
 ]
 
-public let shippingMethodIds_France = [
+let shippingMethodIds_France = [
     shippingMethodId_France_LaPoste,
     shippingMethodId_France_MondialRelay,
 ]
 
 
-public let priceTimbreFrance: Decimal = 1.39
-public let priceTrackingFrance: Decimal = 0.50
+let priceTimbreFrance: Decimal = 1.39
+let priceTrackingFrance: Decimal = 0.50
 
-public let priceTimbreWorld: Decimal = 2.10
-public let priceTrackingWorld: Decimal = 2.80
+let priceTimbreWorld: Decimal = 2.10
+let priceTrackingWorld: Decimal = 2.80
 
 
-public let shippingCostBandsFrance = [
+let shippingCostBandsFrance = [
     
     ShippingCostBand(
         minWeight: 0,
@@ -241,7 +241,7 @@ public let shippingCostBandsFrance = [
 ]
 
 
-public let shippingCostBandsEurope = [
+let shippingCostBandsEurope = [
     
     ShippingCostBand(
         minWeight: 0,
@@ -329,7 +329,7 @@ public let shippingCostBandsEurope = [
 ]
 
 
-public let shippingCostBandsWorld = [
+let shippingCostBandsWorld = [
     
     ShippingCostBand(
         minWeight: 0,
@@ -418,4 +418,4 @@ public let shippingCostBandsWorld = [
 
 
 
-public let orderWeightMarginRatio: Float = 1.2
+let orderWeightMarginRatio: Float = 1.2

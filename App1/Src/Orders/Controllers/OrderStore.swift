@@ -3,7 +3,7 @@ import Foundation
 
 
 @Observable
-public class OrderStore {
+class OrderStore {
     
     
     private let orderController: OrderController
@@ -37,7 +37,7 @@ public class OrderStore {
     // MARK: - URLs
     
     
-    public func url(forDetailsOf order: Order) -> URL? {
+    func url(forDetailsOf order: Order) -> URL? {
         
         BrickLinkUtility.url(forDetailsOfOrderWithId: order.id)
     }
@@ -46,25 +46,25 @@ public class OrderStore {
     // MARK: - Orders
     
     
-    public var orders: [Order] {
+    var orders: [Order] {
         
         orderController.orders
     }
     
     
-    public func order(withId orderId: Order.ID) -> Order? {
+    func order(withId orderId: Order.ID) -> Order? {
         
         orderController.order(withId: orderId)
     }
     
     
-    public func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadOrders(refetchStrategy, operationTag)
     }
     
     
-    public var isLoadingOrders: Bool {
+    var isLoadingOrders: Bool {
      
         orderController.isLoadingOrders
     }
@@ -73,31 +73,31 @@ public class OrderStore {
     // MARK: - Details
     
     
-    public func hasDetails(for order: Order) -> Bool {
+    func hasDetails(for order: Order) -> Bool {
         
         orderController.hasDetails(for: order)
     }
     
     
-    public func details(for order: Order) -> OrderDetails? {
+    func details(for order: Order) -> OrderDetails? {
         
         orderController.details(for: order)
     }
     
     
-    public func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadDetails(for: order, refetchStrategy, operationTag)
     }
     
     
-    public var isLoadingOrderDetails: Bool {
+    var isLoadingOrderDetails: Bool {
         
         orderController.isLoadingOrderDetails
     }
     
     
-    public func isLoadingDetails(for order: Order) -> Bool {
+    func isLoadingDetails(for order: Order) -> Bool {
         
         orderController.isLoadingDetails(for: order)
     }
@@ -106,37 +106,37 @@ public class OrderStore {
     // MARK: - Items
     
     
-    public func hasItems(for order: Order) -> Bool {
+    func hasItems(for order: Order) -> Bool {
         
         orderController.hasItems(for: order)
     }
     
     
-    public func items(for order: Order) -> [OrderItem] {
+    func items(for order: Order) -> [OrderItem] {
         
         orderController.items(for: order)
     }
     
     
-    public func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadItems(for: order, refetchStrategy, operationTag)
     }
     
     
-    public func loadItemsIfMissing(for order: Order) async {
+    func loadItemsIfMissing(for order: Order) async {
         
         await orderController.loadItemsIfMissing(for: order)
     }
     
     
-    public var isLoadingOrderItems: Bool {
+    var isLoadingOrderItems: Bool {
         
         orderController.isLoadingOrderItems
     }
     
     
-    public func isLoadingItems(for order: Order) -> Bool {
+    func isLoadingItems(for order: Order) -> Bool {
         
         orderController.isLoadingItems(for: order)
     }
@@ -145,61 +145,61 @@ public class OrderStore {
     // MARK: - Update
     
     
-    public func updateStatus(of order: Order, to status: OrderStatus) async {
+    func updateStatus(of order: Order, to status: OrderStatus) async {
         
         await orderController.updateStatus(of: order, to: status)
     }
     
     
-    public var isUpdatingOrderStatus: Bool {
+    var isUpdatingOrderStatus: Bool {
         
         orderController.isUpdatingOrderStatus
     }
     
     
-    public func isUpdatingStatus(of order: Order) -> Bool {
+    func isUpdatingStatus(of order: Order) -> Bool {
         
         orderController.isUpdatingStatus(of: order)
     }
     
     
-    public func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool {
+    func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool {
         
         orderController.isUpdatingStatus(of: order, to: status)
     }
     
     
-    public func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
+    func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await orderController.updateTrackingNo(of: order, to: trackingNo)
     }
     
     
-    public var isUpdatingOrderTrackingNo: Bool {
+    var isUpdatingOrderTrackingNo: Bool {
         
         orderController.isUpdatingOrderTrackingNo
     }
     
     
-    public func isUpdatingTrackingNo(of order: Order) -> Bool {
+    func isUpdatingTrackingNo(of order: Order) -> Bool {
         
         orderController.isUpdatingTrackingNo(of: order)
     }
     
     
-    public func sendDriveThru(for order: Order) async {
+    func sendDriveThru(for order: Order) async {
         
         await orderController.sendDriveThru(for: order)
     }
     
     
-    public var isSendingDriveThru: Bool {
+    var isSendingDriveThru: Bool {
         
         orderController.isSendingDriveThru
     }
     
     
-    public func isSendingDriveThru(for order: Order) -> Bool {
+    func isSendingDriveThru(for order: Order) -> Bool {
         
         orderController.isSendingDriveThru(for: order)
     }
@@ -208,37 +208,37 @@ public class OrderStore {
     // MARK: - Checklist
     
     
-    public func state(of item: ChecklistItem, for order: Order) -> ChecklistState {
+    func state(of item: ChecklistItem, for order: Order) -> ChecklistState {
         
         checklistController.state(of: item, for: order)
     }
     
     
-    public func order(_ order: Order, validates item: ChecklistItem) -> Bool {
+    func order(_ order: Order, validates item: ChecklistItem) -> Bool {
         
         checklistController.order(order, validates: item)
     }
     
     
-    public func pickingProgress(for order: Order) -> Percent {
+    func pickingProgress(for order: Order) -> Percent {
         
         pickingProgressController.pickingProgress(for: order)
     }
     
     
-    public func pickingVerificationProgress(for order: Order) -> Percent {
+    func pickingVerificationProgress(for order: Order) -> Percent {
         
         pickingProgressController.pickingVerificationProgress(for: order)
     }
     
     
-    public func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
         trackingMiddleController.laPosteTrackingStatus(for: order)
     }
     
     
-    public func checklistData(for order: Order) -> ChecklistData {
+    func checklistData(for order: Order) -> ChecklistData {
         
         return ChecklistData(sections: [
             .init(
@@ -358,13 +358,13 @@ public class OrderStore {
     // MARK: - Macro status
     
     
-    public func macroStatus(for order: Order) -> OrderMacroStatus {
+    func macroStatus(for order: Order) -> OrderMacroStatus {
         
         macroStatusController.macroStatus(for: order)
     }
     
     
-    public func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection] {
+    func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection] {
         
         let orders = orders.filter { $0.matches(searchText) }
         
@@ -505,13 +505,13 @@ public class OrderStore {
     }
     
     
-    public func softRefreshOrders() async {
+    func softRefreshOrders() async {
         
         await refreshOrders(.refetchOnlyIfInvalidated)
     }
     
     
-    public func hardRefreshOrders(_ operationTag: OperationTag? = nil) async {
+    func hardRefreshOrders(_ operationTag: OperationTag? = nil) async {
         
         await refreshOrders(.forceRefetch, operationTag)
     }
@@ -523,25 +523,25 @@ public class OrderStore {
     }
     
     
-    public func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
+    func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refresh(order, .refetchOnlyIfInvalidated, operationTag)
     }
     
     
-    public func softRefresh(orderWithId orderId: Order.ID) async {
+    func softRefresh(orderWithId orderId: Order.ID) async {
         
         await softRefresh(order(withId: orderId)!)
     }
     
     
-    public func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
+    func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refresh(order, .forceRefetch, operationTag)
     }
     
     
-    public func hardRefresh(orderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+    func hardRefresh(orderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
         await hardRefresh(order(withId: orderId)!, operationTag)
     }
@@ -555,25 +555,25 @@ public class OrderStore {
     }
     
     
-    public func softRefreshDetails(for order: Order) async {
+    func softRefreshDetails(for order: Order) async {
         
         await refreshDetails(for: order, .refetchOnlyIfInvalidated)
     }
 
 
-    public func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
+    func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
         
         await softRefreshDetails(for: order(withId: orderId)!)
     }
     
     
-    public func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
+    func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refreshDetails(for: order, .forceRefetch, operationTag)
     }
 
 
-    public func hardRefreshDetails(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+    func hardRefreshDetails(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
         await hardRefreshDetails(for: order(withId: orderId)!, operationTag)
     }
@@ -587,25 +587,25 @@ public class OrderStore {
     }
     
     
-    public func softRefreshItems(for order: Order) async {
+    func softRefreshItems(for order: Order) async {
         
         await refreshItems(for: order, .refetchOnlyIfInvalidated)
     }
     
     
-    public func softRefreshItems(forOrderWithId orderId: Order.ID) async {
+    func softRefreshItems(forOrderWithId orderId: Order.ID) async {
         
         await softRefreshItems(for: order(withId: orderId)!)
     }
     
     
-    public func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
+    func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refreshItems(for: order, .forceRefetch, operationTag)
     }
     
     
-    public func hardRefreshItems(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+    func hardRefreshItems(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
         await hardRefreshItems(for: order(withId: orderId)!, operationTag)
     }
@@ -614,33 +614,33 @@ public class OrderStore {
     // MARK: - Actions
     
     
-    public func orderNeedsCompletedAndGiveFeedback(_ order: Order) -> Bool {
+    func orderNeedsCompletedAndGiveFeedback(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .inTransitFor30PlusDays
     }
     
     
-    public func ordersThatNeedCompletedAndGiveFeedback(_ orders: [Order]) -> [Order] {
+    func ordersThatNeedCompletedAndGiveFeedback(_ orders: [Order]) -> [Order] {
         
         orders.filter { orderNeedsCompletedAndGiveFeedback($0) }
               .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
     
     
-    public func orderNeedsGiveFeedback(_ order: Order) -> Bool {
+    func orderNeedsGiveFeedback(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .giveFeedback
     }
     
     
-    public func ordersThatNeedGiveFeedback(_ orders: [Order]) -> [Order] {
+    func ordersThatNeedGiveFeedback(_ orders: [Order]) -> [Order] {
         
         orders.filter { orderNeedsGiveFeedback($0) }
               .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
     }
     
     
-    public func orderNeedsShipAndSendDriveThru(_ order: Order) -> Bool {
+    func orderNeedsShipAndSendDriveThru(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .ship
         && self.order(order, validates: .stamping)
@@ -649,14 +649,14 @@ public class OrderStore {
     }
     
     
-    public func ordersToShipAndSendDriveThru(_ orders: [Order]) -> [Order] {
+    func ordersToShipAndSendDriveThru(_ orders: [Order]) -> [Order] {
         
         orders.filter { orderNeedsShipAndSendDriveThru($0) }
               .sorted { $0.date > $1.date }
     }
     
     
-    public func orderNeedsAction(_ order: Order) -> Bool {
+    func orderNeedsAction(_ order: Order) -> Bool {
         
         orderNeedsCompletedAndGiveFeedback(order)
         ||
@@ -666,7 +666,7 @@ public class OrderStore {
     }
     
     
-    public func ordersThatNeedAction(_ orders: [Order]) -> [Order] {
+    func ordersThatNeedAction(_ orders: [Order]) -> [Order] {
         
         ordersThatNeedCompletedAndGiveFeedback(orders)
         + ordersThatNeedGiveFeedback(orders)
@@ -674,13 +674,13 @@ public class OrderStore {
     }
     
     
-    public func postPraiseOrderFeedback(for order: Order) async {
+    func postPraiseOrderFeedback(for order: Order) async {
         
         await feedbackPostController.postPraiseFeedback(for: order)
     }
     
     
-    public func performActions(for orders: [Order]) async {
+    func performActions(for orders: [Order]) async {
         
         for order in ordersThatNeedCompletedAndGiveFeedback(orders) {
         
@@ -704,7 +704,7 @@ public class OrderStore {
     // MARK: - Sidebar
     
     
-    public var numberForSidebarBadge: Int {
+    var numberForSidebarBadge: Int {
         
         orders.filter {
             macroStatus(for: $0).isOneOf(
@@ -716,25 +716,25 @@ public class OrderStore {
 
 
 
-public struct ChecklistData: Equatable {
+struct ChecklistData: Equatable {
     
-    public let sections: [SectionData]
+    let sections: [SectionData]
     
-    public struct SectionData: Identifiable, Equatable {
+    struct SectionData: Identifiable, Equatable {
         
-        public var id: String { title }
-        public let title: String
-        public let items: [ItemData]
+        var id: String { title }
+        let title: String
+        let items: [ItemData]
     }
     
-    public struct ItemData: Identifiable, Equatable {
+    struct ItemData: Identifiable, Equatable {
         
-        public var id: String { label }
-        public let label: String
-        public let state: ChecklistState
-        public let mandatory: Bool
+        var id: String { label }
+        let label: String
+        let state: ChecklistState
+        let mandatory: Bool
         
-        public init(label: String, state: ChecklistState, mandatory: Bool = true) {
+        init(label: String, state: ChecklistState, mandatory: Bool = true) {
             self.label = label
             self.state = state
             self.mandatory = mandatory

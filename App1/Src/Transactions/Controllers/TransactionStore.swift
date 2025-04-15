@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-public class TransactionStore {
+class TransactionStore {
     
     
     private let transactionController: TransactionController
@@ -20,13 +20,13 @@ public class TransactionStore {
     // MARK: - General
     
     
-    public var allTransactions: [Transaction] {
+    var allTransactions: [Transaction] {
         
         transactionController.allTransactions
     }
     
     
-    public func register(_ transaction: Transaction) {
+    func register(_ transaction: Transaction) {
         
         transactionController.register(transaction)
     }
@@ -35,19 +35,19 @@ public class TransactionStore {
     // MARK: - Income
     
     
-    public func incomeTransactions(for order: Order) -> [Transaction] {
+    func incomeTransactions(for order: Order) -> [Transaction] {
         
         transactionController.incomeTransactions(for: order)
     }
     
     
-    public func dateOrderValidatedWithoutIncomeTransaction(_ order: Order) -> Date? {
+    func dateOrderValidatedWithoutIncomeTransaction(_ order: Order) -> Date? {
         
         transactionController.dateOrderValidatedWithoutIncomeTransaction(order)
     }
     
     
-    public func validateOrderWithoutIncomeTransaction(_ order: Order) {
+    func validateOrderWithoutIncomeTransaction(_ order: Order) {
         
         transactionController.validateOrderWithoutIncomeTransaction(order)
     }
@@ -56,19 +56,19 @@ public class TransactionStore {
     // MARK: - Shipping
     
     
-    public func shippingTransactions(for order: Order) -> [Transaction] {
+    func shippingTransactions(for order: Order) -> [Transaction] {
         
         transactionController.shippingTransactions(for: order)
     }
     
     
-    public func dateOrderValidatedWithoutShippingTransaction(_ order: Order) -> Date? {
+    func dateOrderValidatedWithoutShippingTransaction(_ order: Order) -> Date? {
         
         transactionController.dateOrderValidatedWithoutShippingTransaction(order)
     }
     
     
-    public func validateOrderWithoutShippingTransaction(_ order: Order) {
+    func validateOrderWithoutShippingTransaction(_ order: Order) {
         
         transactionController.validateOrderWithoutShippingTransaction(order)
     }
@@ -77,7 +77,7 @@ public class TransactionStore {
     // MARK: - Refunds
     
     
-    public func refundTransactions(for order: Order) -> [Transaction] {
+    func refundTransactions(for order: Order) -> [Transaction] {
         
         transactionController.refundTransactions(for: order)
     }

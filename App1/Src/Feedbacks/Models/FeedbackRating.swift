@@ -1,7 +1,7 @@
 
 
 
-public enum FeedbackRating: Int, Codable {
+enum FeedbackRating: Int, Codable {
     
     
     case praise = 0

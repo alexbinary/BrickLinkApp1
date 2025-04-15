@@ -6,7 +6,7 @@ import SwiftUI
 extension Color {
     
     
-    public init(fromBLCode code: String) {
+    init(fromBLCode code: String) {
         
         let r, g, b: CGFloat
 

@@ -3,21 +3,21 @@ import Foundation
 
 
 
-public struct ResultDashboardModel {
+struct ResultDashboardModel {
     
     
-    public let periodNLastDays: Int
-    public let orders: [Order]
+    let periodNLastDays: Int
+    let orders: [Order]
     
-    public let totalItems: Float
-    public let totalShipping: Float
+    let totalItems: Float
+    let totalShipping: Float
     
-    public let totalItemCost: Float
-    public let totalShippingCost: Float
+    let totalItemCost: Float
+    let totalShippingCost: Float
     
-    public let totalFees: Float
-    public let totalRefund: Float
+    let totalFees: Float
+    let totalRefund: Float
     
-    public let totalResult: Float
-    public let profitMargin: Float
+    let totalResult: Float
+    let profitMargin: Float
 }

@@ -3,15 +3,15 @@ import Foundation
 
 
 
-public struct OrderRefund: Identifiable, Codable, Datable {
+struct OrderRefund: Identifiable, Codable, Datable {
     
-    public var id: UUID = UUID()
-    public var date: Date
-    public var amount: Float
-    public var comment: String
-    public let orderId: Order.ID
+    var id: UUID = UUID()
+    var date: Date
+    var amount: Float
+    var comment: String
+    let orderId: Order.ID
     
-    public init(id: UUID = UUID(), date: Date, amount: Float, comment: String, orderId: Order.ID) {
+    init(id: UUID = UUID(), date: Date, amount: Float, comment: String, orderId: Order.ID) {
         self.id = id
         self.date = date
         self.amount = amount

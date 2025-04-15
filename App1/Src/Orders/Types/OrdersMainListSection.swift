@@ -3,17 +3,17 @@ import Foundation
 
 
 
-public struct OrdersMainListSection {
+struct OrdersMainListSection {
     
-    public let header: String
-    public let orders: [Order]
+    let header: String
+    let orders: [Order]
 }
 
 
 
 extension Array where Element == OrdersMainListSection {
     
-    public var allOrders: [Order] {
+    var allOrders: [Order] {
         
         return flatMap(\.orders)
     }

@@ -3,28 +3,27 @@ import Foundation
 
 
 
-public struct Order: Identifiable, Equatable, Codable, Datable, Sendable {
+struct Order: Identifiable, Equatable, Codable, Datable, Sendable {
     
+    let id: String
+    let date: Date
+    let dateStatusChanged: Date
+    var unchangedFor30Days: Bool { dateStatusChanged.days(to: Date()) > 30 }
+    let buyer: String
+    let status: OrderStatus
     
-    public let id: String
-    public let date: Date
-    public let dateStatusChanged: Date
-    public var unchangedFor30Days: Bool { dateStatusChanged.days(to: Date()) > 30 }
-    public let buyer: String
-    public let status: OrderStatus
+    let items: Int
+    let lots: Int
     
-    public let items: Int
-    public let lots: Int
+    let paymentStatus: PaymentStatus
     
-    public let paymentStatus: PaymentStatus
+    let subTotal: Float
+    let grandTotal: Float
+    let costCurrencyCode: String
     
-    public let subTotal: Float
-    public let grandTotal: Float
-    public let costCurrencyCode: String
-    
-    public let dispSubTotal: Float
-    public let dispGrandTotal: Float
-    public let dispCostCurrencyCode: String
+    let dispSubTotal: Float
+    let dispGrandTotal: Float
+    let dispCostCurrencyCode: String
 }
 
 
@@ -61,7 +60,7 @@ extension Order {
 extension Order {
     
     
-    public func matches(_ rawSearchText: String) -> Bool {
+    func matches(_ rawSearchText: String) -> Bool {
         
         let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
@@ -75,7 +74,7 @@ extension Order {
     }
     
     
-    public func searchableText() -> String {
+    func searchableText() -> String {
         
         [
             id

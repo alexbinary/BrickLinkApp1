@@ -5,7 +5,7 @@ import Speech
 
 extension SFSpeechRecognizerAuthorizationStatus: @retroactive CustomStringConvertible {
     
-    public var description: String {
+    var description: String {
         
         switch self {
             

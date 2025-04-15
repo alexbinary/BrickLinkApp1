@@ -3,11 +3,11 @@ import Foundation
 
 
 
-public struct Percent {
+struct Percent {
 
-    public var fractionValue: Double
+    var fractionValue: Double
 
-    public init(_ value: Double) {
+    init(_ value: Double) {
 		self.fractionValue = value
 	}
 }
@@ -15,27 +15,27 @@ public struct Percent {
 
 postfix operator %
 
-public postfix func %(value: Double) -> Percent {
+postfix func %(value: Double) -> Percent {
     Percent(value/100)
 }
 
 
 extension Percent: CustomStringConvertible {
 
-    public var description: String {
+    var description: String {
         String(format: "%3.0f%%", fractionValue*100)
     }
 }
 
 
-public func *(lhs: CGFloat, rhs: Percent) -> CGFloat {
+func *(lhs: CGFloat, rhs: Percent) -> CGFloat {
     lhs * rhs.fractionValue
 }
 
 
 extension Percent: Comparable {
 
-    public static func < (lhs: Percent, rhs: Percent) -> Bool {
+    static func < (lhs: Percent, rhs: Percent) -> Bool {
         lhs.fractionValue < rhs.fractionValue
 	}
 }

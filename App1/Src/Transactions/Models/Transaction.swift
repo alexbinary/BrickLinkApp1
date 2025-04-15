@@ -4,20 +4,20 @@ import SwiftUI
 
 
 
-public struct Transaction: Identifiable, Codable, Hashable, Datable {
+struct Transaction: Identifiable, Codable, Hashable, Datable {
     
-    public var id: UUID = UUID()
-    public var date: Date
-    public let createdAt: Date
-    public let type: TransactionType
-    public var amount: Float
-    public let fees: Float?
-    public var netAmount: Float { amount - (fees ?? 0) }
-    public var paymentMethod: PaymentMethod
-    public var comment: String
-    public let orderRefIn: Order.ID
+    var id: UUID = UUID()
+    var date: Date
+    let createdAt: Date
+    let type: TransactionType
+    var amount: Float
+    let fees: Float?
+    var netAmount: Float { amount - (fees ?? 0) }
+    var paymentMethod: PaymentMethod
+    var comment: String
+    let orderRefIn: Order.ID
     
-    public init(id: UUID = UUID(), date: Date, createdAt: Date, type: TransactionType, amount: Float, fees: Float?, paymentMethod: PaymentMethod, comment: String, orderRefIn: Order.ID) {
+    init(id: UUID = UUID(), date: Date, createdAt: Date, type: TransactionType, amount: Float, fees: Float?, paymentMethod: PaymentMethod, comment: String, orderRefIn: Order.ID) {
         self.id = id
         self.date = date
         self.createdAt = createdAt
@@ -31,19 +31,19 @@ public struct Transaction: Identifiable, Codable, Hashable, Datable {
 }
 
 
-public enum TransactionType: String, Codable, CaseIterable {
+enum TransactionType: String, Codable, CaseIterable {
     
     case orderIncome
     case orderRefund
     case orderShipping
     
-    public static var incomeTypes: [TransactionType] { [.orderIncome] }
-    public static var expenseTypes: [TransactionType] { [.orderShipping, .orderRefund] }
+    static var incomeTypes: [TransactionType] { [.orderIncome] }
+    static var expenseTypes: [TransactionType] { [.orderShipping, .orderRefund] }
     
-    public var isIncome: Bool { Self.incomeTypes.contains(self) }
-    public var isExpense: Bool { Self.expenseTypes.contains(self) }
+    var isIncome: Bool { Self.incomeTypes.contains(self) }
+    var isExpense: Bool { Self.expenseTypes.contains(self) }
     
-    public static func graphColorFor(_ type: Self) -> Color {
+    static func graphColorFor(_ type: Self) -> Color {
         switch type {
             case .orderIncome: .green
             case .orderShipping: .red
@@ -53,12 +53,12 @@ public enum TransactionType: String, Codable, CaseIterable {
 }
 
 
-public enum PaymentMethod: String, Codable, CaseIterable {
+enum PaymentMethod: String, Codable, CaseIterable {
     
     case paypal
     case cb_iban
     
-    public static func graphColorFor(_ method: Self) -> Color {
+    static func graphColorFor(_ method: Self) -> Color {
         switch method {
             case .paypal: .blue
             case .cb_iban: .gray
@@ -71,7 +71,7 @@ public enum PaymentMethod: String, Codable, CaseIterable {
 extension Array where Element == Transaction {
     
     
-    public func closest(for date: Date) -> Transaction? {
+    func closest(for date: Date) -> Transaction? {
         
         let all = self.sorted { $0.date < $1.date }
         

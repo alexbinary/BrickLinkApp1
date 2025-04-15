@@ -3,7 +3,7 @@ import Foundation
 
 
 
-public typealias Env = (
+typealias Env = (
     
     catalog: Catalog,
     
@@ -28,7 +28,7 @@ public typealias Env = (
 
 
 
-public func createEnv() -> Env {
+func createEnv() -> Env {
     
     let coreController = CoreController(
         brickLinkCredentials: Secrets.brickLinkAPICredentials,

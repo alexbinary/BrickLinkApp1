@@ -1,7 +1,7 @@
 
 
 
-public enum OrderStatus: String, Codable, IsOneOfAble, Sendable {
+enum OrderStatus: String, Codable, IsOneOfAble, Sendable {
     
     case paid = "PAID"
     case packed = "PACKED"

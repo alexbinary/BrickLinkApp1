@@ -6,7 +6,7 @@ import Foundation
 extension Date {
     
     
-    public static var currentMonth: String {
+    static var currentMonth: String {
         
         let cal = Calendar.current
         
@@ -17,7 +17,7 @@ extension Date {
     }
     
     
-    public var firstDayOfMonth: Date {
+    var firstDayOfMonth: Date {
         
         let calendar = Calendar.current
         
@@ -31,7 +31,7 @@ extension Date {
     }
     
     
-    public var previousDay: Date {
+    var previousDay: Date {
         
         let calendar = Calendar.current
         
@@ -39,7 +39,7 @@ extension Date {
     }
     
     
-    public var endOfDay: Date {
+    var endOfDay: Date {
         
         let calendar = Calendar.current
         
@@ -47,7 +47,7 @@ extension Date {
     }
     
     
-    public var startOfDay: Date {
+    var startOfDay: Date {
         
         let calendar = Calendar.current
         
@@ -55,7 +55,7 @@ extension Date {
     }
     
     
-    public func days(to date: Date) -> Int {
+    func days(to date: Date) -> Int {
         
         let calendar = Calendar.current
         

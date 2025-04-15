@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class ResultStore {
+class ResultStore {
     
     
     private let orderController: OrderController
@@ -26,31 +26,31 @@ public class ResultStore {
     }
     
     
-    public var orders: [Order] {
+    var orders: [Order] {
         
         orderController.orders
     }
     
     
-    public func shippingCost(for order: Order) -> Float? {
+    func shippingCost(for order: Order) -> Float? {
         
         shippingController.confirmedShippingCost(for: order)
     }
     
     
-    public func refunds(for order: Order) -> [OrderRefund] {
+    func refunds(for order: Order) -> [OrderRefund] {
         
         refundController.refunds(for: order)
     }
     
     
-    public func incomeTransactions(for order: Order) -> [Transaction] {
+    func incomeTransactions(for order: Order) -> [Transaction] {
         
         transactionController.incomeTransactions(for: order)
     }
     
     
-    public func refundTransactions(for order: Order) -> [Transaction] {
+    func refundTransactions(for order: Order) -> [Transaction] {
         
         transactionController.refundTransactions(for: order)
     }
@@ -59,7 +59,7 @@ public class ResultStore {
     // -
     
     
-    public func fees(for order: Order) -> Float? {
+    func fees(for order: Order) -> Float? {
         
         let incomeTransactionsFees = incomeTransactions(for: order).compactMap { $0.fees }.reduce(0, +)
         let refundTransactionsFees = refundTransactions(for: order).compactMap { $0.fees }.reduce(0, +)
@@ -68,7 +68,7 @@ public class ResultStore {
     }
     
     
-    public func profitMargin(
+    func profitMargin(
     
         totalItems: Float?,
         totalShipping: Float?,
@@ -100,7 +100,7 @@ public class ResultStore {
     }
     
     
-    public func profitMargin(for order: Order) -> Float? {
+    func profitMargin(for order: Order) -> Float? {
         
         if let orderDetails = orderController.details(for: order) {
             
@@ -121,7 +121,7 @@ public class ResultStore {
     }
     
     
-    public var resultDashboardModel: ResultDashboardModel {
+    var resultDashboardModel: ResultDashboardModel {
         
         let periodNLastDays = 30
         

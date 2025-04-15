@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class PickingStore {
+class PickingStore {
     
     
     private let pickingController: PickingController
@@ -23,13 +23,13 @@ public class PickingStore {
     }
     
     
-    public func items(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
+    func items(for order: Order, fromItemIds itemsIds: [OrderItem.ID]) -> [OrderItem] {
         
         orderController.items(for: order, fromItemIds: itemsIds)
     }
     
     
-    public func items(for order: Order) -> [OrderItem] {
+    func items(for order: Order) -> [OrderItem] {
         
         orderController.items(for: order)
     }
@@ -38,13 +38,13 @@ public class PickingStore {
     // MARK: - Pick
     
     
-    public func pickedItemIds(for order: Order) -> [OrderItem.ID] {
+    func pickedItemIds(for order: Order) -> [OrderItem.ID] {
         
         pickingController.pickedItemIds(for: order)
     }
     
     
-    public func pickedOrderItems(for order: Order) -> [OrderItem] {
+    func pickedOrderItems(for order: Order) -> [OrderItem] {
         
         let pickedIds = pickedItemIds(for: order)
         
@@ -52,7 +52,7 @@ public class PickingStore {
     }
     
     
-    public func nextOrderItemsToPick(for order: Order) -> [OrderItem] {
+    func nextOrderItemsToPick(for order: Order) -> [OrderItem] {
         
         let pickedIds = pickedItemIds(for: order)
         
@@ -62,7 +62,7 @@ public class PickingStore {
     }
     
     
-    public func orderItemsLeftToPick(for order: Order) -> [OrderItem] {
+    func orderItemsLeftToPick(for order: Order) -> [OrderItem] {
         
         let pickedIds = pickedItemIds(for: order)
         
@@ -70,31 +70,31 @@ public class PickingStore {
     }
     
     
-    public func pickingProgress(for order: Order) -> Percent {
+    func pickingProgress(for order: Order) -> Percent {
         
         pickingProgressController.pickingProgress(for: order)
     }
     
     
-    public func totalLotsLeftToPick(for order: Order) -> Int {
+    func totalLotsLeftToPick(for order: Order) -> Int {
         
         orderItemsLeftToPick(for: order).count
     }
     
     
-    public func totalPartsLeftToPick(for order: Order) -> Int {
+    func totalPartsLeftToPick(for order: Order) -> Int {
         
         orderItemsLeftToPick(for: order).reduce(0) { $0 + Int($1.quantity)! }
     }
     
     
-    public func pick(_ item: OrderItem) {
+    func pick(_ item: OrderItem) {
         
         pickingController.pick(item)
     }
     
     
-    public func unpick(_ item: OrderItem) {
+    func unpick(_ item: OrderItem) {
         
         pickingController.unpick(item)
     }
@@ -103,13 +103,13 @@ public class PickingStore {
     // MARK: - Verify
     
     
-    public func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
+    func verifiedItemIds(for order: Order) -> [OrderItem.ID] {
         
         pickingController.verifiedItemIds(for: order)
     }
     
     
-    public func verifiedOrderItems(for order: Order) -> [OrderItem] {
+    func verifiedOrderItems(for order: Order) -> [OrderItem] {
         
         let verifiedIds = verifiedItemIds(for: order)
         
@@ -117,7 +117,7 @@ public class PickingStore {
     }
     
     
-    public func nextOrderItemsToVerify(for order: Order) -> [OrderItem] {
+    func nextOrderItemsToVerify(for order: Order) -> [OrderItem] {
     
         let pickedIds = pickedItemIds(for: order)
         let verifiedIds = verifiedItemIds(for: order)
@@ -128,7 +128,7 @@ public class PickingStore {
     }
     
     
-    public func orderItemsLeftToVerify(for order: Order) -> [OrderItem] {
+    func orderItemsLeftToVerify(for order: Order) -> [OrderItem] {
         
         let verifiedIds = verifiedItemIds(for: order)
         
@@ -136,31 +136,31 @@ public class PickingStore {
     }
     
     
-    public func pickingVerificationProgress(for order: Order) -> Percent {
+    func pickingVerificationProgress(for order: Order) -> Percent {
         
         pickingProgressController.pickingVerificationProgress(for: order)
     }
     
     
-    public func totalLotsLeftToVerify(for order: Order) -> Int {
+    func totalLotsLeftToVerify(for order: Order) -> Int {
         
         orderItemsLeftToVerify(for: order).count
     }
     
     
-    public func totalPartsLeftToVerify(for order: Order) -> Int {
+    func totalPartsLeftToVerify(for order: Order) -> Int {
         
         orderItemsLeftToVerify(for: order).reduce(0) { $0 + Int($1.quantity)! }
     }
     
     
-    public func verify(_ item: OrderItem) {
+    func verify(_ item: OrderItem) {
         
         pickingController.verify(item)
     }
     
     
-    public func unverify(_ item: OrderItem) {
+    func unverify(_ item: OrderItem) {
         
         pickingController.unverify(item)
     }

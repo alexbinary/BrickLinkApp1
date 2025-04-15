@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class TrackingStore {
+class TrackingStore {
     
     
     private let trackingController: TrackingController
@@ -18,19 +18,19 @@ public class TrackingStore {
     }
     
     
-    public func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
+    func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
         trackingMiddleController.laPosteTrackingStatus(for: order)
     }
     
     
-    public var isLoadingLaPosteTrackingStatus: Bool {
+    var isLoadingLaPosteTrackingStatus: Bool {
         
         trackingController.isLoadingLaPosteTrackingStatus
     }
     
     
-    public func isLoadingLaPosteTrackingStatus(for order: Order) -> Bool {
+    func isLoadingLaPosteTrackingStatus(for order: Order) -> Bool {
         
         trackingMiddleController.isLoadingLaPosteTrackingStatus(for: order)
     }

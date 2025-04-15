@@ -3,19 +3,19 @@ import Foundation
 
 
 
-public struct UploadItem: Identifiable, Codable, Equatable {
+struct UploadItem: Identifiable, Codable, Equatable {
     
-    public var id = UUID()
-    public let type: ItemType
-    public let ref: String
-    public let name: String?
-    public let colorId: LegoColor.ID
-    public let qty: Int?
-    public let condition: String?
-    public let comment: String?
-    public let unitPrice: Float?
+    var id = UUID()
+    let type: ItemType
+    let ref: String
+    let name: String?
+    let colorId: LegoColor.ID
+    let qty: Int?
+    let condition: String?
+    let comment: String?
+    let unitPrice: Float?
     
-    public init(id: UUID = UUID(), type: ItemType, ref: String, name: String?, colorId: LegoColor.ID, qty: Int?, condition: String?, comment: String?, unitPrice: Float?) {
+    init(id: UUID = UUID(), type: ItemType, ref: String, name: String?, colorId: LegoColor.ID, qty: Int?, condition: String?, comment: String?, unitPrice: Float?) {
         self.id = id
         self.type = type
         self.ref = ref

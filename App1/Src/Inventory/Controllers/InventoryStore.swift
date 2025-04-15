@@ -5,7 +5,7 @@ import SwiftUI
 
 
 @Observable
-public class InventoryStore {
+class InventoryStore {
     
     
     private let inventoryController: InventoryController
@@ -24,7 +24,7 @@ public class InventoryStore {
     // MARK: - URLs
     
     
-    public func url(forInventoryItemWithId inventoryId: String) -> URL? {
+    func url(forInventoryItemWithId inventoryId: String) -> URL? {
         
         BrickLinkUtility.url(forInventoryItemWithId: inventoryId)
     }
@@ -33,49 +33,49 @@ public class InventoryStore {
     // MARK: - Read inventories
     
     
-    public var allInventories: [InventoryItem] {
+    var allInventories: [InventoryItem] {
         
         inventoryController.allInventories
     }
     
     
-    public var hasInventories: Bool {
+    var hasInventories: Bool {
         
         inventoryController.hasInventories
     }
     
     
-    public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
+    func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
         inventoryController.inventory(for: uploadItem)
     }
     
     
-    public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
+    func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
         inventoryController.inventories(forAllColorsOf: uploadItem)
     }
     
     
-    public func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await inventoryController.loadInventories(refetchStrategy, operationTag)
     }
     
     
-    public var isLoadingInventories: Bool {
+    var isLoadingInventories: Bool {
         
         inventoryController.isLoadingInventories
     }
     
     
-    public var isLoadingInventory: Bool {
+    var isLoadingInventory: Bool {
      
         inventoryController.isLoadingInventory
     }
     
     
-    public func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+    func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
      
         inventoryController.isLoadingInventory(withId: inventoryId)
     }
@@ -92,13 +92,13 @@ public class InventoryStore {
     }
     
     
-    public func softRefreshInventories() async {
+    func softRefreshInventories() async {
      
         await refreshInventories(.refetchOnlyIfInvalidated)
     }
     
     
-    public func hardRefreshInventories(_ operationTag: OperationTag? = nil) async {
+    func hardRefreshInventories(_ operationTag: OperationTag? = nil) async {
      
         await refreshInventories(.forceRefetch, operationTag)
     }
@@ -107,13 +107,13 @@ public class InventoryStore {
     // MARK: - Create and update inventories
     
     
-    public func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem? {
+    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem? {
         
         await inventoryController.createInventory(ref: ref, type: type, colorId: colorId, quantity: quantity, unitPrice: unitPrice, condition: condition, description: description, remarks: remarks)
     }
     
     
-    public func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
+    func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
         await inventoryController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
@@ -122,7 +122,7 @@ public class InventoryStore {
     // MARK: - Stock
     
     
-    public func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
+    func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
         
         stockController.inStockQuantityBeforeAfter(for: orderItem)
     }

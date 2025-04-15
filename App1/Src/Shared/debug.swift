@@ -3,19 +3,19 @@ import Foundation
 
 
 
-public struct Debug {
+struct Debug {
     
-    public let printRequest: Bool
-    public let printResponse: Bool
+    let printRequest: Bool
+    let printResponse: Bool
     
-    public init(printRequest: Bool, printResponse: Bool) {
+    init(printRequest: Bool, printResponse: Bool) {
      
         self.printRequest = printRequest
         self.printResponse = printResponse
     }
     
     
-    public func printRequest(_ request: URLRequest) {
+    func printRequest(_ request: URLRequest) {
         
         if printRequest {
             print(request.url!.absoluteString)
@@ -26,7 +26,7 @@ public struct Debug {
     }
     
     
-    public func printResponse(_ data: Data, _ response: URLResponse) {
+    func printResponse(_ data: Data, _ response: URLResponse) {
         
         if printResponse {
             print(String(data: data, encoding: .utf8)!)

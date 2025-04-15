@@ -3,7 +3,7 @@ import Foundation
 
 
 @Observable
-public class ShippingStore {
+class ShippingStore {
     
     
     private let shippingController: ShippingController
@@ -19,7 +19,7 @@ public class ShippingStore {
     }
     
     
-    public func details(for order: Order) -> OrderDetails? {
+    func details(for order: Order) -> OrderDetails? {
         
         orderController.details(for: order)
     }
@@ -28,19 +28,19 @@ public class ShippingStore {
     // MARK: - Shipping cost
     
     
-    public func confirmedShippingCost(for order: Order) -> Float? {
+    func confirmedShippingCost(for order: Order) -> Float? {
         
         shippingController.confirmedShippingCost(for: order)
     }
     
     
-    public func confirmShippingCost(for order: Order, cost: Float) {
+    func confirmShippingCost(for order: Order, cost: Float) {
         
         shippingController.confirmShippingCost(for: order, cost: cost)
     }
     
     
-    public func selectedShippingCost(for order: Order) -> SelectedShippingCost? {
+    func selectedShippingCost(for order: Order) -> SelectedShippingCost? {
         
         guard let orderDetails = details(for: order) else { return nil }
         
@@ -191,31 +191,31 @@ public class ShippingStore {
     // MARK: - Stamping
     
     
-    public func confirmedStamping(for order: Order) -> String? {
+    func confirmedStamping(for order: Order) -> String? {
         
         shippingController.confirmedStamping(for: order)
     }
     
     
-    public func confirmStamping(for order: Order, stamping: String) {
+    func confirmStamping(for order: Order, stamping: String) {
         
         shippingController.confirmStamping(for: order, stamping: stamping)
     }
     
     
-    public func dateOrderValidatedWithoutStamping(_ order: Order) -> Date? {
+    func dateOrderValidatedWithoutStamping(_ order: Order) -> Date? {
         
         shippingController.dateOrderValidatedWithoutStamping(order)
     }
     
     
-    public func validateOrderWithoutStamping(_ order: Order) {
+    func validateOrderWithoutStamping(_ order: Order) {
         
         shippingController.validateOrderWithoutStamping(order)
     }
     
     
-    public func recommendedStampingMethod(for order: Order) -> String {
+    func recommendedStampingMethod(for order: Order) -> String {
         
         let selectedShippingCost = selectedShippingCost(for: order)
 

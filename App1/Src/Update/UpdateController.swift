@@ -303,7 +303,7 @@ class UpdateController {
     // MARK: - Loading state
     
     
-    public func isRunningOrIsScheduledToRun_operations(withTag tag: UUID) -> Bool {
+    func isRunningOrIsScheduledToRun_operations(withTag tag: UUID) -> Bool {
         
         hasScheduledOrRunningOperation(matching: { $0.operationTag == tag })
     }
@@ -897,18 +897,18 @@ class UpdateController {
 
 
 
-public enum RefetchStrategy: Sendable {
+enum RefetchStrategy: Sendable {
     
     case refetchOnlyIfInvalidated
     case forceRefetch
 }
 
 
-public typealias OperationTag = UUID
+typealias OperationTag = UUID
 
 extension OperationTag {
     
-    public static var new: OperationTag {
+    static var new: OperationTag {
         
         OperationTag()
     }

@@ -7,14 +7,14 @@ import Speech
 @Observable
 class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     
-    public var microphoneAuthorized: Bool?
-    public var speechRecognitionAvailable: Bool?
-    public var speechRecognitionAuthorized: Bool?
-    public var ready: Bool { ![microphoneAuthorized, speechRecognitionAvailable, speechRecognitionAuthorized].contains(false) }
+    var microphoneAuthorized: Bool?
+    var speechRecognitionAvailable: Bool?
+    var speechRecognitionAuthorized: Bool?
+    var ready: Bool { ![microphoneAuthorized, speechRecognitionAvailable, speechRecognitionAuthorized].contains(false) }
     
-    public var listening = false
-    public var recognizedText: String?
-    public var recognizedNumber: Int?
+    var listening = false
+    var recognizedText: String?
+    var recognizedNumber: Int?
     
     private var audioEngine: AVAudioEngine!
     private var inputNode: AVAudioInputNode!
@@ -24,7 +24,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     private var recognitionTask: SFSpeechRecognitionTask!
     
     
-    public override init() {
+    override init() {
         super.init()
         
         updateMicrophoneAuthorisationStatus()
@@ -40,7 +40,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    public func start() async {
+    func start() async {
         
         let microphoneStatus = await requestMicrophoneAuthorisation()
         guard microphoneStatus == .authorized else {
@@ -70,7 +70,7 @@ class SpeechRecognitionController: NSObject, SFSpeechRecognizerDelegate {
     }
     
     
-    public func stop() {
+    func stop() {
         
         stopRecognition()
         stopAudio()

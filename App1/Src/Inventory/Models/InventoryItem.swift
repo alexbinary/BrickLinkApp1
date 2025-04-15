@@ -3,19 +3,19 @@ import Foundation
 
 
 
-public struct InventoryItem: Identifiable, Codable, Sendable {
+struct InventoryItem: Identifiable, Codable, Sendable {
     
     
-    public let id: String
-    public let condition: String
-    public let colorId: String
-    public let ref: String
-    public let name: String
-    public let type: ItemType
-    public let description: String
-    public let remarks: String
-    public let quantity: Int
-    public let unitPrice: Float
+    let id: String
+    let condition: String
+    let colorId: String
+    let ref: String
+    let name: String
+    let type: ItemType
+    let description: String
+    let remarks: String
+    let quantity: Int
+    let unitPrice: Float
 }
 
 

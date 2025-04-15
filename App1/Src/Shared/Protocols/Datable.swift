@@ -2,7 +2,7 @@ import Foundation
 
 
 
-public protocol Datable {
+protocol Datable {
     
     var date: Date { get }
 }
@@ -12,7 +12,7 @@ public protocol Datable {
 extension Array where Element: Datable {
     
     
-    public var grouppedByDay: [(day: String, elements: [Self.Element])] {
+    var grouppedByDay: [(day: String, elements: [Self.Element])] {
         
         let withDay: [(day: String, element: Self.Element)] = self.map {
             
@@ -34,7 +34,7 @@ extension Array where Element: Datable {
     }
     
     
-    public var grouppedByMonth: [(month: String, elements: [Self.Element])] {
+    var grouppedByMonth: [(month: String, elements: [Self.Element])] {
         
         let withMonth: [(month: String, element: Self.Element)] = self.map {
             
@@ -56,7 +56,7 @@ extension Array where Element: Datable {
     }
     
     
-    public var grouppedByBusinessMonth: [(month: BusinessMonth, elements: [Self.Element])] {
+    var grouppedByBusinessMonth: [(month: BusinessMonth, elements: [Self.Element])] {
         
         let months = self.map { $0.date.businessMonth } .unique
         
@@ -75,7 +75,7 @@ extension Array where Element: Datable {
 extension Array where Element == (month: String, elements: [Order]) {
     
     
-    public subscript(_ month: String) -> [Order] {
+    subscript(_ month: String) -> [Order] {
         
         return self.first(where: { $0.month == month })?.elements ?? []
     }
@@ -86,13 +86,13 @@ extension Array where Element == (month: String, elements: [Order]) {
 extension Array where Element == (month: BusinessMonth, elements: [Order]) {
     
     
-    public subscript(_ month: BusinessMonth) -> [Order] {
+    subscript(_ month: BusinessMonth) -> [Order] {
         
         return self.first(where: { $0.month == month })?.elements ?? []
     }
     
     
-    public var withAllMonthsToCurrent: [(month: BusinessMonth, elements: [Order])] {
+    var withAllMonthsToCurrent: [(month: BusinessMonth, elements: [Order])] {
         
         let orderMonths = self.map { $0.month } .unique.sorted()
         

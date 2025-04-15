@@ -3,10 +3,10 @@ import Foundation
 
 
 
-public struct CatalogEntry: Sendable {
+struct CatalogEntry: Sendable {
     
     
-    public let name: String
+    let name: String
 }
 
 

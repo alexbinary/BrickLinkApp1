@@ -3,11 +3,11 @@ import Foundation
 
 
 
-public typealias TrackingNo = String
+typealias TrackingNo = String
 
 
 
-public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
+enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
     
     case noData
     case inTransit
@@ -16,19 +16,19 @@ public enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
 
 
 
-public struct LaPosteTrackingClient {
+struct LaPosteTrackingClient {
     
     
     let debug: Debug
     
     
-    public init(_ debug: Debug) {
+    init(_ debug: Debug) {
         
         self.debug = debug
     }
     
     
-    public func fetchTrackingStatus(forTrackingNo trackingNo: TrackingNo) async -> LaPosteTrackingStatus {
+    func fetchTrackingStatus(forTrackingNo trackingNo: TrackingNo) async -> LaPosteTrackingStatus {
         
         let request = URLRequest(url: URL(string: "https://www.laposte.fr/ssu/sun/back/suivi-unifie/\(trackingNo)?lang=fr_FR")!)
         
@@ -52,13 +52,13 @@ public struct LaPosteTrackingClient {
     }
     
     
-    public struct TrackingData: Decodable {
+    struct TrackingData: Decodable {
 
-        public let shipment: Shipment
+        let shipment: Shipment
         
-        public struct Shipment: Decodable {
+        struct Shipment: Decodable {
             
-            public let isFinal: Bool
+            let isFinal: Bool
         }
     }
 }

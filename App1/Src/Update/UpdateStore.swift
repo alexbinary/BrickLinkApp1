@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class UpdateStore {
+class UpdateStore {
     
     
     private let updateController: UpdateController
@@ -16,7 +16,7 @@ public class UpdateStore {
     }
     
     
-    public func isLoadingOperations(withTag tag: OperationTag) -> Bool {
+    func isLoadingOperations(withTag tag: OperationTag) -> Bool {
         
         updateController.isRunningOrIsScheduledToRun_operations(withTag: tag)
     }

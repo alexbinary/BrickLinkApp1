@@ -3,13 +3,13 @@ import SwiftUI
 
 
 
-public struct LegoColor: Identifiable, Codable {
+struct LegoColor: Identifiable, Codable {
     
     
-    public let id: String
-    public let name: String
-    public let colorCode: String
-    public var color: Color { Color(fromBLCode: colorCode) }
+    let id: String
+    let name: String
+    let colorCode: String
+    var color: Color { Color(fromBLCode: colorCode) }
 }
 
 

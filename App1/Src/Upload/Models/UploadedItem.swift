@@ -3,26 +3,26 @@ import Foundation
 
 
 
-public struct UploadedItem: Identifiable, Codable, Equatable {
+struct UploadedItem: Identifiable, Codable, Equatable {
     
-    public var id = UUID()
-    public let type: ItemType
-    public let ref: String
-    public let name: String?
-    public let colorId: LegoColor.ID
-    public let qtyBefore: Int?
-    public let qtyAfter: Int
-    public let condition: String
-    public let comment: String?
-    public let remarksBefore: String?
-    public let remarksAfter: String
-    public let unitPriceBefore: Float?
-    public let unitPriceAfter: Float
-    public let inventoryId: InventoryItem.ID
-    public let uploadDate: Date
-    public let inventoryStatus: UploadInventoryStatus
+    var id = UUID()
+    let type: ItemType
+    let ref: String
+    let name: String?
+    let colorId: LegoColor.ID
+    let qtyBefore: Int?
+    let qtyAfter: Int
+    let condition: String
+    let comment: String?
+    let remarksBefore: String?
+    let remarksAfter: String
+    let unitPriceBefore: Float?
+    let unitPriceAfter: Float
+    let inventoryId: InventoryItem.ID
+    let uploadDate: Date
+    let inventoryStatus: UploadInventoryStatus
     
-    public init(
+    init(
         id: UUID = UUID(),
         type: ItemType,
         ref: String,
@@ -62,11 +62,11 @@ public struct UploadedItem: Identifiable, Codable, Equatable {
 
 extension UploadedItem: Datable {
     
-    public var date: Date { uploadDate }
+    var date: Date { uploadDate }
 }
 
 
-public enum UploadInventoryStatus: String, Codable {
+enum UploadInventoryStatus: String, Codable {
     
     case created
     case updated

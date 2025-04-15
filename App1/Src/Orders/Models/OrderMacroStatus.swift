@@ -3,7 +3,7 @@ import Foundation
 
 
 
-public enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
+enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
     
     
     case validatePayment
@@ -17,7 +17,7 @@ public enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
     case closed
     
     
-    public var descriptionAndPicto: (picto: String, text: String) {
+    var descriptionAndPicto: (picto: String, text: String) {
         
         switch self {
         
@@ -50,13 +50,13 @@ public enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
         }
     }
         
-    public var descriptionWithPicto: String {
+    var descriptionWithPicto: String {
         
         let (picto, text) = descriptionAndPicto
         return "\(picto) \(text)"
     }
     
-    public var descriptionWithoutPicto: String {
+    var descriptionWithoutPicto: String {
         
         descriptionAndPicto.text
     }

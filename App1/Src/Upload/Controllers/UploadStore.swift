@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class UploadStore {
+class UploadStore {
     
     
     private let uploadController: UploadController
@@ -23,13 +23,13 @@ public class UploadStore {
     }
     
     
-    public func inventory(for uploadItem: UploadItem) -> InventoryItem? {
+    func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
         inventoryController.inventory(for: uploadItem)
     }
     
     
-    public func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
+    func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
         inventoryController.inventories(forAllColorsOf: uploadItem)
     }
@@ -38,13 +38,13 @@ public class UploadStore {
     // MARK: - Upload
     
     
-    public var uploadItems: [UploadItem] {
+    var uploadItems: [UploadItem] {
         
         uploadController.uploadItems
     }
     
     
-    public var uploadItemsForList: [UploadItem] {
+    var uploadItemsForList: [UploadItem] {
         
         uploadItems.sorted { item1, item2 in
                 
@@ -69,31 +69,31 @@ public class UploadStore {
     }
     
     
-    public func add(_ uploadItem: UploadItem) {
+    func add(_ uploadItem: UploadItem) {
         
         uploadController.add(uploadItem)
     }
     
     
-    public func delete(_ uploadItem: UploadItem) {
+    func delete(_ uploadItem: UploadItem) {
         
         uploadController.delete(uploadItem)
     }
     
     
-    public func update(_ uploadItem: UploadItem) {
+    func update(_ uploadItem: UploadItem) {
         
         uploadController.update(uploadItem)
     }
     
     
-    public func importUploadList(fromXml xml: String) {
+    func importUploadList(fromXml xml: String) {
         
         uploadController.importUploadList(fromXml: xml)
     }
     
     
-    public var numberForSidebarBadge: Int {
+    var numberForSidebarBadge: Int {
         
         uploadItems.count
     }
@@ -102,19 +102,19 @@ public class UploadStore {
     // MARK: - Uploaded items
     
     
-    public var uploadedItems: [UploadedItem] {
+    var uploadedItems: [UploadedItem] {
         
         uploadController.uploadedItems
     }
     
     
-    public func add(_ uploadedItem: UploadedItem) {
+    func add(_ uploadedItem: UploadedItem) {
         
         uploadController.add(uploadedItem)
     }
     
     
-    public func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
+    func uploadedItemsForList(matching searchText: String) -> [UploadedItem] {
         
         uploadedItems
             .filter { $0.matches(searchText, catalog) }

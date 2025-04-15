@@ -3,24 +3,23 @@ import Foundation
 
 
 
-public struct OrderItem: Identifiable, Codable {
+struct OrderItem: Identifiable, Codable {
     
+    var id: InventoryItem.ID { inventoryId }
     
-    public var id: InventoryItem.ID { inventoryId }
-    
-    public let inventoryId: InventoryItem.ID
-    public let orderId: String
-    public let condition: String
-    public let colorId: String
-    public let colorName: String
-    public let ref: String
-    public let name: String
-    public let type: ItemType
-    public let location: String
-    public let comment: String
-    public let quantity: String
-    public let unitPrice: Float
-    public let unitPriceFinal: Float
+    let inventoryId: InventoryItem.ID
+    let orderId: String
+    let condition: String
+    let colorId: String
+    let colorName: String
+    let ref: String
+    let name: String
+    let type: ItemType
+    let location: String
+    let comment: String
+    let quantity: String
+    let unitPrice: Float
+    let unitPriceFinal: Float
 }
 
 

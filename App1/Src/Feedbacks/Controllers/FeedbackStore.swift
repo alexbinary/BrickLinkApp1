@@ -4,7 +4,7 @@ import Foundation
 
 
 @Observable
-public class FeedbackStore {
+class FeedbackStore {
     
     
     private let feedbackController: FeedbackController
@@ -26,31 +26,31 @@ public class FeedbackStore {
     // MARK: - Read feedbacks
     
     
-    public func feedbacks(for order: Order) -> [Feedback] {
+    func feedbacks(for order: Order) -> [Feedback] {
         
         feedbackController.feedbacks(for: order)
     }
     
     
-    public func buyerFeedback(for order: Order) -> Feedback? {
+    func buyerFeedback(for order: Order) -> Feedback? {
         
         feedbackController.buyerFeedback(for: order)
     }
     
     
-    public func sellerFeedback(for order: Order) -> Feedback? {
+    func sellerFeedback(for order: Order) -> Feedback? {
         
         feedbackController.sellerFeedback(for: order)
     }
     
     
-    public var isLoadingOrderFeedbacks: Bool {
+    var isLoadingOrderFeedbacks: Bool {
         
         feedbackController.isLoadingOrderFeedbacks
     }
     
     
-    public func isLoadingFeedbacks(for order: Order) -> Bool {
+    func isLoadingFeedbacks(for order: Order) -> Bool {
         
         feedbackController.isLoadingFeedbacks(for: order)
     }
@@ -85,25 +85,25 @@ public class FeedbackStore {
     }
     
     
-    public func softRefreshFeedbacks(for order: Order) async {
+    func softRefreshFeedbacks(for order: Order) async {
         
         await refreshFeedbacks(for: order, .refetchOnlyIfInvalidated)
     }
     
     
-    public func softRefreshFeedbacks(forOrderWithId orderId: Order.ID) async {
+    func softRefreshFeedbacks(forOrderWithId orderId: Order.ID) async {
         
         await softRefreshFeedbacks(for: order(withId: orderId)!)
     }
     
     
-    public func hardRefreshFeedbacks(for order: Order, _ operationTag: OperationTag? = nil) async {
+    func hardRefreshFeedbacks(for order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refreshFeedbacks(for: order, .forceRefetch, operationTag)
     }
     
     
-    public func hardRefreshFeedbacks(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
+    func hardRefreshFeedbacks(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag? = nil) async {
         
         await hardRefreshFeedbacks(for: order(withId: orderId)!, operationTag)
     }
@@ -112,19 +112,19 @@ public class FeedbackStore {
     // MARK: - Post feedback
     
     
-    public func postPraiseFeedback(for order: Order) async {
+    func postPraiseFeedback(for order: Order) async {
         
         await feedbackPostController.postPraiseFeedback(for: order)
     }
     
     
-    public var isPostingFeedback: Bool {
+    var isPostingFeedback: Bool {
         
         feedbackController.isPostingFeedback
     }
     
     
-    public func isPostingFeedback(for order: Order) -> Bool {
+    func isPostingFeedback(for order: Order) -> Bool {
         
         feedbackController.isPostingFeedback(for: order)
     }
@@ -133,19 +133,19 @@ public class FeedbackStore {
     // MARK: - Validation without feedback
     
     
-    public func dateOrderValidatedWithoutFeedback(_ order: Order) -> Date? {
+    func dateOrderValidatedWithoutFeedback(_ order: Order) -> Date? {
         
         feedbackController.dateOrderValidatedWithoutFeedback(order)
     }
     
     
-    public func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
+    func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool {
         
         feedbackController.orderIsValidatedWithoutFeedback(order)
     }
     
     
-    public func validateOrderWithoutFeedback(_ order: Order) {
+    func validateOrderWithoutFeedback(_ order: Order) {
         
         feedbackController.validateOrderWithoutFeedback(order)
     }

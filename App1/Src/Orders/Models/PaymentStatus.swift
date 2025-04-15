@@ -1,7 +1,7 @@
 
 
 
-public enum PaymentStatus: String, Codable, IsOneOfAble, Sendable {
+enum PaymentStatus: String, Codable, IsOneOfAble, Sendable {
     
     case none = "None"
     case sent = "Sent"

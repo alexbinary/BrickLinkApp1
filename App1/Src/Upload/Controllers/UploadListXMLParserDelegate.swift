@@ -6,7 +6,7 @@ import Foundation
 class UploadListXMLParserDelegate : NSObject, XMLParserDelegate {
 
     
-    public var decodedUploadItems: [UploadItem] = []
+    var decodedUploadItems: [UploadItem] = []
     
     
     private var ref: String = ""
