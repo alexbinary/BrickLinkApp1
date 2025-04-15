@@ -47,7 +47,7 @@ struct UploadAddView: View {
                             
                             TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                             
-                            BrickLinkItemConditionPicker("Condition", selection: $condition)
+                            ItemConditionPicker("Condition", selection: $condition)
                             
                             TextField("Comment", text: $comment)
                             

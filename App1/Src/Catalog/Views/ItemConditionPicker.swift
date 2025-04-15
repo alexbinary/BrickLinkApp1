@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct BrickLinkItemConditionPicker: View {
+struct ItemConditionPicker: View {
 
     
     let label: String
@@ -31,5 +31,5 @@ struct BrickLinkItemConditionPicker: View {
 
 #Preview {
     @Previewable @State var selection: String = "N"
-    BrickLinkItemConditionPicker("Type", selection: $selection)
+    ItemConditionPicker("Type", selection: $selection)
 }
