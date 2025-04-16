@@ -35,8 +35,6 @@ struct OrderDetailPickingView: View {
         VStack(alignment: .leading) {
             
             PickingProgressView(order)
-                .font(.title3)
-                .padding()
                 .padding(.bottom, 12)
             
             TabView {
