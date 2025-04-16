@@ -121,8 +121,19 @@ struct OrdersMainListItem: View {
                             
                             ForEach(tags) { tagView($0) }
                             
-                            if macroStatus == .inTransit, let orderDetails = orderStore.details(for: order), orderDetails.shipsWithLaPoste {
-                                LaPosteTrackingStatusIndicator(order: order)
+                            if macroStatus == .inTransit, let orderDetails = orderStore.details(for: order) {
+                                
+                                if orderDetails.shipsWithLaPoste {
+                                    
+                                    LaPosteTrackingStatusIndicator(order: order)
+                                    
+                                } else if orderDetails.shipsWithMondialRelay {
+                                    
+                                    Text("Mondial Relay")
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 2)
+                                        .roundedContainer(style: .tag(baseColor: .yellow))
+                                }
                             }
                         }
                         .frame(width: 280, alignment: .trailing)
