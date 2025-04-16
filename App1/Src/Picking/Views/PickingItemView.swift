@@ -66,23 +66,22 @@ struct PickingItemView: View {
             
             Grid(alignment: .leading) {
                 
-                GridRow {
-                    Text("Location").captionStyle()
-                    Text("Quantity").captionStyle().gridColumnAlignment(.center)
-                }
-                
                 GridRow(alignment: .lastTextBaseline) {
                     
                     InventoryLink(inventoryItemId: item.inventoryId) {
-                        Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
+                        Text(item.location).font(.title2)
                     }
-                    Text(item.quantity).font(.title2)
+                    .frame(width: 80, alignment: .leading)
+                    
+                    Text("x \(item.quantity)").font(.title2)
+                        .padding()
+                        .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
+                        .clipShape(Circle())
                     
                     HStack(spacing: 0) {
-                        let (before, after) = inventoryStore.inStockQuantityBeforeAfter(for: item)
-                        Text("(\(before) 􁉂 ")
-                        Text("\(after)").foregroundStyle(after == 0 ? .red.opacity(0.7) : .secondary)
-                        Text(")")
+                        let (_, left) = inventoryStore.inStockQuantityBeforeAfter(for: item)
+                        Text("leaves ")
+                        Text("\(left)").foregroundStyle(left == 0 ? .red.opacity(0.7) : .secondary)
                     }
                     .foregroundStyle(.secondary)
                 }
@@ -91,10 +90,10 @@ struct PickingItemView: View {
             Spacer()
             
             switch button {
-            case .pick: Button("Pick") { pickingStore.pick(item) }
-            case .unpick: Button("Unpick") { pickingStore.unpick(item) }
-            case .verify: Button("Verify") { pickingStore.verify(item) }
-            case .unverify: Button("Unverify") { pickingStore.unverify(item) }
+            case .pick: Button("􀈥 Pick") { pickingStore.pick(item) }
+            case .unpick: Button("􀈧 Unpick") { pickingStore.unpick(item) }
+            case .verify: Button("􀁢 Verify") { pickingStore.verify(item) }
+            case .unverify: Button("􁜢 Unverify") { pickingStore.unverify(item) }
             }
         }
         .padding()
