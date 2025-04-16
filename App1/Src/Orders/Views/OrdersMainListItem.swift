@@ -37,7 +37,8 @@ struct OrdersMainListItem: View {
                             HStack {
                                 Text("order")
                                 if orderStore.isLoadingDetails(for: order) {
-                                    Text("(updating...)")
+                                    ProgressView()
+                                        .controlSize(.mini)
                                 }
                             }
                             .captionStyle()
@@ -93,7 +94,8 @@ struct OrdersMainListItem: View {
                             HStack {
                                 Text("feedback")
                                 if feedbackStore.isLoadingFeedbacks(for: order) {
-                                    Text("(updating...)")
+                                    ProgressView()
+                                        .controlSize(.mini)
                                 }
                             }
                             .captionStyle()

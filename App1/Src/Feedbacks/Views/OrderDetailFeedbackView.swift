@@ -44,7 +44,8 @@ struct OrderDetailFeedbackView: View {
                     Text(date, format: .dateTime)
                 }
                 if feedbackStore.isLoadingFeedbacks(for: order) {
-                    Text("updating...")
+                    ProgressView()
+                        .controlSize(.small)
                 }
             }
         }

@@ -68,14 +68,16 @@ struct OrdersActionsSheet: View {
                             CheckView(state: orderStore.state(of: .shipped, for: order))
                             Text("Mark shipped")
                             if orderStore.isUpdatingStatus(of: order, to: .shipped) {
-                                Text("updating...")
+                                ProgressView()
+                                    .controlSize(.small)
                             }
                         }
                         HStack {
                             CheckView(state: orderStore.state(of: .driveThru, for: order))
                             Text("Send drive thru")
                             if orderStore.isSendingDriveThru(for: order) {
-                                Text("updating...")
+                                ProgressView()
+                                    .controlSize(.small)
                             }
                         }
                     }

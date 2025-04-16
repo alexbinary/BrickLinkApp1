@@ -85,7 +85,7 @@ struct ReloadButton: View {
             }
             
         } label: {
-            Text("􀅈\(isLoading ? " (loading...)" : "")").padding(.horizontal)
+            Text("􀅈").padding(.horizontal)
         }
 
         primaryAction: {

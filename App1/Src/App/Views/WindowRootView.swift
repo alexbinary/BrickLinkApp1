@@ -39,7 +39,8 @@ struct WindowRootView: View {
         .toolbar {
             
             if isLoading {
-                Text("updating...")
+                ProgressView()
+                    .controlSize(.small)
             }
             
             ReloadButton()

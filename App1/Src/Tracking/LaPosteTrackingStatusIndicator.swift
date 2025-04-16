@@ -17,7 +17,13 @@ struct LaPosteTrackingStatusIndicator: View {
     
     var body: some View {
         
-        Text(updating ? "updating..." : "La Poste: \(status?.rawValue ?? "")")
+        HStack {
+            if updating {
+                ProgressView()
+                    .controlSize(.mini)
+            }
+            Text("La Poste: \(status?.rawValue ?? "")")
+        }
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
             .roundedContainer(style: .tag(baseColor: color))
