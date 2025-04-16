@@ -21,42 +21,6 @@ struct UploadedItem: Identifiable, Codable, Equatable {
     let inventoryId: InventoryItem.ID
     let uploadDate: Date
     let inventoryStatus: UploadInventoryStatus
-    
-    init(
-        id: UUID = UUID(),
-        type: ItemType,
-        ref: String,
-        name: String?,
-        colorId: LegoColor.ID,
-        qtyBefore: Int?,
-        qtyAfter: Int,
-        condition: String,
-        comment: String?,
-        remarksBefore: String?,
-        remarksAfter: String,
-        unitPriceBefore: Float?,
-        unitPriceAfter: Float,
-        inventoryId: InventoryItem.ID,
-        uploadDate: Date,
-        inventoryStatus: UploadInventoryStatus
-    ) {
-        self.id = id
-        self.type = type
-        self.ref = ref
-        self.name = name
-        self.colorId = colorId
-        self.qtyBefore = qtyBefore
-        self.qtyAfter = qtyAfter
-        self.condition = condition
-        self.comment = comment
-        self.remarksBefore = remarksBefore
-        self.remarksAfter = remarksAfter
-        self.unitPriceBefore = unitPriceBefore
-        self.unitPriceAfter = unitPriceAfter
-        self.inventoryId = inventoryId
-        self.uploadDate = uploadDate
-        self.inventoryStatus = inventoryStatus
-    }
 }
 
 

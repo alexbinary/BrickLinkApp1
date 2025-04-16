@@ -13,18 +13,6 @@ struct Feedback: Identifiable, Codable {
     let rating: FeedbackRating
     let author: FeedbackAuthor
     let comment: String
-    
-    init(id: Int, orderId: String, from: String, to: String, dateRated: Date, rating: FeedbackRating, author: FeedbackAuthor, comment: String) {
-        
-        self.id = id
-        self.orderId = orderId
-        self.from = from
-        self.to = to
-        self.dateRated = dateRated
-        self.rating = rating
-        self.author = author
-        self.comment = comment
-    }
 }
 
 

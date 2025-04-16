@@ -16,18 +16,6 @@ struct Transaction: Identifiable, Codable, Hashable, Datable {
     var paymentMethod: PaymentMethod
     var comment: String
     let orderRefIn: Order.ID
-    
-    init(id: UUID = UUID(), date: Date, createdAt: Date, type: TransactionType, amount: Float, fees: Float?, paymentMethod: PaymentMethod, comment: String, orderRefIn: Order.ID) {
-        self.id = id
-        self.date = date
-        self.createdAt = createdAt
-        self.type = type
-        self.amount = amount
-        self.fees = fees
-        self.paymentMethod = paymentMethod
-        self.comment = comment
-        self.orderRefIn = orderRefIn
-    }
 }
 
 
