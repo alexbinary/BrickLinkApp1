@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct ShippingCostBand: Identifiable, Sendable {
+struct ShippingCostBand: Identifiable {
     
     var id: Int { maxWeight }
     
@@ -18,7 +18,7 @@ struct ShippingCostBand: Identifiable, Sendable {
 }
 
 
-struct LetterCost: Sendable {
+struct LetterCost {
     
     let refPrice: Decimal
     

@@ -7,7 +7,7 @@ typealias TrackingNo = String
 
 
 
-enum LaPosteTrackingStatus: String, Codable, IsOneOfAble, Sendable {
+enum LaPosteTrackingStatus: String, Codable, IsOneOfAble {
     
     case noData
     case inTransit

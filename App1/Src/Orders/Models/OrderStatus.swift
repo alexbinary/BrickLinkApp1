@@ -1,7 +1,7 @@
 
 
 
-enum OrderStatus: String, Codable, IsOneOfAble, Sendable {
+enum OrderStatus: String, Codable, IsOneOfAble {
     
     case paid = "PAID"
     case packed = "PACKED"

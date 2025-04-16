@@ -898,7 +898,7 @@ class UpdateController {
 
 
 
-enum RefetchStrategy: Sendable {
+enum RefetchStrategy {
     
     case refetchOnlyIfInvalidated
     case forceRefetch

@@ -1,7 +1,7 @@
 
 
 
-enum ItemType: String, Codable, Sendable, CaseIterable {
+enum ItemType: String, Codable, CaseIterable {
     
     
     case part = "PART"

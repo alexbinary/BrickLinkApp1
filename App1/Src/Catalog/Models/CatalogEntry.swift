@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct CatalogEntry: Sendable {
+struct CatalogEntry {
     
     
     let name: String
