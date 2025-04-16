@@ -43,7 +43,7 @@ struct CatalogImage: View {
     
     var body: some View {    
         
-        ZStack(alignment: .top) {
+        ZStack {
             AsyncImage(url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId)) { image in
                 image
                     .aspectRatio(contentMode: .fit)
@@ -62,7 +62,7 @@ struct CatalogImage: View {
                 }
             }
         }
-        .frame(width: frameSize.width, height: frameSize.height, alignment: .top)
+        .frame(width: frameSize.width, height: frameSize.height, alignment: .center)
     }
 
 

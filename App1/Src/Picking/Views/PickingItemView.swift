@@ -35,6 +35,7 @@ struct PickingItemView: View {
                 GridRow(alignment: .top) {
                     
                     CatalogImage(orderItem: item)
+                        .border(conditionColor, width: 2)
                     
                     VStack(alignment: .leading) {
                         Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
@@ -46,8 +47,15 @@ struct PickingItemView: View {
                 }
                 
                 GridRow {
-                    Text(item.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
-                    LegoColorView(orderItem: item).gridColumnAlignment(.leading)
+                    
+                    Text(item.condition == "U" ? "USED" : "NEW")
+                        .font(.title3)
+                        .foregroundStyle(conditionColor)
+                        .fontWeight(.bold)
+                        .gridColumnAlignment(.center)
+                    
+                    LegoColorView(orderItem: item)
+                        .gridColumnAlignment(.leading)
                 }
             }
             
@@ -86,6 +94,15 @@ struct PickingItemView: View {
         }
         .padding()
         .roundedContainer(fill: .secondarySystemFill, stroke: .tertiarySystemFill)
+    }
+    
+    
+    var conditionColor: Color {
+        switch item.condition {
+        case "U": return .red
+        case "N": return .blue
+        default: return .clear
+        }
     }
 }
 
