@@ -2,6 +2,7 @@ import Foundation
 
 
 
+@MainActor
 class MacroStatusController {
     
     

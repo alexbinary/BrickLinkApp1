@@ -28,6 +28,7 @@ typealias Env = (
 
 
 
+@MainActor
 func createEnv() -> Env {
     
     let coreController = CoreController(

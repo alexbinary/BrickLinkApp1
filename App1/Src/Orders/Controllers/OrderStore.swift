@@ -3,6 +3,7 @@ import Foundation
 
 
 @Observable
+@MainActor
 class OrderStore {
     
     
@@ -487,16 +488,16 @@ class OrderStore {
             for order in orders {
                 group.addTask {
                     
-                    if !(self.hasDetails(for: order)) {
+                    if !(await self.hasDetails(for: order)) {
                         await self.loadDetails(for: order, .forceRefetch, operationTag)
                     }
-                    if !(self.orderIsClosedForMoreThan30Days(order)) && refetchStrategy == .forceRefetch {
+                    if !(await self.orderIsClosedForMoreThan30Days(order)) && refetchStrategy == .forceRefetch {
                         await self.loadDetails(for: order, .forceRefetch, operationTag)
                     }
-                    if self.orderNeedsRefreshLaPosteTrackingStatus(order) {
+                    if await self.orderNeedsRefreshLaPosteTrackingStatus(order) {
                         Task { await self.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag) }
                     }
-                    if self.orderNeedsRefreshFeedback(order) {
+                    if await self.orderNeedsRefreshFeedback(order) {
                         Task { await self.loadFeedbacks(for: order, refetchStrategy, operationTag) }
                     }
                 }

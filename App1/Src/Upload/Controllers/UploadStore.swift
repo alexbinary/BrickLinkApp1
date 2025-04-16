@@ -4,6 +4,7 @@ import Foundation
 
 
 @Observable
+@MainActor
 class UploadStore {
     
     

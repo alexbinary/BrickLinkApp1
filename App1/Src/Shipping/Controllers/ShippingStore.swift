@@ -3,6 +3,7 @@ import Foundation
 
 
 @Observable
+@MainActor
 class ShippingStore {
     
     
