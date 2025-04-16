@@ -92,32 +92,11 @@ class Catalog {
     }
     
 
-    // MARK: - Parts annotations
+    // MARK: - Parts data
     
 
-    func lengthAnnotation(forItemOfType type: ItemType, ref: String, colorId: String) -> String? {
+    func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData? {
      
-        if type == .part, let data = partData.first(where: { $0.ref == ref }) {
-            return data.length
-        }
-        return nil
-    }
-
-
-    func dimensionsAnnotation(forItemOfType type: ItemType, ref: String, colorId: String) -> String? {
-        
-        if type == .part, let data = partData.first(where: { $0.ref == ref }) {
-            return data.dimensions
-        }
-        return nil
-    }
-
-
-    func chiralityAnnotation(forItemOfType type: ItemType, ref: String, colorId: String) -> String? {
-        
-        if type == .part, let data = partData.first(where: { $0.ref == ref }) {
-            return data.chirality?.rawValue
-        }
-        return nil
+        return partData.first(where: { $0.ref == ref })
     }
 }

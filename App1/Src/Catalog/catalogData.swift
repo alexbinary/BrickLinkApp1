@@ -1,16 +1,25 @@
 
+import SwiftUI
+
 
 
 struct PartData {
 
     let ref: String
-    var length: String? = nil
-    var dimensions: String? = nil
-    var chirality: Chirality? = nil
+    
+    var lengthAnnotation: String? = nil
+    var lengthAnnotationPosition: Alignment = .bottomTrailing
+    
+    var dimensionsAnnotation: String? = nil
+    var dimensionsAnnotationPosition: Alignment = .bottomTrailing
+    
+    var chiralityAnnotation: Chirality? = nil
+    var chiralityAnnotationPosition: Alignment = .topLeading
 }
 
 
 enum Chirality: String {
+    
     case left
     case right
 }
@@ -21,94 +30,95 @@ let partData: [PartData] = [
 
     .init(
         ref: "29119",
-        chirality: .right
+        chiralityAnnotation: .right,
+        chiralityAnnotationPosition: .topTrailing
     ),
     .init(
         ref: "41769",
-        chirality: .right
+        chiralityAnnotation: .right
     ),
     .init(
         ref: "2450", 
-        length: "3"
+        lengthAnnotation: "3"
     ),
     .init(
         ref: "3020",
-        length: "4"
+        lengthAnnotation: "4"
     ),
     .init(
         ref: "3021",
-        length: "3"
+        lengthAnnotation: "3"
     ),
     .init(
         ref: "3029",
-        dimensions: "4 x 12"
+        dimensionsAnnotation: "4 x 12"
     ),
     .init(
         ref: "3068",
-        length: "2"
+        lengthAnnotation: "2"
     ),
     .init(
         ref: "3623",
-        length: "3"
+        lengthAnnotation: "3"
     ),
     .init(
         ref: "3666",
-        length: "6"
+        lengthAnnotation: "6"
     ),
     .init(
         ref: "3705",
-        length: "4"
+        lengthAnnotation: "4"
     ),
     .init(
         ref: "3709b",
-        length: "4"
+        lengthAnnotation: "4"
     ),
     .init(
         ref: "3795",
-        length: "6"
+        lengthAnnotation: "6"
     ),
     .init(
         ref: "3832",
-        length: "10"
+        lengthAnnotation: "10"
     ),
     .init(
         ref: "6179",
-        length: "4"
+        lengthAnnotation: "4"
     ),
     .init(
         ref: "11212",
-        length: "3"
+        lengthAnnotation: "3"
     ),
     .init(
         ref: "11213",
-        length: "6"
+        lengthAnnotation: "6"
     ),
     .init(
         ref: "26603",
-        length: "3"
+        lengthAnnotation: "3"
     ),
     .init(
         ref: "30503",
-        length: "4"
+        lengthAnnotation: "4"
     ),
     .init(
         ref: "32062",
-        length: "2"
+        lengthAnnotation: "2"
     ),
     .init(
         ref: "37352",
-        length: "2"
+        lengthAnnotation: "2"
     ),
     .init(
         ref: "41769",
-        length: "4"
+        lengthAnnotation: "4"
     ),
     .init(
         ref: "43722",
-        length: "3"
+        lengthAnnotation: "3"
     ),
     .init(
         ref: "98138",
-        length: "1"
+        lengthAnnotation: "1"
     ),
 ]

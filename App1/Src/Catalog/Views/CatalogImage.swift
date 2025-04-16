@@ -50,14 +50,16 @@ struct CatalogImage: View {
                     .frame(width: imageSize.width, height: imageSize.height)
             } placeholder: { Color.clear }
             
-            if let length = catalog.lengthAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
-                annotationView(text: length, alignment: .bottomTrailing)
-            } else if let dimensions = catalog.dimensionsAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
-                annotationView(text: dimensions, alignment: .bottomTrailing) 
-            }
-
-            if let chirality = catalog.chiralityAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
-                annotationView(text: chirality, alignment: .topLeading)
+            if let data = catalog.data(forItemOfType: type, ref: ref, colorId: colorId) {
+                if let length = data.lengthAnnotation {
+                    annotationView(text: length, alignment: data.lengthAnnotationPosition)
+                }
+                if let dimensions = data.dimensionsAnnotation {
+                    annotationView(text: dimensions, alignment: data.dimensionsAnnotationPosition)
+                }
+                if let chirality = data.chiralityAnnotation {
+                    annotationView(text: chirality.rawValue, alignment: data.chiralityAnnotationPosition)
+                }
             }
         }
         .frame(width: frameSize.width, height: frameSize.height, alignment: .top)
