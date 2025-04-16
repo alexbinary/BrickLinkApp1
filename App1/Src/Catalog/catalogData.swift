@@ -4,7 +4,8 @@
 struct PartData {
 
     let ref: String
-    let length: String
+    var length: String? = nil
+    var dimensions: String? = nil
 }
 
 
@@ -25,7 +26,7 @@ let partData: [PartData] = [
     ),
     .init(
         ref: "3029",
-        length: "12"
+        dimensions: "4 x 12"
     ),
     .init(
         ref: "3068",

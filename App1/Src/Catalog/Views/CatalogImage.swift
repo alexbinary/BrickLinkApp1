@@ -37,12 +37,12 @@ struct CatalogImage: View {
         self.ref = item.ref
         self.colorId = item.colorId
     }
-    
 
-    var body: some View {
-        
-        let frameSize = CGSize(width: 90, height: 70)
-        let imageSize = CGSize(width: 80, height: 60)
+
+    let frameSize = CGSize(width: 90, height: 70)
+    let imageSize = CGSize(width: 80, height: 60)
+    
+    var body: some View {    
         
         ZStack(alignment: .top) {
             AsyncImage(url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId)) { image in
@@ -52,16 +52,24 @@ struct CatalogImage: View {
             } placeholder: { Color.clear }
             
             if let length = catalog.lengthAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
-                Text(length)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
-                    .clipShape(Capsule())
-                    .padding(2)
-                    .frame(width: imageSize.width, height: imageSize.height, alignment: .bottomTrailing)
+                annotationView(text: length)
+            } else if let dimensions = catalog.dimensionsAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
+                annotationView(text: dimensions) 
             }
         }
         .frame(width: frameSize.width, height: frameSize.height, alignment: .top)
+    }
+
+
+    @ViewBuilder
+    func annotationView(text: String) -> some View {
+        Text(text)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
+            .clipShape(Capsule())
+            .padding(2)
+            .frame(width: imageSize.width, height: imageSize.height, alignment: .bottomTrailing)
     }
 }
 

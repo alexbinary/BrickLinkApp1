@@ -102,4 +102,13 @@ class Catalog {
         }
         return nil
     }
+
+
+    func dimensionsAnnotation(forItemOfType type: ItemType, ref: String, colorId: String) -> String? {
+        
+        if type == .part, let data = partData.first(where: { $0.ref == ref }) {
+            return data.dimensions
+        }
+        return nil
+    }
 }
