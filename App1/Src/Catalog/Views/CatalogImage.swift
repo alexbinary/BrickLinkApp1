@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 
@@ -52,9 +51,13 @@ struct CatalogImage: View {
             } placeholder: { Color.clear }
             
             if let length = catalog.lengthAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
-                annotationView(text: length)
+                annotationView(text: length, alignment: .bottomTrailing)
             } else if let dimensions = catalog.dimensionsAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
-                annotationView(text: dimensions) 
+                annotationView(text: dimensions, alignment: .bottomTrailing) 
+            }
+
+            if let chirality = catalog.chiralityAnnotation(forItemOfType: type, ref: ref, colorId: colorId) {
+                annotationView(text: chirality, alignment: .topLeading)
             }
         }
         .frame(width: frameSize.width, height: frameSize.height, alignment: .top)
@@ -62,14 +65,14 @@ struct CatalogImage: View {
 
 
     @ViewBuilder
-    func annotationView(text: String) -> some View {
+    func annotationView(text: String, alignment: Alignment) -> some View {
         Text(text)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
             .clipShape(Capsule())
             .padding(2)
-            .frame(width: imageSize.width, height: imageSize.height, alignment: .bottomTrailing)
+            .frame(width: imageSize.width, height: imageSize.height, alignment: alignment)
     }
 }
 

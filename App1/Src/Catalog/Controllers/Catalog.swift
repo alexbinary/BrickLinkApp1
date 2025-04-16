@@ -111,4 +111,13 @@ class Catalog {
         }
         return nil
     }
+
+
+    func chiralityAnnotation(forItemOfType type: ItemType, ref: String, colorId: String) -> String? {
+        
+        if type == .part, let data = partData.first(where: { $0.ref == ref }) {
+            return data.chirality?.rawValue
+        }
+        return nil
+    }
 }

@@ -6,12 +6,27 @@ struct PartData {
     let ref: String
     var length: String? = nil
     var dimensions: String? = nil
+    var chirality: Chirality? = nil
+}
+
+
+enum Chirality: String {
+    case left
+    case right
 }
 
 
 
 let partData: [PartData] = [
 
+    .init(
+        ref: "29119",
+        chirality: .right
+    ),
+    .init(
+        ref: "41769",
+        chirality: .right
+    ),
     .init(
         ref: "2450", 
         length: "3"
