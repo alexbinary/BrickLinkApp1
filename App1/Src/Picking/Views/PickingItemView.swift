@@ -98,7 +98,6 @@ struct PickingItemView: View {
             }
         }
         .padding()
-        .roundedContainer(fill: .secondarySystemFill, stroke: .tertiarySystemFill)
     }
     
     

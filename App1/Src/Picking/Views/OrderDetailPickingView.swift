@@ -41,48 +41,27 @@ struct OrderDetailPickingView: View {
             
             TabView {
                 
-                if !nextOrderItemsToPick.isEmpty {
-                    
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(nextOrderItemsToPick) { PickingItemView($0, button: .pick) }
-                        }
-                    }
-                    .padding()
-                    .tabItem { Text("􀈥 Pick") }
-                }
+                let tabs: [(title: String, items: [OrderItem], button: ButtonType)] = [
+                    ("􀈥 Pick", nextOrderItemsToPick, .pick),
+                    ("􀐫 Picked", pickedOrderItems, .unpick),
+                    ("􀁢 Verify", nextOrderItemsToVerify, .verify),
+                    ("􀐫 Verified", verifiedOrderItems, .unverify)
+                ]
                 
-                if !pickedOrderItems.isEmpty {
-                    
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(pickedOrderItems) { PickingItemView($0, button: .unpick) }
+                ForEach(tabs, id: \.title) { tab in
+                    if !tab.items.isEmpty {
+                        ScrollView {
+                            LazyVStack(alignment: .leading, spacing: 12) {
+                                Divider()
+                                ForEach(tab.items) {
+                                    PickingItemView($0, button: tab.button)
+                                    Divider()
+                                }
+                            }
                         }
+                        .padding()
+                        .tabItem { Text(tab.title) }
                     }
-                    .padding()
-                    .tabItem { Text("􀐫 Picked") }
-                }
-            
-                if !nextOrderItemsToVerify.isEmpty {
-                    
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(nextOrderItemsToVerify) { PickingItemView($0, button: .verify) }
-                        }
-                    }
-                    .padding()
-                    .tabItem { Text("􀁢 Verify") }
-                }
-                
-                if !verifiedOrderItems.isEmpty {
-                    
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(verifiedOrderItems) { PickingItemView($0, button: .unverify) }
-                        }
-                    }
-                    .padding()
-                    .tabItem { Text("􀐫 Verified") }
                 }
             }
         }
