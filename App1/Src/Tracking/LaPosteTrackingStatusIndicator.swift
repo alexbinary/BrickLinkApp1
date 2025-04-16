@@ -22,15 +22,25 @@ struct LaPosteTrackingStatusIndicator: View {
                 ProgressView()
                     .controlSize(.mini)
             }
-            Text("La Poste: \(status?.rawValue ?? "")")
+            Text("La Poste: \(statusDescription)")
         }
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
-            .roundedContainer(style: .tag(baseColor: color))
+            .roundedContainer(style: .tag(baseColor: statusColor))
     }
     
     
-    var color: Color {
+    var statusDescription: String {
+        switch status {
+        case .none: "no data"
+        case .noData: "Pending"
+        case .inTransit: "In transit"
+        case .delivered: "Delivered"
+        }
+    }
+    
+    
+    var statusColor: Color {
         switch status {
         case .none: .gray
         case .noData: .red
