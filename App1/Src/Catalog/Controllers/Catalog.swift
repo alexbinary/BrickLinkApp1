@@ -1,3 +1,4 @@
+
 import Foundation
 import HTMLEntities
 import SwiftUI
@@ -91,13 +92,13 @@ class Catalog {
     }
     
 
-    // MARK: - Lengths overlay
+    // MARK: - Parts annotations
     
 
-    func url(forRebrickableLengthOverlayForItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+    func lengthAnnotation(forItemOfType type: ItemType, ref: String, colorId: String) -> String? {
      
-        if type == .part, let length = overlayLengthByPartRef[ref] {
-            return URL(string: "https://rebrickable.com/static/img/overlays/ov_\(length).png")
+        if type == .part, let data = partData.first(where: { $0.ref == ref }) {
+            return data.length
         }
         return nil
     }
