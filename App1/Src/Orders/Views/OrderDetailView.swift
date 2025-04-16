@@ -48,9 +48,9 @@ struct OrderDetailView: View {
             
             TabView(selection: $nav.orderDetailTab) {
                 
-                ScrollView { OrderDetailGeneralView(order) }
+                ScrollView { OrderDetailPaymentView(order) }
                     .padding()
-                    .tabItem { Text("􀅴 General") }.tag(OrderDetailTab.general)
+                    .tabItem { Text("􀖧 Payment") }.tag(OrderDetailTab.payment)
                 
                 OrderDetailPickingView(order)
                     .tabItem { Text("􀈥 Picking") }.tag(OrderDetailTab.picking)

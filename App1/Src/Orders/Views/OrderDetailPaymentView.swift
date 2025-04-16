@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct OrderDetailGeneralView: View {
+struct OrderDetailPaymentView: View {
     
     
     @Environment(OrderStore.self)
@@ -65,6 +65,6 @@ struct OrderDetailGeneralView: View {
     let env = createEnv()
     let order = env.stores.order.orders.first!
     
-    OrderDetailGeneralView(order)
+    OrderDetailPaymentView(order)
         .inject(env)
 }

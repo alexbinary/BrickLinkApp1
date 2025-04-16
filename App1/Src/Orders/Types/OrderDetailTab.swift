@@ -3,7 +3,7 @@
 
 enum OrderDetailTab {
     
-    case general
+    case payment
     case picking
     case shipping
     case feedback
