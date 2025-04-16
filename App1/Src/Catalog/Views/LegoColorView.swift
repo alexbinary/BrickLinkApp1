@@ -13,22 +13,22 @@ struct LegoColorView: View {
     let colorId: String
     let style: Style
     
-    init(colorId: String, style: Style = .full) {
+    init(colorId: String, style: Style = .default) {
         self.colorId = colorId
         self.style = style
     }
     
-    init(orderItem item: OrderItem, style: Style = .full) {
+    init(orderItem item: OrderItem, style: Style = .default) {
         self.colorId = item.colorId
         self.style = style
     }
     
-    init(uploadItem item: UploadItem, style: Style = .full) {
+    init(uploadItem item: UploadItem, style: Style = .default) {
         self.colorId = item.colorId
         self.style = style
     }
     
-    init(uploadedItem item: UploadedItem, style: Style = .full) {
+    init(uploadedItem item: UploadedItem, style: Style = .default) {
         self.colorId = item.colorId
         self.style = style
     }
@@ -38,18 +38,32 @@ struct LegoColorView: View {
         
         let (color, name) = catalog.colorAndName(forLegoColorId: colorId)
         
-        HStack {
+        switch style {
+        
+        case .default:
+            
+            HStack {
+                
+                color.frame(width: 18, height: 18)
+                Text(name)
+            }
+            
+        case .colorSquareOnly:
             
             color.frame(width: 18, height: 18)
-            if style == .full { Text(name) }
+            
+        case .nameOnly:
+            
+            Text(name)
         }
     }
     
     
     enum Style {
         
-        case full
-        case compact
+        case `default`
+        case colorSquareOnly
+        case nameOnly
     }
 }
 

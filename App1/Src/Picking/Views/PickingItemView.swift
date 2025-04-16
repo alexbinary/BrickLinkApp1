@@ -30,32 +30,37 @@ struct PickingItemView: View {
         
         HStack(spacing: 48) {
                 
-            Grid(verticalSpacing: 0) {
-                
-                GridRow(alignment: .top) {
-                    
+            HStack(alignment: .top) {
+
+                VStack {
+
                     CatalogImage(orderItem: item)
                         .border(conditionColor, width: 2)
-                    
-                    VStack(alignment: .leading) {
-                        Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
-                            Text(item.ref).captionStyle()
-                        }
-                        Text(item.name).lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
-                        if !item.comment.isEmpty { Text(item.comment) }
-                    }
-                }
-                
-                GridRow {
                     
                     Text(item.condition == "U" ? "USED" : "NEW")
                         .font(.title3)
                         .foregroundStyle(conditionColor)
                         .fontWeight(.bold)
-                        .gridColumnAlignment(.center)
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+
+                    HStack {
+                        
+                        Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
+                            Text(item.ref)
+                        }
+                        
+                        LegoColorView(orderItem: item, style: .nameOnly)
+                    }
+                    .font(.caption)
                     
-                    LegoColorView(orderItem: item)
-                        .gridColumnAlignment(.leading)
+                    Text(item.name)
+                        .lineLimit(nil)
+                        .font(.title3)
+                        .frame(width: 300, alignment: .leading)
+                    
+                    if !item.comment.isEmpty { Text(item.comment) }
                 }
             }
             

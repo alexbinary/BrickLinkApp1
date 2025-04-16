@@ -38,7 +38,7 @@ struct CatalogImage: View {
     }
 
 
-    let frameSize = CGSize(width: 90, height: 70)
+    let frameSize = CGSize(width: 84, height: 64)
     let imageSize = CGSize(width: 80, height: 60)
     
     var body: some View {    
