@@ -59,7 +59,10 @@ struct PickingItemView: View {
                 }
                 
                 GridRow(alignment: .lastTextBaseline) {
-                    Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
+                    
+                    InventoryLink(inventoryItemId: item.inventoryId) {
+                        Text(item.location).font(.title2).frame(width: 80, alignment: .leading)
+                    }
                     Text(item.quantity).font(.title2)
                     
                     HStack(spacing: 0) {

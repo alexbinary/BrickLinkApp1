@@ -10,19 +10,24 @@ struct InventoryLink<Label>: View where Label: View {
     @Environment(InventoryStore.self)
     var inventoryStore
     
-    
-    let inventoryItem: InventoryItem
+
+    let inventoryItemId: InventoryItem.ID
     let label: () -> Label
     
     init(_ inventoryItem: InventoryItem, label: @escaping () -> Label) {
-        self.inventoryItem = inventoryItem
+        self.inventoryItemId = inventoryItem.id
+        self.label = label
+    }
+    
+    init(inventoryItemId: InventoryItem.ID, label: @escaping () -> Label) {
+        self.inventoryItemId = inventoryItemId
         self.label = label
     }
     
     
     var body: some View {
 
-        Link(destination: inventoryStore.url(forInventoryItemWithId: inventoryItem.id)!, label: label)
+        Link(destination: inventoryStore.url(forInventoryItemWithId: inventoryItemId)!, label: label)
     }
 }
 
