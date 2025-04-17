@@ -5,7 +5,7 @@ import AVFoundation
 
 extension AVAuthorizationStatus: @retroactive CustomStringConvertible {
     
-    var description: String {
+    public var description: String {
         
         switch self {
             

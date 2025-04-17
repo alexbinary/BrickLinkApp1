@@ -5,7 +5,7 @@ import CoreBluetooth
 
 extension CBManagerState: @retroactive CustomStringConvertible {
     
-    var description: String {
+    public var description: String {
         
         switch self {
         
