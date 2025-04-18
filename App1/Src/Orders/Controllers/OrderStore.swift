@@ -59,13 +59,13 @@ class OrderStore {
     }
     
     
-    func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    private func loadOrders(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadOrders(refetchStrategy, operationTag)
     }
     
     
-    var isLoadingOrders: Bool {
+    private var isLoadingOrders: Bool {
      
         orderController.isLoadingOrders
     }
@@ -74,7 +74,7 @@ class OrderStore {
     // MARK: - Details
     
     
-    func hasDetails(for order: Order) -> Bool {
+    private func hasDetails(for order: Order) -> Bool {
         
         orderController.hasDetails(for: order)
     }
@@ -86,13 +86,13 @@ class OrderStore {
     }
     
     
-    func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    private func loadDetails(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadDetails(for: order, refetchStrategy, operationTag)
     }
     
     
-    var isLoadingOrderDetails: Bool {
+    private var isLoadingOrderDetails: Bool {
         
         orderController.isLoadingOrderDetails
     }
@@ -107,37 +107,37 @@ class OrderStore {
     // MARK: - Items
     
     
-    func hasItems(for order: Order) -> Bool {
+    private func hasItems(for order: Order) -> Bool {
         
         orderController.hasItems(for: order)
     }
     
     
-    func items(for order: Order) -> [OrderItem] {
+    private func items(for order: Order) -> [OrderItem] {
         
         orderController.items(for: order)
     }
     
     
-    func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    private func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadItems(for: order, refetchStrategy, operationTag)
     }
     
     
-    func loadItemsIfMissing(for order: Order) async {
+    private func loadItemsIfMissing(for order: Order) async {
         
         await orderController.loadItemsIfMissing(for: order)
     }
     
     
-    var isLoadingOrderItems: Bool {
+    private var isLoadingOrderItems: Bool {
         
         orderController.isLoadingOrderItems
     }
     
     
-    func isLoadingItems(for order: Order) -> Bool {
+    private func isLoadingItems(for order: Order) -> Bool {
         
         orderController.isLoadingItems(for: order)
     }
@@ -152,13 +152,13 @@ class OrderStore {
     }
     
     
-    var isUpdatingOrderStatus: Bool {
+    private var isUpdatingOrderStatus: Bool {
         
         orderController.isUpdatingOrderStatus
     }
     
     
-    func isUpdatingStatus(of order: Order) -> Bool {
+    private func isUpdatingStatus(of order: Order) -> Bool {
         
         orderController.isUpdatingStatus(of: order)
     }
@@ -176,13 +176,13 @@ class OrderStore {
     }
     
     
-    var isUpdatingOrderTrackingNo: Bool {
+    private var isUpdatingOrderTrackingNo: Bool {
         
         orderController.isUpdatingOrderTrackingNo
     }
     
     
-    func isUpdatingTrackingNo(of order: Order) -> Bool {
+    private func isUpdatingTrackingNo(of order: Order) -> Bool {
         
         orderController.isUpdatingTrackingNo(of: order)
     }
@@ -194,7 +194,7 @@ class OrderStore {
     }
     
     
-    var isSendingDriveThru: Bool {
+    private var isSendingDriveThru: Bool {
         
         orderController.isSendingDriveThru
     }
@@ -221,19 +221,19 @@ class OrderStore {
     }
     
     
-    func pickingProgress(for order: Order) -> Percent {
+    private func pickingProgress(for order: Order) -> Percent {
         
         pickingProgressController.pickingProgress(for: order)
     }
     
     
-    func pickingVerificationProgress(for order: Order) -> Percent {
+    private func pickingVerificationProgress(for order: Order) -> Percent {
         
         pickingProgressController.pickingVerificationProgress(for: order)
     }
     
     
-    func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
+    private func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
         trackingMiddleController.laPosteTrackingStatus(for: order)
     }
@@ -445,19 +445,19 @@ class OrderStore {
     // MARK: - Refresh
     
     
-    func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func loadLaPosteTrackingStatus(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await trackingMiddleController.loadLaPosteTrackingStatus(for: order, refetchStrategy, operationTag)
     }
     
     
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    private func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await feedbackController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     
-    func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
+    private func orderIsClosedForMoreThan30Days(_ order: Order) -> Bool {
         
         return (
             order.status.isOneOf(.completed, .cancelled, .purged)
@@ -467,19 +467,19 @@ class OrderStore {
     }
     
     
-    func orderNeedsRefreshLaPosteTrackingStatus(_ order: Order) -> Bool {
+    private func orderNeedsRefreshLaPosteTrackingStatus(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .inTransit
     }
     
     
-    func orderNeedsRefreshFeedback(_ order: Order) -> Bool {
+    private func orderNeedsRefreshFeedback(_ order: Order) -> Bool {
         
         macroStatus(for: order).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback)
     }
     
     
-    func refreshOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func refreshOrders(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await loadOrders(refetchStrategy, operationTag)
         
@@ -518,25 +518,25 @@ class OrderStore {
     }
     
     
-    func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func refresh(_ order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await loadOrders(refetchStrategy, operationTag)
     }
     
     
-    func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
+    private func softRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refresh(order, .refetchOnlyIfInvalidated, operationTag)
     }
     
     
-    func softRefresh(orderWithId orderId: Order.ID) async {
+    private func softRefresh(orderWithId orderId: Order.ID) async {
         
         await softRefresh(order(withId: orderId)!)
     }
     
     
-    func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
+    private func hardRefresh(_ order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refresh(order, .forceRefetch, operationTag)
     }
@@ -548,7 +548,7 @@ class OrderStore {
     }
     
     
-    func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func refreshDetails(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasDetails(for: order) ? refetchStrategy : .forceRefetch
         
@@ -556,19 +556,19 @@ class OrderStore {
     }
     
     
-    func softRefreshDetails(for order: Order) async {
+    private func softRefreshDetails(for order: Order) async {
         
         await refreshDetails(for: order, .refetchOnlyIfInvalidated)
     }
 
 
-    func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
+    private func softRefreshDetails(forOrderWithId orderId: Order.ID) async {
         
         await softRefreshDetails(for: order(withId: orderId)!)
     }
     
     
-    func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
+    private func hardRefreshDetails(for order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refreshDetails(for: order, .forceRefetch, operationTag)
     }
@@ -580,7 +580,7 @@ class OrderStore {
     }
     
     
-    func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func refreshItems(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasItems(for: order) ? refetchStrategy : .forceRefetch
         
@@ -594,13 +594,13 @@ class OrderStore {
     }
     
     
-    func softRefreshItems(forOrderWithId orderId: Order.ID) async {
+    private func softRefreshItems(forOrderWithId orderId: Order.ID) async {
         
         await softRefreshItems(for: order(withId: orderId)!)
     }
     
     
-    func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
+    private func hardRefreshItems(for order: Order, _ operationTag: OperationTag? = nil) async {
         
         await refreshItems(for: order, .forceRefetch, operationTag)
     }
@@ -615,7 +615,7 @@ class OrderStore {
     // MARK: - Actions
     
     
-    func orderNeedsCompletedAndGiveFeedback(_ order: Order) -> Bool {
+    private func orderNeedsCompletedAndGiveFeedback(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .inTransitFor30PlusDays
     }
@@ -628,7 +628,7 @@ class OrderStore {
     }
     
     
-    func orderNeedsGiveFeedback(_ order: Order) -> Bool {
+    private func orderNeedsGiveFeedback(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .giveFeedback
     }
@@ -641,7 +641,7 @@ class OrderStore {
     }
     
     
-    func orderNeedsShipAndSendDriveThru(_ order: Order) -> Bool {
+    private func orderNeedsShipAndSendDriveThru(_ order: Order) -> Bool {
         
         macroStatus(for: order) == .ship
         && self.order(order, validates: .stamping)
@@ -657,7 +657,7 @@ class OrderStore {
     }
     
     
-    func orderNeedsAction(_ order: Order) -> Bool {
+    private func orderNeedsAction(_ order: Order) -> Bool {
         
         orderNeedsCompletedAndGiveFeedback(order)
         ||
@@ -675,7 +675,7 @@ class OrderStore {
     }
     
     
-    func postPraiseOrderFeedback(for order: Order) async {
+    private func postPraiseOrderFeedback(for order: Order) async {
         
         await feedbackPostController.postPraiseFeedback(for: order)
     }
