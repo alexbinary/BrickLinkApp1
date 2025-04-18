@@ -3,8 +3,24 @@ import Foundation
 
 
 
+protocol NavigationControllerProtocol {
+    
+    var sidebar: SidebarItem { get }
+    
+    var orderStack: [Order.ID] { get }
+    func push(_ order: Order)
+    
+    var orderDetailTab: OrderDetailTab? { get }
+    
+    var resultSelectedOrderIds: Set<Order.ID> { get }
+    var selectedTransactions: Set<Transaction.ID> { get }
+    func resultClearSelectedOrder()
+}
+
+
+
 @Observable
-class NavigationController {
+class NavigationController: NavigationControllerProtocol {
     
     
     var sidebar: SidebarItem = Secrets.Defaults.selectedSidebarItem

@@ -49,6 +49,7 @@ struct EnvInjector: PreviewModifier {
         content
             .inject(context.env)
             .environment(context.nav)
+            .environment(\.navigationController, context.nav)
     }
 }
 

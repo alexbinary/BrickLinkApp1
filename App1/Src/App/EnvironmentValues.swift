@@ -22,4 +22,6 @@ extension EnvironmentValues {
     @Entry var resultStore: ResultStoreProtocol?
 
     @Entry var updateStore: UpdateStoreProtocol?
+
+    @Entry var navigationController: NavigationControllerProtocol?
 }
