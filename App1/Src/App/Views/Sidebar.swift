@@ -52,12 +52,13 @@ struct Sidebar: View {
 
 
 
-#Preview {
+#Preview(traits: .env) {
     
-    let env = createEnv()
-    let navigationController = NavigationController()
-    
-    Sidebar()
-        .inject(env)
-        .environment(navigationController)
+    NavigationSplitView {
+        
+        Sidebar()
+        
+    } detail: {
+        
+    }
 }
