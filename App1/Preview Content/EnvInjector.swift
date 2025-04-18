@@ -18,7 +18,25 @@ struct EnvInjector: PreviewModifier {
     func body(content: Content, context: PreviewEnv) -> some View {
         
         content
-            .inject(context.env)
+            
+            .environment(context.env.catalog)
+        
+            .environment(context.env.stores.inventory)
+            .environment(context.env.stores.upload)
+        
+            .environment(context.env.stores.order)
+            .environment(\.pickingStore, PreviewPickingStore())
+            .environment(context.env.stores.shipping)
+            .environment(context.env.stores.tracking)
+            .environment(context.env.stores.feedback)
+            
+            .environment(context.env.stores.refund)
+        
+            .environment(context.env.stores.transaction)
+            .environment(context.env.stores.result)
+        
+            .environment(context.env.stores.update)
+        
             .environment(context.nav)
     }
 }

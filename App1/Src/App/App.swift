@@ -35,7 +35,6 @@ extension View {
             .environment(env.stores.upload)
         
             .environment(env.stores.order)
-            .environment(env.stores.picking)
             .environment(\.pickingStore, env.stores.picking)
             .environment(env.stores.shipping)
             .environment(env.stores.tracking)
