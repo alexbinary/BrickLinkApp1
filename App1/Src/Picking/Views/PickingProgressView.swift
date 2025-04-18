@@ -6,8 +6,8 @@ import SwiftUI
 struct PickingProgressView: View {
 
 
-    @Environment(PickingStore.self)
-    var pickingStore
+    @Environment(\.pickingStore)
+    var pickingStore: PickingStoreProtocol!
 
 
     let order: Order

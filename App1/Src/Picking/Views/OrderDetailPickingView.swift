@@ -3,7 +3,6 @@ import SwiftUI
 
 
 
-
 struct OrderDetailPickingView: View {
     
     
@@ -13,8 +12,8 @@ struct OrderDetailPickingView: View {
     @Environment(InventoryStore.self)
     var inventoryStore
     
-    @Environment(PickingStore.self)
-    var pickingStore
+    @Environment(\.pickingStore)
+    var pickingStore: PickingStoreProtocol!
     
     
     let order: Order

@@ -7,8 +7,8 @@ import SwiftUI
 struct PickingItemView: View {
     
     
-    @Environment(PickingStore.self)
-    var pickingStore
+    @Environment(\.pickingStore)
+    var pickingStore: PickingStoreProtocol!
     
     @Environment(InventoryStore.self)
     var inventoryStore

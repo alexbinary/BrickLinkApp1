@@ -1,11 +1,38 @@
 
 import Foundation
+import SwiftUI
+
+
+
+@MainActor
+protocol PickingStoreProtocol: Observable {
+    
+    func pickedOrderItems(for order: Order) -> [OrderItem]
+    func nextOrderItemsToPick(for order: Order) -> [OrderItem]
+    func pickingProgress(for order: Order) -> Percent
+    
+    func totalPartsLeftToPick(for order: Order) -> Int
+    func totalLotsLeftToPick(for order: Order) -> Int
+    
+    func pick(_ item: OrderItem)
+    func unpick(_ item: OrderItem)
+    
+    func verifiedOrderItems(for order: Order) -> [OrderItem]
+    func nextOrderItemsToVerify(for order: Order) -> [OrderItem]
+    func pickingVerificationProgress(for order: Order) -> Percent
+    
+    func totalPartsLeftToVerify(for order: Order) -> Int
+    func totalLotsLeftToVerify(for order: Order) -> Int
+
+    func verify(_ item: OrderItem)
+    func unverify(_ item: OrderItem)
+}
 
 
 
 @Observable
 @MainActor
-class PickingStore {
+class PickingStore: PickingStoreProtocol {
     
     
     private let pickingController: PickingController
