@@ -17,6 +17,12 @@ class UpdateStore {
     }
     
     
+    var isLoadingOperations: Bool {
+        
+        updateController.isRunningOrIsScheduledToRun_anyOperation
+    }
+    
+    
     func isLoadingOperations(withTag tag: OperationTag) -> Bool {
         
         updateController.isRunningOrIsScheduledToRun_operations(withTag: tag)

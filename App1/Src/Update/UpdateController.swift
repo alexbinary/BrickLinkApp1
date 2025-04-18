@@ -304,6 +304,12 @@ class UpdateController {
     // MARK: - Loading state
     
     
+    var isRunningOrIsScheduledToRun_anyOperation: Bool {
+        
+        hasScheduledOrRunningOperation()
+    }
+    
+    
     func isRunningOrIsScheduledToRun_operations(withTag tag: UUID) -> Bool {
         
         hasScheduledOrRunningOperation(matching: { $0.operationTag == tag })
@@ -319,13 +325,13 @@ class UpdateController {
     private var continuationsByOperationId: [UpdateOperationID: [CheckedContinuation<(),Never>]] = [:]
     
     
-    private func scheduledOrRunningOperation(matching predicate: (UpdateOperation) -> Bool) -> UpdateOperation? {
+    private func scheduledOrRunningOperation(matching predicate: ((UpdateOperation) -> Bool)? = nil) -> UpdateOperation? {
         
-        (queuedOperations + runningOperations).first(where: { predicate($0) })
+        (queuedOperations + runningOperations).first(where: { predicate?($0) ?? true })
     }
     
     
-    private func hasScheduledOrRunningOperation(matching predicate: (UpdateOperation) -> Bool) -> Bool {
+    private func hasScheduledOrRunningOperation(matching predicate: ((UpdateOperation) -> Bool)? = nil) -> Bool {
         
         scheduledOrRunningOperation(matching: predicate) != nil
     }
