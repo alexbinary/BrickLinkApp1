@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadedItemsView: View {
     
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(\.uploadStore)
+    var uploadStore: UploadStoreProtocol!
     
     
     @State var searchText = ""

@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadItemsView: View {
     
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(\.uploadStore)
+    var uploadStore: UploadStoreProtocol!
     
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!

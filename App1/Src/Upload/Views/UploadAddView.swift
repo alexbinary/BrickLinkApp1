@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadAddView: View {
     
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(\.uploadStore)
+    var uploadStore: UploadStoreProtocol!
 
     
     @State var type: ItemType = .part

@@ -3,9 +3,25 @@ import Foundation
 
 
 
+@MainActor
+protocol UploadStoreProtocol {
+
+     var uploadItemsForList: [UploadItem] { get }
+     func add(_ uploadItem: UploadItem)
+     func delete(_ uploadItem: UploadItem)
+     func update(_ uploadItem: UploadItem)
+     func importUploadList(fromXml xml: String)
+     var numberForSidebarBadge: Int { get }
+    
+     func add(_ uploadedItem: UploadedItem)
+     func uploadedItemsForList(matching searchText: String) -> [UploadedItem]
+}
+
+
+
 @Observable
 @MainActor
-class UploadStore {
+class UploadStore: UploadStoreProtocol {
     
     
     private let uploadController: UploadController
@@ -24,24 +40,24 @@ class UploadStore {
     }
     
     
-    func inventory(for uploadItem: UploadItem) -> InventoryItem? {
+    // MARK: - Upload
+    
+    
+    private var uploadItems: [UploadItem] {
+        
+        uploadController.uploadItems
+    }
+    
+    
+    private func inventory(for uploadItem: UploadItem) -> InventoryItem? {
         
         inventoryController.inventory(for: uploadItem)
     }
     
     
-    func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
+    private func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
         inventoryController.inventories(forAllColorsOf: uploadItem)
-    }
-    
-    
-    // MARK: - Upload
-    
-    
-    var uploadItems: [UploadItem] {
-        
-        uploadController.uploadItems
     }
     
     
@@ -103,7 +119,7 @@ class UploadStore {
     // MARK: - Uploaded items
     
     
-    var uploadedItems: [UploadedItem] {
+    private var uploadedItems: [UploadedItem] {
         
         uploadController.uploadedItems
     }

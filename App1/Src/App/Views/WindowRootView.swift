@@ -36,3 +36,10 @@ struct WindowRootView: View {
         .environment(navigationController)
     }
 }
+
+
+
+#Preview(traits: .env) {
+    WindowRootView()
+        .frame(width: 1400, height: 800)
+}

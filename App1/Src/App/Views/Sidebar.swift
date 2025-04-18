@@ -12,8 +12,8 @@ struct Sidebar: View {
     @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(UploadStore.self)
-    var uploadStore
+    @Environment(\.uploadStore)
+    var uploadStore: UploadStoreProtocol!
     
     
     var body: some View {

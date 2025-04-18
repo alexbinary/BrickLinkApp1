@@ -32,7 +32,7 @@ extension View {
             .environment(\.catalog, env.catalog)
         
             .environment(\.inventoryStore, env.stores.inventory)
-            .environment(env.stores.upload)
+            .environment(\.uploadStore, env.stores.upload)
         
             .environment(env.stores.order)
             .environment(\.pickingStore, env.stores.picking)
