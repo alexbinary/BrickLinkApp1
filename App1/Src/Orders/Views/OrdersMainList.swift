@@ -9,8 +9,8 @@ struct OrdersMainList: View {
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     
     @State var actionPopoverPresented: Bool = false

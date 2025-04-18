@@ -10,8 +10,8 @@ struct CashFlowDetailView: View {
     @Environment(\.transactionStore)
     var transactionStore: TransactionStoreProtocol!
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     
     @State private var selectedMonth: String? = nil

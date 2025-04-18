@@ -6,8 +6,8 @@ import SwiftUI
 struct ReloadButton: View {
 
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     @Environment(\.catalog)
     var catalog: CatalogProtocol!

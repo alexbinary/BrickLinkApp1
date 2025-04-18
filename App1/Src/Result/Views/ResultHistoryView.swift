@@ -19,8 +19,8 @@ struct ResultHistoryView: View {
     @Environment(\.resultStore)
     var resultStore: ResultStoreProtocol!
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     
     @State var firstVisibleMonth: BusinessMonth = .current
