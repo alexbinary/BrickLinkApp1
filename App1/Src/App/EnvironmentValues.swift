@@ -13,4 +13,5 @@ extension EnvironmentValues {
     @Entry var orderStore: OrderStoreProtocol?
     @Entry var pickingStore: PickingStoreProtocol?
     @Entry var shippingStore: ShippingStoreProtocol?
+    @Entry var trackingStore: TrackingStoreProtocol?
 }

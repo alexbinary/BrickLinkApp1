@@ -37,7 +37,7 @@ extension View {
             .environment(\.orderStore, env.stores.order)
             .environment(\.pickingStore, env.stores.picking)
             .environment(\.shippingStore, env.stores.shipping)
-            .environment(env.stores.tracking)
+            .environment(\.trackingStore, env.stores.tracking)
             .environment(env.stores.feedback)
             
             .environment(env.stores.refund)

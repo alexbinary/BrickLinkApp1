@@ -6,8 +6,8 @@ import SwiftUI
 struct LaPosteTrackingStatusIndicator: View {
     
     
-    @Environment(TrackingStore.self)
-    var trackingStore
+    @Environment(\.trackingStore)
+    var trackingStore: TrackingStoreProtocol!
     
     
     let order: Order

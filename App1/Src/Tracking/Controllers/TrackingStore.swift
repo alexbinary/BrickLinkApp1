@@ -3,9 +3,18 @@ import Foundation
 
 
 
+@MainActor
+protocol TrackingStoreProtocol {
+
+    func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus?
+    func isLoadingLaPosteTrackingStatus(for order: Order) -> Bool
+}
+
+
+
 @Observable
 @MainActor
-class TrackingStore {
+class TrackingStore: TrackingStoreProtocol {
     
     
     private let trackingController: TrackingController
@@ -22,12 +31,6 @@ class TrackingStore {
     func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
         
         trackingMiddleController.laPosteTrackingStatus(for: order)
-    }
-    
-    
-    var isLoadingLaPosteTrackingStatus: Bool {
-        
-        trackingController.isLoadingLaPosteTrackingStatus
     }
     
     
