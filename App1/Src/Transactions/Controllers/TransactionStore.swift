@@ -1,12 +1,30 @@
 
-import Foundation
 import SwiftUI
+
+
+
+@MainActor
+protocol TransactionStoreProtocol {
+    
+    var allTransactions: [Transaction] { get }
+    func register(_ transaction: Transaction)
+
+    func incomeTransactions(for order: Order) -> [Transaction]
+    func dateOrderValidatedWithoutIncomeTransaction(_ order: Order) -> Date?
+    func validateOrderWithoutIncomeTransaction(_ order: Order)
+
+    func shippingTransactions(for order: Order) -> [Transaction]
+    func dateOrderValidatedWithoutShippingTransaction(_ order: Order) -> Date?
+    func validateOrderWithoutShippingTransaction(_ order: Order)
+
+    func refundTransactions(for order: Order) -> [Transaction]
+}
 
 
 
 @Observable
 @MainActor
-class TransactionStore {
+class TransactionStore: TransactionStoreProtocol {
     
     
     private let transactionController: TransactionController
