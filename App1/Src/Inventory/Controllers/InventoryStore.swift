@@ -34,13 +34,13 @@ class InventoryStore {
     // MARK: - Read inventories
     
     
-    var allInventories: [InventoryItem] {
+    private var allInventories: [InventoryItem] {
         
         inventoryController.allInventories
     }
     
     
-    var hasInventories: Bool {
+    private var hasInventories: Bool {
         
         inventoryController.hasInventories
     }
@@ -58,34 +58,16 @@ class InventoryStore {
     }
     
     
-    func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
+    // MARK: Refresh
+    
+    
+    private func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await inventoryController.loadInventories(refetchStrategy, operationTag)
     }
     
     
-    var isLoadingInventories: Bool {
-        
-        inventoryController.isLoadingInventories
-    }
-    
-    
-    var isLoadingInventory: Bool {
-     
-        inventoryController.isLoadingInventory
-    }
-    
-    
-    func isLoadingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
-     
-        inventoryController.isLoadingInventory(withId: inventoryId)
-    }
-    
-    
-    // MARK: Refresh
-    
-    
-    func refreshInventories(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func refreshInventories(_ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasInventories ? refetchStrategy : .forceRefetch
         
