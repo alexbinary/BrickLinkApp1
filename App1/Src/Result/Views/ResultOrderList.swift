@@ -12,8 +12,8 @@ struct ResultOrderList: View {
     @Environment(\.refundStore)
     var refundStore: RefundStoreProtocol!
     
-    @Environment(ResultStore.self)
-    var resultStore
+    @Environment(\.resultStore)
+    var resultStore: ResultStoreProtocol!
     
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!

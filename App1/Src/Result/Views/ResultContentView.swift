@@ -15,8 +15,8 @@ struct ResultContentView: View {
     @Environment(\.refundStore)
     var refundStore: RefundStoreProtocol!
     
-    @Environment(ResultStore.self)
-    var resultStore
+    @Environment(\.resultStore)
+    var resultStore: ResultStoreProtocol!
     
     @Environment(NavigationController.self)
     var nav

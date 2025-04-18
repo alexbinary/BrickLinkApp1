@@ -33,7 +33,7 @@ struct EnvInjector: PreviewModifier {
             .environment(\.refundStore, PreviewRefundStore())
         
             .environment(\.transactionStore, PreviewTransactionStore())
-            .environment(context.env.stores.result)
+            .environment(\.resultStore, PreviewResultStore())
         
             .environment(context.env.stores.update)
         

@@ -7,8 +7,8 @@ import Charts
 struct ResultDashboard: View {
     
     
-    @Environment(ResultStore.self)
-    var resultStore
+    @Environment(\.resultStore)
+    var resultStore: ResultStoreProtocol!
     
     
     @State var selectedMostProfitableOrder: Order.ID? = nil

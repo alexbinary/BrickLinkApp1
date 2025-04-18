@@ -3,9 +3,19 @@ import Foundation
 
 
 
+@MainActor
+protocol ResultStoreProtocol {
+
+    func fees(for order: Order) -> Float?
+    func profitMargin(for order: Order) -> Float?
+    var resultDashboardModel: ResultDashboardModel { get }
+}
+
+
+
 @Observable
 @MainActor
-class ResultStore {
+class ResultStore: ResultStoreProtocol {
     
     
     private let orderController: OrderController
@@ -27,31 +37,31 @@ class ResultStore {
     }
     
     
-    var orders: [Order] {
+    private var orders: [Order] {
         
         orderController.orders
     }
     
     
-    func shippingCost(for order: Order) -> Float? {
+    private func shippingCost(for order: Order) -> Float? {
         
         shippingController.confirmedShippingCost(for: order)
     }
     
     
-    func refunds(for order: Order) -> [OrderRefund] {
+    private func refunds(for order: Order) -> [OrderRefund] {
         
         refundController.refunds(for: order)
     }
     
     
-    func incomeTransactions(for order: Order) -> [Transaction] {
+    private func incomeTransactions(for order: Order) -> [Transaction] {
         
         transactionController.incomeTransactions(for: order)
     }
     
     
-    func refundTransactions(for order: Order) -> [Transaction] {
+    private func refundTransactions(for order: Order) -> [Transaction] {
         
         transactionController.refundTransactions(for: order)
     }
@@ -69,7 +79,7 @@ class ResultStore {
     }
     
     
-    func profitMargin(
+    private func profitMargin(
     
         totalItems: Float?,
         totalShipping: Float?,

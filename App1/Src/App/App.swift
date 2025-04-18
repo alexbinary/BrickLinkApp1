@@ -43,7 +43,7 @@ extension View {
             .environment(\.refundStore, env.stores.refund)
         
             .environment(\.transactionStore, env.stores.transaction)
-            .environment(env.stores.result)
+            .environment(\.resultStore, env.stores.result)
         
             .environment(env.stores.update)
     }
