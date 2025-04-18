@@ -10,8 +10,8 @@ struct ResultHistoryView: View {
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(\.shippingStore)
+    var shippingStore: ShippingStoreProtocol!
     
     @Environment(RefundStore.self)
     var refundStore

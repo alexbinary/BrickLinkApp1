@@ -10,8 +10,8 @@ struct OrderDetailShippingView: View {
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(\.shippingStore)
+    var shippingStore: ShippingStoreProtocol!
     
     
     let order: Order

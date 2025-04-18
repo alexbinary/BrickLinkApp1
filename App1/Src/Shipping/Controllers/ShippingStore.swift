@@ -1,10 +1,29 @@
+
 import Foundation
+
+
+
+@MainActor
+protocol ShippingStoreProtocol {
+      
+    func confirmedShippingCost(for order: Order) -> Float?
+    func confirmShippingCost(for order: Order, cost: Float)
+    func selectedShippingCost(for order: Order) -> SelectedShippingCost?
+    
+    func confirmedStamping(for order: Order) -> String?
+    func confirmStamping(for order: Order, stamping: String)
+    
+    func dateOrderValidatedWithoutStamping(_ order: Order) -> Date?
+    func validateOrderWithoutStamping(_ order: Order)
+  
+    func recommendedStampingMethod(for order: Order) -> String
+}
 
 
 
 @Observable
 @MainActor
-class ShippingStore {
+class ShippingStore: ShippingStoreProtocol {
     
     
     private let shippingController: ShippingController
@@ -20,7 +39,7 @@ class ShippingStore {
     }
     
     
-    func details(for order: Order) -> OrderDetails? {
+    private func details(for order: Order) -> OrderDetails? {
         
         orderController.details(for: order)
     }

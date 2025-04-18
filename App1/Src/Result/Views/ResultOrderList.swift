@@ -6,8 +6,8 @@ import SwiftUI
 struct ResultOrderList: View {
     
     
-    @Environment(ShippingStore.self)
-    var shippingStore
+    @Environment(\.shippingStore)
+    var shippingStore: ShippingStoreProtocol!
     
     @Environment(RefundStore.self)
     var refundStore
