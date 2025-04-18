@@ -142,6 +142,12 @@ class InventoryController {
         
     ) async -> InventoryItem? {
         
+        #if DEBUG
+        if PreviewUtils.isPreviewing {
+            fatalError("Cannot create inventory in Preview mode")
+        }
+        #endif
+        
         let blInventory = await brickLinkAPIClient.createInventory(
             
             ref: ref,

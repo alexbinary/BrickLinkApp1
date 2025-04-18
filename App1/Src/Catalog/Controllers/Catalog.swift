@@ -71,6 +71,12 @@ class Catalog {
     
     func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
         
+        #if DEBUG
+        if PreviewUtils.isPreviewing {
+            fatalError("Cannot fetch catalog entry in Preview mode")
+        }
+        #endif
+        
         if let entry = await brickLinkAPIClient.fetchCatalogEntry(itemType: type.brickLinkItemType, ref: ref) {
             
             return CatalogEntry(fromBl: entry)

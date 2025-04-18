@@ -346,6 +346,13 @@ class UpdateController {
     private func enqueue(_ operation: UpdateOperation) async {
         
         await withCheckedContinuation { continuation in
+            
+            #if DEBUG
+            if PreviewUtils.isPreviewing {
+                continuation.resume()
+                return
+            }
+            #endif
 
             continuationsByOperationId[operation.id] = [continuation]
             enqueue(operation)
