@@ -3,9 +3,29 @@ import Foundation
 
 
 
+@MainActor
+protocol FeedbackStoreProtocol {
+    
+    func feedbacks(for order: Order) -> [Feedback]
+    func buyerFeedback(for order: Order) -> Feedback?
+    func sellerFeedback(for order: Order) -> Feedback?
+    
+    func isLoadingFeedbacks(for order: Order) -> Bool
+    func softRefreshFeedbacks(for order: Order) async
+    func hardRefreshFeedbacks(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag?) async
+
+    func postPraiseFeedback(for order: Order) async
+    
+    func dateOrderValidatedWithoutFeedback(_ order: Order) -> Date?
+    func orderIsValidatedWithoutFeedback(_ order: Order) -> Bool
+    func validateOrderWithoutFeedback(_ order: Order)
+}
+
+
+
 @Observable
 @MainActor
-class FeedbackStore {
+class FeedbackStore: FeedbackStoreProtocol {
     
     
     private let feedbackController: FeedbackController
@@ -45,12 +65,6 @@ class FeedbackStore {
     }
     
     
-    var isLoadingOrderFeedbacks: Bool {
-        
-        feedbackController.isLoadingOrderFeedbacks
-    }
-    
-    
     func isLoadingFeedbacks(for order: Order) -> Bool {
         
         feedbackController.isLoadingFeedbacks(for: order)
@@ -60,25 +74,25 @@ class FeedbackStore {
     // MARK: - Refresh feedbacks
     
     
-    func order(withId orderId: Order.ID) -> Order? {
+    private func order(withId orderId: Order.ID) -> Order? {
         
         orderController.order(withId: orderId)
     }
     
     
-    func hasFeedbacks(for order: Order) -> Bool {
+    private func hasFeedbacks(for order: Order) -> Bool {
         
         feedbackController.hasFeedbacks(for: order)
     }
     
     
-    func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func loadFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         await feedbackController.loadFeedbacks(for: order, refetchStrategy, operationTag)
     }
     
     
-    func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
+    private func refreshFeedbacks(for order: Order, _ refetchStrategy: RefetchStrategy, _ operationTag: OperationTag? = nil) async {
         
         let strategy = hasFeedbacks(for: order) ? refetchStrategy : .forceRefetch
         
@@ -116,18 +130,6 @@ class FeedbackStore {
     func postPraiseFeedback(for order: Order) async {
         
         await feedbackPostController.postPraiseFeedback(for: order)
-    }
-    
-    
-    var isPostingFeedback: Bool {
-        
-        feedbackController.isPostingFeedback
-    }
-    
-    
-    func isPostingFeedback(for order: Order) -> Bool {
-        
-        feedbackController.isPostingFeedback(for: order)
     }
     
     

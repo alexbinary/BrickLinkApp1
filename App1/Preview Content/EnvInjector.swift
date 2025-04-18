@@ -27,8 +27,8 @@ struct EnvInjector: PreviewModifier {
             .environment(\.orderStore, PreviewOrderStore())
             .environment(\.pickingStore, PreviewPickingStore())
             .environment(\.shippingStore, PreviewShippingStore())
-            .environment(\.trackingStore, context.env.stores.tracking)
-            .environment(context.env.stores.feedback)
+            .environment(\.trackingStore, PreviewTrackingStore())
+            .environment(\.feedbackStore, PreviewFeedbackStore())
             
             .environment(context.env.stores.refund)
         

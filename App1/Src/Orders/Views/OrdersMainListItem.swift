@@ -12,8 +12,8 @@ struct OrdersMainListItem: View {
     @Environment(\.pickingStore)
     var pickingStore: PickingStoreProtocol!
     
-    @Environment(FeedbackStore.self)
-    var feedbackStore
+    @Environment(\.feedbackStore)
+    var feedbackStore: FeedbackStoreProtocol!
     
     
     let order: Order

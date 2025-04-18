@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderDetailFeedbackView: View {
     
     
-    @Environment(FeedbackStore.self)
-    var feedbackStore
+    @Environment(\.feedbackStore)
+    var feedbackStore: FeedbackStoreProtocol!
     
     
     let order: Order

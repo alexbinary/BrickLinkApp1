@@ -18,8 +18,8 @@ struct ReloadButton: View {
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!
     
-    @Environment(FeedbackStore.self)
-    var feedbackStore
+    @Environment(\.feedbackStore)
+    var feedbackStore: FeedbackStoreProtocol!
     
     @Environment(UpdateStore.self)
     var updateStore
