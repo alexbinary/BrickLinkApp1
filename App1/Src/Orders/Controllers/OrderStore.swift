@@ -65,12 +65,6 @@ class OrderStore {
     }
     
     
-    private var isLoadingOrders: Bool {
-     
-        orderController.isLoadingOrders
-    }
-    
-    
     // MARK: - Details
     
     
@@ -92,12 +86,6 @@ class OrderStore {
     }
     
     
-    private var isLoadingOrderDetails: Bool {
-        
-        orderController.isLoadingOrderDetails
-    }
-    
-    
     func isLoadingDetails(for order: Order) -> Bool {
         
         orderController.isLoadingDetails(for: order)
@@ -113,33 +101,9 @@ class OrderStore {
     }
     
     
-    private func items(for order: Order) -> [OrderItem] {
-        
-        orderController.items(for: order)
-    }
-    
-    
     private func loadItems(for order: Order, _ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await orderController.loadItems(for: order, refetchStrategy, operationTag)
-    }
-    
-    
-    private func loadItemsIfMissing(for order: Order) async {
-        
-        await orderController.loadItemsIfMissing(for: order)
-    }
-    
-    
-    private var isLoadingOrderItems: Bool {
-        
-        orderController.isLoadingOrderItems
-    }
-    
-    
-    private func isLoadingItems(for order: Order) -> Bool {
-        
-        orderController.isLoadingItems(for: order)
     }
     
     
@@ -149,18 +113,6 @@ class OrderStore {
     func updateStatus(of order: Order, to status: OrderStatus) async {
         
         await orderController.updateStatus(of: order, to: status)
-    }
-    
-    
-    private var isUpdatingOrderStatus: Bool {
-        
-        orderController.isUpdatingOrderStatus
-    }
-    
-    
-    private func isUpdatingStatus(of order: Order) -> Bool {
-        
-        orderController.isUpdatingStatus(of: order)
     }
     
     
@@ -176,27 +128,9 @@ class OrderStore {
     }
     
     
-    private var isUpdatingOrderTrackingNo: Bool {
-        
-        orderController.isUpdatingOrderTrackingNo
-    }
-    
-    
-    private func isUpdatingTrackingNo(of order: Order) -> Bool {
-        
-        orderController.isUpdatingTrackingNo(of: order)
-    }
-    
-    
     func sendDriveThru(for order: Order) async {
         
         await orderController.sendDriveThru(for: order)
-    }
-    
-    
-    private var isSendingDriveThru: Bool {
-        
-        orderController.isSendingDriveThru
     }
     
     
