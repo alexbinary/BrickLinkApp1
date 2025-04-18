@@ -12,8 +12,8 @@ struct ResultContentView: View {
     @Environment(\.shippingStore)
     var shippingStore: ShippingStoreProtocol!
     
-    @Environment(RefundStore.self)
-    var refundStore
+    @Environment(\.refundStore)
+    var refundStore: RefundStoreProtocol!
     
     @Environment(ResultStore.self)
     var resultStore

@@ -3,9 +3,18 @@ import Foundation
 
 
 
+@MainActor
+protocol RefundStoreProtocol {
+    
+    func refunds(for order: Order) -> [OrderRefund]
+    func create(_ refund: OrderRefund)
+}
+
+
+
 @Observable
 @MainActor
-class RefundStore {
+class RefundStore: RefundStoreProtocol {
     
     
     let refundController: RefundController

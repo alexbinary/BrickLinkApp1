@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderDetailRefundView: View {
     
     
-    @Environment(RefundStore.self)
-    var refundStore
+    @Environment(\.refundStore)
+    var refundStore: RefundStoreProtocol!
     
     
     let order: Order

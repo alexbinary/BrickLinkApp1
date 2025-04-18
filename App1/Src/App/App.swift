@@ -40,7 +40,7 @@ extension View {
             .environment(\.trackingStore, env.stores.tracking)
             .environment(\.feedbackStore, env.stores.feedback)
             
-            .environment(env.stores.refund)
+            .environment(\.refundStore, env.stores.refund)
         
             .environment(env.stores.transaction)
             .environment(env.stores.result)
