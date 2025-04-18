@@ -5,24 +5,24 @@ import Foundation
 
 typealias Env = (
     
-    catalog: Catalog,
+    catalog: CatalogProtocol,
     
     stores: (
         
-        inventory: InventoryStore,
-        upload: UploadStore,
+        inventory: InventoryStoreProtocol,
+        upload: UploadStoreProtocol,
 
-        order: OrderStore,
-        picking: PickingStore,
-        shipping: ShippingStore,
-        tracking: TrackingStore,
-        feedback: FeedbackStore,
-        refund: RefundStore,
+        order: OrderStoreProtocol,
+        picking: PickingStoreProtocol,
+        shipping: ShippingStoreProtocol,
+        tracking: TrackingStoreProtocol,
+        feedback: FeedbackStoreProtocol,
+        refund: RefundStoreProtocol,
 
-        transaction: TransactionStore,
-        result: ResultStore,
+        transaction: TransactionStoreProtocol,
+        result: ResultStoreProtocol,
         
-        update: UpdateStore
+        update: UpdateStoreProtocol
     )
 )
 

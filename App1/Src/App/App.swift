@@ -15,7 +15,7 @@ struct MainApp: App {
             
             WindowRootView()
                 .inject(env)
-                .task { await env.catalog.loadColors() }
+                .task { await env.catalog.loadColors(nil) }
         }
     }
 }
