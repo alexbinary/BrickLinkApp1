@@ -12,8 +12,8 @@ struct UploadItemView: View {
     @Environment(UploadStore.self)
     var uploadStore
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
     
     
     let uploadItem: UploadItem

@@ -9,8 +9,8 @@ struct OrderDetailPickingView: View {
     @Environment(OrderStore.self)
     var orderStore
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
     
     @Environment(\.pickingStore)
     var pickingStore: PickingStoreProtocol!

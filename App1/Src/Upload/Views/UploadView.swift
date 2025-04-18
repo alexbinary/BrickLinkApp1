@@ -6,8 +6,8 @@ import SwiftUI
 struct UploadView: View {
     
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
 
     
     @State var addViewVisible: Bool = false

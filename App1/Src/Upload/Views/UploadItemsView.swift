@@ -9,8 +9,8 @@ struct UploadItemsView: View {
     @Environment(UploadStore.self)
     var uploadStore
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
     
 
     var body: some View {

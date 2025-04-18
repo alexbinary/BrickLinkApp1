@@ -7,8 +7,8 @@ import SwiftUI
 struct InventoryLink<Label>: View where Label: View {
     
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
     
 
     let inventoryItemId: InventoryItem.ID
@@ -33,10 +33,7 @@ struct InventoryLink<Label>: View where Label: View {
 
 
 
-#Preview {
+#Preview(traits: .env) {
     
-    let env = createEnv()
-    let inventory = env.stores.inventory.allInventories.first!
-    
-    InventoryLink(inventory) { Text(inventory.id) }
+    InventoryLink(inventoryItemId: "") { Text("Link") }
 }

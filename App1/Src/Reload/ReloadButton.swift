@@ -12,8 +12,8 @@ struct ReloadButton: View {
     @Environment(Catalog.self)
     var catalog
     
-    @Environment(InventoryStore.self)
-    var inventoryStore
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
     
     @Environment(OrderStore.self)
     var orderStore

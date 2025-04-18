@@ -4,9 +4,28 @@ import SwiftUI
 
 
 
+@MainActor
+protocol InventoryStoreProtocol {
+    
+    func url(forInventoryItemWithId inventoryId: String) -> URL?
+
+    func inventory(for uploadItem: UploadItem) -> InventoryItem?
+    func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem]
+
+    func softRefreshInventories() async
+    func hardRefreshInventories(_ operationTag: OperationTag?) async
+    
+    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem?
+    func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float?, remarks: String?) async
+    
+    func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int)
+}
+
+
+
 @Observable
 @MainActor
-class InventoryStore {
+class InventoryStore: InventoryStoreProtocol {
     
     
     private let inventoryController: InventoryController

@@ -31,7 +31,7 @@ extension View {
         self
             .environment(env.catalog)
         
-            .environment(env.stores.inventory)
+            .environment(\.inventoryStore, env.stores.inventory)
             .environment(env.stores.upload)
         
             .environment(env.stores.order)
