@@ -6,8 +6,8 @@ import SwiftUI
 struct OrdersMainList: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     @Environment(NavigationController.self)
     var nav

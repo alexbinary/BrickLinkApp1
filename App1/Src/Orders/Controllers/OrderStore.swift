@@ -2,9 +2,50 @@ import Foundation
 
 
 
+@MainActor
+protocol OrderStoreProtocol {
+    
+    
+    func url(forDetailsOf order: Order) -> URL?
+    
+    var orders: [Order]  { get }
+    func order(withId orderId: Order.ID) -> Order?
+    func details(for order: Order) -> OrderDetails?
+    func isLoadingDetails(for order: Order) -> Bool
+    
+    func updateStatus(of order: Order, to status: OrderStatus) async
+    func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool
+    func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async
+    func sendDriveThru(for order: Order) async
+    func isSendingDriveThru(for order: Order) -> Bool
+    
+    func state(of item: ChecklistItem, for order: Order) -> ChecklistState
+    func order(_ order: Order, validates item: ChecklistItem) -> Bool
+    func checklistData(for order: Order) -> ChecklistData
+    func macroStatus(for order: Order) -> OrderMacroStatus
+    func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection]
+
+    func softRefreshOrders() async
+    func hardRefreshOrders(_ operationTag: OperationTag?) async
+    func hardRefresh(orderWithId orderId: Order.ID, _ operationTag: OperationTag?) async
+    func hardRefreshDetails(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag?) async
+    func softRefreshItems(for order: Order) async
+    func hardRefreshItems(forOrderWithId orderId: Order.ID, _ operationTag: OperationTag?) async
+
+    func ordersThatNeedCompletedAndGiveFeedback(_ orders: [Order]) -> [Order]
+    func ordersThatNeedGiveFeedback(_ orders: [Order]) -> [Order]
+    func ordersToShipAndSendDriveThru(_ orders: [Order]) -> [Order]
+    func ordersThatNeedAction(_ orders: [Order]) -> [Order]
+    func performActions(for orders: [Order]) async
+    
+    var numberForSidebarBadge: Int { get }
+}
+
+
+
 @Observable
 @MainActor
-class OrderStore {
+class OrderStore: OrderStoreProtocol {
     
     
     private let orderController: OrderController

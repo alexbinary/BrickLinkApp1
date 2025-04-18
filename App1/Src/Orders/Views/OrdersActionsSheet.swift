@@ -6,8 +6,8 @@ import SwiftUI
 struct OrdersActionsSheet: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     
     let orders: [Order]

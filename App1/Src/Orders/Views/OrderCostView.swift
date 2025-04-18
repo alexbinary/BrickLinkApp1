@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderCostView: View {
 
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     
     let order: Order

@@ -9,8 +9,8 @@ struct Sidebar: View {
     @Environment(NavigationController.self)
     var nav
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     @Environment(\.uploadStore)
     var uploadStore: UploadStoreProtocol!

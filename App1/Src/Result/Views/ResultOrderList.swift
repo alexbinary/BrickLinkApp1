@@ -15,8 +15,8 @@ struct ResultOrderList: View {
     @Environment(ResultStore.self)
     var resultStore
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     
     let orders: [Order]

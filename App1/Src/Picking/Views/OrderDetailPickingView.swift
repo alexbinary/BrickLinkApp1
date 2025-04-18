@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderDetailPickingView: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!

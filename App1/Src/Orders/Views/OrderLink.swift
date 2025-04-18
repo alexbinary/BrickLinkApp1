@@ -6,8 +6,8 @@ import SwiftUI
 struct OrderLink<Label>: View where Label: View {
     
     
-    @Environment(OrderStore.self)
-    var orderStore
+    @Environment(\.orderStore)
+    var orderStore: OrderStoreProtocol!
     
     
     let order: Order
