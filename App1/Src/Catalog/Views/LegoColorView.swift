@@ -6,8 +6,8 @@ import SwiftUI
 struct LegoColorView: View {
     
     
-    @Environment(Catalog.self)
-    var catalog
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
     
     
     let colorId: String

@@ -9,8 +9,8 @@ struct ReloadButton: View {
     @Environment(NavigationController.self)
     var nav
     
-    @Environment(Catalog.self)
-    var catalog
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
     
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!

@@ -13,8 +13,8 @@ struct PickingItemView: View {
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!
     
-    @Environment(Catalog.self)
-    var catalog
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
     
     
     let item: OrderItem

@@ -29,7 +29,7 @@ extension View {
     func inject(_ env: Env) -> some View {
 
         self
-            .environment(env.catalog)
+            .environment(\.catalog, env.catalog)
         
             .environment(\.inventoryStore, env.stores.inventory)
             .environment(env.stores.upload)

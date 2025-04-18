@@ -42,7 +42,7 @@ extension UploadedItem {
     
     
     @MainActor
-    func matches(_ rawSearchText: String, _ catalog: Catalog) -> Bool {
+    func matches(_ rawSearchText: String, _ catalog: CatalogProtocol) -> Bool {
         
         let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
@@ -57,7 +57,7 @@ extension UploadedItem {
     
     
     @MainActor
-    func searchableText(_ catalog: Catalog) -> String {
+    func searchableText(_ catalog: CatalogProtocol) -> String {
         
         [
             rawSearchableText_type,

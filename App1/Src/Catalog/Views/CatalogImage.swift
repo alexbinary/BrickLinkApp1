@@ -5,8 +5,8 @@ import SwiftUI
 struct CatalogImage: View {
     
     
-    @Environment(Catalog.self)
-    var catalog
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
     
     
     let type: ItemType

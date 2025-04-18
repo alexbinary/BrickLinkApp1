@@ -39,6 +39,7 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
     }
     
     func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
-        (4, 2)
+        
+        return (4, 2)
     }
 }

@@ -6,8 +6,8 @@ import SwiftUI
 struct DynamicCatalogName: View {
 
     
-    @Environment(Catalog.self)
-    var catalog
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
     
     
     var type: ItemType

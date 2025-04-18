@@ -19,7 +19,7 @@ struct EnvInjector: PreviewModifier {
         
         content
             
-            .environment(context.env.catalog)
+            .environment(\.catalog, PreviewCatalog())
         
             .environment(\.inventoryStore, PreviewInventoryStore())
             .environment(context.env.stores.upload)

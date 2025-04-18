@@ -5,9 +5,25 @@ import SwiftUI
 
 
 
+@MainActor
+protocol CatalogProtocol {
+    
+    var allColors: [LegoColor] { get }
+    func colorName(forLegoColorId colorId: LegoColor.ID) -> String
+    func colorAndName(forLegoColorId colorId: LegoColor.ID) -> (color: Color?, name: String)
+    func loadColors(_ operationTag: OperationTag?) async
+
+    func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry?
+    func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL?
+    func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL?
+    func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData?
+}
+
+
+
 @Observable
 @MainActor
-class Catalog {
+class Catalog: CatalogProtocol {
     
     
     private let dataStore: DataStore
@@ -32,7 +48,7 @@ class Catalog {
     }
     
     
-    func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
+    private func color(forLegoColorId colorId: LegoColor.ID) -> Color? {
         
         if let c = dataStore.colors.first(where: { $0.id == colorId }) {
             return Color(fromBLCode: c.colorCode)
@@ -57,12 +73,6 @@ class Catalog {
     func loadColors(_ operationTag: OperationTag? = nil) async {
         
         await updateController.loadColors(operationTag)
-    }
-    
-    
-    var isLoadingColors: Bool {
-        
-        updateController.isRunningOrIsScheduledToRun_loadColors
     }
     
     
