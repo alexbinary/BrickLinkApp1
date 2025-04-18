@@ -21,8 +21,8 @@ struct ReloadButton: View {
     @Environment(\.feedbackStore)
     var feedbackStore: FeedbackStoreProtocol!
     
-    @Environment(UpdateStore.self)
-    var updateStore
+    @Environment(\.updateStore)
+    var updateStore: UpdateStoreProtocol!
     
     
     var items: [ReloadItem] {

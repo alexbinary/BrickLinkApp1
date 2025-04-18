@@ -35,7 +35,7 @@ struct EnvInjector: PreviewModifier {
             .environment(\.transactionStore, PreviewTransactionStore())
             .environment(\.resultStore, PreviewResultStore())
         
-            .environment(context.env.stores.update)
+            .environment(\.updateStore, PreviewUpdateStore())
         
             .environment(context.nav)
     }

@@ -6,8 +6,8 @@ import SwiftUI
 struct WindowRootView: View {
     
     
-    @Environment(UpdateStore.self)
-    var updateStore
+    @Environment(\.updateStore)
+    var updateStore: UpdateStoreProtocol!
     
     
     @State

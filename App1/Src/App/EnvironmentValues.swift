@@ -19,6 +19,7 @@ extension EnvironmentValues {
     @Entry var refundStore: RefundStoreProtocol?
 
     @Entry var transactionStore: TransactionStoreProtocol?
-
     @Entry var resultStore: ResultStoreProtocol?
+
+    @Entry var updateStore: UpdateStoreProtocol?
 }

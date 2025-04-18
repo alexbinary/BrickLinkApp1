@@ -3,9 +3,18 @@ import Foundation
 
 
 
+@MainActor
+protocol UpdateStoreProtocol {
+    
+    var isLoadingOperations: Bool { get }
+    func isLoadingOperations(withTag tag: OperationTag) -> Bool
+}
+
+
+
 @Observable
 @MainActor
-class UpdateStore {
+class UpdateStore: UpdateStoreProtocol {
     
     
     private let updateController: UpdateController

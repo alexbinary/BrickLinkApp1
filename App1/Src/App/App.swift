@@ -45,6 +45,6 @@ extension View {
             .environment(\.transactionStore, env.stores.transaction)
             .environment(\.resultStore, env.stores.result)
         
-            .environment(env.stores.update)
+            .environment(\.updateStore, env.stores.update)
     }
 }
