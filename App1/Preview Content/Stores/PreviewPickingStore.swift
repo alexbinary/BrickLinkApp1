@@ -11,23 +11,7 @@ struct PreviewPickingStore: PickingStoreProtocol {
     
     func nextOrderItemsToPick(for order: Order) -> [OrderItem] {
         
-        return [
-            .init(
-                inventoryId: "",
-                orderId: "",
-                condition: "U",
-                colorId: "",
-                colorName: "",
-                ref: "",
-                name: "",
-                type: .part,
-                location: "",
-                comment: "",
-                quantity: "42",
-                unitPrice: 0,
-                unitPriceFinal: 0
-            )
-        ]
+        return [.previewItem1]
     }
     
     func pickingProgress(for order: Order) -> Percent {

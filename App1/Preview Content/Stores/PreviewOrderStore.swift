@@ -18,22 +18,7 @@ struct PreviewOrderStore: OrderStoreProtocol {
     
     func order(withId orderId: Order.ID) -> Order? {
         
-        return Order(
-            id: "",
-            date: .now,
-            dateStatusChanged: .now,
-            buyer: "",
-            status: .paid,
-            items: 0,
-            lots: 0,
-            paymentStatus: .none,
-            subTotal: 0,
-            grandTotal: 0,
-            costCurrencyCode: "",
-            dispSubTotal: 0,
-            dispGrandTotal: 0,
-            dispCostCurrencyCode: ""
-        )
+        return .previewOrder1
     }
     
     func details(for order: Order) -> OrderDetails? {
