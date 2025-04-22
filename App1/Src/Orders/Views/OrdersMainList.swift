@@ -35,7 +35,11 @@ struct OrdersMainList: View {
         }
         .navigationTitle("Orders")
         .navigationDestination(for: Order.ID.self) { orderId in
-            OrderDetailView(orderStore.order(withId: orderId)!)
+            if let order = orderStore.order(withId: orderId) {
+                OrderDetailView(order)
+            } else {
+                Text("Order \(orderId) not found")
+            }
         }
         .toolbar {
             Button {
