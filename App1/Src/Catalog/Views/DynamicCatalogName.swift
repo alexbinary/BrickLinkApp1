@@ -64,6 +64,7 @@ struct DynamicCatalogName: View {
 
 
 #Preview {
+    
     @Previewable @State var name: String? = ""
     
     VStack(alignment: .leading) {

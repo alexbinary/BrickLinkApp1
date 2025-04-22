@@ -30,6 +30,16 @@ struct ItemConditionPicker: View {
 
 
 #Preview {
+    
     @Previewable @State var selection: String = "N"
-    ItemConditionPicker("Type", selection: $selection)
+    
+    VStack(alignment: .leading) {
+        
+        ItemConditionPicker("Type", selection: $selection)
+        .padding()
+        
+        Text("Selected value: \(selection)").font(.title3)
+        .padding()
+    }
+    .padding()
 }
