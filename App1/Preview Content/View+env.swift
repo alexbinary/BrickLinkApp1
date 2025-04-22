@@ -8,7 +8,7 @@ extension View {
     
     func env(
     
-        defaultSelectedSidebarItem: SidebarItem = .orders,
+        selectedSidebarItem: SidebarItem = .orders,
         ordersNumberForSidebarBadge: Int = 1,
         uploadNumberForSidebarBadge: Int = 2
         
@@ -16,7 +16,7 @@ extension View {
         
         self
             .environment(\.navigationController, PreviewNavigationController(
-                defaultSelectedSidebarItem: defaultSelectedSidebarItem
+                sidebar: selectedSidebarItem
             ))
         
             .environment(\.catalog, PreviewCatalog())

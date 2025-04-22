@@ -66,7 +66,7 @@ struct Sidebar: View {
         
     }
     .env(
-        defaultSelectedSidebarItem: .orders,
+        selectedSidebarItem: .orders,
         ordersNumberForSidebarBadge: 1,
         uploadNumberForSidebarBadge: 2
     )

@@ -6,9 +6,9 @@ import SwiftUI
 class PreviewNavigationController: NavigationControllerProtocol {
     
     
-    init(defaultSelectedSidebarItem: SidebarItem? = nil) {
+    init(sidebar: SidebarItem? = nil) {
         
-        self.sidebar = defaultSelectedSidebarItem ?? .orders
+        self.sidebar = sidebar ?? .orders
     }
     
     

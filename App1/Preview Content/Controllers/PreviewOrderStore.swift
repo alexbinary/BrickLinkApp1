@@ -19,7 +19,9 @@ struct PreviewOrderStore: OrderStoreProtocol {
     
     var orders: [Order] {
         
-        return []
+        return [
+            .previewOrder1
+        ]
     }
     
     func order(withId orderId: Order.ID) -> Order? {
@@ -81,7 +83,14 @@ struct PreviewOrderStore: OrderStoreProtocol {
     
     func ordersMainListSections(restrictingToOrdersMatching searchText: String) -> [OrdersMainListSection] {
         
-        return []
+        return [
+            OrdersMainListSection(
+                header: "Section title",
+                orders: [
+                    .previewOrder1
+                ]
+            ),
+        ]
     }
     
     func softRefreshOrders() async {
