@@ -29,7 +29,7 @@ struct DynamicCatalogName: View {
     
     var body: some View {
 
-        Group {
+        VStack {
             if let result = catalogResult {
                 
                 switch result {
@@ -45,7 +45,7 @@ struct DynamicCatalogName: View {
                 }
             }
         }
-        .onChange(of: "\(type) \(ref)") { Task {
+        .onChange(of: "\(type) \(ref)", initial: true) { Task {
             
             catalogResult = .loading
             name = nil
@@ -57,7 +57,7 @@ struct DynamicCatalogName: View {
             } else {
                 catalogResult = .notFound
             }
-        } }
+        }}
     }
 }
 
@@ -66,8 +66,25 @@ struct DynamicCatalogName: View {
 #Preview {
     @Previewable @State var name: String? = ""
     
-    let env = createEnv()
-    
-    DynamicCatalogName(forItemType: .part, ref: "3001", name: $name)
-        .inject(env)
+    VStack(alignment: .leading) {
+        
+        VStack(alignment: .leading) {
+            Text("Catalog").font(.title3)
+            DynamicCatalogName(forItemType: .part, ref: "", name: $name)
+                .previewEnv(
+                    catalog: PreviewCatalog(
+                        catalogEntry: CatalogEntry(name: "entry name"),
+                        catalogEntryLoadingDelay: 2
+                    )
+                )
+        }
+        .padding()
+        
+        VStack(alignment: .leading) {
+            Text("Name binding").font(.title3)
+            Text(name ?? "-")
+        }
+        .padding()
+    }
+    .padding()
 }

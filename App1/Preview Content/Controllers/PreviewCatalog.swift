@@ -7,9 +7,13 @@ struct PreviewCatalog: CatalogProtocol {
     
     
     init(
+        catalogEntry: CatalogEntry? = nil,
+        catalogEntryLoadingDelay: TimeInterval? = nil,
         urlForImageOfItemOfType: URL? = nil,
         partData: PartData? = nil
     ) {
+        self.catalogEntry = catalogEntry
+        self.catalogEntryLoadingDelay = catalogEntryLoadingDelay
         self.urlForImageOfItemOfType = urlForImageOfItemOfType
         self.partData = partData
     }
@@ -34,9 +38,15 @@ struct PreviewCatalog: CatalogProtocol {
         
     }
     
+    var catalogEntry: CatalogEntry?
+    var catalogEntryLoadingDelay: TimeInterval?
+    
     func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
         
-        return nil
+        if let delay = catalogEntryLoadingDelay {
+            try! await Task.sleep(for: .seconds(delay))
+        }
+        return catalogEntry
     }
     
     let urlForImageOfItemOfType: URL?
