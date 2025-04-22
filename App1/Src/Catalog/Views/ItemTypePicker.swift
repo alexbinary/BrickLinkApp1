@@ -30,7 +30,18 @@ struct ItemTypePicker: View {
 
 
 
+
 #Preview {
+    
     @Previewable @State var selection: ItemType = .part
-    ItemTypePicker("Type", selection: $selection)
+    
+    VStack(alignment: .leading) {
+        
+        ItemTypePicker("Type", selection: $selection)
+        .padding()
+        
+        Text("Selected value: \(selection)").font(.title3)
+        .padding()
+    }
+    .padding()
 }
