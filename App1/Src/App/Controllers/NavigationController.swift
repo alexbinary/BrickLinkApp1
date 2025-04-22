@@ -23,10 +23,10 @@ protocol NavigationControllerProtocol: AnyObject {
 class NavigationController: NavigationControllerProtocol {
     
     
-    var sidebar: SidebarItem = Secrets.Defaults.selectedSidebarItem
+    var sidebar: SidebarItem = Defaults.active.selectedSidebarItem
     
     
-    var orderStack: [Order.ID] = Secrets.Defaults.ordersActiveNavigationPath {
+    var orderStack: [Order.ID] = Defaults.active.ordersActiveNavigationPath {
         didSet {
             orderDetailTab = nil
         }
@@ -37,10 +37,10 @@ class NavigationController: NavigationControllerProtocol {
     }
     
     
-    var orderDetailTab: OrderDetailTab? = Secrets.Defaults.orderDetailActiveTab
+    var orderDetailTab: OrderDetailTab? = Defaults.active.orderDetailActiveTab
     
     
-    var resultSelectedOrderIds: Set<Order.ID> = Secrets.Defaults.resultSelectedOrderIds
+    var resultSelectedOrderIds: Set<Order.ID> = Defaults.active.resultSelectedOrderIds
     var selectedTransactions: Set<Transaction.ID> = []
     
     func resultClearSelectedOrder() {
