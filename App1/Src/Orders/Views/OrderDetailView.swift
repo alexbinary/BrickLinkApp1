@@ -9,8 +9,8 @@ struct OrderDetailView: View {
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     
     let order: Order
@@ -44,9 +44,12 @@ struct OrderDetailView: View {
             }
             .equalWidths($columnWidth)
             
-            @Bindable var nav = nav
-            
-            TabView(selection: $nav.orderDetailTab) {
+            let navOrderDetailTabBinding = Binding {
+                nav.orderDetailTab
+            } set: {
+                nav.orderDetailTab = $0
+            }
+            TabView(selection: navOrderDetailTabBinding) {
                 
                 ScrollView { OrderDetailPaymentView(order) }
                     .padding()

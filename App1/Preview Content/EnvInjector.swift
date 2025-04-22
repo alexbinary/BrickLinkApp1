@@ -9,7 +9,7 @@ struct EnvInjector: PreviewModifier {
     struct PreviewEnv {
         
         let env: Env
-        let nav: NavigationController
+        let nav: NavigationControllerProtocol
     }
 
 
@@ -38,7 +38,7 @@ struct EnvInjector: PreviewModifier {
             )
         )
             
-        let nav = NavigationController()
+        let nav = PreviewNavigationController()
         
         return PreviewEnv(env: env, nav: nav)
     }
@@ -48,7 +48,6 @@ struct EnvInjector: PreviewModifier {
         
         content
             .inject(context.env)
-            .environment(context.nav)
             .environment(\.navigationController, context.nav)
     }
 }

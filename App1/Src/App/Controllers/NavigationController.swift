@@ -3,17 +3,17 @@ import Foundation
 
 
 
-protocol NavigationControllerProtocol {
+protocol NavigationControllerProtocol: AnyObject {
     
-    var sidebar: SidebarItem { get }
+    var sidebar: SidebarItem { get set }
     
-    var orderStack: [Order.ID] { get }
+    var orderStack: [Order.ID] { get set }
     func push(_ order: Order)
     
-    var orderDetailTab: OrderDetailTab? { get }
+    var orderDetailTab: OrderDetailTab? { get set }
     
-    var resultSelectedOrderIds: Set<Order.ID> { get }
-    var selectedTransactions: Set<Transaction.ID> { get }
+    var resultSelectedOrderIds: Set<Order.ID> { get set }
+    var selectedTransactions: Set<Transaction.ID> { get set }
     func resultClearSelectedOrder()
 }
 

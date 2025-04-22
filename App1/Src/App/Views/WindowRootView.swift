@@ -33,7 +33,6 @@ struct WindowRootView: View {
             
             ReloadButton()
         }
-        .environment(navigationController)
         .environment(\.navigationController, navigationController)
     }
 }

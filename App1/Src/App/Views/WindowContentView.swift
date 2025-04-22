@@ -6,19 +6,23 @@ import SwiftUI
 struct WindowContentView: View {
     
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
         
     
     var body: some View {
         
-        @Bindable var nav = nav
+        let navOrderStackBinding = Binding {
+            nav.orderStack
+        } set: {
+            nav.orderStack = $0
+        }
          
         switch nav.sidebar {
             
         case .orders:
             
-            NavigationStack(path: $nav.orderStack) {
+            NavigationStack(path: navOrderStackBinding) {
                 OrdersMainList()
             }
             

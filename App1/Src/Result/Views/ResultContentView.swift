@@ -18,15 +18,18 @@ struct ResultContentView: View {
     @Environment(\.resultStore)
     var resultStore: ResultStoreProtocol!
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     
     var body: some View {
         
-        @Bindable var nav = nav
-        
-        Table(of: Order.self, selection: $nav.resultSelectedOrderIds) {
+        let navResultSelectedOrderIdsBinding = Binding {
+            nav.resultSelectedOrderIds
+        } set: {
+            nav.resultSelectedOrderIds = $0
+        }
+        Table(of: Order.self, selection: navResultSelectedOrderIdsBinding) {
             
             TableColumn("ID", value: \.id)
             

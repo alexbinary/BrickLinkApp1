@@ -6,8 +6,8 @@ import SwiftUI
 struct Sidebar: View {
     
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     @Environment(\.orderStore)
     var orderStore: OrderStoreProtocol!
@@ -18,8 +18,12 @@ struct Sidebar: View {
     
     var body: some View {
             
-        @Bindable var nav = nav
-        List(selection: $nav.sidebar) {
+        let navSidebarBinding = Binding {
+            nav.sidebar
+        } set: {
+            nav.sidebar = $0
+        }
+        List(selection: navSidebarBinding) {
             
             Section("Operations") {
                 

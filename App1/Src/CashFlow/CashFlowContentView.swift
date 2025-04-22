@@ -9,17 +9,20 @@ struct CashFlowContentView: View {
     @Environment(\.transactionStore)
     var transactionStore: TransactionStoreProtocol!
     
-    @Environment(NavigationController.self)
-    var nav
+    @Environment(\.navigationController)
+    var nav: NavigationControllerProtocol!
     
     
     var body: some View {
         
-        @Bindable var nav = nav
-        
+        let navSelectedTransactionsBinding = Binding {
+            nav.selectedTransactions
+        } set: {
+            nav.selectedTransactions = $0
+        }
         TransactionListView(
             transactions: transactionStore.allTransactions,
-            selectedTransactions: $nav.selectedTransactions
+            selectedTransactions: navSelectedTransactionsBinding
         )
         .navigationTitle("Cash Flow")
     }
