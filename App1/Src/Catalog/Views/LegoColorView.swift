@@ -59,7 +59,7 @@ struct LegoColorView: View {
     }
     
     
-    enum Style {
+    enum Style: String, CaseIterable {
         
         case `default`
         case colorSquareOnly
@@ -71,8 +71,20 @@ struct LegoColorView: View {
 
 #Preview {
     
-    let env = createEnv()
+    VStack(alignment: .leading) {
+        
+        ForEach(LegoColorView.Style.allCases, id: \.self) { style in
     
-    LegoColorView(colorId: "11")
-        .inject(env)
+            VStack(alignment: .leading) {
+                Text("Style: \(style)").font(.title3)
+                LegoColorView(colorId: "", style: style)
+            }
+            .padding()
+        }
+    }
+    .previewEnv(
+        catalog: PreviewCatalog(
+            color: LegoColor(id: "", name: "Color name", colorCode: "ff0000")
+        )
+    )
 }

@@ -7,11 +7,13 @@ struct PreviewCatalog: CatalogProtocol {
     
     
     init(
+        color: LegoColor? = nil,
         catalogEntry: CatalogEntry? = nil,
         catalogEntryLoadingDelay: TimeInterval? = nil,
         urlForImageOfItemOfType: URL? = nil,
         partData: PartData? = nil
     ) {
+        self.color = color
         self.catalogEntry = catalogEntry
         self.catalogEntryLoadingDelay = catalogEntryLoadingDelay
         self.urlForImageOfItemOfType = urlForImageOfItemOfType
@@ -24,6 +26,8 @@ struct PreviewCatalog: CatalogProtocol {
         return LegoColor.previewColors
     }
     
+    var color: LegoColor?
+    
     func colorName(forLegoColorId colorId: LegoColor.ID) -> String {
         
         return ""
@@ -31,7 +35,11 @@ struct PreviewCatalog: CatalogProtocol {
     
     func colorAndName(forLegoColorId colorId: LegoColor.ID) -> (color: Color?, name: String) {
         
-        return (nil, "")
+        if let color = color {
+            return (color: color.color, color.name)
+        } else {
+            return (color: nil, name: "")
+        }
     }
     
     func loadColors(_ operationTag: OperationTag?) async {
