@@ -6,6 +6,12 @@ import SwiftUI
 struct PreviewOrderStore: OrderStoreProtocol {
     
     
+    init(numberForSidebarBadge: Int = 0) {
+        
+        self.numberForSidebarBadge = numberForSidebarBadge
+    }
+    
+    
     func url(forDetailsOf order: Order) -> URL? {
         
         return URL(string: "http://example.com")
@@ -126,8 +132,5 @@ struct PreviewOrderStore: OrderStoreProtocol {
         
     }
     
-    var numberForSidebarBadge: Int {
-        
-        return 42
-    }
+    var numberForSidebarBadge: Int
 }

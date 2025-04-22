@@ -4,6 +4,12 @@ import SwiftUI
 
 
 struct PreviewUploadStore: UploadStoreProtocol {
+    
+    
+    init(numberForSidebarBadge: Int = 0) {
+        
+        self.numberForSidebarBadge = numberForSidebarBadge
+    }
 
 
     var uploadItemsForList: [UploadItem] {
@@ -27,10 +33,7 @@ struct PreviewUploadStore: UploadStoreProtocol {
         
     }
     
-    var numberForSidebarBadge: Int {
-
-        return 3
-    }
+    var numberForSidebarBadge: Int
     
     func add(_ uploadedItem: UploadedItem) {
         

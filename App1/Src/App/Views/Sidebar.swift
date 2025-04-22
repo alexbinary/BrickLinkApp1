@@ -56,7 +56,7 @@ struct Sidebar: View {
 
 
 
-#Preview(traits: .env) {
+#Preview {
     
     NavigationSplitView {
         
@@ -65,4 +65,9 @@ struct Sidebar: View {
     } detail: {
         
     }
+    .env(
+        defaultSelectedSidebarItem: .orders,
+        ordersNumberForSidebarBadge: 1,
+        uploadNumberForSidebarBadge: 2
+    )
 }

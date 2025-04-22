@@ -6,7 +6,13 @@ import SwiftUI
 class PreviewNavigationController: NavigationControllerProtocol {
     
     
-    var sidebar: SidebarItem = .upload
+    init(defaultSelectedSidebarItem: SidebarItem? = nil) {
+        
+        self.sidebar = defaultSelectedSidebarItem ?? .orders
+    }
+    
+    
+    var sidebar: SidebarItem
     
     var orderStack: [Order.ID] = []
     
