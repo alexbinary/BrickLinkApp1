@@ -65,9 +65,16 @@ struct Sidebar: View {
     } detail: {
         
     }
-    .env(
-        selectedSidebarItem: .orders,
-        ordersNumberForSidebarBadge: 1,
-        uploadNumberForSidebarBadge: 2
+    .previewEnv(
+        
+        navigationController: PreviewNavigationController(
+            sidebar: .orders
+        ),
+        uploadStore: PreviewUploadStore(
+            numberForSidebarBadge: 1
+        ),
+        orderStore: PreviewOrderStore(
+            numberForSidebarBadge: 2
+        )
     )
 }

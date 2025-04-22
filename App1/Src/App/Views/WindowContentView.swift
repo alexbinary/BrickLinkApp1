@@ -59,6 +59,5 @@ struct WindowContentView: View {
 #Preview {
     WindowContentView()
         .frame(width: 1000, height: 800)
-        .env(
-        )
+        .previewEnv()
 }

@@ -82,8 +82,46 @@ struct CatalogImage: View {
 
 #Preview {
     
-    let env = createEnv()
-    
-    CatalogImage(itemType: .part, ref: "3001", colorId: "11")
-        .inject(env)
+    VStack {
+        
+        let baseView =
+            CatalogImage(itemType: .part, ref: "", colorId: "")
+                .padding(.top)
+        
+        baseView
+            .previewEnv(
+                catalog: PreviewCatalog(
+                    urlForImageOfItemOfType: URL(string: "https://img.bricklink.com/P/11/3001.jpg"),
+                )
+            )
+        baseView
+            .previewEnv(
+                catalog: PreviewCatalog(
+                    urlForImageOfItemOfType: URL(string: "https://img.bricklink.com/P/11/3001.jpg"),
+                    partData: .init(ref: "",
+                                    lengthAnnotation: "4"
+                                   )
+                )
+            )
+        baseView
+            .previewEnv(
+                catalog: PreviewCatalog(
+                    urlForImageOfItemOfType: URL(string: "https://img.bricklink.com/P/11/3001.jpg"),
+                    partData: .init(ref: "",
+                                    dimensionsAnnotation: "2x4"
+                                   )
+                )
+            )
+        baseView
+            .previewEnv(
+                catalog: PreviewCatalog(
+                    urlForImageOfItemOfType: URL(string: "https://img.bricklink.com/P/11/3001.jpg"),
+                    partData: .init(ref: "",
+                                    chiralityAnnotation: .left
+                                   )
+                )
+            )
+    }
+    .padding(.bottom)
+    .padding(.horizontal)
 }

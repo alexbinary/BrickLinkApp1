@@ -4,6 +4,15 @@ import SwiftUI
 
 
 struct PreviewCatalog: CatalogProtocol {
+    
+    
+    init(
+        urlForImageOfItemOfType: URL? = nil,
+        partData: PartData? = nil
+    ) {
+        self.urlForImageOfItemOfType = urlForImageOfItemOfType
+        self.partData = partData
+    }
 
     
     var allColors: [LegoColor] {
@@ -30,9 +39,11 @@ struct PreviewCatalog: CatalogProtocol {
         return nil
     }
     
+    let urlForImageOfItemOfType: URL?
+    
     func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
         
-        return URL(string: "http://example.com")
+        return urlForImageOfItemOfType
     }
     
     func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
@@ -40,8 +51,10 @@ struct PreviewCatalog: CatalogProtocol {
         return URL(string: "http://example.com")
     }
     
+    let partData: PartData?
+    
     func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData? {
         
-        return nil
+        return partData
     }
 }

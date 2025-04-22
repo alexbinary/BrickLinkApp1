@@ -42,6 +42,5 @@ struct WindowRootView: View {
 #Preview {
     WindowRootView()
         .frame(width: 1200, height: 800)
-        .env(
-        )
+        .previewEnv()
 }
