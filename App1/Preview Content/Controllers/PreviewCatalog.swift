@@ -21,7 +21,7 @@ struct PreviewCatalog: CatalogProtocol {
     
     var allColors: [LegoColor] {
         
-        return []
+        return LegoColor.previewColors
     }
     
     func colorName(forLegoColorId colorId: LegoColor.ID) -> String {

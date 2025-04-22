@@ -36,10 +36,17 @@ struct LegoColorPicker: View {
 
 
 #Preview {
-    @Previewable @State var selection: LegoColor.ID = "11"
     
-    let env = createEnv()
+    @Previewable @State var selection: LegoColor.ID = ""
     
-    LegoColorPicker("Color", selection: $selection)
-        .inject(env)
+    VStack(alignment: .leading) {
+        
+        LegoColorPicker("Color", selection: $selection)
+        .padding()
+        
+        Text("Selected value: \(selection)").font(.title3)
+        .padding()
+    }
+    .padding()
+    .previewEnv()
 }
