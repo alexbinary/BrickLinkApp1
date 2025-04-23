@@ -11,6 +11,7 @@ struct InventoryListView: View {
     
     
     @State var searchText = ""
+    @State var actionPopoverPresented: Bool = false
     
  
     var body: some View {
@@ -32,6 +33,16 @@ struct InventoryListView: View {
         }
         .navigationTitle("Inventory")
         .navigationSubtitle("\(inventories.count) lots, \(inventories.reduce(0, { $0+$1.quantity })) items")
+        .toolbar {
+            Button {
+                actionPopoverPresented.toggle()
+            } label: {
+                Text("􀈫").padding(.horizontal)
+            }
+            .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
+                InventoryActionSheet(items: inventories)
+            }
+        }
         .task { await inventoryStore.softRefreshInventories() }
     }
 }
