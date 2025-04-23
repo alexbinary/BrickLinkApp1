@@ -67,7 +67,7 @@ class InventoryStore: InventoryStoreProtocol {
         
         allInventories
             .filter { $0.matches(searchText, catalog) }
-            .sorted(by: { $0.remarks < $1.remarks })
+            .sorted(on: { Location(from: $0.remarks) }, ifNilOn: { $0.remarks })
     }
     
     

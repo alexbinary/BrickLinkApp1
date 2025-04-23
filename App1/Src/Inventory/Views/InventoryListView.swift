@@ -32,6 +32,7 @@ struct InventoryListView: View {
         }
         .navigationTitle("Inventory")
         .navigationSubtitle("\(inventories.count) lots, \(inventories.reduce(0, { $0+$1.quantity })) items")
+        .task { await inventoryStore.softRefreshInventories() }
     }
 }
 

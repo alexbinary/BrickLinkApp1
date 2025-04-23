@@ -62,7 +62,11 @@ struct InventoryItemView: View {
                 
                 GridRow(alignment: .firstTextBaseline) {
                     Text("Remarks").foregroundStyle(.secondary)
-                    Text(item.remarks).font(.title2)
+                    if let loc = Location(from: item.remarks) {
+                        Text(loc.description).font(.title2)
+                    } else {
+                        Text(item.remarks).foregroundStyle(.red)
+                    }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {

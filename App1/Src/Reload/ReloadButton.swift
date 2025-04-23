@@ -55,6 +55,9 @@ struct ReloadButton: View {
         case .upload:
             items.append(contentsOf: [.inventoryAndColors])
             
+        case .inventory:
+            items.append(contentsOf: [.inventoryAndColors])
+            
         default:
             break
         }
