@@ -44,11 +44,27 @@ struct CatalogImage: View {
     var body: some View {    
         
         ZStack {
-            AsyncImage(url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId)) { image in
-                image
+            AsyncImage(
+                url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId),
+                transaction: SwiftUICore.Transaction(animation: .default),
+                content: { phase in
+                    Group {
+                        switch phase {
+                        case .success(let image):
+                            image
+                        case .failure(let error):
+                            let _ = print(error)
+                            Text("Error")
+                        case .empty:
+                            ProgressView().controlSize(.small)
+                        @unknown default:
+                            fatalError("Unkown state")
+                        }
+                    }
                     .aspectRatio(contentMode: .fit)
                     .frame(width: imageSize.width, height: imageSize.height)
-            } placeholder: { Color.clear }
+                }
+            )
             
             if let data = catalog.data(forItemOfType: type, ref: ref, colorId: colorId) {
                 if let length = data.lengthAnnotation {
@@ -119,6 +135,12 @@ struct CatalogImage: View {
                     partData: .init(ref: "",
                                     chiralityAnnotation: .left
                                    )
+                )
+            )
+        baseView
+            .previewEnv(
+                catalog: PreviewCatalog(
+                    urlForImageOfItemOfType: URL(string: "broken")
                 )
             )
     }
