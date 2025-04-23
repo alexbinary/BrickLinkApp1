@@ -18,6 +18,7 @@ protocol InventoryStoreProtocol {
     
     func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem?
     func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float?, remarks: String?) async
+    func isUpdatingInventory(withId inventoryId: InventoryItem.ID) -> Bool
     
     func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int)
 }
@@ -130,6 +131,12 @@ class InventoryStore: InventoryStoreProtocol {
     func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float? = nil, remarks: String? = nil) async {
         
         await inventoryController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+    }
+    
+    
+    func isUpdatingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+     
+        inventoryController.isUpdatingInventory(withId: inventoryId)
     }
     
     

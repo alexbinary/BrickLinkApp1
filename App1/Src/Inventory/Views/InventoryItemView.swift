@@ -9,11 +9,18 @@ struct InventoryItemView: View {
     @Environment(\.catalog)
     var catalog: CatalogProtocol!
     
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
+    
     
     let item: InventoryItem
     
     
     @State var hover = false
+    
+    @State var editRemarks: String = ""
+    @State var editQty: String = ""
+    @State var editUnitPrice: Float? = nil
     
     
     var body: some View {
@@ -61,23 +68,57 @@ struct InventoryItemView: View {
             Grid(alignment: .leading, verticalSpacing: 12) {
                 
                 GridRow(alignment: .firstTextBaseline) {
+                    
                     Text("Remarks").foregroundStyle(.secondary)
                     if let loc = Location(from: item.remarks) {
                         Text(loc.description).font(.title2)
                     } else {
                         Text(item.remarks).foregroundStyle(.red)
                     }
+                    
+                    TextField("Remarks", text: $editRemarks)
+                        .onSubmit { self.updateInventoryItem(remarks: editRemarks) }
+                    Text("􀇿").foregroundStyle(.orange)
+                        .opacity(editedRemarks.isInvalid ? 1 : 0)
+                    
+                    Button("Reset") { editRemarks = item.remarks }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
+                    
                     Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                     Text("\(item.quantity)").font(.title2)
+                    
+                    TextField("Change quantity +/-", text: $editQty)
+                        .onSubmit {
+                            if let qty = editedQty.validatedValue {
+                                self.updateInventoryItem(addQuantity: qty)
+                            }
+                        }
+                    Text("􀇿").foregroundStyle(.orange)
+                        .opacity(editedQty.isInvalid ? 1 : 0)
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
+                    
                     Text("Unit price").foregroundStyle(.secondary)
                     Text(item.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
+                    
+                    TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                        .onSubmit {
+                            if let price = editedUnitPrice.validatedValue {
+                                self.updateInventoryItem(unitPrice: price)
+                            }
+                        }
+                    Text("􀇿").foregroundStyle(.orange)
+                        .opacity(editedUnitPrice.isInvalid ? 1 : 0)
+                    
+                    Button("Reset") { editUnitPrice = item.unitPrice }
                 }
+            }
+            
+            if inventoryStore.isUpdatingInventory(withId: item.id) {
+                ProgressView().controlSize(.small)
             }
         }
         .padding()
@@ -87,6 +128,10 @@ struct InventoryItemView: View {
             stroke: .tertiarySystemFill
         )
         .onHover { self.hover = $0 }
+        .onChange(of: item, initial: true) {
+            self.editRemarks = item.remarks
+            self.editUnitPrice = item.unitPrice
+        }
     }
     
     
@@ -95,6 +140,66 @@ struct InventoryItemView: View {
         case "U": return .red
         case "N": return .blue
         default: return .clear
+        }
+    }
+    
+    
+    var editedRemarks: ValidatedValue<String, Location> {
+        
+        if let location = Location(from: editRemarks) {
+            .valid(rawValue: editRemarks, validatedValue: location)
+        } else {
+            .invalid(rawValue: editRemarks)
+        }
+    }
+    
+    
+    var editedQty: ValidatedValue<String, Int> {
+        
+        if let qty = Int(editQty) {
+            .valid(rawValue: editQty, validatedValue: qty)
+        } else {
+            .invalid(rawValue: editQty)
+        }
+    }
+    
+    var editedUnitPrice: ValidatedValue<Float?, Float> {
+        
+        if let price = editUnitPrice, price > 0 {
+            .valid(rawValue: editUnitPrice, validatedValue: price)
+        } else {
+            .invalid(rawValue: editUnitPrice)
+        }
+    }
+    
+    
+    func updateInventoryItem(remarks: String? = nil, addQuantity: Int = 0, unitPrice: Float? = nil) {
+        
+        Task {
+            await inventoryStore.updateInventory(inventoryId: item.id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+        }
+    }
+}
+
+
+
+enum ValidatedValue<Raw: Equatable, Transformed: Equatable> : Equatable {
+    
+    case valid(rawValue: Raw, validatedValue: Transformed)
+    case invalid(rawValue: Raw)
+    
+    var isValid: Bool {
+        switch self {
+        case .invalid: false
+        case .valid: true
+        }
+    }
+    var isInvalid: Bool { !isValid }
+    
+    var validatedValue: Transformed? {
+        switch self {
+        case .valid(rawValue: _, validatedValue: let value): value
+        case .invalid: nil
         }
     }
 }

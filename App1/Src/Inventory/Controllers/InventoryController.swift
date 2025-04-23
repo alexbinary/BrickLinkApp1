@@ -175,4 +175,10 @@ class InventoryController {
         
         await updateController.updateInventory(inventoryId: inventoryId, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
     }
+    
+    
+    func isUpdatingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+     
+        updateController.isRunningOrIsScheduledToRun_updateInventory(withId: inventoryId)
+    }
 }

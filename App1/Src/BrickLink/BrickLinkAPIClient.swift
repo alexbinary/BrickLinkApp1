@@ -251,7 +251,7 @@ struct BrickLinkAPIClient {
             
             var body = """
             {
-                "quantity": "+\(addQuantity)"
+                "quantity": "\(addQuantity)"
             """
             
             if let price = unitPrice {

@@ -45,6 +45,11 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
         
     }
     
+    func isUpdatingInventory(withId inventoryId: InventoryItem.ID) -> Bool {
+        
+        return false
+    }
+    
     func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
         
         return (4, 2)

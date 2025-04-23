@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct InventoryItem: Identifiable, Codable {
+struct InventoryItem: Identifiable, Equatable, Codable {
     
     
     let id: String
