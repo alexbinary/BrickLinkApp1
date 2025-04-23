@@ -333,22 +333,19 @@ struct UploadItemView: View {
                         Color.clear.frame(width: 0)
                         
                         Group {
-                            if relatedInventories.isEmpty {
+                            if suggestedLocations.isEmpty {
                                 
-                                Text("no similar part").foregroundStyle(.secondary)
+                                Text("no suggestions").foregroundStyle(.secondary)
                                 
                             } else {
                                 
-                                let remarks = relatedInventories.map { $0.remarks }
-                                    .unique .sorted()
-                                
                                 ScrollView(.horizontal) {
                                     HStack {
-                                        ForEach(remarks, id: \.self) { rem in
+                                        ForEach(suggestedLocations, id: \.self) { location in
                                             Button {
-                                                self.editRemarks = rem
+                                                self.editRemarks = location
                                             } label: {
-                                                Text(rem)
+                                                Text(location)
                                             }
                                         }
                                     }
@@ -590,18 +587,12 @@ struct UploadItemView: View {
     
     var inventoryItem: InventoryItem? {
         
-        if uploadItem.condition == nil {
-            return nil
-        }
         return inventoryStore.inventory(for: uploadItem)
     }
     
-    var relatedInventories: [InventoryItem] {
+    var suggestedLocations: [String] {
         
-        if uploadItem.condition == nil {
-            return []
-        }
-        return inventoryStore.inventories(forAllColorsOf: uploadItem)
+        return uploadStore.suggestedLocations(for: uploadItem)
     }
     
     

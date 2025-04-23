@@ -10,7 +10,12 @@ struct PreviewUploadStore: UploadStoreProtocol {
         
         self.numberForSidebarBadge = numberForSidebarBadge
     }
-
+    
+    
+    func suggestedLocations(for uploadItem: UploadItem) -> [String] {
+        
+        return []
+    }
 
     var uploadItemsForList: [UploadItem] {
 

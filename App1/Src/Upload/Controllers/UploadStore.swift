@@ -6,15 +6,16 @@ import Foundation
 @MainActor
 protocol UploadStoreProtocol {
 
-     var uploadItemsForList: [UploadItem] { get }
-     func add(_ uploadItem: UploadItem)
-     func delete(_ uploadItem: UploadItem)
-     func update(_ uploadItem: UploadItem)
-     func importUploadList(fromXml xml: String)
-     var numberForSidebarBadge: Int { get }
-    
-     func add(_ uploadedItem: UploadedItem)
-     func uploadedItemsForList(matching searchText: String) -> [UploadedItem]
+    func suggestedLocations(for uploadItem: UploadItem) -> [String]
+    var uploadItemsForList: [UploadItem] { get }
+    func add(_ uploadItem: UploadItem)
+    func delete(_ uploadItem: UploadItem)
+    func update(_ uploadItem: UploadItem)
+    func importUploadList(fromXml xml: String)
+    var numberForSidebarBadge: Int { get }
+
+    func add(_ uploadedItem: UploadedItem)
+    func uploadedItemsForList(matching searchText: String) -> [UploadedItem]
 }
 
 
@@ -61,12 +62,18 @@ class UploadStore: UploadStoreProtocol {
     }
     
     
+    func suggestedLocations(for uploadItem: UploadItem) -> [String] {
+        
+        inventories(forAllColorsOf: uploadItem).map(\.remarks).unique.sorted()
+    }
+    
+    
     var uploadItemsForList: [UploadItem] {
         
         uploadItems.sorted { item1, item2 in
                 
-            let rem1 = inventory(for: item1)?.remarks ?? inventories(forAllColorsOf: item1).map { $0.remarks }.sorted().first
-            let rem2 = inventory(for: item2)?.remarks ?? inventories(forAllColorsOf: item2).map { $0.remarks }.sorted().first
+            let rem1 = suggestedLocations(for: item1).first
+            let rem2 = suggestedLocations(for: item2).first
             
             switch (rem1, rem2) {
                 
