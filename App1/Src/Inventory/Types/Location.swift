@@ -32,63 +32,42 @@ struct Location {
     
     init?(from str: String) {
         
-        let strFirstLevelParts = str.split(separator: "-")
-        if strFirstLevelParts.count < 1 || strFirstLevelParts.count > 2 {
-            return nil
-        }
-        let strMeubleEtTiroir = strFirstLevelParts[0]
+        let scanner = Scanner(string: str)
         
-        let strMeuble = String(strMeubleEtTiroir.first!)
-        if let valueMeuble = Meuble(rawValue: strMeuble) {
-            self.meuble = valueMeuble
-        } else {
-            return nil
-        }
+        guard let charMeuble = scanner.scanCharacter(),
+              let valueMeuble = Meuble(rawValue: String(charMeuble)) else { return nil }
+        self.meuble = valueMeuble
         
-        let strTiroir = strMeubleEtTiroir[(strMeubleEtTiroir.index(after: strMeubleEtTiroir.startIndex))...]
-        if let valueTiroir = Int(strTiroir) {
-            self.tiroir = valueTiroir
-        } else {
-            return nil
-        }
+        guard let valueTiroir = scanner.scanInt(), valueTiroir > 0 else { return nil }
+        self.tiroir = valueTiroir
         
-        if strFirstLevelParts.count < 2 {
-            
+        if scanner.isAtEnd {
             self.colonne = nil
             self.ligne = nil
             self.ab = nil
-            
-        } else {
-            
-            let strColonneLigneAB = strFirstLevelParts[1]
-            
-            let strColonneLigneABParts = strColonneLigneAB.split(separator: ".")
-            if strColonneLigneABParts.count != 2 {
-                return nil
-            }
-            
-            let strColonne = String(strColonneLigneABParts[0])
-            if let valueColonne = Int(strColonne) {
-                self.colonne = valueColonne
-            } else {
-                return nil
-            }
-            
-            let strLigneAB = String(strColonneLigneABParts[1])
-            
-            let scannerLigneAB = Scanner(string: strLigneAB)
-            if let valueLigne = scannerLigneAB.scanInt() {
-                self.ligne = valueLigne
-            } else {
-                return nil
-            }
-            
-            if let charAB = scannerLigneAB.scanCharacter(), let valueAB = AB(rawValue: String(charAB)) {
-                self.ab = valueAB
-            } else {
-                self.ab = nil
-            }
+            return
         }
+        
+        guard let char = scanner.scanCharacter(), char == "-" else { return nil }
+        
+        guard let valueColonne = scanner.scanInt(), valueColonne > 0 else { return nil }
+        self.colonne = valueColonne
+        
+        guard let char = scanner.scanCharacter(), char == "." else { return nil }
+        
+        guard let valueLigne = scanner.scanInt(), valueLigne > 0 else { return nil }
+        self.ligne = valueLigne
+        
+        if scanner.isAtEnd {
+            self.ab = nil
+            return
+        }
+        
+        guard let char = scanner.scanCharacter(),
+              let valueAB = AB(rawValue: String(char)) else { return nil }
+        self.ab = valueAB
+        
+        guard scanner.isAtEnd else { return nil }
     }
 }
 
