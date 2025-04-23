@@ -69,8 +69,9 @@ struct InventoryItemView: View {
                 
                 GridRow(alignment: .firstTextBaseline) {
                     
-                    Text("Remarks").foregroundStyle(.secondary)
-                    
+                    Text("Remarks")
+                        .foregroundStyle(validatedRemarks.hasWarning ? .red : .secondary)
+                        
                     TextField("Remarks", text: $editRemarks)
                         .onSubmit {
                             if let rem = validatedRemarks.valueToSubmit {
@@ -78,15 +79,13 @@ struct InventoryItemView: View {
                             }
                         }
                     
-                    Text("􀇿").foregroundStyle(.orange)
-                        .opacity(validatedRemarks.hasWarning ? 1 : 0)
-                    
-                    Button("Reset") { editRemarks = item.remarks }
+                    Button("􀅉") { editRemarks = item.remarks }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
                     
-                    Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                    Text("Quantity").gridColumnAlignment(.trailing)
+                        .foregroundStyle(validatedQty.hasWarning ? .red : .secondary)
                     
                     HStack {
                         Text("\(item.quantity)").font(.title2)
@@ -99,13 +98,13 @@ struct InventoryItemView: View {
                             }
                     }
                     
-                    Text("􀇿").foregroundStyle(.orange)
-                        .opacity(validatedQty.hasWarning ? 1 : 0)
+                    Button("􀅉") { editQty = "" }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
                     
-                    Text("Unit price").foregroundStyle(.secondary)
+                    Text("Unit price")
+                        .foregroundStyle(validatedUnitPrice.hasWarning ? .red : .secondary)
                     
                     TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         .onSubmit {
@@ -114,12 +113,10 @@ struct InventoryItemView: View {
                             }
                         }
                     
-                    Text("􀇿").foregroundStyle(.orange)
-                        .opacity(validatedUnitPrice.hasWarning ? 1 : 0)
-                    
-                    Button("Reset") { editUnitPrice = item.unitPrice }
+                    Button("􀅉") { editUnitPrice = item.unitPrice }
                 }
             }
+            .frame(width: 300)
             
             if inventoryStore.isUpdatingInventory(withId: item.id) {
                 ProgressView().controlSize(.small)
