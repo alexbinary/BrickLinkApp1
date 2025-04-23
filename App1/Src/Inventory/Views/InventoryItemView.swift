@@ -70,16 +70,16 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Remarks").foregroundStyle(.secondary)
-                    if let loc = Location(from: item.remarks) {
-                        Text(loc.description).font(.title2)
-                    } else {
-                        Text(item.remarks).foregroundStyle(.red)
-                    }
                     
                     TextField("Remarks", text: $editRemarks)
-                        .onSubmit { self.updateInventoryItem(remarks: editRemarks) }
+                        .onSubmit {
+                            if let rem = validatedRemarks.valueToSubmit {
+                                self.updateInventoryItem(remarks: rem)
+                            }
+                        }
+                    
                     Text("􀇿").foregroundStyle(.orange)
-                        .opacity(editedRemarks.isInvalid ? 1 : 0)
+                        .opacity(validatedRemarks.hasWarning ? 1 : 0)
                     
                     Button("Reset") { editRemarks = item.remarks }
                 }
@@ -87,31 +87,35 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                    Text("\(item.quantity)").font(.title2)
                     
-                    TextField("Change quantity +/-", text: $editQty)
-                        .onSubmit {
-                            if let qty = editedQty.validatedValue {
-                                self.updateInventoryItem(addQuantity: qty)
+                    HStack {
+                        Text("\(item.quantity)").font(.title2)
+                        
+                        TextField("Change quantity +/-", text: $editQty)
+                            .onSubmit {
+                                if let qty = validatedQty.valueToSubmit {
+                                    self.updateInventoryItem(addQuantity: qty)
+                                }
                             }
-                        }
+                    }
+                    
                     Text("􀇿").foregroundStyle(.orange)
-                        .opacity(editedQty.isInvalid ? 1 : 0)
+                        .opacity(validatedQty.hasWarning ? 1 : 0)
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Unit price").foregroundStyle(.secondary)
-                    Text(item.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
                     
                     TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         .onSubmit {
-                            if let price = editedUnitPrice.validatedValue {
+                            if let price = validatedUnitPrice.valueToSubmit {
                                 self.updateInventoryItem(unitPrice: price)
                             }
                         }
+                    
                     Text("􀇿").foregroundStyle(.orange)
-                        .opacity(editedUnitPrice.isInvalid ? 1 : 0)
+                        .opacity(validatedUnitPrice.hasWarning ? 1 : 0)
                     
                     Button("Reset") { editUnitPrice = item.unitPrice }
                 }
@@ -144,31 +148,34 @@ struct InventoryItemView: View {
     }
     
     
-    var editedRemarks: ValidatedValue<String, Location> {
+    var validatedRemarks: ValidatedValue<String> {
         
-        if let location = Location(from: editRemarks) {
-            .valid(rawValue: editRemarks, validatedValue: location)
+        if Location(from: editRemarks) == nil {
+            .init(valueToSubmit: editRemarks, hasWarning: true)
         } else {
-            .invalid(rawValue: editRemarks)
+            .init(valueToSubmit: editRemarks, hasWarning: false)
         }
     }
     
     
-    var editedQty: ValidatedValue<String, Int> {
+    var validatedQty: ValidatedValue<Int> {
         
         if let qty = Int(editQty) {
-            .valid(rawValue: editQty, validatedValue: qty)
+            .init(valueToSubmit: qty, hasWarning: false)
+        } else if editQty.isEmpty {
+            .init(valueToSubmit: nil, hasWarning: false)
         } else {
-            .invalid(rawValue: editQty)
+            .init(valueToSubmit: nil, hasWarning: true)
         }
     }
     
-    var editedUnitPrice: ValidatedValue<Float?, Float> {
+    
+    var validatedUnitPrice: ValidatedValue<Float> {
         
         if let price = editUnitPrice, price > 0 {
-            .valid(rawValue: editUnitPrice, validatedValue: price)
+            .init(valueToSubmit: price, hasWarning: false)
         } else {
-            .invalid(rawValue: editUnitPrice)
+            .init(valueToSubmit: nil, hasWarning: true)
         }
     }
     
@@ -176,32 +183,22 @@ struct InventoryItemView: View {
     func updateInventoryItem(remarks: String? = nil, addQuantity: Int = 0, unitPrice: Float? = nil) {
         
         Task {
-            await inventoryStore.updateInventory(inventoryId: item.id, addQuantity: addQuantity, unitPrice: unitPrice, remarks: remarks)
+            await inventoryStore.updateInventory(
+                inventoryId: item.id,
+                addQuantity: addQuantity,
+                unitPrice: unitPrice,
+                remarks: remarks
+            )
         }
     }
 }
 
 
 
-enum ValidatedValue<Raw: Equatable, Transformed: Equatable> : Equatable {
+struct ValidatedValue<T> {
     
-    case valid(rawValue: Raw, validatedValue: Transformed)
-    case invalid(rawValue: Raw)
-    
-    var isValid: Bool {
-        switch self {
-        case .invalid: false
-        case .valid: true
-        }
-    }
-    var isInvalid: Bool { !isValid }
-    
-    var validatedValue: Transformed? {
-        switch self {
-        case .valid(rawValue: _, validatedValue: let value): value
-        case .invalid: nil
-        }
-    }
+    var valueToSubmit: T? = nil
+    var hasWarning: Bool = false
 }
 
 
