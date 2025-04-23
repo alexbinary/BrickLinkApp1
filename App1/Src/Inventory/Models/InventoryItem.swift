@@ -38,3 +38,97 @@ extension InventoryItem {
         )
     }
 }
+
+
+
+extension InventoryItem {
+    
+    
+    @MainActor
+    func matches(_ rawSearchText: String, _ catalog: CatalogProtocol) -> Bool {
+        
+        let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        
+        if searchText.isEmpty {
+            return true
+        }
+        
+        let searchableText = searchableText(catalog)
+        
+        return searchableText.contains(searchText)
+    }
+    
+    
+    @MainActor
+    func searchableText(_ catalog: CatalogProtocol) -> String {
+        
+        [
+            rawSearchableText_id,
+            rawSearchableText_condition,
+            catalog.colorName(forLegoColorId: colorId),
+            rawSearchableText_ref,
+            rawSearchableText_name,
+            rawSearchableText_type,
+            rawSearchableText_description,
+            rawSearchableText_remarks,
+            rawSearchableText_quantity,
+            rawSearchableText_unitPrice,
+            
+        ].map { $0.lowercased() } .joined(separator: " ")
+    }
+    
+    
+    var rawSearchableText_id: String {
+        
+        id
+    }
+    
+    var rawSearchableText_condition: String {
+    
+        condition
+    }
+    
+    var rawSearchableText_ref: String {
+    
+        ref
+    }
+    
+    var rawSearchableText_name: String {
+    
+        name
+    }
+    
+    var rawSearchableText_type: String {
+        
+        type.rawValue
+    }
+    
+    var rawSearchableText_description: String {
+    
+        description
+    }
+    
+    var rawSearchableText_remarks: String {
+    
+        remarks
+    }
+    
+    var rawSearchableText_quantity: String {
+    
+        "\(quantity)"
+    }
+    
+    var rawSearchableText_unitPrice: String {
+        
+        priceFormatter.string(from: NSNumber(value: unitPrice)) ?? ""
+    }
+    
+    
+    var priceFormatter: NumberFormatter {
+        
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 4
+        f.maximumFractionDigits = 4
+        return f
+    }
+}

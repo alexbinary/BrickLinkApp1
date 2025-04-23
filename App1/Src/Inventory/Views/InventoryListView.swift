@@ -9,10 +9,13 @@ struct InventoryListView: View {
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!
     
+    
+    @State var searchText = ""
+    
  
     var body: some View {
         
-        let inventories = inventoryStore.allInventories
+        let inventories = inventoryStore.allInventories(matching: searchText)
         
         ScrollView {
             
@@ -24,6 +27,7 @@ struct InventoryListView: View {
                         .padding(.horizontal)
                 }
             }
+            .searchable(text: $searchText, prompt: "Search inventories")
             .padding(.vertical)
         }
         .navigationTitle("Inventory")

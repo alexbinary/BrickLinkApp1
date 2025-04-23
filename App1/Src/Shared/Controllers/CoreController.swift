@@ -60,7 +60,7 @@ class CoreController {
         
         catalog = Catalog(dataStore, updateController, brickLinkAPIClient)
         
-        inventoryStore = InventoryStore(inventoryController, stockController)
+        inventoryStore = InventoryStore(inventoryController, stockController, catalog)
         uploadStore = UploadStore(uploadController, inventoryController, catalog)
         
         orderStore = OrderStore(orderController, checklistController, macroStatusController, pickingProgressController, trackingMiddleController, feedbackController, feedbackPostController)

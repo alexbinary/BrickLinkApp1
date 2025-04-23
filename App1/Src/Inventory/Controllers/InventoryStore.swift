@@ -9,7 +9,7 @@ protocol InventoryStoreProtocol {
     
     func url(forInventoryItemWithId inventoryId: String) -> URL?
 
-    var allInventories: [InventoryItem] { get }
+    func allInventories(matching searchText: String) -> [InventoryItem]
     func inventory(for uploadItem: UploadItem) -> InventoryItem?
     func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem]
 
@@ -31,14 +31,17 @@ class InventoryStore: InventoryStoreProtocol {
     
     private let inventoryController: InventoryController
     private let stockController: StockController
+    private let catalog: Catalog
     
     
     init(
         _ inventoryController: InventoryController,
-        _ stockController: StockController
+        _ stockController: StockController,
+        _ catalog: Catalog
     ) {
         self.inventoryController = inventoryController
         self.stockController = stockController
+        self.catalog = catalog
     }
     
     
@@ -54,9 +57,17 @@ class InventoryStore: InventoryStoreProtocol {
     // MARK: - Read inventories
     
     
-    var allInventories: [InventoryItem] {
+    private var allInventories: [InventoryItem] {
         
-        inventoryController.allInventories.sorted(by: { $0.remarks < $1.remarks })
+        inventoryController.allInventories
+    }
+    
+    
+    func allInventories(matching searchText: String) -> [InventoryItem] {
+        
+        allInventories
+            .filter { $0.matches(searchText, catalog) }
+            .sorted(by: { $0.remarks < $1.remarks })
     }
     
     
