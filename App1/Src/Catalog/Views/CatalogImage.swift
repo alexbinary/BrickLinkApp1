@@ -36,6 +36,12 @@ struct CatalogImage: View {
         self.ref = item.ref
         self.colorId = item.colorId
     }
+    
+    init(inventoryItem item: InventoryItem) {
+        self.type = item.type
+        self.ref = item.ref
+        self.colorId = item.colorId
+    }
 
 
     let frameSize = CGSize(width: 84, height: 64)

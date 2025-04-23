@@ -33,6 +33,11 @@ struct LegoColorView: View {
         self.style = style
     }
     
+    init(inventoryItem item: InventoryItem, style: Style = .default) {
+        self.colorId = item.colorId
+        self.style = style
+    }
+    
     
     var body: some View {
         

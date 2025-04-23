@@ -30,6 +30,10 @@ struct WindowContentView: View {
             
             UploadView()
             
+        case .inventory:
+            
+            InventoryListView()
+            
         case .resultDashboard:
             
             HSplitView {
@@ -57,7 +61,17 @@ struct WindowContentView: View {
 
 
 #Preview {
-    WindowContentView()
-        .frame(width: 1000, height: 800)
-        .previewEnv()
+    
+    NavigationSplitView {
+        
+        Sidebar()
+            .frame(minWidth: 180)
+        
+    } detail: {
+    
+        WindowContentView()
+            .frame(width: 1000, height: 800)
+            
+    }
+    .previewEnv()
 }

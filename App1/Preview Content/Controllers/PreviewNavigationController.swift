@@ -3,6 +3,7 @@ import SwiftUI
 
 
 
+@Observable
 class PreviewNavigationController: NavigationControllerProtocol {
     
     

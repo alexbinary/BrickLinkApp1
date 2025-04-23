@@ -34,6 +34,9 @@ struct Sidebar: View {
                 Label("Upload", systemImage: "tray.and.arrow.down")
                     .badge(uploadStore.numberForSidebarBadge)
                     .tag(SidebarItem.upload)
+                
+                Label("Inventory", systemImage: "tray")
+                    .tag(SidebarItem.inventory)
             }
             
             Section("Result") {
@@ -61,6 +64,7 @@ struct Sidebar: View {
     NavigationSplitView {
         
         Sidebar()
+            .frame(minWidth: 180)
         
     } detail: {
         

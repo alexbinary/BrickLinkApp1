@@ -9,6 +9,7 @@ protocol InventoryStoreProtocol {
     
     func url(forInventoryItemWithId inventoryId: String) -> URL?
 
+    var allInventories: [InventoryItem] { get }
     func inventory(for uploadItem: UploadItem) -> InventoryItem?
     func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem]
 
@@ -53,9 +54,9 @@ class InventoryStore: InventoryStoreProtocol {
     // MARK: - Read inventories
     
     
-    private var allInventories: [InventoryItem] {
+    var allInventories: [InventoryItem] {
         
-        inventoryController.allInventories
+        inventoryController.allInventories.sorted(by: { $0.remarks < $1.remarks })
     }
     
     

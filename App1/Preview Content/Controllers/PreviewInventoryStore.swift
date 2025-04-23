@@ -11,6 +11,13 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
         return URL(string: "http://example.com")
     }
     
+    var allInventories: [InventoryItem] {
+        
+        return [
+            .previewItem1,
+        ]
+    }
+    
     func inventory(for uploadItem: UploadItem) -> InventoryItem? {
     
         return nil
