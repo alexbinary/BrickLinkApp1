@@ -22,6 +22,8 @@ struct InventoryItemView: View {
     @State var editQty: String = ""
     @State var editUnitPrice: Float? = nil
     
+    @Binding var listSearchText: String
+    
     
     var body: some View {
         
@@ -47,6 +49,8 @@ struct InventoryItemView: View {
                 VStack(alignment: .leading, spacing: 4) {
 
                     HStack {
+                        
+                        Button("􀭥") { listSearchText = item.ref }
                         
                         Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
                             Text(item.ref)
@@ -80,6 +84,8 @@ struct InventoryItemView: View {
                         }
                     
                     Button("􀅉") { editRemarks = item.remarks }
+                    
+                    Button("􀭥") { listSearchText = item.remarks }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
@@ -215,7 +221,7 @@ struct ValidatedValue<T> {
             remarks: "A1-2.3",
             quantity: 1,
             unitPrice: 2.3456
-        ))
+        ), listSearchText: .constant(""))
         .padding()
         .previewEnv(
             catalog: PreviewCatalog(
@@ -234,7 +240,7 @@ struct ValidatedValue<T> {
             remarks: "",
             quantity: 0,
             unitPrice: 0
-        ))
+        ), listSearchText: .constant(""))
         .padding()
         .previewEnv(
             catalog: PreviewCatalog(

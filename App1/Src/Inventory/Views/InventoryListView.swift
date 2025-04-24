@@ -27,7 +27,7 @@ struct InventoryListView: View {
                 
                 ForEach(inventories) { item in
                     
-                    InventoryItemView(item: item)
+                    InventoryItemView(item: item, listSearchText: $searchText)
                         .padding(.horizontal)
                 }
             }
