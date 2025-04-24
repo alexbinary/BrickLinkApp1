@@ -51,7 +51,10 @@ struct InventoryItemView: View {
 
                     HStack {
                         
-                        Button("􀭥") { listSearchTokens.append(.refIs(item.ref)) }
+                        Button("􀭥") {
+                            listSearchTokens = [.refIs(item.ref)]
+                            listSearchText = ""
+                        }
                         
                         Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
                             Text(item.ref)
@@ -88,8 +91,10 @@ struct InventoryItemView: View {
                     
                     Button("􀭥") {
                         if let loc = Location(from: item.remarks) {
-                            listSearchTokens.append(.locationIs(loc))
+                            listSearchTokens = [.locationIs(loc)]
+                            listSearchText = ""
                         } else {
+                            listSearchTokens = []
                             listSearchText = item.remarks
                         }
                     }
