@@ -23,6 +23,7 @@ struct InventoryItemView: View {
     @State var editUnitPrice: Float? = nil
     
     @Binding var listSearchText: String
+    @Binding var listSearchTokens: [SearchToken]
     
     
     var body: some View {
@@ -85,7 +86,13 @@ struct InventoryItemView: View {
                     
                     Button("􀅉") { editRemarks = item.remarks }
                     
-                    Button("􀭥") { listSearchText = item.remarks }
+                    Button("􀭥") {
+                        if let loc = Location(from: item.remarks) {
+                            listSearchTokens.append(.locationIs(loc))
+                        } else {
+                            listSearchText = item.remarks
+                        }
+                    }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
@@ -221,7 +228,7 @@ struct ValidatedValue<T> {
             remarks: "A1-2.3",
             quantity: 1,
             unitPrice: 2.3456
-        ), listSearchText: .constant(""))
+        ), listSearchText: .constant(""), listSearchTokens: .constant([]))
         .padding()
         .previewEnv(
             catalog: PreviewCatalog(
@@ -240,7 +247,7 @@ struct ValidatedValue<T> {
             remarks: "",
             quantity: 0,
             unitPrice: 0
-        ), listSearchText: .constant(""))
+        ), listSearchText: .constant(""), listSearchTokens: .constant([]))
         .padding()
         .previewEnv(
             catalog: PreviewCatalog(

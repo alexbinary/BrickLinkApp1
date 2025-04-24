@@ -45,17 +45,47 @@ extension InventoryItem {
     
     
     @MainActor
-    func matches(_ rawSearchText: String, _ catalog: CatalogProtocol) -> Bool {
+    func matches(_ rawSearchText: String, _ searchTokens: [SearchToken], _ catalog: CatalogProtocol) -> Bool {
         
         let searchText = rawSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
-        if searchText.isEmpty {
+        if searchText.isEmpty && searchTokens.isEmpty {
+            return true
+        }
+        
+        let searchTerms = searchText.split(separator: " ").map { String($0) }
+        
+        return
+            searchTerms.allSatisfy { self.matches($0, catalog) }
+            &&
+            searchTokens.allSatisfy { self.matches($0, catalog) }
+    }
+    
+    
+    @MainActor
+    func matches(_ searchTerm: String, _ catalog: CatalogProtocol) -> Bool {
+        
+        if searchTerm.isEmpty {
             return true
         }
         
         let searchableText = searchableText(catalog)
         
-        return searchableText.contains(searchText)
+        return searchableText.contains(searchTerm)
+    }
+    
+    
+    @MainActor
+    func matches(_ token: SearchToken, _ catalog: CatalogProtocol) -> Bool {
+        
+        switch token {
+            
+        case .locationIs(let location):
+            return remarks == location.description
+            
+        case .locationContains(let str):
+            return remarks.contains(str)
+        }
     }
     
     

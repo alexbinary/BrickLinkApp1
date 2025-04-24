@@ -9,7 +9,7 @@ protocol InventoryStoreProtocol {
     
     func url(forInventoryItemWithId inventoryId: String) -> URL?
 
-    func allInventories(matching searchText: String) -> [InventoryItem]
+    func allInventories(matching searchText: String, _ searchTokens: [SearchToken]) -> [InventoryItem]
     func inventory(for uploadItem: UploadItem) -> InventoryItem?
     func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem]
 
@@ -64,10 +64,10 @@ class InventoryStore: InventoryStoreProtocol {
     }
     
     
-    func allInventories(matching searchText: String) -> [InventoryItem] {
+    func allInventories(matching searchText: String, _ searchTokens: [SearchToken]) -> [InventoryItem] {
         
         allInventories
-            .filter { $0.matches(searchText, catalog) }
+            .filter { $0.matches(searchText, searchTokens, catalog) }
             .sorted(on: { Location(from: $0.remarks) }, ifNilOn: { $0.remarks })
     }
     
