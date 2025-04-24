@@ -13,11 +13,8 @@ struct InventoryListView: View {
     @State var searchText = ""
     @State var searchTokens: [SearchToken] = []
     
-    @State var actionPopoverPresentedOnDefaultMoveButton: Bool = false
-    @State var actionPopoverPresentedOnQuickMoveButton: Bool = false
-    
+    @State var actionPopoverPresented: Bool = false
     @State var recentMoveLocations: [Location] = []
-    @State var recentActions: [InventoryAction] = []
     
  
     var body: some View {
@@ -83,33 +80,18 @@ struct InventoryListView: View {
         .toolbar {
             
             Button {
-                actionPopoverPresentedOnDefaultMoveButton = true
+                actionPopoverPresented = true
             } label: {
-                Text("􀈫").padding(.horizontal)
+                Text("􀈫􁉂").padding(.horizontal)
             }
-            .popover(isPresented: $actionPopoverPresentedOnDefaultMoveButton, arrowEdge: .bottom) {
+            .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
                 InventoryActionSheet(
                     items: inventories,
                     defaultLocation: nil,
-                    recentMoveLocations: $recentMoveLocations,
-                    recentActions: $recentActions
+                    recentMoveLocations: $recentMoveLocations
                 )
             }
-            
-            if let action = recentActions.first, case .move(let location) = action {
-                
-                Button("􀈫 􁉂 \(location.description)") {
-                    actionPopoverPresentedOnQuickMoveButton = true
-                }
-                .popover(isPresented: $actionPopoverPresentedOnQuickMoveButton, arrowEdge: .bottom) {
-                    InventoryActionSheet(
-                        items: inventories,
-                        defaultLocation: location,
-                        recentMoveLocations: $recentMoveLocations,
-                        recentActions: $recentActions
-                    )
-                }
-            }
+            .disabled(inventories.isEmpty)
         }
         .task { await inventoryStore.softRefreshInventories() }
     }
@@ -169,20 +151,6 @@ struct InventoryListView: View {
             
         case .refContains(let str):
             Text("􂘬 \"\(str)\"")
-        }
-    }
-}
-
-
-
-enum InventoryAction: Equatable {
-    
-    case move(to: Location)
-    
-    var description: String {
-        switch self {
-        case .move(let location):
-            "Move items to \(location)"
         }
     }
 }

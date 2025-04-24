@@ -87,6 +87,18 @@ class InventoryController {
     }
     
     
+    func inventories(forAllColorsOf inventoryItem: InventoryItem) -> [InventoryItem] {
+        
+        return allInventories.filter {
+            
+            $0.type == inventoryItem.type
+            && $0.ref == inventoryItem.ref
+            && $0.description == inventoryItem.description
+            && $0.condition == inventoryItem.condition
+        }
+    }
+    
+    
     func loadInventories(_ refetchStrategy: RefetchStrategy = .forceRefetch, _ operationTag: OperationTag? = nil) async {
         
         await updateController.loadInventories(refetchStrategy, operationTag)

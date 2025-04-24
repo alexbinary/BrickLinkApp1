@@ -59,4 +59,9 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
         
         return (4, 2)
     }
+    
+    func suggestedTargetLocations(forMoving inventoryItem: InventoryItem) -> [Location] {
+        
+        return []
+    }
 }

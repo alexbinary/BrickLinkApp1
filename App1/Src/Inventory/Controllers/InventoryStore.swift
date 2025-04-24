@@ -22,6 +22,8 @@ protocol InventoryStoreProtocol {
     func isUpdatingInventory(withId inventoryId: InventoryItem.ID) -> Bool
     
     func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int)
+    
+    func suggestedTargetLocations(forMoving inventoryItem: InventoryItem) -> [Location]
 }
 
 
@@ -91,6 +93,12 @@ class InventoryStore: InventoryStoreProtocol {
     }
     
     
+    func inventories(forAllColorsOf inventoryItem: InventoryItem) -> [InventoryItem] {
+        
+        inventoryController.inventories(forAllColorsOf: inventoryItem)
+    }
+    
+    
     // MARK: Refresh
     
     
@@ -147,5 +155,14 @@ class InventoryStore: InventoryStoreProtocol {
     func inStockQuantityBeforeAfter(for orderItem: OrderItem) -> (before: Int, after: Int) {
         
         stockController.inStockQuantityBeforeAfter(for: orderItem)
+    }
+    
+    
+    // MARK: - Move
+    
+    
+    func suggestedTargetLocations(forMoving inventoryItem: InventoryItem) -> [Location] {
+        
+        inventories(forAllColorsOf: inventoryItem).compactMap { Location(from: $0.remarks) }.unique.sorted()
     }
 }

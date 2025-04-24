@@ -9,6 +9,9 @@ struct InventoryActionSheet: View {
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!
     
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
+    
     
     let items: [InventoryItem]
     let defaultLocation: Location?
@@ -17,38 +20,29 @@ struct InventoryActionSheet: View {
     @State var editLocation: String = ""
     
     @Binding var recentMoveLocations: [Location]
-    @Binding var recentActions: [InventoryAction]
+    
+    
+    let itemsLimit = 23
     
     
     var body: some View {
         
         VStack(alignment: .leading, spacing: 18) {
             
-            Text("Move \(items.count) items").font(.title2)
+            HStack {
+                Text("Move \(items.count) items").font(.title2)
+                Spacer()
+                Text("􀈫􁉂")
+            }
             
             LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
                 
-                ForEach(items.limit(11)) { item in
+                ForEach(items.limit(itemsLimit)) { item in
                     view(for: item)
                 }
                 
-                if items.count > 11 {
-                    Text("\(items.count-11) more")
-                }
-            }
-            
-            TextField("New location", text: $editLocation)
-            
-            if !recentMoveLocations.isEmpty {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("recent locations:")
-                    HStack {
-                        ForEach(recentMoveLocations, id: \.description) { loc in
-                            Button(loc.description) {
-                                editLocation = loc.description
-                            }
-                        }
-                    }
+                if items.count > itemsLimit {
+                    Text("\(items.count-itemsLimit) more")
                 }
             }
             
@@ -62,15 +56,94 @@ struct InventoryActionSheet: View {
                     .filter({ $0.ref == sourceItem.ref && $0.condition != sourceItem.condition })
             }
             
+            VStack(alignment: .leading, spacing: 4) {
+                
+                HStack {
+                    TextField("New location", text: $editLocation)
+                    
+                    Button("Confirm move") {
+                        if let loc = validatedLocation.valueToSubmit {
+                            self.moveItems(to: loc)
+                            self.addRecentLocation(loc)
+                        }
+                    }
+                    .disabled(validatedLocation.valueToSubmit == nil)
+                }
+                
+                if isUpdatingItems || validatedLocation.hasWarning {
+                    
+                    HStack {
+                        
+                        if isUpdatingItems {
+                            ProgressView().controlSize(.small)
+                        }
+                        
+                        Spacer()
+                        
+                        if validatedLocation.hasWarning {
+                            Text("invalid location").foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                
+                if !recentMoveLocations.isEmpty {
+                    HStack {
+                        Text("recent:")
+                        HStack {
+                            ForEach(recentMoveLocations, id: \.description) { loc in
+                                Button(loc.description) {
+                                    editLocation = loc.description
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                let suggestedLocations = items
+                    .flatMap { inventoryStore.suggestedTargetLocations(forMoving: $0) }
+                    .unique.sorted()
+                
+                if !suggestedLocations.isEmpty {
+                    HStack {
+                        Text("suggested:")
+                        HStack {
+                            ForEach(suggestedLocations, id: \.description) { loc in
+                                Button(loc.description) {
+                                    editLocation = loc.description
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             VStack(alignment: .leading) {
                 
                 if let loc = newLocation {
                     
-                    Text("\(itemsInNewLocation.count) items in location \(loc)")
+                    let hasConflicts = !conflictingItems.isEmpty
+                    
+                    HStack {
+                        Text("\(itemsInNewLocation.count) items in location \(loc)")
+                        Spacer()
+                        if hasConflicts {
+                            Text("conflicts detected")
+                        }
+                        Text(hasConflicts ? "􀇿" : "􀆅")
+                    }
+                    .foregroundStyle(hasConflicts ? .orange : green)
                 
                     LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
                         
-                        ForEach(itemsInNewLocation.limit(11)) { item in
+                        let itemsInNewLocation = itemsInNewLocation.sorted { item1, item2 in
+                            
+                            conflictingItems.contains(item1)
+                        }
+                        
+                        ForEach(itemsInNewLocation.limit(itemsLimit)) { item in
                             ZStack(alignment: .topLeading) {
                                 view(for: item)
                                 
@@ -84,33 +157,10 @@ struct InventoryActionSheet: View {
                             }
                         }
                         
-                        if itemsInNewLocation.count > 11 {
-                            Text("\(itemsInNewLocation.count-11) more")
+                        if itemsInNewLocation.count > itemsLimit {
+                            Text("\(itemsInNewLocation.count-itemsLimit) more")
                         }
                     }
-                }
-            }
-            
-            HStack {
-                
-                Button("Confirm move") {
-                    if let loc = validatedLocation.valueToSubmit {
-                        self.moveItems(to: loc)
-                        self.addRecentLocation(loc)
-                        self.addRecentMoveAction(to: loc)
-                    }
-                }
-                .disabled(validatedLocation.valueToSubmit == nil)
-                
-                if validatedLocation.hasWarning {
-                    Text("invalid location").foregroundStyle(.secondary)
-                }
-                if !conflictingItems.isEmpty {
-                    Text("􀇿 conflicts detected").foregroundStyle(.orange)
-                }
-                
-                if isUpdatingItems {
-                    ProgressView().controlSize(.small)
                 }
             }
         }
@@ -119,6 +169,7 @@ struct InventoryActionSheet: View {
         .onAppear {
             editLocation = defaultLocation?.description ?? ""
         }
+        .frame(minWidth: 400)
     }
     
     
@@ -135,6 +186,7 @@ struct InventoryActionSheet: View {
                 .clipShape(Capsule())
                 .padding(4)
         }
+        .help(catalog.colorName(forLegoColorId: item.colorId))
     }
     
     
@@ -182,14 +234,6 @@ struct InventoryActionSheet: View {
     }
     
     
-    func addRecentMoveAction(to loc: Location) {
-        
-        var recent = recentActions
-        recent.insert(.move(to: loc), at: 0)
-        recentActions = recent.unique.limit(3)
-    }
-    
-    
     var isUpdatingItems: Bool {
     
         for item in items {
@@ -207,7 +251,6 @@ struct InventoryActionSheet: View {
     InventoryActionSheet(
         items: [],
         defaultLocation: nil,
-        recentMoveLocations: .constant([]),
-        recentActions: .constant([])
+        recentMoveLocations: .constant([])
     )
 }
