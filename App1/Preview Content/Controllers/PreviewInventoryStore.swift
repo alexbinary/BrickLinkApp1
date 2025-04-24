@@ -11,6 +11,11 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
         return URL(string: "http://example.com")
     }
     
+    var allInventories: [InventoryItem] {
+        
+        return []
+    }
+    
     func allInventories(matching searchText: String, _ searchTokens: [SearchToken]) -> [InventoryItem] {
         
         return [

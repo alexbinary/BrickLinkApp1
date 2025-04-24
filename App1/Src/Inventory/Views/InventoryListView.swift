@@ -12,7 +12,9 @@ struct InventoryListView: View {
     
     @State var searchText = ""
     @State var searchTokens: [SearchToken] = []
-    @State var actionPopoverPresented: Bool = false
+    
+    @State var actionPopoverPresentedOnDefaultMoveButton: Bool = false
+    @State var actionPopoverPresentedOnQuickMoveButton: Bool = false
     
     @State var recentMoveLocations: [Location] = []
     @State var recentActions: [InventoryAction] = []
@@ -80,59 +82,36 @@ struct InventoryListView: View {
         .navigationSubtitle("\(inventories.count) lots, \(inventories.reduce(0, { $0+$1.quantity })) items")
         .toolbar {
             
-            if let action = recentActions.first, case .move(let location) = action {
-                Button("􀈫 􁉂 \(location.description)") {
-                    self.move(inventories, to: location)
-                }
-            }
-            Menu {
-                if recentActions.isEmpty {
-                    Text("no recent actions")
-                } else {
-                    ForEach(recentActions, id: \.description) { action in
-                        Button(action.description) {
-                            self.run(action, on: inventories)
-                        }
-                    }
-                }
+            Button {
+                actionPopoverPresentedOnDefaultMoveButton = true
             } label: {
                 Text("􀈫").padding(.horizontal)
-            } primaryAction: {
-                actionPopoverPresented.toggle()
             }
-            .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
+            .popover(isPresented: $actionPopoverPresentedOnDefaultMoveButton, arrowEdge: .bottom) {
                 InventoryActionSheet(
                     items: inventories,
+                    defaultLocation: nil,
                     recentMoveLocations: $recentMoveLocations,
                     recentActions: $recentActions
                 )
             }
-        }
-        .task { await inventoryStore.softRefreshInventories() }
-    }
-    
-    
-    func run(_ action: InventoryAction, on items: [InventoryItem]) {
-        
-        switch action {
-        case .move(let location):
-            move(items, to: location)
-        }
-    }
-    
-    
-    func move(_ items: [InventoryItem], to loc: Location) {
-        
-        for item in items {
-            Task {
-                await inventoryStore.updateInventory(
-                    inventoryId: item.id,
-                    addQuantity: 0,
-                    unitPrice: nil,
-                    remarks: loc.description
-                )
+            
+            if let action = recentActions.first, case .move(let location) = action {
+                
+                Button("􀈫 􁉂 \(location.description)") {
+                    actionPopoverPresentedOnQuickMoveButton = true
+                }
+                .popover(isPresented: $actionPopoverPresentedOnQuickMoveButton, arrowEdge: .bottom) {
+                    InventoryActionSheet(
+                        items: inventories,
+                        defaultLocation: location,
+                        recentMoveLocations: $recentMoveLocations,
+                        recentActions: $recentActions
+                    )
+                }
             }
         }
+        .task { await inventoryStore.softRefreshInventories() }
     }
     
     

@@ -11,6 +11,7 @@ struct InventoryActionSheet: View {
     
     
     let items: [InventoryItem]
+    let defaultLocation: Location?
     
     
     @State var editLocation: String = ""
@@ -20,16 +21,27 @@ struct InventoryActionSheet: View {
     
     
     var body: some View {
-
-        VStack(alignment: .leading, spacing: 12) {
+        
+        VStack(alignment: .leading, spacing: 18) {
             
-            Text("Move \(items.count) items to")
+            Text("Move \(items.count) items").font(.title2)
+            
+            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
+                
+                ForEach(items.limit(11)) { item in
+                    view(for: item)
+                }
+                
+                if items.count > 11 {
+                    Text("\(items.count-11) more")
+                }
+            }
             
             TextField("New location", text: $editLocation)
             
             if !recentMoveLocations.isEmpty {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("recent:")
+                    Text("recent locations:")
                     HStack {
                         ForEach(recentMoveLocations, id: \.description) { loc in
                             Button(loc.description) {
@@ -40,9 +52,48 @@ struct InventoryActionSheet: View {
                 }
             }
             
+            let newLocation = validatedLocation.valueToSubmit
+            
+            let itemsInNewLocation = inventoryStore.allInventories.filter { newLocation != nil && Location(from: $0.remarks) == newLocation }
+            
+            let conflictingItems: [InventoryItem] = items.flatMap { sourceItem in
+                
+                itemsInNewLocation
+                    .filter({ $0.ref == sourceItem.ref && $0.condition != sourceItem.condition })
+            }
+            
+            VStack(alignment: .leading) {
+                
+                if let loc = newLocation {
+                    
+                    Text("\(itemsInNewLocation.count) items in location \(loc)")
+                
+                    LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
+                        
+                        ForEach(itemsInNewLocation.limit(11)) { item in
+                            ZStack(alignment: .topLeading) {
+                                view(for: item)
+                                
+                                if conflictingItems.contains(item) {
+                                    
+                                    Text("􀇿")
+                                        .foregroundStyle(.orange)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                }
+                            }
+                        }
+                        
+                        if itemsInNewLocation.count > 11 {
+                            Text("\(itemsInNewLocation.count-11) more")
+                        }
+                    }
+                }
+            }
+            
             HStack {
                 
-                Button("Move") {
+                Button("Confirm move") {
                     if let loc = validatedLocation.valueToSubmit {
                         self.moveItems(to: loc)
                         self.addRecentLocation(loc)
@@ -52,7 +103,10 @@ struct InventoryActionSheet: View {
                 .disabled(validatedLocation.valueToSubmit == nil)
                 
                 if validatedLocation.hasWarning {
-                    Text("invalid").foregroundStyle(.red)
+                    Text("invalid location").foregroundStyle(.secondary)
+                }
+                if !conflictingItems.isEmpty {
+                    Text("􀇿 conflicts detected").foregroundStyle(.orange)
                 }
                 
                 if isUpdatingItems {
@@ -61,6 +115,35 @@ struct InventoryActionSheet: View {
             }
         }
         .padding()
+        .padding(.vertical)
+        .onAppear {
+            editLocation = defaultLocation?.description ?? ""
+        }
+    }
+    
+    
+    @ViewBuilder
+    func view(for item: InventoryItem) -> some View {
+        
+        ZStack(alignment: .bottomTrailing) {
+            CatalogImage(inventoryItem: item)
+                .border(color(for: item.condition), width: 2)
+            Text("x \(item.quantity)")
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
+                .clipShape(Capsule())
+                .padding(4)
+        }
+    }
+    
+    
+    func color(for condition: String) -> Color {
+        switch condition {
+        case "U": return .red
+        case "N": return .blue
+        default: return .clear
+        }
     }
     
     
@@ -123,6 +206,7 @@ struct InventoryActionSheet: View {
 #Preview {
     InventoryActionSheet(
         items: [],
+        defaultLocation: nil,
         recentMoveLocations: .constant([]),
         recentActions: .constant([])
     )
