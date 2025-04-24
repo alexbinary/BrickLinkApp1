@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct InventoryActionSheet: View {
+struct InventoryMoveActionSheet: View {
 
     
     @Environment(\.inventoryStore)
@@ -32,7 +32,7 @@ struct InventoryActionSheet: View {
             HStack {
                 Text("Move \(items.count) items").font(.title2)
                 Spacer()
-                Text("􀈫􁉂")
+                Text("􀈫􁉂􀈫")
             }
             
             LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
@@ -104,7 +104,7 @@ struct InventoryActionSheet: View {
                 
                 let suggestedLocations = items
                     .flatMap { inventoryStore.suggestedTargetLocations(forMoving: $0) }
-                    .unique.sorted()
+                    .unique.sorted().limit(5)
                 
                 if !suggestedLocations.isEmpty {
                     HStack {
@@ -248,7 +248,7 @@ struct InventoryActionSheet: View {
 
 
 #Preview {
-    InventoryActionSheet(
+    InventoryMoveActionSheet(
         items: [],
         defaultLocation: nil,
         recentMoveLocations: .constant([])

@@ -13,7 +13,8 @@ struct InventoryListView: View {
     @State var searchText = ""
     @State var searchTokens: [SearchToken] = []
     
-    @State var actionPopoverPresented: Bool = false
+    @State var actionMovePopoverPresented: Bool = false
+    @State var actionSwapPopoverPresented: Bool = false
     @State var recentMoveLocations: [Location] = []
     
  
@@ -80,12 +81,25 @@ struct InventoryListView: View {
         .toolbar {
             
             Button {
-                actionPopoverPresented = true
+                actionSwapPopoverPresented = true
             } label: {
-                Text("􀈫􁉂").padding(.horizontal)
+                Text("􁉾").padding(.horizontal)
             }
-            .popover(isPresented: $actionPopoverPresented, arrowEdge: .bottom) {
-                InventoryActionSheet(
+            .popover(isPresented: $actionSwapPopoverPresented, arrowEdge: .bottom) {
+                InventorySwapActionSheet(
+                    items: inventories,
+                    defaultLocation: nil
+                )
+            }
+            .disabled(inventories.map { $0.remarks }.unique.count != 1)
+            
+            Button {
+                actionMovePopoverPresented = true
+            } label: {
+                Text("􁉂").padding(.horizontal)
+            }
+            .popover(isPresented: $actionMovePopoverPresented, arrowEdge: .bottom) {
+                InventoryMoveActionSheet(
                     items: inventories,
                     defaultLocation: nil,
                     recentMoveLocations: $recentMoveLocations
