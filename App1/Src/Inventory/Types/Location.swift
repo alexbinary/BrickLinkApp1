@@ -3,7 +3,7 @@ import Foundation
 
 
 
-struct Location {
+struct Location: CustomStringConvertible {
     
     
     let meuble: Meuble
