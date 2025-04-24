@@ -84,7 +84,13 @@ extension InventoryItem {
             return remarks == location.description
             
         case .locationContains(let str):
-            return remarks.contains(str)
+            return rawSearchableText_remarks.lowercased().contains(str.lowercased())
+        
+        case .refIs(let ref):
+            return self.ref == ref
+            
+        case .refContains(let str):
+            return rawSearchableText_ref.lowercased().contains(str.lowercased())
         }
     }
     

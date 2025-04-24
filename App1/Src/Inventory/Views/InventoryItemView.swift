@@ -51,7 +51,7 @@ struct InventoryItemView: View {
 
                     HStack {
                         
-                        Button("􀭥") { listSearchText = item.ref }
+                        Button("􀭥") { listSearchTokens.append(.refIs(item.ref)) }
                         
                         Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
                             Text(item.ref)

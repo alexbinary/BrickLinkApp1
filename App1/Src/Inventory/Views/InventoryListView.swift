@@ -30,13 +30,26 @@ struct InventoryListView: View {
             
             var suggestions: [SearchSuggestion] = []
             
-            let matchingLocations = inventories.compactMap { Location(from: $0.remarks) }.filter { $0.description.contains(searchText) }
+            // ref
             
+            let matchingRefs = inventories.map(\.ref).filter { $0.lowercased().contains(searchText.lowercased()) }
+            
+            for ref in matchingRefs.unique.sorted().limit(10) {
+                suggestions.append(.token(.refIs(ref)))
+            }
+            if !matchingRefs.isEmpty {
+                suggestions.append(.token(.refContains(searchText)))
+            }
+            
+            // location
+            
+            let matchingLocations = inventories.compactMap { Location(from: $0.remarks) }.filter { $0.description.lowercased().contains(searchText.lowercased()) }
+            
+            for location in matchingLocations.unique.sorted().limit(10) {
+                suggestions.append(.token(.locationIs(location)))
+            }
             if !matchingLocations.isEmpty {
                 suggestions.append(.token(.locationContains(searchText)))
-            }
-            for location in matchingLocations.unique.sorted() {
-                suggestions.append(.token(.locationIs(location)))
             }
             
             return suggestions
@@ -125,15 +138,31 @@ struct InventoryListView: View {
         case .locationIs(let location):
             
             HStack(spacing: 0) {
-                Text("􀈣 Location is ").foregroundColor(.secondary)
+                Text("􁼡 Location ").foregroundColor(.secondary)
                 Text(location.description)
             }
             
         case .locationContains(let str):
             
             HStack(spacing: 0) {
-                Text("􀈣 Location contains ").foregroundColor(.secondary)
+                Text("􁼡 Locations that contain \"").foregroundColor(.secondary)
                 Text(str)
+                Text("\"").foregroundColor(.secondary)
+            }
+            
+        case .refIs(let ref):
+            
+            HStack(spacing: 0) {
+                Text("􂘬 Ref ").foregroundColor(.secondary)
+                Text(ref)
+            }
+            
+        case .refContains(let str):
+            
+            HStack(spacing: 0) {
+                Text("􂘬 Refs that contain \"").foregroundColor(.secondary)
+                Text(str)
+                Text("\"").foregroundColor(.secondary)
             }
         }
     }
@@ -145,10 +174,16 @@ struct InventoryListView: View {
         switch token {
             
         case .locationIs(let location):
-            Text("Location is: \(location)")
+            Text("􁼡 \(location)")
             
         case .locationContains(let str):
-            Text("Location contains: \(str)")
+            Text("􁼡 \"\(str)\"")
+            
+        case .refIs(let ref):
+            Text("􂘬 \(ref)")
+            
+        case .refContains(let str):
+            Text("􂘬 \"\(str)\"")
         }
     }
 }
