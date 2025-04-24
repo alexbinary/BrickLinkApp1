@@ -79,6 +79,12 @@ struct InventoryListView: View {
         .navigationTitle("Inventory")
         .navigationSubtitle("\(inventories.count) lots, \(inventories.reduce(0, { $0+$1.quantity })) items")
         .toolbar {
+            
+            if let action = recentActions.first, case .move(let location) = action {
+                Button("􀈫 􁉂 \(location.description)") {
+                    self.move(inventories, to: location)
+                }
+            }
             Menu {
                 if recentActions.isEmpty {
                     Text("no recent actions")
