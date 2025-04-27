@@ -11,7 +11,8 @@ struct Experimental1: App {
 
         WindowGroup {
 //            SpeechRecognitionRootView()
-            SmartDrawersBluetoothRootView()
+//            SmartDrawersBluetoothKeypadView()
+            SmartDrawersBluetoothControlPanelView()
         }
     }
 }

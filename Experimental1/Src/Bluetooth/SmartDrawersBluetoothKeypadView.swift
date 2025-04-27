@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct SmartDrawersBluetoothRootView: View {
+struct SmartDrawersBluetoothKeypadView: View {
     
     
     var controller = SmartDrawersBluetoothController()
@@ -128,5 +128,5 @@ struct KeyPad: View {
 
 
 #Preview {
-    SmartDrawersBluetoothRootView()
+    SmartDrawersBluetoothKeypadView()
 }
