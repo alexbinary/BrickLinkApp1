@@ -30,7 +30,7 @@ struct UploadView: View {
                     
                         if let activeItem = activeItem {
                             
-                            UploadItemView(uploadItem: activeItem)
+                            UploadActiveItemView(uploadItem: activeItem)
                                 .padding([.leading, .trailing])
                         }
                         

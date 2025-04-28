@@ -16,7 +16,7 @@ struct UploadRootView: View {
     var body: some View {
      
         TabView(
-//            selection: .constant("upload")
+            selection: .constant("upload")
         ) {
             
             UploadAddView()

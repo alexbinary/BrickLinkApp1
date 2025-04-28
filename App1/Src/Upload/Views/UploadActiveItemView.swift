@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct UploadItemView: View {
+struct UploadActiveItemView: View {
     
     
     @Environment(\.catalog)
@@ -366,9 +366,98 @@ struct UploadItemView: View {
                         
                         HStack(spacing: 12) {
                             
+                            let submitType = uploadItem.type
+                            let submitRef = uploadItem.ref.normalizedOptional
+                            let submitName = uploadItem.name
+                            let submitColorId = uploadItem.colorId
+                            let submitCondition = uploadItem.condition.normalizedOptional
+                            let submitComment = uploadItem.comment
                             let submitQty = uploadItem.qty.normalizedOptional
                             let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
                             let submitRemarks = editRemarks.normalizedOptional
+                            
+                            let buttonDisabled = submitting
+                            || submitRef == nil
+                            || submitCondition == nil
+                            || submitQty == nil
+                            || submitUnitPrice == nil
+                            || submitRemarks == nil
+                            
+                            Button {
+                                
+                                Task {
+                                    
+                                    submitting = true
+                                    
+                                    let qtyBefore = inventoryItem?.quantity
+                                    let priceBefore = inventoryItem?.unitPrice
+                                    let remarksBefore = inventoryItem?.remarks
+                                    let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
+
+                                    let updatedOrCreatedInventoryItem = await {
+                                        
+                                        if let inventoryItem = inventoryItem {
+                                            
+                                            await inventoryStore.updateInventory(
+                                                
+                                                inventoryId: inventoryItem.id,
+                                                addQuantity: submitQty!,
+                                                unitPrice: submitUnitPrice!,
+                                                remarks: submitRemarks!
+                                            )
+                                            
+                                            return inventoryItem
+                                            
+                                        } else {
+                                            
+                                            let inventoryItem = await inventoryStore.createInventory(
+                                                
+                                                ref: submitRef!,
+                                                type: submitType,
+                                                colorId: submitColorId,
+                                                quantity: submitQty!,
+                                                unitPrice: submitUnitPrice!,
+                                                condition: submitCondition!,
+                                                description: submitComment,
+                                                remarks: submitRemarks!
+                                            )!
+                                            
+                                            return inventoryItem
+                                        }
+                                    }()
+
+                                    uploadStore.add(UploadedItem(
+                                        type: submitType,
+                                        ref: submitRef!,
+                                        name: submitName,
+                                        colorId: submitColorId,
+                                        qtyBefore: qtyBefore,
+                                        qtyAfter:  (qtyBefore ?? 0) + submitQty!,
+                                        condition: submitCondition!,
+                                        comment: submitComment,
+                                        remarksBefore: remarksBefore,
+                                        remarksAfter: submitRemarks!,
+                                        unitPriceBefore: priceBefore,
+                                        unitPriceAfter: submitUnitPrice!,
+                                        inventoryId: updatedOrCreatedInventoryItem.id,
+                                        uploadDate: .now,
+                                        inventoryStatus: inventoryStatus
+                                    ))
+                                    
+                                    uploadStore.delete(uploadItem)
+                                    
+                                    submitting = false
+                                }
+                                
+                            } label: {
+                                if submitting {
+                                    Text("􀈧 Uploading...").padding(.horizontal)
+                                } else {
+                                    Text("􀈧 Upload").padding(.horizontal)
+                                }
+                            }
+                            .disabled(buttonDisabled)
+                            .fixedSize()
                             
                             Button {
                                 uploadStore.delete(uploadItem)
@@ -557,4 +646,38 @@ struct UploadItemView: View {
         default: return .clear
         }
     }
+}
+
+
+
+extension Int? {
+    
+    var normalizedOptional: Int? {
+        return (self ?? 0) > 0 ? self : nil
+    }
+}
+
+
+
+extension Float? {
+    
+    var normalizedOptional: Float? {
+        return (self ?? 0) > 0 ? self : nil
+    }
+}
+
+
+
+extension String {
+        
+    var normalizedOptional: String? {
+        
+        let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed == "" ? nil : trimmed
+    }
+}
+
+extension String? {
+    
+    var normalizedOptional: String? { (self ?? "").normalizedOptional }
 }
