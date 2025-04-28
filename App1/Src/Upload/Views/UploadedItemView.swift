@@ -9,6 +9,9 @@ struct UploadedItemView: View {
     @Environment(\.uploadStore)
     var uploadStore: UploadStoreProtocol!
     
+    @Environment(\.catalog)
+    var catalog: CatalogProtocol!
+    
     
     let uploadedItem: UploadedItem
     
@@ -19,34 +22,46 @@ struct UploadedItemView: View {
     var body: some View {
         
         HStack(spacing: 48) {
-                
-            Grid(verticalSpacing: 0) {
-                
-                GridRow(alignment: .top) {
-                    
+            
+            HStack(alignment: .top) {
+
+                VStack(spacing: 0) {
+
                     CatalogImage(uploadedItem: uploadedItem)
+                        .border(conditionColor, width: 2)
                     
-                    VStack(alignment: .leading) {
-                        Text(uploadedItem.ref).font(.caption).foregroundStyle(.secondary)
-                        
-                        Group {
-                            if let name = uploadedItem.name {
-                                Text(name)
-                            } else {
-                                Text("name unknown").foregroundStyle(.secondary).italic()
-                            }
-                        }.lineLimit(nil).font(.title3).frame(width: 300, alignment: .leading)
-                        
-                        if !(uploadedItem.comment ?? "").isEmpty {
-                            Text((uploadedItem.comment ?? "").htmlUnescape())
-                        }
-                    }
+                    Text(uploadedItem.condition == "U" ? "USED" : "NEW")
+                        .font(.title3)
+                        .foregroundStyle(conditionColor)
+                        .fontWeight(.bold)
                 }
                 
-                GridRow {
-                
-                    Text(uploadedItem.condition == "U" ? "USED" : "NEW").font(.title3).gridColumnAlignment(.center)
-                    LegoColorView(uploadedItem: uploadedItem).gridColumnAlignment(.leading)
+                VStack(alignment: .leading, spacing: 4) {
+
+                    HStack {
+                        
+                        Link(destination: catalog.url(forItemOfType: uploadedItem.type, ref: uploadedItem.ref, colorId: uploadedItem.colorId)!) {
+                            Text(uploadedItem.ref)
+                        }
+                        
+                        LegoColorView(uploadedItem: uploadedItem, style: .nameOnly)
+                    }
+                    .font(.caption)
+                    
+                    Group {
+                        if let name = uploadedItem.name {
+                            Text(name)
+                        } else {
+                            Text("name unknown").foregroundStyle(.secondary).italic()
+                        }
+                    }
+                        .lineLimit(nil)
+                        .font(.title3)
+                        .frame(width: 300, alignment: .leading)
+                    
+                    if !(uploadedItem.comment ?? "").isEmpty {
+                        Text((uploadedItem.comment ?? "").htmlUnescape())
+                    }
                 }
             }
                 
@@ -143,5 +158,14 @@ struct UploadedItemView: View {
             stroke: .tertiarySystemFill
         )
         .onHover { self.hover = $0 }
+    }
+    
+    
+    var conditionColor: Color {
+        switch uploadedItem.condition {
+        case "U": return .red
+        case "N": return .blue
+        default: return .clear
+        }
     }
 }
