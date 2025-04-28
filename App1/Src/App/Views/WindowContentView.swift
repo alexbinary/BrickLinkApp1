@@ -28,7 +28,7 @@ struct WindowContentView: View {
             
         case .upload:
             
-            UploadView()
+            UploadRootView()
             
         case .inventory:
             

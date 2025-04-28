@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct UploadItemsView: View {
+struct UploadItemsListView: View {
     
     
     @Environment(\.uploadStore)
@@ -34,6 +34,6 @@ struct UploadItemsView: View {
     
     let env = createEnv()
     
-    UploadItemsView()
+    UploadItemsListView()
         .inject(env)
 }

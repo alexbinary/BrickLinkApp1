@@ -8,84 +8,33 @@ struct UploadAddView: View {
     
     @Environment(\.uploadStore)
     var uploadStore: UploadStoreProtocol!
+    
+    @Environment(\.inventoryStore)
+    var inventoryStore: InventoryStoreProtocol!
 
-    
-    @State var type: ItemType = .part
-    @State var ref: String = ""
-    @State var name: String? = nil
-    @State var colorId: LegoColor.ID = ""
-    @State var qty: Int = 1
-    @State var condition: String = "U"
-    @State var comment: String = ""
-    @State var unitPrice: Float = 0
-    @State var importText: String = ""
-    
-    
+
     var body: some View {
+
+        VStack {
             
-        VStack(alignment: .leading) {
+            UploadAddFormView()
+                .padding()
             
-            HStack(alignment: .top) {
+            ScrollView {
                 
-                VStack(alignment: .leading, spacing: 12) {
-                    
-                    HeaderTitleView(label: "􁚛 Manual add")
-                    
-                    HStack(alignment: .top) {
-                        
-                        Form {
-                            
-                            ItemTypePicker("Type", selection: $type)
-                                
-                            TextField("Ref", text: $ref)
-                            
-                            DynamicCatalogName(forItemType: type, ref: ref, name: $name)
-                            
-                            LegoColorPicker("Color", selection: $colorId)
-                            
-                            TextField("Qty", value: $qty, format: .number)
-                            
-                            TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                            
-                            ItemConditionPicker("Condition", selection: $condition)
-                            
-                            TextField("Comment", text: $comment)
-                            
-                            Button("Add") {
-                                uploadStore.add(UploadItem(
-                                    type: type,
-                                    ref: ref,
-                                    name: name,
-                                    colorId: colorId,
-                                    qty: qty,
-                                    condition: condition,
-                                    comment: comment,
-                                    unitPrice: unitPrice
-                                ))
-                            }
+                let items = uploadStore.uploadItemsForList
+                
+                LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
+                    Section {
+                        ForEach(items) {
+                            UploadAddItemView(uploadItem: $0)
+                                .padding([.leading, .trailing])
                         }
-                            
-                        CatalogImage(itemType: type, ref: ref, colorId: colorId)
+                        Color.clear.frame(width: 0, height: 24)
+                    } header: {
+                        SectionHeader("􀋲 Items to upload", secondaryText: "\(items.count) items")
                     }
                 }
-                .padding()
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    
-                    HeaderTitleView(label: "􀈄 XML import")
-                    
-                    VStack(alignment: .leading) {
-                        
-                        TextField(text: $importText, axis: .vertical, label: { Text("")})
-                            .lineLimit(10, reservesSpace: true)
-                        
-                        Button("Import") {
-                            uploadStore.importUploadList(fromXml: self.importText)
-                            self.importText = ""
-                        }
-                    }
-                }
-                .padding()
             }
         }
     }

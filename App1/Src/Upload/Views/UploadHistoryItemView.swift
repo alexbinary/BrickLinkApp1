@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct UploadedItemView: View {
+struct UploadHistoryItemView: View {
     
     
     @Environment(\.uploadStore)
