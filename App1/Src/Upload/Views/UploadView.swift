@@ -18,13 +18,12 @@ struct UploadView: View {
         TabView {
             
             VStack {
-                if addViewVisible { UploadAddView().padding() }
+                UploadAddView().padding()
                 ScrollView { UploadItemsView() }
             }
-            .toolbar {
-                Button { addViewVisible.toggle() }
-                label: { Text("􀅼").padding(.horizontal) }
-            }
+            .tabItem { Text("􀅼 Add") }.tag("add")
+            
+            ScrollView { UploadItemsView() }
             .tabItem { Text("􀋲 Upload") }.tag("upload")
             
             ScrollView { UploadedItemsView() }
