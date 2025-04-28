@@ -60,7 +60,7 @@ struct CatalogImage: View {
                             image
                         case .failure(let error):
                             let _ = print(error)
-                            Text("Error")
+                            Text("Failed to load image")
                         case .empty:
                             ProgressView().controlSize(.small)
                         @unknown default:
@@ -82,6 +82,10 @@ struct CatalogImage: View {
                 if let chirality = data.chiralityAnnotation {
                     annotationView(text: chirality.rawValue, alignment: data.chiralityAnnotationPosition)
                 }
+                if data.variantAnnotation {
+                    annotationView(text: "􀇿", alignment: data.variantAnnotationPosition, backgroundColor: .clear)
+                        .foregroundStyle(.orange)
+                }
             }
         }
         .frame(width: frameSize.width, height: frameSize.height, alignment: .center)
@@ -89,11 +93,11 @@ struct CatalogImage: View {
 
 
     @ViewBuilder
-    func annotationView(text: String, alignment: Alignment) -> some View {
+    func annotationView(text: String, alignment: Alignment, backgroundColor: Color? = nil) -> some View {
         Text(text)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
+            .background(backgroundColor ?? Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
             .clipShape(Capsule())
             .padding(2)
             .frame(width: imageSize.width, height: imageSize.height, alignment: alignment)

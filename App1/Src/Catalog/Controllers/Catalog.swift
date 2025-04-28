@@ -113,6 +113,9 @@ class Catalog: CatalogProtocol {
 
     func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData? {
      
-        return partData.first(where: { $0.ref == ref })
+        return
+            partData.first(where: { $0.matches(ref: ref, colorId: colorId) })
+            ??
+            partData.first(where: { $0.matches(ref: ref) })
     }
 }

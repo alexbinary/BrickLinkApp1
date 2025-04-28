@@ -22,7 +22,7 @@ struct InventoryMoveActionSheet: View {
     @Binding var recentMoveLocations: [Location]
     
     
-    let itemsLimit = 23
+    let itemsLimit = 50
     
     
     var body: some View {
