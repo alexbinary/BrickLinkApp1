@@ -27,6 +27,30 @@ struct SmartDrawersBluetoothControlPanelView: View {
                 .disabled(!ready)
             
             Spacer()
+            
+            HStack {
+                Text("Repeat count: ").font(.title3)
+                if let count = controller.repeatCount {
+                    Text("\(count)").font(.title3)
+                }
+                Button { readRepeatCount() }
+                label: { Text("􀅈") }
+            }
+            HStack {
+                ForEach(1..<5) { count in
+                    Button { setRepeatCount(UInt8(count)) }
+                    label: { Text("\(count)").padding() }
+                        
+                }
+            }
+            .disabled(!ready)
+            
+            Spacer()
+        }
+        .onChange(of: ready, initial: true) {
+            if ready {
+                readRepeatCount()
+            }
         }
     }
     
@@ -34,6 +58,18 @@ struct SmartDrawersBluetoothControlPanelView: View {
     func openDrawer() {
         
         controller.openDrawer(1)
+    }
+    
+    
+    func setRepeatCount(_ count: UInt8) {
+        
+        controller.setRepeatCount(count)
+    }
+    
+    
+    func readRepeatCount() {
+     
+        controller.readRepeatCount()
     }
 }
 
