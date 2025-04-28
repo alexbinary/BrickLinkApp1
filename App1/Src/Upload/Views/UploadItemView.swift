@@ -55,25 +55,44 @@ struct UploadItemView: View {
                 GridRow(alignment: .top) {
                     
                     CatalogImage(uploadItem: uploadItem)
+                        .border(conditionColor, width: 2)
                     
                     VStack(alignment: .leading, spacing: 0) {
                         
-                        ZStack(alignment: .leading) {
+                        HStack {
                             
-                            Text(uploadItem.ref)
-                                .onTapGesture { editModeRef = true }
-                                .captionStyle()
-                                .opacity(editModeRef ? 0 : 1)
-                            
-                            TextField("Ref", text: $editRef)
-                                .frame(maxWidth: 100)
-                                .onSubmit({
-                                    if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-                                        editRef = uploadItem.ref
-                                    }
-                                    editModeRef = false
+                            ZStack(alignment: .leading) {
+                                
+                                Text(uploadItem.ref)
+                                    .onTapGesture { editModeRef = true }
+                                    .captionStyle()
+                                    .opacity(editModeRef ? 0 : 1)
+                                
+                                TextField("Ref", text: $editRef)
+                                    .frame(maxWidth: 100)
+                                    .onSubmit({
+                                        if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                            editRef = uploadItem.ref
+                                        }
+                                        editModeRef = false
+                                    })
+                                    .opacity(editModeRef ? 1 : 0)
+                            }
+                        
+                            ZStack(alignment: .leading) {
+                                
+                                Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
+                                    .onTapGesture { editModeColor = true }
+                                    .opacity(editModeColor ? 0 : 1)
+                                
+                                LegoColorPicker("Color", selection: $editColorId)
+                                .labelsHidden()
+                                .frame(maxWidth: 150)
+                                .onChange(of: editColorId, {
+                                    editModeColor = false
                                 })
-                                .opacity(editModeRef ? 1 : 0)
+                                .opacity(editModeColor ? 1 : 0)
+                            }
                         }
                         
                         Group {
@@ -127,7 +146,10 @@ struct UploadItemView: View {
                     
                     ZStack {
                         
-                        Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-").font(.title3)
+                        Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-")
+                            .font(.title3)
+                            .foregroundStyle(conditionColor)
+                            .fontWeight(.bold)
                             .onTapGesture { editModeCondition = true }
                             .opacity(editModeCondition ? 0 : 1)
                         
@@ -145,26 +167,6 @@ struct UploadItemView: View {
                         .opacity(editModeCondition ? 1 : 0)
                         
                     }.gridColumnAlignment(.center)
-                    
-                    HStack {
-                        LegoColorView(uploadItem: uploadItem, style: .colorSquareOnly)
-                        
-                        ZStack(alignment: .leading) {
-                            
-                            Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
-                                .onTapGesture { editModeColor = true }
-                                .opacity(editModeColor ? 0 : 1)
-                            
-                            LegoColorPicker("Color", selection: $editColorId)
-                            .labelsHidden()
-                            .frame(maxWidth: 150)
-                            .onChange(of: editColorId, {
-                                editModeColor = false
-                            })
-                            .opacity(editModeColor ? 1 : 0)
-                        }
-                    }
-                    .gridColumnAlignment(.leading)
                 }
             }
             
@@ -633,6 +635,15 @@ struct UploadItemView: View {
             updateItem(name: catalogEntry.name)
         } else {
             self.catalogResult = .notFound
+        }
+    }
+    
+    
+    var conditionColor: Color {
+        switch uploadItem.condition {
+        case "U": return .red
+        case "N": return .blue
+        default: return .clear
         }
     }
 }
