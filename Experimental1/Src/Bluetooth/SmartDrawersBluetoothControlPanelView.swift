@@ -17,8 +17,7 @@ struct SmartDrawersBluetoothControlPanelView: View {
             Text(controller.state == .connecting ? "Connecting..." : "Ready")
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(height: 48)
-            Divider()
+                .background(ready ? .green : .orange)
             
             Spacer()
             
@@ -37,7 +36,7 @@ struct SmartDrawersBluetoothControlPanelView: View {
                 label: { Text("􀅈") }
             }
             HStack {
-                ForEach(1..<5) { count in
+                ForEach(1..<6) { count in
                     Button { setRepeatCount(UInt8(count)) }
                     label: { Text("\(count)").padding() }
                         
