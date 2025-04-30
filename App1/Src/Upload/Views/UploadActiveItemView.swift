@@ -16,16 +16,10 @@ struct UploadActiveItemView: View {
     var inventoryStore: InventoryStoreProtocol!
     
     
-    let uploadItem: UploadItem
-    
-    init(uploadItem: UploadItem) {
-        
-        self.uploadItem = uploadItem
-        self._editColorId = State(initialValue: uploadItem.colorId)
-    }
+    let uploadItemId: UploadItem.ID
+    var uploadItem: UploadItem { uploadStore.uploadItemsForList.first(where: { $0.id == uploadItemId })! }
     
     
-    @State var hover = false
     @State var catalogResult: Result<CatalogEntry>? = nil
     
     @State var editModeRef = false
@@ -36,7 +30,7 @@ struct UploadActiveItemView: View {
     @State var editModePrice = false
     
     @State var editRef: String = ""
-    @State var editColorId: LegoColor.ID
+    @State var editColorId: LegoColor.ID = ""
     @State var editCondition: String?
     @State var editComment: String = ""
     @State var editQty: Int?
@@ -48,129 +42,139 @@ struct UploadActiveItemView: View {
     
     var body: some View {
         
-        VStack {
+        HStack(alignment: .top) {
             
-            HStack(alignment: .top) {
+            VStack(alignment: .leading) {
                 
-                Grid(verticalSpacing: 0) {
+                HStack {
+                    Text("Upload item").font(.title2)
+                    Spacer()
+                    Text("􁉂􀈫")
+                }
+                
+                HStack(alignment: .top) {
                     
-                    GridRow(alignment: .top) {
+                    Grid(verticalSpacing: 0) {
                         
-                        CatalogImage(uploadItem: uploadItem)
-                            .border(conditionColor, width: 2)
-                        
-                        VStack(alignment: .leading, spacing: 0) {
+                        GridRow(alignment: .top) {
                             
-                            HStack {
-                                
-                                ZStack(alignment: .leading) {
-                                    
-                                    Text(uploadItem.ref)
-                                        .onTapGesture { editModeRef = true }
-                                        .captionStyle()
-                                        .opacity(editModeRef ? 0 : 1)
-                                    
-                                    TextField("Ref", text: $editRef)
-                                        .frame(maxWidth: 100)
-                                        .onSubmit({
-                                            if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-                                                editRef = uploadItem.ref
-                                            }
-                                            editModeRef = false
-                                        })
-                                        .opacity(editModeRef ? 1 : 0)
-                                }
-                                
-                                ZStack(alignment: .leading) {
-                                    
-                                    Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
-                                        .onTapGesture { editModeColor = true }
-                                        .opacity(editModeColor ? 0 : 1)
-                                    
-                                    LegoColorPicker("Color", selection: $editColorId)
-                                        .labelsHidden()
-                                        .frame(maxWidth: 150)
-                                        .onChange(of: editColorId, {
-                                            editModeColor = false
-                                        })
-                                        .opacity(editModeColor ? 1 : 0)
-                                }
-                            }
+                            CatalogImage(uploadItem: uploadItem)
+                                .border(conditionColor, width: 2)
                             
-                            Group {
+                            VStack(alignment: .leading, spacing: 0) {
                                 
-                                if let catalogResult = catalogResult {
+                                HStack {
                                     
-                                    switch catalogResult {
+                                    ZStack(alignment: .leading) {
                                         
-                                    case .loading:
-                                        Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                        Text(uploadItem.ref)
+                                            .onTapGesture { editModeRef = true }
+                                            .captionStyle()
+                                            .opacity(editModeRef ? 0 : 1)
                                         
-                                    case .found(let catalogEntry):
-                                        Text(catalogEntry.name).lineLimit(nil)
-                                        
-                                    case .notFound:
-                                        Text("no catalog entry").foregroundStyle(.secondary)
+                                        TextField("Ref", text: $editRef)
+                                            .frame(maxWidth: 100)
+                                            .onSubmit({
+                                                if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                                    editRef = uploadItem.ref
+                                                }
+                                                editModeRef = false
+                                            })
+                                            .opacity(editModeRef ? 1 : 0)
                                     }
                                     
-                                } else if let name = uploadItem.name {
-                                    
-                                    Text(name).lineLimit(nil)
-                                    
-                                } else {
-                                    
-                                    Text("name unknown").foregroundStyle(.secondary).italic()
+                                    ZStack(alignment: .leading) {
+                                        
+                                        Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
+                                            .onTapGesture { editModeColor = true }
+                                            .opacity(editModeColor ? 0 : 1)
+                                        
+                                        LegoColorPicker("Color", selection: $editColorId)
+                                            .labelsHidden()
+                                            .frame(maxWidth: 150)
+                                            .onChange(of: editColorId, {
+                                                editModeColor = false
+                                            })
+                                            .opacity(editModeColor ? 1 : 0)
+                                    }
                                 }
-                            }
-                            .font(.title3).frame(width: 300, alignment: .leading)
-                            
-                            ZStack(alignment: .leading) {
                                 
                                 Group {
-                                    if !(uploadItem.comment ?? "").isEmpty {
-                                        Text((uploadItem.comment ?? "").htmlUnescape())
+                                    
+                                    if let catalogResult = catalogResult {
+                                        
+                                        switch catalogResult {
+                                            
+                                        case .loading:
+                                            Text("Loading name from catalog...").foregroundStyle(.secondary)
+                                            
+                                        case .found(let catalogEntry):
+                                            Text(catalogEntry.name).lineLimit(nil)
+                                            
+                                        case .notFound:
+                                            Text("no catalog entry").foregroundStyle(.secondary)
+                                        }
+                                        
+                                    } else if let name = uploadItem.name {
+                                        
+                                        Text(name).lineLimit(nil)
+                                        
                                     } else {
-                                        Text("no comment").italic().foregroundStyle(.secondary)
+                                        
+                                        Text("name unknown").foregroundStyle(.secondary).italic()
                                     }
                                 }
-                                .onTapGesture { editModeComment = true }
-                                .opacity(editModeComment ? 0 : 1)
+                                .font(.title3).frame(width: 300, alignment: .leading)
                                 
-                                TextField("Comment", text: $editComment)
-                                    .frame(maxWidth: 200)
-                                    .onSubmit { editModeComment = false }
-                                    .opacity(editModeComment ? 1 : 0)
+                                ZStack(alignment: .leading) {
+                                    
+                                    Group {
+                                        if !(uploadItem.comment ?? "").isEmpty {
+                                            Text((uploadItem.comment ?? "").htmlUnescape())
+                                        } else {
+                                            Text("no comment").italic().foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    .onTapGesture { editModeComment = true }
+                                    .opacity(editModeComment ? 0 : 1)
+                                    
+                                    TextField("Comment", text: $editComment)
+                                        .frame(maxWidth: 200)
+                                        .onSubmit { editModeComment = false }
+                                        .opacity(editModeComment ? 1 : 0)
+                                }
                             }
                         }
-                    }
-                    
-                    GridRow {
                         
-                        ZStack {
+                        GridRow {
                             
-                            Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-")
-                                .font(.title3)
-                                .foregroundStyle(conditionColor)
-                                .fontWeight(.bold)
-                                .onTapGesture { editModeCondition = true }
-                                .opacity(editModeCondition ? 0 : 1)
-                            
-                            Picker("Condition", selection: $editCondition) {
+                            ZStack {
                                 
-                                Text("").tag(nil as String?)
-                                Text("NEW").tag("N")
-                                Text("USED").tag("U")
-                            }
-                            .labelsHidden()
-                            .frame(maxWidth: 90)
-                            .onChange(of: editCondition) {
-                                editModeCondition = false
-                            }
-                            .opacity(editModeCondition ? 1 : 0)
-                            
-                        }.gridColumnAlignment(.center)
+                                Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-")
+                                    .font(.title3)
+                                    .foregroundStyle(conditionColor)
+                                    .fontWeight(.bold)
+                                    .onTapGesture { editModeCondition = true }
+                                    .opacity(editModeCondition ? 0 : 1)
+                                
+                                Picker("Condition", selection: $editCondition) {
+                                    
+                                    Text("").tag(nil as String?)
+                                    Text("NEW").tag("N")
+                                    Text("USED").tag("U")
+                                }
+                                .labelsHidden()
+                                .frame(maxWidth: 90)
+                                .onChange(of: editCondition) {
+                                    editModeCondition = false
+                                }
+                                .opacity(editModeCondition ? 1 : 0)
+                                
+                            }.gridColumnAlignment(.center)
+                        }
                     }
                 }
+                
                 
                 let errors: [String] = {
                     
@@ -334,7 +338,7 @@ struct UploadActiveItemView: View {
                         
                         GridRow {
                             
-                            Color.clear.frame(width: 0)
+                            Text("Suggested").foregroundStyle(.secondary)
                             
                             Group {
                                 if suggestedLocations.isEmpty {
@@ -494,107 +498,11 @@ struct UploadActiveItemView: View {
                     }
                 }
             }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .roundedContainer(
-                fill: hover ? .secondarySystemFill : .tertiarySystemFill,
-                stroke: .tertiarySystemFill
-            )
-            .onHover { self.hover = $0 }
+                .padding()
             
-            .onChange(of: editModeRef) { old, new in
-                if new == true {
-                    editRef = uploadItem.ref
-                }
-            }
-            .onChange(of: editModeColor) { old, new in
-                if new == true {
-                    editColorId = uploadItem.colorId
-                }
-            }
-            .onChange(of: editModeCondition) { old, new in
-                if new == true {
-                    editCondition = uploadItem.condition
-                }
-            }
-            .onChange(of: editModeComment) { old, new in
-                if new == true {
-                    editComment = uploadItem.comment ?? ""
-                }
-            }
-            .onChange(of: editModeQty) { old, new in
-                if new == true {
-                    editQty = uploadItem.qty
-                }
-            }
-            .onChange(of: editModePrice) { old, new in
-                if new == true {
-                    editUnitPrice = uploadItem.unitPrice
-                }
-            }
-            
-            .onChange(of: editModeRef) { old, new in
-                if new == false, editRef != uploadItem.ref {
-                    updateItem(ref: editRef)
-                }
-            }
-            .onChange(of: editModeColor) { old, new in
-                if new == false, editColorId != uploadItem.colorId {
-                    updateItem(colorId: editColorId)
-                }
-            }
-            .onChange(of: editModeCondition) { old, new in
-                if new == false, editCondition != uploadItem.condition {
-                    updateItem(condition: editCondition)
-                }
-            }
-            .onChange(of: editModeComment) { old, new in
-                if new == false, editComment.trimmingCharacters(in: .whitespacesAndNewlines) != (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines) {
-                    updateItem(comment: editComment)
-                }
-            }
-            .onChange(of: editModeQty) { old, new in
-                if new == false, editQty != uploadItem.qty {
-                    updateItem(qty: editQty)
-                }
-            }
-            .onChange(of: editModePrice) { old, new in
-                if new == false, editUnitPrice != uploadItem.unitPrice {
-                    updateItem(unitPrice: editUnitPrice)
-                }
-            }
-            
-            .onChange(of: uploadItem.ref, initial: false) {
-                uploadStore.update(UploadItem(
-                    
-                    id: uploadItem.id,
-                    type: uploadItem.type,
-                    ref: uploadItem.ref,
-                    name: nil,
-                    colorId: uploadItem.colorId,
-                    qty: uploadItem.qty,
-                    condition: uploadItem.condition,
-                    comment: uploadItem.comment,
-                    unitPrice: uploadItem.unitPrice
-                ))
-            }
-            .onChange(of: uploadItem.name, initial: true) { old, new in
-                if new == nil {
-                    Task { await pullCatalogEntry() }
-                }
-            }
-            .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
-                self.editRemarks = self.inventoryItem?.remarks ?? ""
-            }
+            Divider()
             
             VStack {
-                
-                let newLocation = validatedLocation.valueToSubmit
-                
-                let itemsInNewLocation = inventoryStore.allInventories.filter { newLocation != nil && Location(from: $0.remarks) == newLocation }
-                
-                let conflictingItems: [InventoryItem] = itemsInNewLocation
-                    .filter({ $0.ref == uploadItem.ref && $0.condition != uploadItem.condition })
                 
                 VStack(alignment: .leading, spacing: 4) {
 
@@ -603,78 +511,95 @@ struct UploadActiveItemView: View {
                     }
                 }
                 
-                let itemsLimit = 50
-
-                VStack(alignment: .leading) {
-                    
-                    if let loc = newLocation {
-                        
-                        let hasConflicts = !conflictingItems.isEmpty
-                        
-                        HStack {
-                            Text("\(itemsInNewLocation.count) items in location \(loc)")
-                            Spacer()
-                            if hasConflicts {
-                                Text("conflicts detected")
-                            }
-                            Text(hasConflicts ? "􀇿" : "􀆅")
-                        }
-                        .foregroundStyle(hasConflicts ? .orange : green)
-                    
-                        LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
-                            
-                            let itemsInNewLocation = itemsInNewLocation.sorted { item1, item2 in
-                                
-                                conflictingItems.contains(item1)
-                            }
-                            
-                            ForEach(itemsInNewLocation.limit(itemsLimit)) { item in
-                                ZStack(alignment: .topLeading) {
-                                    view(for: item)
-                                    
-                                    if conflictingItems.contains(item) {
-                                        
-                                        Text("􀇿")
-                                            .foregroundStyle(.orange)
-                                            .padding(.horizontal, 6)
-                                            .padding(.vertical, 2)
-                                    }
-                                }
-                            }
-                            
-                            if itemsInNewLocation.count > itemsLimit {
-                                Text("\(itemsInNewLocation.count-itemsLimit) more")
-                            }
-                        }
-                    }
-                }
+                let newLocation = validatedLocation.valueToSubmit
+                
+                InventoryTargetLocationView(newLocation: newLocation, candidateItems: [uploadItem])
+            }
+            .padding()
+        }
+        .onChange(of: editModeRef) { old, new in
+            if new == true {
+                editRef = uploadItem.ref
             }
         }
-    }
-    
-    
-    @ViewBuilder
-    func view(for item: InventoryItem) -> some View {
-        
-        ZStack(alignment: .bottomTrailing) {
-            CatalogImage(inventoryItem: item)
-                .border(color(for: item.condition), width: 2)
-            Text("x \(item.quantity)")
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
-                .clipShape(Capsule())
-                .padding(4)
+        .onChange(of: editModeColor) { old, new in
+            if new == true {
+                editColorId = uploadItem.colorId
+            }
         }
-        .help(catalog.colorName(forLegoColorId: item.colorId))
-    }
-    
-    
-    func color(for condition: String) -> Color {
-        switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
+        .onChange(of: editModeCondition) { old, new in
+            if new == true {
+                editCondition = uploadItem.condition
+            }
+        }
+        .onChange(of: editModeComment) { old, new in
+            if new == true {
+                editComment = uploadItem.comment ?? ""
+            }
+        }
+        .onChange(of: editModeQty) { old, new in
+            if new == true {
+                editQty = uploadItem.qty
+            }
+        }
+        .onChange(of: editModePrice) { old, new in
+            if new == true {
+                editUnitPrice = uploadItem.unitPrice
+            }
+        }
+        
+        .onChange(of: editModeRef) { old, new in
+            if new == false, editRef != uploadItem.ref {
+                updateItem(ref: editRef)
+            }
+        }
+        .onChange(of: editModeColor) { old, new in
+            if new == false, editColorId != uploadItem.colorId {
+                updateItem(colorId: editColorId)
+            }
+        }
+        .onChange(of: editModeCondition) { old, new in
+            if new == false, editCondition != uploadItem.condition {
+                updateItem(condition: editCondition)
+            }
+        }
+        .onChange(of: editModeComment) { old, new in
+            if new == false, editComment.trimmingCharacters(in: .whitespacesAndNewlines) != (uploadItem.comment ?? "").trimmingCharacters(in: .whitespacesAndNewlines) {
+                updateItem(comment: editComment)
+            }
+        }
+        .onChange(of: editModeQty) { old, new in
+            if new == false, editQty != uploadItem.qty {
+                updateItem(qty: editQty)
+            }
+        }
+        .onChange(of: editModePrice) { old, new in
+            if new == false, editUnitPrice != uploadItem.unitPrice {
+                updateItem(unitPrice: editUnitPrice)
+            }
+        }
+        
+        .onChange(of: uploadItem.ref, initial: false) {
+            uploadStore.update(UploadItem(
+                
+                id: uploadItem.id,
+                type: uploadItem.type,
+                ref: uploadItem.ref,
+                name: nil,
+                colorId: uploadItem.colorId,
+                qty: uploadItem.qty,
+                condition: uploadItem.condition,
+                comment: uploadItem.comment,
+                unitPrice: uploadItem.unitPrice
+            ))
+        }
+        .onChange(of: uploadItem.name, initial: true) { old, new in
+            if new == nil {
+                Task { await pullCatalogEntry() }
+            }
+        }
+        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+            self.editRemarks = self.inventoryItem?.remarks ?? ""
         }
     }
     

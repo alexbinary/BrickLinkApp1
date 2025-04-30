@@ -13,7 +13,7 @@ struct UploadView: View {
     var inventoryStore: InventoryStoreProtocol!
     
     
-    @State var activeItem: UploadItem? = nil
+    @State var activeItemId: UploadItem.ID? = nil
     
     
     var body: some View {
@@ -26,25 +26,18 @@ struct UploadView: View {
                 
                 LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
-                    Section {
-                    
-                        if let activeItem = activeItem {
-                            
-                            UploadActiveItemView(uploadItem: activeItem)
-                                .padding([.leading, .trailing])
-                        }
+                    if let id = activeItemId {
                         
-                        Color.clear.frame(width: 0, height: 24)
-                    } header: {
-                        SectionHeader("􀈧 Active item")
+                        UploadActiveItemView(uploadItemId: id)
+                            .padding()
                     }
                     
                     Section {
-                        ForEach(items.filter({ $0.id != activeItem?.id })) { item in
+                        ForEach(items.filter({ $0.id != activeItemId })) { item in
                             UploadItemView(uploadItem: item)
                                 .padding([.leading, .trailing])
                                 .onTapGesture {
-                                    activeItem = item
+                                    activeItemId = item.id
                                 }
                         }
                         Color.clear.frame(width: 0, height: 24)
@@ -56,8 +49,8 @@ struct UploadView: View {
         }
         .onChange(of: items, initial: true) {
             
-            if !items.contains(where: { $0.id == activeItem?.id }) {
-                activeItem = items.first
+            if !items.contains(where: { $0.id == activeItemId }) {
+                activeItemId = items.first?.id
             }
         }
     }
