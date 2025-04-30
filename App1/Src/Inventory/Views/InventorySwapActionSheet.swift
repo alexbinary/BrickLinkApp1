@@ -35,16 +35,7 @@ struct InventorySwapActionSheet: View {
             
             Text("\(items.count) items in location \(items.first?.remarks ?? "")")
             
-            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
-                
-                ForEach(items.limit(itemsLimit)) { item in
-                    view(for: item)
-                }
-                
-                if items.count > itemsLimit {
-                    Text("\(items.count-itemsLimit) more")
-                }
-            }
+            InventoryLocationItemsView(items: items, itemViewBuilder: { item, view in AnyView(view) })
             
             let newLocation = validatedLocation.valueToSubmit
             let itemsInNewLocation = inventoryStore.allInventories.filter { newLocation != nil && Location(from: $0.remarks) == newLocation }
@@ -82,17 +73,8 @@ struct InventorySwapActionSheet: View {
             if let loc = newLocation {
                 
                 Text("\(itemsInNewLocation.count) items in location \(loc)")
-            
-                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
-                    
-                    ForEach(itemsInNewLocation.limit(itemsLimit)) { item in
-                        view(for: item)
-                    }
-                    
-                    if itemsInNewLocation.count > itemsLimit {
-                        Text("\(itemsInNewLocation.count-itemsLimit) more")
-                    }
-                }
+                
+                InventoryLocationItemsView(items: itemsInNewLocation, itemViewBuilder: { item, view in AnyView(view) })
             }
         }
         .padding()
@@ -101,32 +83,6 @@ struct InventorySwapActionSheet: View {
             editLocation = defaultLocation?.description ?? ""
         }
         .frame(minWidth: 400)
-    }
-    
-    
-    @ViewBuilder
-    func view(for item: InventoryItem) -> some View {
-        
-        ZStack(alignment: .bottomTrailing) {
-            CatalogImage(inventoryItem: item)
-                .border(color(for: item.condition), width: 2)
-            Text("x \(item.quantity)")
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
-                .clipShape(Capsule())
-                .padding(4)
-        }
-        .help(catalog.colorName(forLegoColorId: item.colorId))
-    }
-    
-    
-    func color(for condition: String) -> Color {
-        switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
-        }
     }
     
     
