@@ -93,7 +93,7 @@ struct InventoryMoveActionSheet: View {
                     HStack {
                         Text("recent:")
                         HStack {
-                            ForEach(recentMoveLocations, id: \.description) { loc in
+                            ForEach(recentMoveLocations.limit(4), id: \.description) { loc in
                                 Button(loc.description) {
                                     editLocation = loc.description
                                 }
@@ -104,7 +104,7 @@ struct InventoryMoveActionSheet: View {
                 
                 let suggestedLocations = items
                     .flatMap { inventoryStore.suggestedTargetLocations(forMoving: $0) }
-                    .unique.sorted().limit(5)
+                    .unique.sorted().limit(4)
                 
                 if !suggestedLocations.isEmpty {
                     HStack {
@@ -230,7 +230,7 @@ struct InventoryMoveActionSheet: View {
         
         var recent = recentMoveLocations
         recent.insert(loc, at: 0)
-        recentMoveLocations = recent.unique.limit(3)
+        recentMoveLocations = recent.unique
     }
     
     
