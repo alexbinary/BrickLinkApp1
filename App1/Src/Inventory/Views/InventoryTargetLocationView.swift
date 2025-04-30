@@ -9,12 +9,9 @@ struct InventoryTargetLocationView: View {
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!
     
-    @Environment(\.catalog)
-    var catalog: CatalogProtocol!
-    
     
     let newLocation: Location?
-    let items: [InventoryItem]
+    let candidateItems: [InventoryItem]
     
     let itemsLimit = 50
 
@@ -26,7 +23,7 @@ struct InventoryTargetLocationView: View {
             
             let itemsInNewLocation = inventoryStore.allInventories.filter { newLocation != nil && Location(from: $0.remarks) == newLocation }
             
-            let conflictingItems: [InventoryItem] = items.flatMap { sourceItem in
+            let conflictingItems: [InventoryItem] = candidateItems.flatMap { sourceItem in
                 
                 itemsInNewLocation
                     .filter({ $0.ref == sourceItem.ref && $0.condition != sourceItem.condition })
@@ -46,58 +43,27 @@ struct InventoryTargetLocationView: View {
                 }
                 .foregroundStyle(hasConflicts ? .orange : green)
             
-                LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
+                let itemsInNewLocation = itemsInNewLocation.sorted { item1, item2 in
                     
-                    let itemsInNewLocation = itemsInNewLocation.sorted { item1, item2 in
+                    conflictingItems.contains(item1)
+                }
+                
+                InventoryLocationItemsView(items: itemsInNewLocation, itemViewBuilder: { item, view in
+                    
+                    ZStack(alignment: .topLeading) {
                         
-                        conflictingItems.contains(item1)
-                    }
-                    
-                    ForEach(itemsInNewLocation.limit(itemsLimit)) { item in
-                        ZStack(alignment: .topLeading) {
-                            view(for: item)
+                        AnyView(view)
+                        
+                        if conflictingItems.contains(item) {
                             
-                            if conflictingItems.contains(item) {
-                                
-                                Text("􀇿")
-                                    .foregroundStyle(.orange)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                            }
+                            Text("􀇿")
+                                .foregroundStyle(.orange)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
                         }
                     }
-                    
-                    if itemsInNewLocation.count > itemsLimit {
-                        Text("\(itemsInNewLocation.count-itemsLimit) more")
-                    }
-                }
+                })
             }
-        }
-    }
-    
-    
-    @ViewBuilder
-    func view(for item: InventoryItem) -> some View {
-        
-        ZStack(alignment: .bottomTrailing) {
-            CatalogImage(inventoryItem: item)
-                .border(color(for: item.condition), width: 2)
-            Text("x \(item.quantity)")
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
-                .clipShape(Capsule())
-                .padding(4)
-        }
-        .help(catalog.colorName(forLegoColorId: item.colorId))
-    }
-    
-    
-    func color(for condition: String) -> Color {
-        switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
         }
     }
 }

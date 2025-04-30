@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct InventoryLocationItemsView: View {
+struct InventoryLocationItemsView<Content: View>: View {
     
     
     @Environment(\.catalog)
@@ -11,6 +11,9 @@ struct InventoryLocationItemsView: View {
     
     
     let items: [InventoryItem]
+    
+    @ViewBuilder
+    let itemViewBuilder: (InventoryItem, any View) -> Content
     
     let itemsLimit = 50
 
@@ -20,7 +23,7 @@ struct InventoryLocationItemsView: View {
         LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
             
             ForEach(items.limit(itemsLimit)) { item in
-                view(for: item)
+                itemViewBuilder(item, view(for: item))
             }
             
             if items.count > itemsLimit {

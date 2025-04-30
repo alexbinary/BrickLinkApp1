@@ -9,9 +9,6 @@ struct InventoryMoveActionSheet: View {
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!
     
-    @Environment(\.catalog)
-    var catalog: CatalogProtocol!
-    
     
     let items: [InventoryItem]
     let defaultLocation: Location?
@@ -35,7 +32,7 @@ struct InventoryMoveActionSheet: View {
                 Text("􀈫􁉂􀈫")
             }
             
-            InventoryLocationItemsView(items: items)
+            InventoryLocationItemsView(items: items, itemViewBuilder: { item, view in AnyView(view) })
             
             VStack(alignment: .leading, spacing: 4) {
                 
@@ -103,7 +100,7 @@ struct InventoryMoveActionSheet: View {
             
             let newLocation = validatedLocation.valueToSubmit
             
-            InventoryTargetLocationView(newLocation: newLocation, items: items)
+            InventoryTargetLocationView(newLocation: newLocation, candidateItems: items)
         }
         .padding()
         .padding(.vertical)
@@ -111,32 +108,6 @@ struct InventoryMoveActionSheet: View {
             editLocation = defaultLocation?.description ?? ""
         }
         .frame(minWidth: 400)
-    }
-    
-    
-    @ViewBuilder
-    func view(for item: InventoryItem) -> some View {
-        
-        ZStack(alignment: .bottomTrailing) {
-            CatalogImage(inventoryItem: item)
-                .border(color(for: item.condition), width: 2)
-            Text("x \(item.quantity)")
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(Color(NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)))
-                .clipShape(Capsule())
-                .padding(4)
-        }
-        .help(catalog.colorName(forLegoColorId: item.colorId))
-    }
-    
-    
-    func color(for condition: String) -> Color {
-        switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
-        }
     }
     
     
