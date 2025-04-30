@@ -35,16 +35,7 @@ struct InventoryMoveActionSheet: View {
                 Text("􀈫􁉂􀈫")
             }
             
-            LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
-                
-                ForEach(items.limit(itemsLimit)) { item in
-                    view(for: item)
-                }
-                
-                if items.count > itemsLimit {
-                    Text("\(items.count-itemsLimit) more")
-                }
-            }
+            InventoryLocationItemsView(items: items)
             
             VStack(alignment: .leading, spacing: 4) {
                 
@@ -112,7 +103,7 @@ struct InventoryMoveActionSheet: View {
             
             let newLocation = validatedLocation.valueToSubmit
             
-            InventoryLocationView(newLocation: newLocation, items: items)
+            InventoryTargetLocationView(newLocation: newLocation, items: items)
         }
         .padding()
         .padding(.vertical)

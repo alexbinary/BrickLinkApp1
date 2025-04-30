@@ -3,7 +3,7 @@ import SwiftUI
 
 
 
-struct InventoryLocationView: View {
+struct InventoryTargetLocationView: View {
     
     
     @Environment(\.inventoryStore)
