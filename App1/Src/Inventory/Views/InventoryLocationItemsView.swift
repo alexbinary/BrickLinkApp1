@@ -12,15 +12,24 @@ struct InventoryLocationItemsView<Content: View>: View {
     
     let items: [InventoryItem]
     
+    let itemsLimit = 50
+    let columnsCount: Int
+    
     @ViewBuilder
     let itemViewBuilder: (InventoryItem, any View) -> Content
     
-    let itemsLimit = 50
+    
+    init(items: [InventoryItem], columnsCount: Int = 4, itemViewBuilder: @escaping (InventoryItem, any View) -> Content) {
+        
+        self.items = items
+        self.columnsCount = columnsCount
+        self.itemViewBuilder = itemViewBuilder
+    }
 
 
     var body: some View {
 
-        LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 4)) {
+        LazyVGrid(columns: Array(repeating: .init(.fixed(84)), count: columnsCount)) {
             
             ForEach(items.limit(itemsLimit)) { item in
                 itemViewBuilder(item, view(for: item))
@@ -30,6 +39,7 @@ struct InventoryLocationItemsView<Content: View>: View {
                 Text("\(items.count-itemsLimit) more")
             }
         }
+        .fixedSize()
     }
     
     

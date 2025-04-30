@@ -42,7 +42,7 @@ struct UploadView: View {
                         }
                         Color.clear.frame(width: 0, height: 24)
                     } header: {
-                        SectionHeader("􀋲 Items to upload", secondaryText: "\(items.count) items")
+                        SectionHeader("􀋲 Next", secondaryText: "\(items.count) lots, \(items.reduce(0, { $0 + ($1.qty ?? 0) })) items")
                     }
                 }
             }

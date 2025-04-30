@@ -42,62 +42,50 @@ struct UploadActiveItemView: View {
     
     var body: some View {
         
-        HStack(alignment: .top) {
-            
-            VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
+        
+            HStack {
+                Text("Upload item").font(.title2)
+                Text("􁉂􀈫")
+            }
+        
+            HStack(alignment: .top) {
                 
-                HStack {
-                    Text("Upload item").font(.title2)
-                    Spacer()
-                    Text("􁉂􀈫")
-                }
-                
-                HStack(alignment: .top) {
+                VStack(alignment: .leading) {
                     
-                    Grid(verticalSpacing: 0) {
+                    HStack(alignment: .top, spacing: 16) {
                         
-                        GridRow(alignment: .top) {
+                        CatalogImage(uploadItem: uploadItem)
+                            .border(conditionColor, width: 2)
+                        
+                        Grid {
                             
-                            CatalogImage(uploadItem: uploadItem)
-                                .border(conditionColor, width: 2)
-                            
-                            VStack(alignment: .leading, spacing: 0) {
+                            GridRow {
                                 
-                                HStack {
+                                Text("Ref").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                                
+                                ZStack(alignment: .leading) {
                                     
-                                    ZStack(alignment: .leading) {
-                                        
-                                        Text(uploadItem.ref)
-                                            .onTapGesture { editModeRef = true }
-                                            .captionStyle()
-                                            .opacity(editModeRef ? 0 : 1)
-                                        
-                                        TextField("Ref", text: $editRef)
-                                            .frame(maxWidth: 100)
-                                            .onSubmit({
-                                                if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-                                                    editRef = uploadItem.ref
-                                                }
-                                                editModeRef = false
-                                            })
-                                            .opacity(editModeRef ? 1 : 0)
-                                    }
+                                    Text(uploadItem.ref)
+                                        .onTapGesture { editModeRef = true }
+                                        .captionStyle()
+                                        .opacity(editModeRef ? 0 : 1)
                                     
-                                    ZStack(alignment: .leading) {
-                                        
-                                        Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
-                                            .onTapGesture { editModeColor = true }
-                                            .opacity(editModeColor ? 0 : 1)
-                                        
-                                        LegoColorPicker("Color", selection: $editColorId)
-                                            .labelsHidden()
-                                            .frame(maxWidth: 150)
-                                            .onChange(of: editColorId, {
-                                                editModeColor = false
-                                            })
-                                            .opacity(editModeColor ? 1 : 0)
-                                    }
+                                    TextField("Ref", text: $editRef)
+                                        .frame(maxWidth: 100)
+                                        .onSubmit({
+                                            if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                                editRef = uploadItem.ref
+                                            }
+                                            editModeRef = false
+                                        })
+                                        .opacity(editModeRef ? 1 : 0)
                                 }
+                            }
+                            
+                            GridRow {
+                                
+                                Text("Name").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                                 
                                 Group {
                                     
@@ -125,7 +113,61 @@ struct UploadActiveItemView: View {
                                     }
                                 }
                                 .font(.title3).frame(width: 300, alignment: .leading)
+                            }
+                            
+                            GridRow {
                                 
+                                Text("Color").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                                
+                                ZStack(alignment: .leading) {
+                                    
+                                    Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
+                                        .onTapGesture { editModeColor = true }
+                                        .opacity(editModeColor ? 0 : 1)
+                                    
+                                    LegoColorPicker("Color", selection: $editColorId)
+                                        .labelsHidden()
+                                        .frame(maxWidth: 150)
+                                        .onChange(of: editColorId, {
+                                            editModeColor = false
+                                        })
+                                        .opacity(editModeColor ? 1 : 0)
+                                }
+                            }
+                            
+                            GridRow {
+                                
+                                Text("Condition").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                                
+                                ZStack {
+                                    
+                                    Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-")
+                                        .font(.title3)
+                                        .foregroundStyle(conditionColor)
+                                        .fontWeight(.bold)
+                                        .onTapGesture { editModeCondition = true }
+                                        .opacity(editModeCondition ? 0 : 1)
+                                    
+                                    Picker("Condition", selection: $editCondition) {
+                                        
+                                        Text("").tag(nil as String?)
+                                        Text("NEW").tag("N")
+                                        Text("USED").tag("U")
+                                    }
+                                    .labelsHidden()
+                                    .frame(maxWidth: 90)
+                                    .onChange(of: editCondition) {
+                                        editModeCondition = false
+                                    }
+                                    .opacity(editModeCondition ? 1 : 0)
+                                    
+                                }
+                            }
+                            
+                            GridRow {
+                                
+                                Text("Comment").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                             
                                 ZStack(alignment: .leading) {
                                     
                                     Group {
@@ -145,377 +187,353 @@ struct UploadActiveItemView: View {
                                 }
                             }
                         }
+                    }
+                    
+                    Divider()
+                    
+                    let errors: [String] = {
                         
-                        GridRow {
+                        var errors = [String]()
+                        
+                        if uploadItem.ref.normalizedOptional == nil {
+                            errors.append("invalid item ref")
+                        }
+                        
+                        if uploadItem.condition.normalizedOptional == nil {
+                            errors.append("missing condition")
+                        }
+                        
+                        return errors
+                    }()
+                    
+                    if !errors.isEmpty {
+                        
+                        VStack(alignment: .leading) {
                             
-                            ZStack {
-                                
-                                Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-")
-                                    .font(.title3)
-                                    .foregroundStyle(conditionColor)
-                                    .fontWeight(.bold)
-                                    .onTapGesture { editModeCondition = true }
-                                    .opacity(editModeCondition ? 0 : 1)
-                                
-                                Picker("Condition", selection: $editCondition) {
-                                    
-                                    Text("").tag(nil as String?)
-                                    Text("NEW").tag("N")
-                                    Text("USED").tag("U")
-                                }
-                                .labelsHidden()
-                                .frame(maxWidth: 90)
-                                .onChange(of: editCondition) {
-                                    editModeCondition = false
-                                }
-                                .opacity(editModeCondition ? 1 : 0)
-                                
-                            }.gridColumnAlignment(.center)
-                        }
-                    }
-                }
-                
-                
-                let errors: [String] = {
-                    
-                    var errors = [String]()
-                    
-                    if uploadItem.ref.normalizedOptional == nil {
-                        errors.append("invalid item ref")
-                    }
-                    
-                    if uploadItem.condition.normalizedOptional == nil {
-                        errors.append("missing condition")
-                    }
-                    
-                    return errors
-                }()
-                
-                if !errors.isEmpty {
-                    
-                    VStack(alignment: .leading) {
-                        
-                        ForEach(errors, id: \.self) { error in
-                            Text(error)
-                        }
-                    }
-                    .italic()
-                    
-                } else {
-                    
-                    Grid(alignment: .leading, verticalSpacing: 12) {
-                        
-                        GridRow(alignment: .firstTextBaseline) {
-                            Text("Inventory ID").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                            if let inventoryItem = inventoryItem {
-                                InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
-                            } else {
-                                Text("-")
+                            ForEach(errors, id: \.self) { error in
+                                Text(error)
                             }
                         }
+                        .italic()
                         
-                        GridRow(alignment: .firstTextBaseline) {
-                            Text("Action").foregroundStyle(.secondary)
-                            Text(inventoryItem == nil ? "Create 􀫸" : "Update 􀅈")
-                        }
-                    }
-                    .frame(width: 200)
-                    
-                    Grid(alignment: .leading, verticalSpacing: 8) {
+                    } else {
                         
-                        GridRow(alignment: .firstTextBaseline) {
-                            Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                        Grid(alignment: .leading, verticalSpacing: 12) {
                             
-                            if !editModeQty {
+                            GridRow(alignment: .firstTextBaseline) {
+                                Text("Inventory ID").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                                if let inventoryItem = inventoryItem {
+                                    InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
+                                } else {
+                                    Text("-")
+                                }
+                            }
+                            
+                            GridRow(alignment: .firstTextBaseline) {
+                                Text("Action").foregroundStyle(.secondary)
+                                Text(inventoryItem == nil ? "Create 􀫸" : "Update 􀅈")
+                            }
+                        }
+                        .frame(width: 200)
+                        
+                        Divider()
+                        
+                        Grid(alignment: .leading, verticalSpacing: 8) {
+                            
+                            GridRow(alignment: .firstTextBaseline) {
+                                Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                                 
-                                HStack {
+                                if !editModeQty {
+                                    
+                                    HStack {
+                                        
+                                        Group {
+                                            if let qty = uploadItem.qty {
+                                                Text("+\(qty)")
+                                            } else {
+                                                Text("-")
+                                            }
+                                        }
+                                        .font(.title2)
+                                        .onTapGesture {
+                                            editModeQty = true
+                                        }
+                                        
+                                        Button {
+                                            updateItem(qty: (uploadItem.qty ?? 0) + 1)
+                                        } label: {
+                                            Text("􁾨")
+                                        }
+                                        
+                                        Button {
+                                            updateItem(qty: (uploadItem.qty ?? 0) - 1)
+                                        } label: {
+                                            Text("􁾬")
+                                        }
+                                    }
+                                    
+                                } else {
+                                    
+                                    TextField("Qty", value: $editQty, format: .number).multilineTextAlignment(.center)
+                                        .frame(maxWidth: 50)
+                                        .onSubmit({
+                                            editModeQty = false
+                                        })
+                                }
+                                
+                                if let inventoryItem = inventoryItem {
+                                    if let qty = uploadItem.qty {
+                                        Text("(\(inventoryItem.quantity) 􁉂 \(inventoryItem.quantity + qty))")
+                                    } else {
+                                        Text("(\(inventoryItem.quantity) 􁉂 _)")
+                                    }
+                                } else {
+                                    Text("")
+                                }
+                            }
+                            
+                            GridRow(alignment: .firstTextBaseline) {
+                                Text("Unit price").foregroundStyle(.secondary)
+                                
+                                ZStack(alignment: .leading) {
                                     
                                     Group {
-                                        if let qty = uploadItem.qty {
-                                            Text("+\(qty)")
+                                        if let price = uploadItem.unitPrice {
+                                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
                                         } else {
                                             Text("-")
                                         }
                                     }
                                     .font(.title2)
                                     .onTapGesture {
-                                        editModeQty = true
+                                        editModePrice = true
                                     }
+                                    .opacity(editModePrice ? 0 : 1)
                                     
-                                    Button {
-                                        updateItem(qty: (uploadItem.qty ?? 0) + 1)
-                                    } label: {
-                                        Text("􁾨")
-                                    }
-                                    
-                                    Button {
-                                        updateItem(qty: (uploadItem.qty ?? 0) - 1)
-                                    } label: {
-                                        Text("􁾬")
-                                    }
+                                    TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                        .onSubmit({
+                                            editModePrice = false
+                                        })
+                                        .frame(maxWidth: 100)
+                                        .opacity(editModePrice ? 1 : 0)
                                 }
                                 
-                            } else {
-                                
-                                TextField("Qty", value: $editQty, format: .number).multilineTextAlignment(.center)
-                                    .frame(maxWidth: 50)
-                                    .onSubmit({
-                                        editModeQty = false
-                                    })
-                            }
-                            
-                            if let inventoryItem = inventoryItem {
-                                if let qty = uploadItem.qty {
-                                    Text("(\(inventoryItem.quantity) 􁉂 \(inventoryItem.quantity + qty))")
+                                if let inventoryItem = inventoryItem {
+                                    
+                                    HStack(spacing: 0) {
+                                        Text("(")
+                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
+                                        Text(")")
+                                    }
                                 } else {
-                                    Text("(\(inventoryItem.quantity) 􁉂 _)")
+                                    Text("")
                                 }
-                            } else {
-                                Text("")
+                                
+                                if let price = uploadItem.unitPrice, let inventoryItem = inventoryItem, price != inventoryItem.unitPrice {
+                                    
+                                    Button {
+                                        editUnitPrice = inventoryItem.unitPrice
+                                        updateItem()
+                                    } label: {
+                                        Text("Keep existing price")
+                                    }
+                                    .fixedSize()
+                                }
                             }
-                        }
-                        
-                        GridRow(alignment: .firstTextBaseline) {
-                            Text("Unit price").foregroundStyle(.secondary)
                             
-                            ZStack(alignment: .leading) {
+                            GridRow(alignment: .firstTextBaseline) {
+                                Text("Remarks").foregroundStyle(.secondary)
+                                
+                                TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(width: 80).fixedSize()
+                                
+                                if let inventoryItem = inventoryItem {
+                                    Text("(\(inventoryItem.remarks))").fixedSize()
+                                } else {
+                                    Text("")
+                                }
+                            }
+                            
+                            GridRow {
+                                
+                                Text("Suggested").foregroundStyle(.secondary)
                                 
                                 Group {
-                                    if let price = uploadItem.unitPrice {
-                                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).monospacedDigit()
+                                    if suggestedLocations.isEmpty {
+                                        
+                                        Text("no suggestions").foregroundStyle(.secondary)
+                                        
                                     } else {
-                                        Text("-")
-                                    }
-                                }
-                                .font(.title2)
-                                .onTapGesture {
-                                    editModePrice = true
-                                }
-                                .opacity(editModePrice ? 0 : 1)
-                                
-                                TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                    .onSubmit({
-                                        editModePrice = false
-                                    })
-                                    .frame(maxWidth: 100)
-                                    .opacity(editModePrice ? 1 : 0)
-                            }
-                            
-                            if let inventoryItem = inventoryItem {
-                                
-                                HStack(spacing: 0) {
-                                    Text("(")
-                                    Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
-                                    Text(")")
-                                }
-                            } else {
-                                Text("")
-                            }
-                            
-                            if let price = uploadItem.unitPrice, let inventoryItem = inventoryItem, price != inventoryItem.unitPrice {
-                                
-                                Button {
-                                    editUnitPrice = inventoryItem.unitPrice
-                                    updateItem()
-                                } label: {
-                                    Text("Keep existing price")
-                                }
-                                .fixedSize()
-                            }
-                        }
-                        
-                        GridRow(alignment: .firstTextBaseline) {
-                            Text("Remarks").foregroundStyle(.secondary)
-                            
-                            TextField("Remarks", text: $editRemarks, prompt: Text("Required")).frame(width: 80).fixedSize()
-                            
-                            if let inventoryItem = inventoryItem {
-                                Text("(\(inventoryItem.remarks))").fixedSize()
-                            } else {
-                                Text("")
-                            }
-                        }
-                        
-                        GridRow {
-                            
-                            Text("Suggested").foregroundStyle(.secondary)
-                            
-                            Group {
-                                if suggestedLocations.isEmpty {
-                                    
-                                    Text("no suggestions").foregroundStyle(.secondary)
-                                    
-                                } else {
-                                    
-                                    ScrollView(.horizontal) {
-                                        HStack {
-                                            ForEach(suggestedLocations, id: \.self) { location in
-                                                Button {
-                                                    self.editRemarks = location
-                                                } label: {
-                                                    Text(location)
+                                        
+                                        ScrollView(.horizontal) {
+                                            HStack {
+                                                ForEach(suggestedLocations, id: \.self) { location in
+                                                    Button {
+                                                        self.editRemarks = location
+                                                    } label: {
+                                                        Text(location)
+                                                    }
                                                 }
                                             }
                                         }
+                                        .scrollIndicators(.hidden)
                                     }
-                                    .scrollIndicators(.hidden)
                                 }
+                                .gridCellColumns(3)
                             }
-                            .gridCellColumns(3)
-                        }
-                        
-                        Color.clear.frame(width: 0, height: 12)
-                        
-                        GridRow {
                             
-                            Color.clear.frame(width: 0)
+                            Color.clear.frame(width: 0, height: 12)
                             
-                            HStack(spacing: 12) {
+                            GridRow {
                                 
-                                let submitType = uploadItem.type
-                                let submitRef = uploadItem.ref.normalizedOptional
-                                let submitName = uploadItem.name
-                                let submitColorId = uploadItem.colorId
-                                let submitCondition = uploadItem.condition.normalizedOptional
-                                let submitComment = uploadItem.comment
-                                let submitQty = uploadItem.qty.normalizedOptional
-                                let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
-                                let submitRemarks = editRemarks.normalizedOptional
+                                Color.clear.frame(width: 0)
                                 
-                                let buttonDisabled = submitting
-                                || submitRef == nil
-                                || submitCondition == nil
-                                || submitQty == nil
-                                || submitUnitPrice == nil
-                                || submitRemarks == nil
-                                
-                                Button {
+                                HStack(spacing: 12) {
                                     
-                                    Task {
+                                    let submitType = uploadItem.type
+                                    let submitRef = uploadItem.ref.normalizedOptional
+                                    let submitName = uploadItem.name
+                                    let submitColorId = uploadItem.colorId
+                                    let submitCondition = uploadItem.condition.normalizedOptional
+                                    let submitComment = uploadItem.comment
+                                    let submitQty = uploadItem.qty.normalizedOptional
+                                    let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
+                                    let submitRemarks = editRemarks.normalizedOptional
+                                    
+                                    let buttonDisabled = submitting
+                                    || submitRef == nil
+                                    || submitCondition == nil
+                                    || submitQty == nil
+                                    || submitUnitPrice == nil
+                                    || submitRemarks == nil
+                                    
+                                    Button {
                                         
-                                        submitting = true
-                                        
-                                        let qtyBefore = inventoryItem?.quantity
-                                        let priceBefore = inventoryItem?.unitPrice
-                                        let remarksBefore = inventoryItem?.remarks
-                                        let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
-                                        
-                                        let updatedOrCreatedInventoryItem = await {
+                                        Task {
                                             
-                                            if let inventoryItem = inventoryItem {
+                                            submitting = true
+                                            
+                                            let qtyBefore = inventoryItem?.quantity
+                                            let priceBefore = inventoryItem?.unitPrice
+                                            let remarksBefore = inventoryItem?.remarks
+                                            let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
+                                            
+                                            let updatedOrCreatedInventoryItem = await {
                                                 
-                                                await inventoryStore.updateInventory(
+                                                if let inventoryItem = inventoryItem {
                                                     
-                                                    inventoryId: inventoryItem.id,
-                                                    addQuantity: submitQty!,
-                                                    unitPrice: submitUnitPrice!,
-                                                    remarks: submitRemarks!
-                                                )
-                                                
-                                                return inventoryItem
-                                                
-                                            } else {
-                                                
-                                                let inventoryItem = await inventoryStore.createInventory(
+                                                    await inventoryStore.updateInventory(
+                                                        
+                                                        inventoryId: inventoryItem.id,
+                                                        addQuantity: submitQty!,
+                                                        unitPrice: submitUnitPrice!,
+                                                        remarks: submitRemarks!
+                                                    )
                                                     
-                                                    ref: submitRef!,
-                                                    type: submitType,
-                                                    colorId: submitColorId,
-                                                    quantity: submitQty!,
-                                                    unitPrice: submitUnitPrice!,
-                                                    condition: submitCondition!,
-                                                    description: submitComment,
-                                                    remarks: submitRemarks!
-                                                )!
-                                                
-                                                return inventoryItem
-                                            }
-                                        }()
+                                                    return inventoryItem
+                                                    
+                                                } else {
+                                                    
+                                                    let inventoryItem = await inventoryStore.createInventory(
+                                                        
+                                                        ref: submitRef!,
+                                                        type: submitType,
+                                                        colorId: submitColorId,
+                                                        quantity: submitQty!,
+                                                        unitPrice: submitUnitPrice!,
+                                                        condition: submitCondition!,
+                                                        description: submitComment,
+                                                        remarks: submitRemarks!
+                                                    )!
+                                                    
+                                                    return inventoryItem
+                                                }
+                                            }()
+                                            
+                                            uploadStore.add(UploadedItem(
+                                                type: submitType,
+                                                ref: submitRef!,
+                                                name: submitName,
+                                                colorId: submitColorId,
+                                                qtyBefore: qtyBefore,
+                                                qtyAfter:  (qtyBefore ?? 0) + submitQty!,
+                                                condition: submitCondition!,
+                                                comment: submitComment,
+                                                remarksBefore: remarksBefore,
+                                                remarksAfter: submitRemarks!,
+                                                unitPriceBefore: priceBefore,
+                                                unitPriceAfter: submitUnitPrice!,
+                                                inventoryId: updatedOrCreatedInventoryItem.id,
+                                                uploadDate: .now,
+                                                inventoryStatus: inventoryStatus
+                                            ))
+                                            
+                                            uploadStore.delete(uploadItem)
+                                            
+                                            submitting = false
+                                        }
                                         
-                                        uploadStore.add(UploadedItem(
-                                            type: submitType,
-                                            ref: submitRef!,
-                                            name: submitName,
-                                            colorId: submitColorId,
-                                            qtyBefore: qtyBefore,
-                                            qtyAfter:  (qtyBefore ?? 0) + submitQty!,
-                                            condition: submitCondition!,
-                                            comment: submitComment,
-                                            remarksBefore: remarksBefore,
-                                            remarksAfter: submitRemarks!,
-                                            unitPriceBefore: priceBefore,
-                                            unitPriceAfter: submitUnitPrice!,
-                                            inventoryId: updatedOrCreatedInventoryItem.id,
-                                            uploadDate: .now,
-                                            inventoryStatus: inventoryStatus
-                                        ))
-                                        
+                                    } label: {
+                                        if submitting {
+                                            Text("􀈧 Uploading...").padding(.horizontal)
+                                        } else {
+                                            Text("􀈧 Upload").padding(.horizontal)
+                                        }
+                                    }
+                                    .disabled(buttonDisabled)
+                                    .fixedSize()
+                                    
+                                    Button {
                                         uploadStore.delete(uploadItem)
+                                    } label: {
+                                        Text("􀈑 Delete")
+                                    }
+                                    .fixedSize()
+                                    
+                                    let errors = {
                                         
-                                        submitting = false
-                                    }
+                                        var errors = [String]()
+                                        
+                                        if submitQty == nil {
+                                            errors.append("missing valid qty")
+                                        }
+                                        
+                                        if submitUnitPrice == nil {
+                                            errors.append("missing valid price")
+                                        }
+                                        
+                                        if submitRemarks == nil {
+                                            errors.append("missing valid remarks")
+                                        }
+                                        
+                                        return errors
+                                    }()
                                     
-                                } label: {
-                                    if submitting {
-                                        Text("􀈧 Uploading...").padding(.horizontal)
-                                    } else {
-                                        Text("􀈧 Upload").padding(.horizontal)
-                                    }
+                                    Text(errors.joined(separator: ", ")).italic().fixedSize()
                                 }
-                                .disabled(buttonDisabled)
-                                .fixedSize()
-                                
-                                Button {
-                                    uploadStore.delete(uploadItem)
-                                } label: {
-                                    Text("􀈑 Delete")
-                                }
-                                .fixedSize()
-                                
-                                let errors = {
-                                    
-                                    var errors = [String]()
-                                    
-                                    if submitQty == nil {
-                                        errors.append("missing valid qty")
-                                    }
-                                    
-                                    if submitUnitPrice == nil {
-                                        errors.append("missing valid price")
-                                    }
-                                    
-                                    if submitRemarks == nil {
-                                        errors.append("missing valid remarks")
-                                    }
-                                    
-                                    return errors
-                                }()
-                                
-                                Text(errors.joined(separator: ", ")).italic().fixedSize()
+                                .gridCellColumns(3)
                             }
-                            .gridCellColumns(3)
                         }
                     }
                 }
-            }
                 .padding()
-            
-            Divider()
-            
-            VStack {
                 
-                VStack(alignment: .leading, spacing: 4) {
-
-                    if validatedLocation.hasWarning {
-                        Text("invalid location").foregroundStyle(.secondary)
+                Divider()
+                
+                VStack {
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        
+                        if validatedLocation.hasWarning {
+                            Text("invalid location").foregroundStyle(.secondary)
+                        }
                     }
+                    
+                    let newLocation = validatedLocation.valueToSubmit
+                    
+                    InventoryTargetLocationView(newLocation: newLocation, candidateItems: [uploadItem], columnsCount: 7)
                 }
-                
-                let newLocation = validatedLocation.valueToSubmit
-                
-                InventoryTargetLocationView(newLocation: newLocation, candidateItems: [uploadItem])
+                .padding(.horizontal)
             }
-            .padding()
         }
         .onChange(of: editModeRef) { old, new in
             if new == true {

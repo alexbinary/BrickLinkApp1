@@ -14,10 +14,17 @@ struct InventoryTargetLocationView: View {
     let candidateItems: [PartIdentity]
     
     let itemsLimit = 50
+    let columnsCount: Int
+    
+    
+    init(newLocation: Location?, candidateItems: [PartIdentity], columnsCount: Int = 4) {
+        self.newLocation = newLocation
+        self.candidateItems = candidateItems
+        self.columnsCount = columnsCount
+    }
 
 
     var body: some View {
-
 
         VStack(alignment: .leading) {
             
@@ -48,7 +55,7 @@ struct InventoryTargetLocationView: View {
                     conflictingItems.contains(item1)
                 }
                 
-                InventoryLocationItemsView(items: itemsInNewLocation, itemViewBuilder: { item, view in
+                InventoryLocationItemsView(items: itemsInNewLocation, columnsCount: columnsCount, itemViewBuilder: { item, view in
                     
                     ZStack(alignment: .topLeading) {
                         
