@@ -20,6 +20,15 @@ struct InventoryItem: Identifiable, Equatable, Codable {
 
 
 
+extension InventoryItem: PartIdentity {
+    
+    
+    var item_ref: String? { ref }
+    var item_condition: String? { condition }
+}
+
+
+
 extension InventoryItem {
 
     
