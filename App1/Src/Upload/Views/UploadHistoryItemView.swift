@@ -30,7 +30,7 @@ struct UploadHistoryItemView: View {
                     CatalogImage(uploadedItem: uploadedItem)
                         .border(conditionColor, width: 2)
                     
-                    Text(uploadedItem.condition == "U" ? "USED" : "NEW")
+                    Text(uploadedItem.condition.name.uppercased())
                         .font(.title3)
                         .foregroundStyle(conditionColor)
                         .fontWeight(.bold)
@@ -163,9 +163,8 @@ struct UploadHistoryItemView: View {
     
     var conditionColor: Color {
         switch uploadedItem.condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
+        case .used: return .red
+        case .new: return .blue
         }
     }
 }

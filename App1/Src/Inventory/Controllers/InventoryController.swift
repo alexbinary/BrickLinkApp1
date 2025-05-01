@@ -47,7 +47,7 @@ class InventoryController {
         ref: String,
         comment: String?,
         colorId: String,
-        condition: String
+        condition: ItemCondition
     
     ) -> InventoryItem? {
         
@@ -148,7 +148,7 @@ class InventoryController {
         colorId: String,
         quantity: Int,
         unitPrice: Float,
-        condition: String,
+        condition: ItemCondition,
         description: String?,
         remarks: String
         
@@ -167,7 +167,7 @@ class InventoryController {
             colorId: colorId,
             quantity: quantity,
             unitPrice: unitPrice,
-            condition: condition,
+            condition: condition.brickLinkItemCondition,
             description: description,
             remarks: remarks
         )

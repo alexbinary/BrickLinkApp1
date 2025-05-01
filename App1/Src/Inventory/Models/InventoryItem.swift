@@ -7,7 +7,7 @@ struct InventoryItem: Identifiable, Equatable, Codable {
     
     
     let id: String
-    let condition: String
+    let condition: ItemCondition
     let colorId: String
     let ref: String
     let name: String
@@ -26,7 +26,7 @@ extension InventoryItem: PartIdentity {
     var item_type: ItemType? { type }
     var item_ref: String? { ref }
     var item_colorId: String? { colorId }
-    var item_condition: String? { condition }
+    var item_condition: ItemCondition? { condition }
 }
 
 
@@ -37,7 +37,7 @@ extension InventoryItem {
     init(fromBl bl: BrickLinkInventoryItem) {
         self.init(
             id: "\(bl.inventoryId)",
-            condition: bl.newOrUsed,
+            condition: .init(fromBl: bl.newOrUsed),
             colorId: "\(bl.colorId)",
             ref: bl.item.no,
             name: bl.item.name,
@@ -132,7 +132,7 @@ extension InventoryItem {
     
     var rawSearchableText_condition: String {
     
-        condition
+        condition.name
     }
     
     var rawSearchableText_ref: String {

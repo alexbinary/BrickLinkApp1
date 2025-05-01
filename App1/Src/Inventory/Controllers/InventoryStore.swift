@@ -17,7 +17,7 @@ protocol InventoryStoreProtocol {
     func softRefreshInventories() async
     func hardRefreshInventories(_ operationTag: OperationTag?) async
     
-    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem?
+    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: ItemCondition, description: String?, remarks: String) async -> InventoryItem?
     func updateInventory(inventoryId: InventoryItem.ID, addQuantity: Int, unitPrice: Float?, remarks: String?) async
     func isUpdatingInventory(withId inventoryId: InventoryItem.ID) -> Bool
     
@@ -131,7 +131,7 @@ class InventoryStore: InventoryStoreProtocol {
     // MARK: - Create and update inventories
     
     
-    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem? {
+    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: ItemCondition, description: String?, remarks: String) async -> InventoryItem? {
         
         await inventoryController.createInventory(ref: ref, type: type, colorId: colorId, quantity: quantity, unitPrice: unitPrice, condition: condition, description: description, remarks: remarks)
     }

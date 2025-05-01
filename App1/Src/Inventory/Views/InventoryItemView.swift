@@ -37,7 +37,7 @@ struct InventoryItemView: View {
                     CatalogImage(inventoryItem: item)
                         .border(conditionColor, width: 2)
                     
-                    Text(item.condition == "U" ? "USED" : "NEW")
+                    Text(item.condition.name.uppercased())
                         .font(.title3)
                         .foregroundStyle(conditionColor)
                         .fontWeight(.bold)
@@ -156,9 +156,8 @@ struct InventoryItemView: View {
     
     var conditionColor: Color {
         switch item.condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
+        case .used: return .red
+        case .new: return .blue
         }
     }
     
@@ -216,7 +215,7 @@ struct InventoryItemView: View {
         
         InventoryItemView(item: .init(
             id: "1234567890",
-            condition: "N",
+            condition: .new,
             colorId: "11",
             ref: "3001",
             name: "Preview name",
@@ -235,7 +234,7 @@ struct InventoryItemView: View {
         
         InventoryItemView(item: .init(
             id: "1",
-            condition: "U",
+            condition: .used,
             colorId: "",
             ref: "",
             name: "",

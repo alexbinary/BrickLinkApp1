@@ -210,7 +210,7 @@ struct BrickLinkAPIClient {
         colorId: String,
         quantity: Int,
         unitPrice: Float,
-        condition: String,
+        condition: BrickLinkItemCondition,
         description: String?,
         remarks: String
         
@@ -226,7 +226,7 @@ struct BrickLinkAPIClient {
                 "color_id": \(colorId),
                 "quantity": \(quantity),
                 "unit_price": "\(unitPrice)",
-                "new_or_used": "\(condition)",
+                "new_or_used": "\(condition.rawValue)",
                 "is_retain": false,
                 "is_stock_room": false,
                 "description": "\(description ?? "")",

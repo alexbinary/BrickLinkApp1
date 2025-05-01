@@ -60,11 +60,10 @@ struct InventoryLocationItemsView<Content: View>: View {
     }
     
     
-    func color(for condition: String) -> Color {
+    func color(for condition: ItemCondition) -> Color {
         switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
+        case .used: return .red
+        case .new: return .blue
         }
     }
 }

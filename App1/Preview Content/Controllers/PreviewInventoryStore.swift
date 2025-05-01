@@ -41,7 +41,7 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
         
     }
     
-    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: String, description: String?, remarks: String) async -> InventoryItem? {
+    func createInventory(ref: String, type: ItemType, colorId: String, quantity: Int, unitPrice: Float, condition: ItemCondition, description: String?, remarks: String) async -> InventoryItem? {
         
         return nil
     }

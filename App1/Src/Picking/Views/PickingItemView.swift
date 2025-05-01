@@ -37,7 +37,7 @@ struct PickingItemView: View {
                     CatalogImage(orderItem: item)
                         .border(conditionColor, width: 2)
                     
-                    Text(item.condition == "U" ? "USED" : "NEW")
+                    Text(item.condition.name.uppercased())
                         .font(.title3)
                         .foregroundStyle(conditionColor)
                         .fontWeight(.bold)
@@ -102,9 +102,8 @@ struct PickingItemView: View {
     
     var conditionColor: Color {
         switch item.condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
+        case .used: return .red
+        case .new: return .blue
         }
     }
 }

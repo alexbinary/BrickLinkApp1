@@ -9,10 +9,10 @@ struct ItemConditionPicker: View {
     let label: String
 
     @Binding
-    var selection: String
+    var selection: ItemCondition
     
     
-    init(_ label: String, selection: Binding<String>) {
+    init(_ label: String, selection: Binding<ItemCondition>) {
         self.label = label
         self._selection = selection
     }
@@ -21,8 +21,9 @@ struct ItemConditionPicker: View {
     var body: some View {
 
         Picker(label, selection: $selection) {
-            Text("New").tag("N")
-            Text("Used").tag("U")
+            ForEach(ItemCondition.allCases, id: \.self) { condition in
+                Text(condition.name.uppercased()).tag(condition)
+            }
         }
     }
 }
@@ -31,7 +32,7 @@ struct ItemConditionPicker: View {
 
 #Preview {
     
-    @Previewable @State var selection: String = "N"
+    @Previewable @State var selection: ItemCondition = .new
     
     VStack(alignment: .leading) {
         

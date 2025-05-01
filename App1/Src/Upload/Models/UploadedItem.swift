@@ -12,7 +12,7 @@ struct UploadedItem: Identifiable, Codable, Equatable {
     let colorId: LegoColor.ID
     let qtyBefore: Int?
     let qtyAfter: Int
-    let condition: String
+    let condition: ItemCondition
     let comment: String?
     let remarksBefore: String?
     let remarksAfter: String
@@ -111,7 +111,7 @@ extension UploadedItem {
     
     var rawSearchableText_condition: String {
     
-        condition
+        condition.name
     }
     
     var rawSearchableText_comment: String {

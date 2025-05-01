@@ -50,17 +50,17 @@ class UploadListXMLParserDelegate : NSObject, XMLParserDelegate {
         self.currentElementName = nil
         
         guard elementName == "ITEM" else { return }
-            
-        let ref: String = self.ref
+        
         let type: ItemType? = {
             switch self.type {
             case "P": ItemType.part
             default: nil
             }
         }()
+        let ref = self.ref
         let colorId = self.colorId
         let qty = Int(self.qty)
-        let condition = self.condition
+        let condition = ItemCondition(rawValue: self.condition)
         let unitPrice = Float(self.unitPrice)
         let comment = self.comment
         
@@ -76,14 +76,6 @@ class UploadListXMLParserDelegate : NSObject, XMLParserDelegate {
         
         guard let type = type else {
             print("could not parse type: \(self.type)")
-            return
-        }
-        guard let qty = qty else {
-            print("could not parse qty: \(self.qty)")
-            return
-        }
-        guard let unitPrice = unitPrice else {
-            print("could not parse price: \(self.unitPrice)")
             return
         }
             

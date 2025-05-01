@@ -9,7 +9,7 @@ extension OrderItem {
         .init(
             inventoryId: "",
             orderId: "",
-            condition: "U",
+            condition: .used,
             colorId: "",
             colorName: "",
             ref: "",

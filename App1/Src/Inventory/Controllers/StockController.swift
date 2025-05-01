@@ -57,7 +57,7 @@ class StockController {
         ref: String,
         comment: String?,
         colorId: String,
-        condition: String
+        condition: ItemCondition
     
     ) -> InventoryItem? {
         
@@ -77,7 +77,7 @@ class StockController {
         ref: String,
         comment: String?,
         colorId: String,
-        condition: String
+        condition: ItemCondition
     
     ) -> Int {
         

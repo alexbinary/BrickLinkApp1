@@ -152,7 +152,7 @@ class PickingStore: PickingStoreProtocol {
         
         return items(for: order)
             .filter { pickedIds.contains($0.id) && !verifiedIds.contains($0.id) }
-            .sorted { a, b in a.condition == "N" }
+            .sorted { a, b in a.condition == .new }
     }
     
     

@@ -7,7 +7,7 @@ extension InventoryItem {
     static var previewItem1: InventoryItem {
         .init(
             id: "1",
-            condition: "N",
+            condition: .new,
             colorId: "11",
             ref: "3001",
             name: "Preview name",

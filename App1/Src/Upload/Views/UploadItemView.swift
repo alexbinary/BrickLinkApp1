@@ -37,7 +37,7 @@ struct UploadItemView: View {
     
     @State var editRef: String = ""
     @State var editColorId: LegoColor.ID
-    @State var editCondition: String?
+    @State var editCondition: ItemCondition?
     @State var editComment: String = ""
     @State var editQty: Int?
     @State var editUnitPrice: Float?
@@ -146,7 +146,7 @@ struct UploadItemView: View {
                     
                     ZStack {
                         
-                        Text(uploadItem.condition != nil ? (uploadItem.condition == "U" ? "USED" : "NEW") : "-")
+                        Text(uploadItem.condition?.name.uppercased() ?? "-")
                             .font(.title3)
                             .foregroundStyle(conditionColor)
                             .fontWeight(.bold)
@@ -155,9 +155,9 @@ struct UploadItemView: View {
                         
                         Picker("Condition", selection: $editCondition) {
                             
-                            Text("").tag(nil as String?)
-                            Text("NEW").tag("N")
-                            Text("USED").tag("U")
+                            Text("").tag(nil as ItemCondition?)
+                            Text("NEW").tag(ItemCondition.new)
+                            Text("USED").tag(ItemCondition.used)
                         }
                         .labelsHidden()
                         .frame(maxWidth: 90)
@@ -178,7 +178,7 @@ struct UploadItemView: View {
                     errors.append("invalid item ref")
                 }
                 
-                if uploadItem.condition.normalizedOptional == nil {
+                if uploadItem.condition == nil {
                     errors.append("missing condition")
                 }
                 
@@ -492,7 +492,10 @@ struct UploadItemView: View {
                 Task { await pullCatalogEntry() }
             }
         }
-        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.comment], initial: true) {
+            self.editRemarks = self.inventoryItem?.remarks ?? ""
+        }
+        .onChange(of: [uploadItem.condition], initial: true) {
             self.editRemarks = self.inventoryItem?.remarks ?? ""
         }
     }
@@ -515,7 +518,7 @@ struct UploadItemView: View {
         name: String? = nil,
         colorId: String? = nil,
         qty: Int? = nil,
-        condition: String? = nil,
+        condition: ItemCondition? = nil,
         comment: String? = nil,
         unitPrice: Float? = nil
     
@@ -552,8 +555,8 @@ struct UploadItemView: View {
     
     var conditionColor: Color {
         switch uploadItem.condition {
-        case "U": return .red
-        case "N": return .blue
+        case .used: return .red
+        case .new: return .blue
         default: return .clear
         }
     }

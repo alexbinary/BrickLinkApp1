@@ -15,7 +15,7 @@ struct UploadAddFormView: View {
     @State var name: String? = nil
     @State var colorId: LegoColor.ID = ""
     @State var qty: Int = 1
-    @State var condition: String = "U"
+    @State var condition: ItemCondition = .used
     @State var comment: String = ""
     @State var unitPrice: Float = 0
     @State var importText: String = ""

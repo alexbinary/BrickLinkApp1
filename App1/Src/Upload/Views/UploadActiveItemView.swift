@@ -28,7 +28,7 @@ struct UploadActiveItemView: View {
     @State var editingValue_type: ItemType = .part
     @State var editingValue_ref: String = ""
     @State var editingValue_colorId: LegoColor.ID = ""
-    @State var editingValue_condition: String?
+    @State var editingValue_condition: ItemCondition?
     @State var editingValue_comment: String = ""
     @State var editingValue_quantity: Int?
     @State var editingValue_unitPrice: Float?
@@ -47,7 +47,7 @@ struct UploadActiveItemView: View {
                 errors.append("invalid item ref")
             }
             
-            if uploadItem.condition.normalizedOptional == nil {
+            if uploadItem.condition == nil {
                 errors.append("missing condition")
             }
             
@@ -147,15 +147,15 @@ struct UploadActiveItemView: View {
                             
                             Picker("Condition", selection: $editingValue_condition) {
                                 
-                                Text("").tag(nil as String?)
+                                Text("").tag(nil as ItemCondition?)
                                 Text("NEW")
-                                    .foregroundStyle(color(for: "N"))
+                                    .foregroundStyle(color(for: .new))
                                     .fontWeight(.bold)
-                                    .tag("N")
+                                    .tag(ItemCondition.new)
                                 Text("USED")
-                                    .foregroundStyle(color(for: "U"))
+                                    .foregroundStyle(color(for: .used))
                                     .fontWeight(.bold)
-                                    .tag("U")
+                                    .tag(ItemCondition.used)
                             }
                             .labelsHidden()
                             .onChange(of: editingValue_condition) {
@@ -179,7 +179,7 @@ struct UploadActiveItemView: View {
                             .border(conditionColor, width: 2)
                         
                         if let condition = uploadItem.condition {
-                            Text(condition == "U" ? "USED" : "NEW")
+                            Text(condition.name.uppercased())
                                 .font(.title3)
                                 .foregroundStyle(conditionColor)
                                 .fontWeight(.bold)
@@ -506,7 +506,10 @@ struct UploadActiveItemView: View {
                 Task { await pullCatalogEntry() }
             }
         }
-        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
+        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.comment], initial: true) {
+            self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
+        }
+        .onChange(of: [uploadItem.condition], initial: true) {
             self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
         }
     }
@@ -528,7 +531,7 @@ struct UploadActiveItemView: View {
     var submitValue_ref: String? { uploadItem.ref.normalizedOptional }
     var submitValue_name: String? { uploadItem.name }
     var submitValue_colorId: LegoColor.ID { uploadItem.colorId }
-    var submitValue_condition: String? { uploadItem.condition.normalizedOptional }
+    var submitValue_condition: ItemCondition? { uploadItem.condition }
     var submitValue_comment: String? { uploadItem.comment }
     var submitValue_quantity: Int? { uploadItem.qty.normalizedOptional }
     var submitValue_unitPrice: Float? { uploadItem.unitPrice.normalizedOptional }
@@ -544,11 +547,10 @@ struct UploadActiveItemView: View {
     }
     
     
-    func color(for condition: String) -> Color {
+    func color(for condition: ItemCondition) -> Color {
         switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
+        case .used: return .red
+        case .new: return .blue
         }
     }
     
@@ -574,7 +576,7 @@ struct UploadActiveItemView: View {
         name: String? = nil,
         colorId: String? = nil,
         qty: Int? = nil,
-        condition: String? = nil,
+        condition: ItemCondition? = nil,
         comment: String? = nil,
         unitPrice: Float? = nil
     

@@ -9,7 +9,7 @@ struct OrderItem: Identifiable, Codable {
     
     let inventoryId: InventoryItem.ID
     let orderId: String
-    let condition: String
+    let condition: ItemCondition
     let colorId: String
     let colorName: String
     let ref: String
@@ -31,7 +31,7 @@ extension OrderItem {
         self.init(
             inventoryId: "\(bl.inventoryId)",
             orderId: orderId,
-            condition: bl.newOrUsed,
+            condition: .init(fromBl: bl.newOrUsed),
             colorId: "\(bl.colorId)",
             colorName: bl.colorName,
             ref: bl.item.no,

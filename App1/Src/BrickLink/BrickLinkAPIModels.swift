@@ -86,7 +86,7 @@ struct BrickLinkOrderItem: Decodable {
     let quantity: Int
     let colorId: Int
     let colorName: String
-    let newOrUsed: String
+    let newOrUsed: BrickLinkItemCondition
     let remarks: String?
     let description: String?
     let unitPrice: FixedPointNumber
@@ -143,6 +143,14 @@ enum BrickLinkItemType: String, Decodable, Encodable, CaseIterable {
 
 
 
+enum BrickLinkItemCondition: String, Decodable, Encodable, CaseIterable {
+    
+    case new = "N"
+    case used = "U"
+}
+
+
+
 struct BrickLinkOrderCost: Decodable {
     
     let currencyCode: String
@@ -167,7 +175,7 @@ struct BrickLinkInventoryItem: Decodable {
     let item: BrickLinkCatalogItem
     let colorId: Int
     let quantity: Int
-    let newOrUsed: String
+    let newOrUsed: BrickLinkItemCondition
     let description: String?
     let remarks: String?
     let unitPrice: FixedPointNumber
