@@ -22,15 +22,16 @@ struct UploadActiveItemView: View {
     
     @State var catalogResult: Result<CatalogEntry>? = nil
     
-    @State var editRef: String = ""
-    @State var editColorId: LegoColor.ID = ""
-    @State var editCondition: String?
-    @State var editComment: String = ""
-    @State var editQty: Int?
-    @State var editUnitPrice: Float?
-    @State var editRemarks: String = ""
+    @State var editingValue_type: ItemType = .part
+    @State var editingValue_ref: String = ""
+    @State var editingValue_colorId: LegoColor.ID = ""
+    @State var editingValue_condition: String?
+    @State var editingValue_comment: String = ""
+    @State var editingValue_quantity: Int?
+    @State var editingValue_unitPrice: Float?
+    @State var editingValue_remarks: String = ""
     
-    @State var submitting = false
+    @State var isSubmitting = false
 
     
     var body: some View {
@@ -52,29 +53,19 @@ struct UploadActiveItemView: View {
         
         let itemValid = itemErrors.isEmpty
         
-        let submitType = uploadItem.type
-        let submitRef = uploadItem.ref.normalizedOptional
-        let submitName = uploadItem.name
-        let submitColorId = uploadItem.colorId
-        let submitCondition = uploadItem.condition.normalizedOptional
-        let submitComment = uploadItem.comment
-        let submitQty = uploadItem.qty.normalizedOptional
-        let submitUnitPrice = uploadItem.unitPrice.normalizedOptional
-        let submitRemarks = editRemarks.normalizedOptional
-        
-        let buttonDisabled = submitting
-        || submitRef == nil
-        || submitCondition == nil
-        || submitQty == nil
-        || submitUnitPrice == nil
-        || submitRemarks == nil
+        let buttonDisabled = isSubmitting
+        || submitValue_ref == nil
+        || submitValue_condition == nil
+        || submitValue_quantity == nil
+        || submitValue_unitPrice == nil
+        || submitValue_remarks == nil
         
         HStack(alignment: .top) {
             
             VStack(alignment: .leading) {
                 
                 Text("Upload item 􁉂").font(.title2)
-                .padding(.bottom)
+                    .padding(.bottom)
                 
                 HStack(alignment: .top, spacing: 16) {
                     
@@ -82,14 +73,25 @@ struct UploadActiveItemView: View {
                         
                         GridRow {
                             
+                            Text("Type").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            
+                            ItemTypePicker("Type", selection: $editingValue_type)
+                                .labelsHidden()
+                                .onChange(of: editingValue_type, {
+                                    updateItem(type: editingValue_type)
+                                })
+                        }
+                        
+                        GridRow {
+                            
                             Text("Ref").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                             
-                            TextField("Ref", text: $editRef)
+                            TextField("Ref", text: $editingValue_ref)
                                 .onSubmit({
-                                    if editRef.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-                                        editRef = uploadItem.ref
+                                    if editingValue_ref.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                                        editingValue_ref = uploadItem.ref
                                     }
-                                    updateItem(ref: editRef)
+                                    updateItem(ref: editingValue_ref)
                                 })
                         }
                         
@@ -129,10 +131,10 @@ struct UploadActiveItemView: View {
                             
                             Text("Color").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                             
-                            LegoColorPicker("Color", selection: $editColorId)
+                            LegoColorPicker("Color", selection: $editingValue_colorId)
                                 .labelsHidden()
-                                .onChange(of: editColorId, {
-                                    updateItem(colorId: editColorId)
+                                .onChange(of: editingValue_colorId, {
+                                    updateItem(colorId: editingValue_colorId)
                                 })
                         }
                         
@@ -140,7 +142,7 @@ struct UploadActiveItemView: View {
                             
                             Text("Condition").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                             
-                            Picker("Condition", selection: $editCondition) {
+                            Picker("Condition", selection: $editingValue_condition) {
                                 
                                 Text("").tag(nil as String?)
                                 Text("NEW")
@@ -153,8 +155,8 @@ struct UploadActiveItemView: View {
                                     .tag("U")
                             }
                             .labelsHidden()
-                            .onChange(of: editCondition) {
-                                updateItem(condition: editCondition)
+                            .onChange(of: editingValue_condition) {
+                                updateItem(condition: editingValue_condition)
                             }
                         }
                         
@@ -162,9 +164,9 @@ struct UploadActiveItemView: View {
                             
                             Text("Comment").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                             
-                            TextField("Comment", text: $editComment)
+                            TextField("Comment", text: $editingValue_comment)
                                 .onSubmit {
-                                    updateItem(comment: editComment)
+                                    updateItem(comment: editingValue_comment)
                                 }
                         }
                     }
@@ -172,7 +174,7 @@ struct UploadActiveItemView: View {
                     VStack {
                         CatalogImage(item: uploadItem, scale: 2)
                             .border(conditionColor, width: 2)
-                     
+                        
                         if let condition = uploadItem.condition {
                             Text(condition == "U" ? "USED" : "NEW")
                                 .font(.title3)
@@ -214,9 +216,9 @@ struct UploadActiveItemView: View {
                         Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                         
                         HStack {
-                            TextField("Qty", value: $editQty, format: .number)
+                            TextField("Qty", value: $editingValue_quantity, format: .number)
                                 .onSubmit({
-                                    updateItem(qty: editQty)
+                                    updateItem(qty: editingValue_quantity)
                                 })
                             
                             Button {
@@ -248,11 +250,11 @@ struct UploadActiveItemView: View {
                         
                         Text("Unit price").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
                         
-                        TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                        TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                             .onSubmit({
-                                updateItem(unitPrice: editUnitPrice)
+                                updateItem(unitPrice: editingValue_unitPrice)
                             })
-                            
+                        
                         if let inventoryItem = inventoryItem {
                             
                             Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).font(.title3)
@@ -269,9 +271,9 @@ struct UploadActiveItemView: View {
                             } else {
                                 Text("")
                             }
-
+                            
                             Button("􀅉") {
-                                editUnitPrice = inventoryItem.unitPrice
+                                editingValue_unitPrice = inventoryItem.unitPrice
                             }
                         }
                     }
@@ -288,15 +290,15 @@ struct UploadActiveItemView: View {
                                 
                                 var errors = [String]()
                                 
-                                if submitQty == nil {
+                                if submitValue_quantity == nil {
                                     errors.append("missing valid qty")
                                 }
                                 
-                                if submitUnitPrice == nil {
+                                if submitValue_unitPrice == nil {
                                     errors.append("missing valid price")
                                 }
                                 
-                                if submitRemarks == nil {
+                                if submitValue_remarks == nil {
                                     errors.append("missing valid remarks")
                                 }
                                 
@@ -314,17 +316,17 @@ struct UploadActiveItemView: View {
             VStack(alignment: .leading) {
                 
                 Text("Location 􁉂􀈫").font(.title2)
-                .padding(.bottom)
+                    .padding(.bottom)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
                     HStack {
                         
-                        TextField("Location", text: $editRemarks)
+                        TextField("Location", text: $editingValue_remarks)
                             .frame(width: 100)
                         
                         if let inventoryItem = inventoryItem {
-                            Button("􀅉") { editRemarks = inventoryItem.remarks }
+                            Button("􀅉") { editingValue_remarks = inventoryItem.remarks }
                         }
                         
                         Color.clear.frame(width: 16, height: 0)
@@ -337,7 +339,7 @@ struct UploadActiveItemView: View {
                                 HStack {
                                     ForEach(suggestedLocations, id: \.self) { location in
                                         Button {
-                                            self.editRemarks = location
+                                            self.editingValue_remarks = location
                                         } label: {
                                             Text(location)
                                         }
@@ -355,7 +357,7 @@ struct UploadActiveItemView: View {
                         
                         Task {
                             
-                            submitting = true
+                            isSubmitting = true
                             
                             let qtyBefore = inventoryItem?.quantity
                             let priceBefore = inventoryItem?.unitPrice
@@ -369,9 +371,9 @@ struct UploadActiveItemView: View {
                                     await inventoryStore.updateInventory(
                                         
                                         inventoryId: inventoryItem.id,
-                                        addQuantity: submitQty!,
-                                        unitPrice: submitUnitPrice!,
-                                        remarks: submitRemarks!
+                                        addQuantity: submitValue_quantity!,
+                                        unitPrice: submitValue_unitPrice!,
+                                        remarks: submitValue_remarks!
                                     )
                                     
                                     return inventoryItem
@@ -380,14 +382,14 @@ struct UploadActiveItemView: View {
                                     
                                     let inventoryItem = await inventoryStore.createInventory(
                                         
-                                        ref: submitRef!,
-                                        type: submitType,
-                                        colorId: submitColorId,
-                                        quantity: submitQty!,
-                                        unitPrice: submitUnitPrice!,
-                                        condition: submitCondition!,
-                                        description: submitComment,
-                                        remarks: submitRemarks!
+                                        ref: submitValue_ref!,
+                                        type: submitValue_type,
+                                        colorId: submitValue_colorId,
+                                        quantity: submitValue_quantity!,
+                                        unitPrice: submitValue_unitPrice!,
+                                        condition: submitValue_condition!,
+                                        description: submitValue_comment,
+                                        remarks: submitValue_remarks!
                                     )!
                                     
                                     return inventoryItem
@@ -395,18 +397,18 @@ struct UploadActiveItemView: View {
                             }()
                             
                             uploadStore.add(UploadedItem(
-                                type: submitType,
-                                ref: submitRef!,
-                                name: submitName,
-                                colorId: submitColorId,
+                                type: submitValue_type,
+                                ref: submitValue_ref!,
+                                name: submitValue_name,
+                                colorId: submitValue_colorId,
                                 qtyBefore: qtyBefore,
-                                qtyAfter:  (qtyBefore ?? 0) + submitQty!,
-                                condition: submitCondition!,
-                                comment: submitComment,
+                                qtyAfter:  (qtyBefore ?? 0) + submitValue_quantity!,
+                                condition: submitValue_condition!,
+                                comment: submitValue_comment,
                                 remarksBefore: remarksBefore,
-                                remarksAfter: submitRemarks!,
+                                remarksAfter: submitValue_remarks!,
                                 unitPriceBefore: priceBefore,
-                                unitPriceAfter: submitUnitPrice!,
+                                unitPriceAfter: submitValue_unitPrice!,
                                 inventoryId: updatedOrCreatedInventoryItem.id,
                                 uploadDate: .now,
                                 inventoryStatus: inventoryStatus
@@ -414,11 +416,11 @@ struct UploadActiveItemView: View {
                             
                             uploadStore.delete(uploadItem)
                             
-                            submitting = false
+                            isSubmitting = false
                         }
                         
                     } label: {
-                        if submitting {
+                        if isSubmitting {
                             Text("􀈧 Uploading...").padding(.horizontal)
                         } else {
                             Text("􀈧 Upload").padding(.horizontal)
@@ -431,7 +433,7 @@ struct UploadActiveItemView: View {
                         Text("invalid location").italic().fixedSize()
                     }
                     
-                    if submitting {
+                    if isSubmitting {
                         ProgressView().controlSize(.small)
                     }
                     
@@ -455,12 +457,13 @@ struct UploadActiveItemView: View {
         }
         .onChange(of: uploadItem, initial: true) {
             
-            editRef = uploadItem.ref
-            editColorId = uploadItem.colorId
-            editCondition = uploadItem.condition
-            editComment = uploadItem.comment ?? ""
-            editQty = uploadItem.qty
-            editUnitPrice = uploadItem.unitPrice
+            editingValue_type = uploadItem.type
+            editingValue_ref = uploadItem.ref
+            editingValue_colorId = uploadItem.colorId
+            editingValue_condition = uploadItem.condition
+            editingValue_comment = uploadItem.comment ?? ""
+            editingValue_quantity = uploadItem.qty
+            editingValue_unitPrice = uploadItem.unitPrice
         }
         .onChange(of: uploadItem.ref, initial: false) {
             uploadStore.update(UploadItem(
@@ -482,21 +485,32 @@ struct UploadActiveItemView: View {
             }
         }
         .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.condition, uploadItem.comment], initial: true) {
-            self.editRemarks = self.inventoryItem?.remarks ?? ""
+            self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
         }
     }
     
     
     var validatedLocation: ValidatedValue<Location> {
         
-        if let loc = Location(from: editRemarks) {
+        if let loc = Location(from: editingValue_remarks) {
             .init(valueToSubmit: loc, hasWarning: false)
-        } else if editRemarks.isEmpty {
+        } else if editingValue_remarks.isEmpty {
             .init(valueToSubmit: nil, hasWarning: false)
         } else {
             .init(valueToSubmit: nil, hasWarning: true)
         }
     }
+    
+    
+    var submitValue_type: ItemType { uploadItem.type }
+    var submitValue_ref: String? { uploadItem.ref.normalizedOptional }
+    var submitValue_name: String? { uploadItem.name }
+    var submitValue_colorId: LegoColor.ID { uploadItem.colorId }
+    var submitValue_condition: String? { uploadItem.condition.normalizedOptional }
+    var submitValue_comment: String? { uploadItem.comment }
+    var submitValue_quantity: Int? { uploadItem.qty.normalizedOptional }
+    var submitValue_unitPrice: Float? { uploadItem.unitPrice.normalizedOptional }
+    var submitValue_remarks: String? { editingValue_remarks.normalizedOptional }
     
     
     var inventoryItem: InventoryItem? {
@@ -512,6 +526,7 @@ struct UploadActiveItemView: View {
     
     func updateItem(
         
+        type: ItemType? = nil,
         ref: String? = nil,
         name: String? = nil,
         colorId: String? = nil,
@@ -525,7 +540,7 @@ struct UploadActiveItemView: View {
         uploadStore.update(UploadItem(
             
             id: uploadItem.id,
-            type: uploadItem.type,
+            type: type ?? uploadItem.type,
             ref: ref ?? uploadItem.ref,
             name: name ?? uploadItem.name,
             colorId: colorId ?? uploadItem.colorId,

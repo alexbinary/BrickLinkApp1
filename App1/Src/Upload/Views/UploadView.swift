@@ -27,9 +27,8 @@ struct UploadView: View {
                 LazyVStack(alignment: .leading, spacing: 12, pinnedViews: .sectionHeaders) {
                     
                     if let id = activeItemId {
-                        
                         UploadActiveItemView(uploadItemId: id)
-                            .padding()
+                            .padding(.horizontal)
                     }
                     
                     Section {
