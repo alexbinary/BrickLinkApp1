@@ -81,7 +81,7 @@ struct UploadActiveItemView: View {
                             ItemTypePicker("Type", selection: $editingValue_type)
                                 .labelsHidden()
                                 .onChange(of: editingValue_type, {
-                                    updateItem(type: editingValue_type)
+                                    updateItem(type: ChangeValue(to: editingValue_type))
                                 })
                         }
                         
@@ -94,7 +94,7 @@ struct UploadActiveItemView: View {
                                     if editingValue_ref.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
                                         editingValue_ref = uploadItem.ref
                                     }
-                                    updateItem(ref: editingValue_ref)
+                                    updateItem(ref: ChangeValue(to: editingValue_ref))
                                 })
                         }
                         
@@ -137,7 +137,7 @@ struct UploadActiveItemView: View {
                             LegoColorPicker("Color", selection: $editingValue_colorId)
                                 .labelsHidden()
                                 .onChange(of: editingValue_colorId, {
-                                    updateItem(colorId: editingValue_colorId)
+                                    updateItem(colorId: ChangeValue(to: editingValue_colorId))
                                 })
                         }
                         
@@ -159,7 +159,7 @@ struct UploadActiveItemView: View {
                             }
                             .labelsHidden()
                             .onChange(of: editingValue_condition) {
-                                updateItem(condition: editingValue_condition)
+                                updateItem(condition: ChangeValue(to: editingValue_condition))
                             }
                         }
                         
@@ -169,7 +169,7 @@ struct UploadActiveItemView: View {
                             
                             TextField("Comment", text: $editingValue_comment)
                                 .onSubmit {
-                                    updateItem(comment: editingValue_comment)
+                                    updateItem(comment: ChangeValue(to: editingValue_comment))
                                 }
                         }
                     }
@@ -221,17 +221,17 @@ struct UploadActiveItemView: View {
                         HStack {
                             TextField("Qty", value: $editingValue_quantity, format: .number)
                                 .onSubmit({
-                                    updateItem(qty: editingValue_quantity)
+                                    updateItem(qty: ChangeValue(to: editingValue_quantity))
                                 })
                             
                             Button {
-                                updateItem(qty: (uploadItem.qty ?? 0) + 1)
+                                updateItem(qty: ChangeValue(to: (uploadItem.qty ?? 0) + 1))
                             } label: {
                                 Text("􀅼")
                             }
                             
                             Button {
-                                updateItem(qty: (uploadItem.qty ?? 0) - 1)
+                                updateItem(qty: ChangeValue(to: (uploadItem.qty ?? 0) - 1))
                             } label: {
                                 Text("􀅽")
                             }
@@ -255,7 +255,7 @@ struct UploadActiveItemView: View {
                         
                         TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                             .onSubmit({
-                                updateItem(unitPrice: editingValue_unitPrice)
+                                updateItem(unitPrice: ChangeValue(to: editingValue_unitPrice))
                             })
                         
                         if let inventoryItem = inventoryItem {
@@ -488,18 +488,7 @@ struct UploadActiveItemView: View {
         }
         
         .onChange(of: uploadItem.ref, initial: false) {
-            uploadStore.update(UploadItem(
-                
-                id: uploadItem.id,
-                type: uploadItem.type,
-                ref: uploadItem.ref,
-                name: nil,
-                colorId: uploadItem.colorId,
-                qty: uploadItem.qty,
-                condition: uploadItem.condition,
-                comment: uploadItem.comment,
-                unitPrice: uploadItem.unitPrice
-            ))
+            updateItem(name: ChangeValue(to: nil))
         }
         .onChange(of: uploadItem.name, initial: true) { old, new in
             if new == nil {
@@ -550,7 +539,7 @@ struct UploadActiveItemView: View {
         if let catalogEntry = await catalog.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
             
             self.catalogResult = .found(catalogEntry)
-            updateItem(name: catalogEntry.name)
+            updateItem(name: ChangeValue(to: catalogEntry.name))
         } else {
             self.catalogResult = .notFound
         }
@@ -559,30 +548,45 @@ struct UploadActiveItemView: View {
     
     func updateItem(
         
-        type: ItemType? = nil,
-        ref: String? = nil,
-        name: String? = nil,
-        colorId: String? = nil,
-        qty: Int? = nil,
-        condition: ItemCondition? = nil,
-        comment: String? = nil,
-        unitPrice: Float? = nil
-    
+        type changeType: ChangeValue<ItemType>? = nil,
+        ref changeRef: ChangeValue<String>? = nil,
+        name changeName: ChangeValue<String?>? = nil,
+        colorId changeColorId: ChangeValue<String>? = nil,
+        qty changeQty: ChangeValue<Int?>? = nil,
+        condition changeCondition: ChangeValue<ItemCondition?>? = nil,
+        comment changeComment: ChangeValue<String?>? = nil,
+        unitPrice changeUnitPrice: ChangeValue<Float?>? = nil
     ) {
-        
         uploadStore.update(UploadItem(
             
             id: uploadItem.id,
-            type: type ?? uploadItem.type,
-            ref: ref ?? uploadItem.ref,
-            name: name ?? uploadItem.name,
-            colorId: colorId ?? uploadItem.colorId,
-            qty: qty ?? uploadItem.qty,
-            condition: condition ?? uploadItem.condition,
-            comment: comment ?? uploadItem.comment,
-            unitPrice: unitPrice ?? uploadItem.unitPrice
+            type: value(from: changeType, ifNoChange: uploadItem.type),
+            ref: value(from: changeRef, ifNoChange: uploadItem.ref),
+            name: value(from: changeName, ifNoChange: uploadItem.name),
+            colorId: value(from: changeColorId, ifNoChange: uploadItem.colorId),
+            qty: value(from: changeQty, ifNoChange: uploadItem.qty),
+            condition: value(from: changeCondition, ifNoChange: uploadItem.condition),
+            comment: value(from: changeComment, ifNoChange: uploadItem.comment),
+            unitPrice: value(from: changeUnitPrice, ifNoChange: uploadItem.unitPrice)
         ))
     }
+}
+
+
+
+struct ChangeValue<T> {
+    
+    let newValue: T
+    
+    init(to newValue: T) {
+        self.newValue = newValue
+    }
+}
+
+
+func value<T>(from change: ChangeValue<T>?, ifNoChange defaultValue: T) -> T {
+    
+    change != nil ? change!.newValue : defaultValue
 }
 
 
