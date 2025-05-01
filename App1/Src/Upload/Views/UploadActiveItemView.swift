@@ -78,18 +78,6 @@ struct UploadActiveItemView: View {
                 
                 HStack(alignment: .top, spacing: 16) {
                     
-                    VStack {
-                        CatalogImage(item: uploadItem, scale: 2)
-                            .border(conditionColor, width: 2)
-                     
-                        if let condition = uploadItem.condition {
-                            Text(condition == "U" ? "USED" : "NEW")
-                                .font(.title3)
-                                .foregroundStyle(conditionColor)
-                                .fontWeight(.bold)
-                        }
-                    }
-                    
                     Grid(alignment: .leading) {
                         
                         GridRow {
@@ -173,17 +161,26 @@ struct UploadActiveItemView: View {
                         GridRow {
                             
                             Text("Comment").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                         
+                            
                             TextField("Comment", text: $editComment)
                                 .onSubmit {
                                     updateItem(comment: editComment)
                                 }
                         }
                     }
+                    
+                    VStack {
+                        CatalogImage(item: uploadItem, scale: 2)
+                            .border(conditionColor, width: 2)
+                     
+                        if let condition = uploadItem.condition {
+                            Text(condition == "U" ? "USED" : "NEW")
+                                .font(.title3)
+                                .foregroundStyle(conditionColor)
+                                .fontWeight(.bold)
+                        }
+                    }
                 }
-                
-                Divider()
-                    .padding(.vertical)
                 
                 HStack(spacing: 16) {
                     
@@ -193,16 +190,15 @@ struct UploadActiveItemView: View {
                             if itemValid {
                                 if let inventoryItem = inventoryItem {
                                     HStack {
-                                        Text("Update inventory")
+                                        Text("Updating lot")
                                         InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
-                                        Text("􀅈")
                                     }
                                 } else {
-                                    Text("Create new lot 􀫸")
+                                    Text("This is a new lot 􀫸")
                                 }
                             }
                         }
-                        .font(.title2)
+                        .font(.title3)
                         .padding(.bottom)
                         
                         Grid(alignment: .leading, verticalSpacing: 6) {
@@ -444,7 +440,7 @@ struct UploadActiveItemView: View {
                     }
                 }
                 
-                Divider().padding(.top, 8)
+                Divider().padding(.top)
                 
                 let newLocation = validatedLocation.valueToSubmit
                 
