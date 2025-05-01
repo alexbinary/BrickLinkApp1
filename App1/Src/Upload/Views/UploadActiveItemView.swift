@@ -19,6 +19,9 @@ struct UploadActiveItemView: View {
     let uploadItemId: UploadItem.ID
     var uploadItem: UploadItem { uploadStore.uploadItemsForList.first(where: { $0.id == uploadItemId })! }
     
+    var inventoryItem: InventoryItem? { inventoryStore.inventory(for: uploadItem) }
+    var suggestedLocations: [String] { uploadStore.suggestedLocations(for: uploadItem) }
+    
     
     @State var catalogResult: Result<CatalogEntry>? = nil
     
@@ -455,16 +458,35 @@ struct UploadActiveItemView: View {
             }
             .padding()
         }
-        .onChange(of: uploadItem, initial: true) {
+        .onChange(of: uploadItem.type, initial: true) {
             
             editingValue_type = uploadItem.type
+        }
+        .onChange(of: uploadItem.ref, initial: true) {
+            
             editingValue_ref = uploadItem.ref
+        }
+        .onChange(of: uploadItem.colorId, initial: true) {
+            
             editingValue_colorId = uploadItem.colorId
+        }
+        .onChange(of: uploadItem.condition, initial: true) {
+            
             editingValue_condition = uploadItem.condition
+        }
+        .onChange(of: uploadItem.comment, initial: true) {
+            
             editingValue_comment = uploadItem.comment ?? ""
+        }
+        .onChange(of: uploadItem.qty, initial: true) {
+            
             editingValue_quantity = uploadItem.qty
+        }
+        .onChange(of: uploadItem.unitPrice, initial: true) {
+            
             editingValue_unitPrice = uploadItem.unitPrice
         }
+        
         .onChange(of: uploadItem.ref, initial: false) {
             uploadStore.update(UploadItem(
                 
@@ -513,14 +535,35 @@ struct UploadActiveItemView: View {
     var submitValue_remarks: String? { editingValue_remarks.normalizedOptional }
     
     
-    var inventoryItem: InventoryItem? {
-        
-        return inventoryStore.inventory(for: uploadItem)
+    var conditionColor: Color {
+        if let condition = uploadItem.condition {
+            color(for: condition)
+        } else {
+            .black
+        }
     }
     
-    var suggestedLocations: [String] {
+    
+    func color(for condition: String) -> Color {
+        switch condition {
+        case "U": return .red
+        case "N": return .blue
+        default: return .clear
+        }
+    }
+    
+    
+    func pullCatalogEntry() async {
         
-        return uploadStore.suggestedLocations(for: uploadItem)
+        self.catalogResult = .loading
+        
+        if let catalogEntry = await catalog.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
+            
+            self.catalogResult = .found(catalogEntry)
+            updateItem(name: catalogEntry.name)
+        } else {
+            self.catalogResult = .notFound
+        }
     }
     
     
@@ -549,38 +592,6 @@ struct UploadActiveItemView: View {
             comment: comment ?? uploadItem.comment,
             unitPrice: unitPrice ?? uploadItem.unitPrice
         ))
-    }
-    
-    
-    func pullCatalogEntry() async {
-        
-        self.catalogResult = .loading
-        
-        if let catalogEntry = await catalog.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
-            
-            self.catalogResult = .found(catalogEntry)
-            updateItem(name: catalogEntry.name)
-        } else {
-            self.catalogResult = .notFound
-        }
-    }
-    
-    
-    var conditionColor: Color {
-        if let condition = uploadItem.condition {
-            color(for: condition)
-        } else {
-            .black
-        }
-    }
-    
-    
-    func color(for condition: String) -> Color {
-        switch condition {
-        case "U": return .red
-        case "N": return .blue
-        default: return .clear
-        }
     }
 }
 
