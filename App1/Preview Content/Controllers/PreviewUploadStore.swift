@@ -12,6 +12,18 @@ struct PreviewUploadStore: UploadStoreProtocol {
     }
     
     
+    func suggestedLocations(
+        
+        forItemType type: ItemType,
+        ref: String,
+        comment: String?,
+        condition: ItemCondition
+    
+    ) -> [String] {
+        
+        return []
+    }
+    
     func suggestedLocations(for uploadItem: UploadItem) -> [String] {
         
         return []

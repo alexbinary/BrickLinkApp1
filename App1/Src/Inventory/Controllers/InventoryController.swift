@@ -75,6 +75,25 @@ class InventoryController {
     }
     
     
+    func inventoriesForAllColorsOf(
+        
+        itemType type: ItemType,
+        ref: String,
+        comment: String?,
+        condition: ItemCondition
+    
+    ) -> [InventoryItem] {
+        
+        return allInventories.filter {
+            
+            $0.type == type
+            && $0.ref == ref
+            && $0.description == (comment ?? "")
+            && $0.condition == condition
+        }
+    }
+    
+    
     func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
         return allInventories.filter {

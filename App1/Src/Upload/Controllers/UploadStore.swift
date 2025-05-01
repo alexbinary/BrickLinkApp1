@@ -6,6 +6,7 @@ import Foundation
 @MainActor
 protocol UploadStoreProtocol {
 
+    func suggestedLocations(forItemType type: ItemType, ref: String, comment: String?, condition: ItemCondition) -> [String]
     func suggestedLocations(for uploadItem: UploadItem) -> [String]
     var uploadItemsForList: [UploadItem] { get }
     func add(_ uploadItem: UploadItem)
@@ -56,9 +57,48 @@ class UploadStore: UploadStoreProtocol {
     }
     
     
+    private func inventoriesForAllColorsOf(
+        
+        itemType type: ItemType,
+        ref: String,
+        comment: String?,
+        condition: ItemCondition
+    
+    ) -> [InventoryItem] {
+        
+        inventoryController.inventoriesForAllColorsOf(
+        
+            itemType: type,
+            ref: ref,
+            comment: comment,
+            condition: condition
+        )
+    }
+    
+    
     private func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem] {
         
         inventoryController.inventories(forAllColorsOf: uploadItem)
+    }
+    
+    
+    func suggestedLocations(
+        
+        forItemType type: ItemType,
+        ref: String,
+        comment: String?,
+        condition: ItemCondition
+    
+    ) -> [String] {
+        
+        inventoriesForAllColorsOf(
+        
+            itemType: type,
+            ref: ref,
+            comment: comment,
+            condition: condition
+            
+        ).map(\.remarks).unique.sorted()
     }
     
     

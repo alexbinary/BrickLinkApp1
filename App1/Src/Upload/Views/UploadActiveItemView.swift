@@ -19,11 +19,6 @@ struct UploadActiveItemView: View {
     let uploadItemId: UploadItem.ID
     var uploadItem: UploadItem { uploadStore.uploadItemsForList.first(where: { $0.id == uploadItemId })! }
     
-    var inventoryItem: InventoryItem? { inventoryStore.inventory(for: uploadItem) }
-    var suggestedLocations: [String] { uploadStore.suggestedLocations(for: uploadItem) }
-    
-    
-    @State var catalogResult: Result<CatalogEntry>? = nil
     
     @State var editingValue_type: ItemType = .part
     @State var editingValue_ref: String = ""
@@ -34,6 +29,7 @@ struct UploadActiveItemView: View {
     @State var editingValue_unitPrice: Float?
     @State var editingValue_remarks: String = ""
     
+    @State var catalogResult: Result<CatalogEntry>? = nil
     @State var isSubmitting = false
 
     
@@ -56,13 +52,6 @@ struct UploadActiveItemView: View {
         
         let itemValid = itemErrors.isEmpty
         
-        let buttonDisabled = isSubmitting
-        || submitValue_ref == nil
-        || submitValue_condition == nil
-        || submitValue_quantity == nil
-        || submitValue_unitPrice == nil
-        || submitValue_remarks == nil
-        
         HStack(alignment: .top) {
             
             VStack(alignment: .leading) {
@@ -76,19 +65,28 @@ struct UploadActiveItemView: View {
                         
                         GridRow {
                             
-                            Text("Type").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                            
+                            Text("Type")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    editingValue_type != savedValue_type ? .blue
+                                    : .secondary
+                                )
+                                
                             ItemTypePicker("Type", selection: $editingValue_type)
                                 .labelsHidden()
-                                .onChange(of: editingValue_type, {
-                                    updateItem(type: ChangeValue(to: editingValue_type))
-                                })
+                                
+                            Button("􀅉") { editingValue_type = savedValue_type }
                         }
                         
                         GridRow {
                             
-                            Text("Ref").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                            
+                            Text("Ref")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    editingValue_ref != savedValue_ref ? .blue
+                                    : .secondary
+                                )
+                                
                             TextField("Ref", text: $editingValue_ref)
                                 .onSubmit({
                                     if editingValue_ref.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
@@ -109,25 +107,33 @@ struct UploadActiveItemView: View {
                                     switch catalogResult {
                                         
                                     case .loading:
-                                        Text("Loading name from catalog...").foregroundStyle(.secondary)
-                                        
-                                    case .found(let catalogEntry):
-                                        Text(catalogEntry.name).lineLimit(nil)
+                                        HStack {
+                                            Text("Fetching catalog entry...")
+                                            ProgressView().controlSize(.mini)
+                                        }
+                                        .foregroundStyle(.secondary)
                                         
                                     case .notFound:
-                                        Text("no catalog entry").foregroundStyle(.secondary)
+                                        Text("invalid type/ref")
+                                        .foregroundStyle(.red)
+                                    
+                                    case .found(let catalogEntry):
+                                        Text(catalogEntry.name)
+                                            .lineLimit(nil)
+                                            .font(.title3)
                                     }
                                     
                                 } else if let name = uploadItem.name {
                                     
-                                    Text(name).lineLimit(nil)
+                                    Text(name)
+                                        .lineLimit(nil)
+                                        .font(.title3)
                                     
                                 } else {
                                     
-                                    Text("name unknown").foregroundStyle(.secondary).italic()
+                                    Text("-")
                                 }
                             }
-                            .font(.title3)
                         }
                         
                         GridRow {
@@ -175,13 +181,18 @@ struct UploadActiveItemView: View {
                     }
                     
                     VStack {
-                        CatalogImage(item: uploadItem, scale: 2)
-                            .border(conditionColor, width: 2)
+                        CatalogImage(
+                            itemType: editingValue_type,
+                            ref: editingValue_ref,
+                            colorId: editingValue_colorId,
+                            scale: 2
+                        )
+                        .border(uploadItem.condition?.color ?? .black, width: 2)
                         
                         if let condition = uploadItem.condition {
                             Text(condition.name.uppercased())
                                 .font(.title3)
-                                .foregroundStyle(conditionColor)
+                                .foregroundStyle(condition.color)
                                 .fontWeight(.bold)
                         }
                     }
@@ -357,80 +368,11 @@ struct UploadActiveItemView: View {
                 HStack {
                     
                     Button {
-                        
-                        Task {
-                            
-                            isSubmitting = true
-                            
-                            let qtyBefore = inventoryItem?.quantity
-                            let priceBefore = inventoryItem?.unitPrice
-                            let remarksBefore = inventoryItem?.remarks
-                            let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
-                            
-                            let updatedOrCreatedInventoryItem = await {
-                                
-                                if let inventoryItem = inventoryItem {
-                                    
-                                    await inventoryStore.updateInventory(
-                                        
-                                        inventoryId: inventoryItem.id,
-                                        addQuantity: submitValue_quantity!,
-                                        unitPrice: submitValue_unitPrice!,
-                                        remarks: submitValue_remarks!
-                                    )
-                                    
-                                    return inventoryItem
-                                    
-                                } else {
-                                    
-                                    let inventoryItem = await inventoryStore.createInventory(
-                                        
-                                        ref: submitValue_ref!,
-                                        type: submitValue_type,
-                                        colorId: submitValue_colorId,
-                                        quantity: submitValue_quantity!,
-                                        unitPrice: submitValue_unitPrice!,
-                                        condition: submitValue_condition!,
-                                        description: submitValue_comment,
-                                        remarks: submitValue_remarks!
-                                    )!
-                                    
-                                    return inventoryItem
-                                }
-                            }()
-                            
-                            uploadStore.add(UploadedItem(
-                                type: submitValue_type,
-                                ref: submitValue_ref!,
-                                name: submitValue_name,
-                                colorId: submitValue_colorId,
-                                qtyBefore: qtyBefore,
-                                qtyAfter:  (qtyBefore ?? 0) + submitValue_quantity!,
-                                condition: submitValue_condition!,
-                                comment: submitValue_comment,
-                                remarksBefore: remarksBefore,
-                                remarksAfter: submitValue_remarks!,
-                                unitPriceBefore: priceBefore,
-                                unitPriceAfter: submitValue_unitPrice!,
-                                inventoryId: updatedOrCreatedInventoryItem.id,
-                                uploadDate: .now,
-                                inventoryStatus: inventoryStatus
-                            ))
-                            
-                            uploadStore.delete(uploadItem)
-                            
-                            isSubmitting = false
-                        }
-                        
+                        Task { await upload() }
                     } label: {
-                        if isSubmitting {
-                            Text("􀈧 Uploading...").padding(.horizontal)
-                        } else {
-                            Text("􀈧 Upload").padding(.horizontal)
-                        }
+                        Text("􀈧 Upload").padding(.horizontal)
                     }
-                    .disabled(buttonDisabled)
-                    .fixedSize()
+                    .disabled(!canUpload)
                     
                     if validatedLocation.hasWarning {
                         Text("invalid location").italic().fixedSize()
@@ -443,7 +385,14 @@ struct UploadActiveItemView: View {
                     Spacer()
                     
                     Button {
-                        uploadStore.delete(uploadItem)
+                        saveChanges()
+                    } label: {
+                        Text("􀈽 Save changes")
+                    }
+                    .disabled(!hasChanges || !canSaveChanges)
+                    
+                    Button {
+                        deleteUploadItem()
                     } label: {
                         Text("􀈑 Delete")
                     }
@@ -458,6 +407,9 @@ struct UploadActiveItemView: View {
             }
             .padding()
         }
+        
+        // init edit values
+        
         .onChange(of: uploadItem.type, initial: true) {
             
             editingValue_type = uploadItem.type
@@ -487,14 +439,29 @@ struct UploadActiveItemView: View {
             editingValue_unitPrice = uploadItem.unitPrice
         }
         
-        .onChange(of: uploadItem.ref, initial: false) {
-            updateItem(name: ChangeValue(to: nil))
-        }
+        // update catalog entry
+        
         .onChange(of: uploadItem.name, initial: true) { old, new in
             if new == nil {
-                Task { await pullCatalogEntry() }
+                Task { await pullCatalogEntry(type: savedValue_type, ref: savedValue_ref) }
             }
         }
+        .onChange(of: editingValue_ref, initial: true) {
+            
+            Task { await pullCatalogEntry(type: savedValue_type, ref: editingValue_ref) }
+        }
+        .onChange(of: uploadItem.ref, initial: false) {
+            
+            switch catalogResult {
+            case .found(let entry):
+                updateItem(name: ChangeValue(to: entry.name))
+            default:
+                break
+            }
+        }
+        
+        //
+        
         .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.comment], initial: true) {
             self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
         }
@@ -502,6 +469,91 @@ struct UploadActiveItemView: View {
             self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
         }
     }
+    
+    
+    func pullCatalogEntry(type: ItemType, ref: String) async {
+        
+        self.catalogResult = .loading
+        
+        if let catalogEntry = await catalog.fetchEntry(forItemType: type, ref: ref) {
+            
+            self.catalogResult = .found(catalogEntry)
+            updateItem(name: ChangeValue(to: catalogEntry.name))
+        } else {
+            self.catalogResult = .notFound
+        }
+    }
+    
+    
+    var inventoryItem: InventoryItem? {
+        
+        if let condition = editingValue_condition {
+            
+            return inventoryStore.inventory(
+                
+                forType: editingValue_type,
+                ref: editingValue_ref,
+                comment: editingValue_comment,
+                colorId: editingValue_colorId,
+                condition: condition
+            )
+        }
+        return nil
+    }
+    
+    
+    var suggestedLocations: [String] {
+        
+        if let condition = editingValue_condition {
+            
+            return uploadStore.suggestedLocations(
+                
+                forItemType: editingValue_type,
+                ref: editingValue_ref,
+                comment: editingValue_comment,
+                condition: condition
+            )
+        }
+        
+        return []
+    }
+    
+    
+    var savedValue_type: ItemType { uploadItem.type }
+    var savedValue_ref: String { uploadItem.ref }
+    var savedValue_name: String? { uploadItem.name }
+    var savedValue_colorId: LegoColor.ID { uploadItem.colorId }
+    var savedValue_condition: ItemCondition? { uploadItem.condition }
+    var savedValue_comment: String? { uploadItem.comment }
+    var savedValue_quantity: Int? { uploadItem.qty }
+    var savedValue_unitPrice: Float? { uploadItem.unitPrice }
+    
+    
+    var validatedValue_type: ValidatedValue<ItemType> {
+        
+        .init(valueToSubmit: editingValue_type)
+    }
+    
+    var submitValue_ref: String? {
+        switch catalogResult {
+        case .found(let entry): entry.ref
+        default: nil
+        }
+    }
+    
+    var submitValue_name: String? { uploadItem.name }
+    
+    var submitValue_colorId: LegoColor.ID { uploadItem.colorId }
+    
+    var submitValue_condition: ItemCondition? { uploadItem.condition }
+    
+    var submitValue_comment: String? { uploadItem.comment }
+    
+    var submitValue_quantity: Int? { uploadItem.qty.normalizedOptional }
+    
+    var submitValue_unitPrice: Float? { uploadItem.unitPrice.normalizedOptional }
+    
+    var submitValue_remarks: String? { editingValue_remarks.normalizedOptional }
     
     
     var validatedLocation: ValidatedValue<Location> {
@@ -516,33 +568,131 @@ struct UploadActiveItemView: View {
     }
     
     
-    var submitValue_type: ItemType { uploadItem.type }
-    var submitValue_ref: String? { uploadItem.ref.normalizedOptional }
-    var submitValue_name: String? { uploadItem.name }
-    var submitValue_colorId: LegoColor.ID { uploadItem.colorId }
-    var submitValue_condition: ItemCondition? { uploadItem.condition }
-    var submitValue_comment: String? { uploadItem.comment }
-    var submitValue_quantity: Int? { uploadItem.qty.normalizedOptional }
-    var submitValue_unitPrice: Float? { uploadItem.unitPrice.normalizedOptional }
-    var submitValue_remarks: String? { editingValue_remarks.normalizedOptional }
-    
-    
-    var conditionColor: Color {
-        uploadItem.condition?.color ?? .black
+    var hasChanges: Bool {
+        
+        editingValue_type != savedValue_type
+        ||
+        editingValue_ref != savedValue_ref
     }
     
     
-    func pullCatalogEntry() async {
+    var canSaveChanges: Bool {
         
-        self.catalogResult = .loading
+        validatedValue_type.valueToSubmit != nil
+        &&
+        submitValue_ref != nil
+    }
+    
+    
+    func saveChanges() {
         
-        if let catalogEntry = await catalog.fetchEntry(forItemType: uploadItem.type, ref: uploadItem.ref) {
+        uploadStore.update(UploadItem(
             
-            self.catalogResult = .found(catalogEntry)
-            updateItem(name: ChangeValue(to: catalogEntry.name))
+            id: uploadItem.id,
+            type: validatedValue_type.valueToSubmit!,
+            ref: submitValue_ref!,
+            name: submitValue_name,
+            colorId: submitValue_colorId,
+            qty: submitValue_quantity,
+            condition: submitValue_condition,
+            comment: submitValue_comment,
+            unitPrice: submitValue_unitPrice
+        ))
+    }
+    
+    
+    func deleteUploadItem() {
+        
+        uploadStore.delete(uploadItem)
+    }
+    
+    
+    var canUpload: Bool {
+        
+        return !(isSubmitting
+        || submitValue_ref == nil
+        || submitValue_condition == nil
+        || submitValue_quantity == nil
+        || submitValue_unitPrice == nil
+        || submitValue_remarks == nil)
+    }
+    
+    
+    func upload() async {
+        
+        isSubmitting = true
+        
+        let updatedOrCreatedInventoryItem = await createOrUpdateInventory()
+        addUploadedItem(inventoryId: updatedOrCreatedInventoryItem.id)
+        deleteUploadItem()
+        
+        isSubmitting = false
+    }
+    
+    
+    func updateInventory(id: InventoryItem.ID) async {
+        
+        await inventoryStore.updateInventory(
+            
+            inventoryId: id,
+            addQuantity: submitValue_quantity!,
+            unitPrice: submitValue_unitPrice!,
+            remarks: submitValue_remarks!
+        )
+    }
+    
+    
+    func createInventory() async -> InventoryItem {
+        
+        await inventoryStore.createInventory(
+            
+            ref: submitValue_ref!,
+            type: validatedValue_type.valueToSubmit!,
+            colorId: submitValue_colorId,
+            quantity: submitValue_quantity!,
+            unitPrice: submitValue_unitPrice!,
+            condition: submitValue_condition!,
+            description: submitValue_comment,
+            remarks: submitValue_remarks!
+        )!
+    }
+    
+    
+    func createOrUpdateInventory() async -> InventoryItem {
+        
+        if let inventoryItem = inventoryItem {
+            await updateInventory(id: inventoryItem.id)
+            return inventoryItem
         } else {
-            self.catalogResult = .notFound
+            return await createInventory()
         }
+    }
+    
+    
+    func addUploadedItem(inventoryId: InventoryItem.ID) {
+        
+        let qtyBefore = inventoryItem?.quantity
+        let priceBefore = inventoryItem?.unitPrice
+        let remarksBefore = inventoryItem?.remarks
+        let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
+        
+        uploadStore.add(UploadedItem(
+            type: validatedValue_type.valueToSubmit!,
+            ref: submitValue_ref!,
+            name: submitValue_name,
+            colorId: submitValue_colorId,
+            qtyBefore: qtyBefore,
+            qtyAfter:  (qtyBefore ?? 0) + submitValue_quantity!,
+            condition: submitValue_condition!,
+            comment: submitValue_comment,
+            remarksBefore: remarksBefore,
+            remarksAfter: submitValue_remarks!,
+            unitPriceBefore: priceBefore,
+            unitPriceAfter: submitValue_unitPrice!,
+            inventoryId: inventoryId,
+            uploadDate: .now,
+            inventoryStatus: inventoryStatus
+        ))
     }
     
     

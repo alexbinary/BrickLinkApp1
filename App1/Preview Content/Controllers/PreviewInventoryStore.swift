@@ -23,6 +23,19 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
         ]
     }
     
+    func inventory(
+        
+        forType type: ItemType,
+        ref: String,
+        comment: String?,
+        colorId: String,
+        condition: ItemCondition
+    
+    ) -> InventoryItem? {
+        
+        return nil
+    }
+    
     func inventory(for uploadItem: UploadItem) -> InventoryItem? {
     
         return nil

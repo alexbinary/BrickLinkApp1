@@ -74,7 +74,7 @@ struct DynamicCatalogName: View {
             DynamicCatalogName(forItemType: .part, ref: "", name: $name)
                 .previewEnv(
                     catalog: PreviewCatalog(
-                        catalogEntry: CatalogEntry(name: "entry name"),
+                        catalogEntry: CatalogEntry(ref: "xxx", name: "entry name"),
                         catalogEntryLoadingDelay: 2
                     )
                 )
