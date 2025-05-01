@@ -18,6 +18,8 @@ struct UploadItem: Identifiable, Codable, Equatable {
 
 extension UploadItem: PartIdentity {
     
+    var item_type: ItemType? { type }
     var item_ref: String? { ref }
+    var item_colorId: String? { colorId }
     var item_condition: String? { condition }
 }
