@@ -48,7 +48,7 @@ struct InventoryLocationItemsView<Content: View>: View {
         
         ZStack(alignment: .bottomTrailing) {
             CatalogImage(inventoryItem: item)
-                .border(color(for: item.condition), width: 2)
+                .border(item.condition.color, width: 2)
             Text("x \(item.quantity)")
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
@@ -57,13 +57,5 @@ struct InventoryLocationItemsView<Content: View>: View {
                 .padding(4)
         }
         .help(catalog.colorName(forLegoColorId: item.colorId))
-    }
-    
-    
-    func color(for condition: ItemCondition) -> Color {
-        switch condition {
-        case .used: return .red
-        case .new: return .blue
-        }
     }
 }

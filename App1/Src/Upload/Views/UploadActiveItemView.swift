@@ -149,11 +149,11 @@ struct UploadActiveItemView: View {
                                 
                                 Text("").tag(nil as ItemCondition?)
                                 Text("NEW")
-                                    .foregroundStyle(color(for: .new))
+                                    .foregroundStyle(ItemCondition.new.color)
                                     .fontWeight(.bold)
                                     .tag(ItemCondition.new)
                                 Text("USED")
-                                    .foregroundStyle(color(for: .used))
+                                    .foregroundStyle(ItemCondition.used.color)
                                     .fontWeight(.bold)
                                     .tag(ItemCondition.used)
                             }
@@ -539,19 +539,7 @@ struct UploadActiveItemView: View {
     
     
     var conditionColor: Color {
-        if let condition = uploadItem.condition {
-            color(for: condition)
-        } else {
-            .black
-        }
-    }
-    
-    
-    func color(for condition: ItemCondition) -> Color {
-        switch condition {
-        case .used: return .red
-        case .new: return .blue
-        }
+        uploadItem.condition?.color ?? .black
     }
     
     

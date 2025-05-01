@@ -1,4 +1,6 @@
 
+import SwiftUI
+
 
 
 enum ItemCondition: String, Codable, CaseIterable {
@@ -12,6 +14,14 @@ enum ItemCondition: String, Codable, CaseIterable {
         switch self {
         case .new: "new"
         case .used: "used"
+        }
+    }
+    
+    
+    var color: Color {
+        switch self {
+        case .used: return .red
+        case .new: return .blue
         }
     }
 }

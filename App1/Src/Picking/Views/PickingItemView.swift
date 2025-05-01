@@ -35,11 +35,11 @@ struct PickingItemView: View {
                 VStack {
 
                     CatalogImage(orderItem: item)
-                        .border(conditionColor, width: 2)
+                        .border(item.condition.color, width: 2)
                     
                     Text(item.condition.name.uppercased())
                         .font(.title3)
-                        .foregroundStyle(conditionColor)
+                        .foregroundStyle(item.condition.color)
                         .fontWeight(.bold)
                 }
                 
@@ -97,14 +97,6 @@ struct PickingItemView: View {
             }
         }
         .padding()
-    }
-    
-    
-    var conditionColor: Color {
-        switch item.condition {
-        case .used: return .red
-        case .new: return .blue
-        }
     }
 }
 

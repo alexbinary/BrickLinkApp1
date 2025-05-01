@@ -28,11 +28,11 @@ struct UploadHistoryItemView: View {
                 VStack(spacing: 0) {
 
                     CatalogImage(uploadedItem: uploadedItem)
-                        .border(conditionColor, width: 2)
+                        .border(uploadedItem.condition.color, width: 2)
                     
                     Text(uploadedItem.condition.name.uppercased())
                         .font(.title3)
-                        .foregroundStyle(conditionColor)
+                        .foregroundStyle(uploadedItem.condition.color)
                         .fontWeight(.bold)
                 }
                 
@@ -158,13 +158,5 @@ struct UploadHistoryItemView: View {
             stroke: .tertiarySystemFill
         )
         .onHover { self.hover = $0 }
-    }
-    
-    
-    var conditionColor: Color {
-        switch uploadedItem.condition {
-        case .used: return .red
-        case .new: return .blue
-        }
     }
 }
