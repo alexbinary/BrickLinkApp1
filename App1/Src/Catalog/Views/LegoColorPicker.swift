@@ -27,7 +27,18 @@ struct LegoColorPicker: View {
         let colors = catalog.allColors
         
         Picker(label, selection: $selection) {
-            ForEach(colors) { Text($0.name).foregroundStyle($0.color).tag($0.id) }
+            ForEach(colors) { color in
+             
+                let text = {
+                    var text = AttributedString("􀂓 \(color.name)")
+                    if let range = text.range(of: "􀂓") {
+                        text[range].foregroundColor = color.color
+                    }
+                    return text
+                }()
+                
+                Text(text).tag(color.id)
+            }
         }
         .pickerStyle(.menu)
     }
