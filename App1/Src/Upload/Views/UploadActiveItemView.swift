@@ -182,133 +182,123 @@ struct UploadActiveItemView: View {
                     }
                 }
                 
-                HStack(spacing: 16) {
+                VStack(alignment: .leading) {
                     
-                    VStack(alignment: .leading) {
+                    Group {
+                        if itemValid {
+                            if let inventoryItem = inventoryItem {
+                                HStack {
+                                    Text("Updating lot")
+                                    InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
+                                }
+                            } else {
+                                Text("This is a new lot 􀫸")
+                            }
+                        }
+                    }
+                    .font(.title3)
+                    .padding(.bottom)
+                    
+                    Grid(alignment: .leading, verticalSpacing: 6) {
                         
-                        Group {
-                            if itemValid {
+                        GridRow {
+                            
+                            Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            
+                            HStack {
+                                TextField("Qty", value: $editQty, format: .number)
+                                    .onSubmit({
+                                        updateItem(qty: editQty)
+                                    })
+                                
+                                Button {
+                                    updateItem(qty: (uploadItem.qty ?? 0) + 1)
+                                } label: {
+                                    Text("􀅼")
+                                }
+                                
+                                Button {
+                                    updateItem(qty: (uploadItem.qty ?? 0) - 1)
+                                } label: {
+                                    Text("􀅽")
+                                }
+                                
                                 if let inventoryItem = inventoryItem {
-                                    HStack {
-                                        Text("Updating lot")
-                                        InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
+                                    if let qty = uploadItem.qty {
+                                        Text("(\(inventoryItem.quantity) 􁉂 \(inventoryItem.quantity + qty))")
+                                    } else {
+                                        Text("(\(inventoryItem.quantity) 􁉂 _)")
                                     }
                                 } else {
-                                    Text("This is a new lot 􀫸")
+                                    Text("")
                                 }
                             }
                         }
-                        .font(.title3)
-                        .padding(.bottom)
                         
-                        Grid(alignment: .leading, verticalSpacing: 6) {
+                        GridRow {
                             
-                            GridRow {
+                            Text("Unit price").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            
+                            HStack {
+                                TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                    .onSubmit({
+                                        updateItem(unitPrice: editUnitPrice)
+                                    })
                                 
-                                Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                                
-                                HStack {
-                                    TextField("Qty", value: $editQty, format: .number)
-                                        .onSubmit({
-                                            updateItem(qty: editQty)
-                                        })
+                                if let inventoryItem = inventoryItem {
                                     
-                                    Button {
-                                        updateItem(qty: (uploadItem.qty ?? 0) + 1)
-                                    } label: {
-                                        Text("􀅼")
+                                    HStack(spacing: 0) {
+                                        Text("(")
+                                        Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
+                                        Text(")")
                                     }
-                                    
-                                    Button {
-                                        updateItem(qty: (uploadItem.qty ?? 0) - 1)
-                                    } label: {
-                                        Text("􀅽")
-                                    }
-                                    
-                                    if let inventoryItem = inventoryItem {
-                                        if let qty = uploadItem.qty {
-                                            Text("(\(inventoryItem.quantity) 􁉂 \(inventoryItem.quantity + qty))")
-                                        } else {
-                                            Text("(\(inventoryItem.quantity) 􁉂 _)")
-                                        }
-                                    } else {
-                                        Text("")
-                                    }
+                                } else {
+                                    Text("")
                                 }
-                            }
-                            
-                            GridRow {
                                 
-                                Text("Unit price").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                                
-                                HStack {
-                                    TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                        .onSubmit({
-                                            updateItem(unitPrice: editUnitPrice)
-                                        })
-                                    
-                                    if let inventoryItem = inventoryItem {
-                                        
-                                        HStack(spacing: 0) {
-                                            Text("(")
-                                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).fixedSize()
-                                            Text(")")
-                                        }
-                                    } else {
-                                        Text("")
-                                    }
-                                    
-                                    if let price = uploadItem.unitPrice, let inventoryItem = inventoryItem, price != inventoryItem.unitPrice {
-                                        
-                                        Button {
-                                            editUnitPrice = inventoryItem.unitPrice
-                                            updateItem(unitPrice: editUnitPrice)
-                                        } label: {
-                                            Text("Keep existing price")
-                                        }
-                                        .fixedSize()
-                                    }
-                                }
-                            }
-                            
-                            Color.clear.frame(width: 0, height: 12)
-                            
-                            GridRow {
-                                
-                                Color.clear.frame(width: 0)
-                                
-                                HStack(spacing: 12) {
+                                if let price = uploadItem.unitPrice, let inventoryItem = inventoryItem, price != inventoryItem.unitPrice {
                                     
                                     Button {
-                                        uploadStore.delete(uploadItem)
+                                        editUnitPrice = inventoryItem.unitPrice
+                                        updateItem(unitPrice: editUnitPrice)
                                     } label: {
-                                        Text("􀈑 Delete")
+                                        Text("Keep existing price")
                                     }
                                     .fixedSize()
-                                    
-                                    let submitErrors = {
-                                        
-                                        var errors = [String]()
-                                        
-                                        if submitQty == nil {
-                                            errors.append("missing valid qty")
-                                        }
-                                        
-                                        if submitUnitPrice == nil {
-                                            errors.append("missing valid price")
-                                        }
-                                        
-                                        if submitRemarks == nil {
-                                            errors.append("missing valid remarks")
-                                        }
-                                        
-                                        return errors
-                                    }()
-                                    
-                                    Text((submitErrors+itemErrors).joined(separator: ", ")).italic().fixedSize()
                                 }
-                                .gridCellColumns(3)
                             }
+                        }
+                        
+                        Color.clear.frame(width: 0, height: 12)
+                        
+                        GridRow {
+                            
+                            Color.clear.frame(width: 0)
+                            
+                            HStack(spacing: 12) {
+                                
+                                let submitErrors = {
+                                    
+                                    var errors = [String]()
+                                    
+                                    if submitQty == nil {
+                                        errors.append("missing valid qty")
+                                    }
+                                    
+                                    if submitUnitPrice == nil {
+                                        errors.append("missing valid price")
+                                    }
+                                    
+                                    if submitRemarks == nil {
+                                        errors.append("missing valid remarks")
+                                    }
+                                    
+                                    return errors
+                                }()
+                                
+                                Text((submitErrors+itemErrors).joined(separator: ", ")).italic().fixedSize()
+                            }
+                            .gridCellColumns(3)
                         }
                     }
                 }
@@ -437,6 +427,14 @@ struct UploadActiveItemView: View {
                     
                     if submitting {
                         ProgressView().controlSize(.small)
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        uploadStore.delete(uploadItem)
+                    } label: {
+                        Text("􀈑 Delete")
                     }
                 }
                 
