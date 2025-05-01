@@ -12,40 +12,55 @@ struct CatalogImage: View {
     let type: ItemType
     let ref: String
     let colorId: String
+    let scale: CGFloat
     
-    init(itemType type: ItemType, ref: String, colorId: String) {
+    let baseFrameSize = CGSize(width: 84, height: 64)
+    let baseImageSize = CGSize(width: 80, height: 60)
+    
+    var frameSize: CGSize { baseFrameSize * scale }
+    var imageSize: CGSize { baseImageSize * scale }
+    
+    init(itemType type: ItemType, ref: String, colorId: String, scale: CGFloat = 1) {
         self.type = type
         self.ref = ref
         self.colorId = colorId
+        self.scale = scale
     }
     
-    init(orderItem item: OrderItem) {
+    init(item: PartIdentity, scale: CGFloat = 1) {
+        self.type = item.item_type!
+        self.ref = item.item_ref!
+        self.colorId = item.item_colorId!
+        self.scale = scale
+    }
+    
+    init(orderItem item: OrderItem, scale: CGFloat = 1) {
         self.type = item.type
         self.ref = item.ref
         self.colorId = item.colorId
+        self.scale = scale
     }
     
-    init(uploadItem item: UploadItem) {
+    init(uploadItem item: UploadItem, scale: CGFloat = 1) {
         self.type = item.type
         self.ref = item.ref
         self.colorId = item.colorId
+        self.scale = scale
     }
     
-    init(uploadedItem item: UploadedItem) {
+    init(uploadedItem item: UploadedItem, scale: CGFloat = 1) {
         self.type = item.type
         self.ref = item.ref
         self.colorId = item.colorId
+        self.scale = scale
     }
     
-    init(inventoryItem item: InventoryItem) {
+    init(inventoryItem item: InventoryItem, scale: CGFloat = 1) {
         self.type = item.type
         self.ref = item.ref
         self.colorId = item.colorId
+        self.scale = scale
     }
-
-
-    let frameSize = CGSize(width: 84, height: 64)
-    let imageSize = CGSize(width: 80, height: 60)
     
     var body: some View {    
         
@@ -57,7 +72,7 @@ struct CatalogImage: View {
                     Group {
                         switch phase {
                         case .success(let image):
-                            image
+                            image.scaleEffect(scale)
                         case .failure(let error):
                             let _ = print(error)
                             Text("Failed to load image")
