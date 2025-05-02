@@ -105,7 +105,7 @@ struct UploadActiveItemView: View {
                                     if catalogLoading {
                                         
                                         HStack {
-                                            Text("Checking catalog...")
+                                            Text("checking catalog...")
                                                 .italic()
                                             ProgressView().controlSize(.mini)
                                         }
@@ -512,7 +512,9 @@ struct UploadActiveItemView: View {
                             InventoryTargetLocationView(
                                 newLocation: validatedValue_location.submitValue,
                                 candidateItems: [uploadItem],
-                                columnsCount: 6
+                                highlightItems: inventoryItem != nil ? [inventoryItem!.id] : [],
+                                columnsCount: 6,
+                                
                             )
                         }
                     }
