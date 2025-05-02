@@ -78,11 +78,11 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Remarks")
-                        .foregroundStyle(validatedRemarks.hasWarning ? .red : .secondary)
+                        .foregroundStyle(validatedRemarks.isInvalid ? .red : .secondary)
                         
                     TextField("Remarks", text: $editRemarks)
                         .onSubmit {
-                            if let rem = validatedRemarks.valueToSubmit {
+                            if let rem = validatedRemarks.submitValue {
                                 self.updateInventoryItem(remarks: rem)
                             }
                         }
@@ -103,14 +103,14 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Quantity").gridColumnAlignment(.trailing)
-                        .foregroundStyle(validatedQty.hasWarning ? .red : .secondary)
+                        .foregroundStyle(validatedQty.isInvalid ? .red : .secondary)
                     
                     HStack {
                         Text("\(item.quantity)").font(.title2)
                         
                         TextField("Change quantity +/-", text: $editQty)
                             .onSubmit {
-                                if let qty = validatedQty.valueToSubmit {
+                                if let qty = validatedQty.submitValue {
                                     self.updateInventoryItem(addQuantity: qty)
                                 }
                             }
@@ -122,11 +122,11 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Unit price")
-                        .foregroundStyle(validatedUnitPrice.hasWarning ? .red : .secondary)
+                        .foregroundStyle(validatedUnitPrice.isInvalid ? .red : .secondary)
                     
                     TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         .onSubmit {
-                            if let price = validatedUnitPrice.valueToSubmit {
+                            if let price = validatedUnitPrice.submitValue {
                                 self.updateInventoryItem(unitPrice: price)
                             }
                         }
@@ -157,9 +157,9 @@ struct InventoryItemView: View {
     var validatedRemarks: ValidatedValue<String> {
         
         if Location(from: editRemarks) == nil {
-            .init(valueToSubmit: editRemarks, hasWarning: true)
+            .init(submitValue: editRemarks, isInvalid: true)
         } else {
-            .init(valueToSubmit: editRemarks, hasWarning: false)
+            .init(submitValue: editRemarks, isInvalid: false)
         }
     }
     
@@ -167,11 +167,11 @@ struct InventoryItemView: View {
     var validatedQty: ValidatedValue<Int> {
         
         if let qty = Int(editQty) {
-            .init(valueToSubmit: qty, hasWarning: false)
+            .init(submitValue: qty, isInvalid: false)
         } else if editQty.isEmpty {
-            .init(valueToSubmit: nil, hasWarning: false)
+            .init(submitValue: nil, isInvalid: false)
         } else {
-            .init(valueToSubmit: nil, hasWarning: true)
+            .init(submitValue: nil, isInvalid: true)
         }
     }
     
@@ -179,9 +179,9 @@ struct InventoryItemView: View {
     var validatedUnitPrice: ValidatedValue<Float> {
         
         if let price = editUnitPrice, price > 0 {
-            .init(valueToSubmit: price, hasWarning: false)
+            .init(submitValue: price, isInvalid: false)
         } else {
-            .init(valueToSubmit: nil, hasWarning: true)
+            .init(submitValue: nil, isInvalid: true)
         }
     }
     

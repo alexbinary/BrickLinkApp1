@@ -25,7 +25,7 @@ struct PreviewInventoryStore: InventoryStoreProtocol {
     
     func inventory(
         
-        forType type: ItemType,
+                        forItemType type: ItemType,
         ref: String,
         comment: String?,
         colorId: String,

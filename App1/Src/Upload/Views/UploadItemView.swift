@@ -561,3 +561,37 @@ struct UploadItemView: View {
         }
     }
 }
+
+
+
+extension Int? {
+
+    var normalizedOptional: Int? {
+        return (self ?? 0) > 0 ? self : nil
+    }
+}
+
+
+
+extension Float? {
+
+    var normalizedOptional: Float? {
+        return (self ?? 0) > 0 ? self : nil
+    }
+}
+
+
+
+extension String {
+
+    var normalizedOptional: String? {
+
+        let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed == "" ? nil : trimmed
+    }
+}
+
+extension String? {
+    
+    var normalizedOptional: String? { (self ?? "").normalizedOptional }
+}

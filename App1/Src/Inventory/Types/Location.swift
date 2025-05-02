@@ -13,7 +13,7 @@ struct Location: CustomStringConvertible {
     let ab: AB?
     
     
-    var description: String {
+    var textRepresentation: String {
         
         var str = "\(meuble)\(tiroir)"
         
@@ -28,6 +28,8 @@ struct Location: CustomStringConvertible {
         }
         return str
     }
+    
+    var description: String { textRepresentation }
     
     
     init?(from str: String) {

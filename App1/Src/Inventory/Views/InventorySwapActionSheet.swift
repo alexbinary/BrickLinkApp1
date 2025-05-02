@@ -37,7 +37,7 @@ struct InventorySwapActionSheet: View {
             
             InventoryLocationItemsView(items: items, itemViewBuilder: { item, view in AnyView(view) })
             
-            let newLocation = validatedLocation.valueToSubmit
+            let newLocation = validatedLocation.submitValue
             let itemsInNewLocation = inventoryStore.allInventories.filter { newLocation != nil && Location(from: $0.remarks) == newLocation }
             
             VStack(alignment: .leading, spacing: 4) {
@@ -46,14 +46,14 @@ struct InventorySwapActionSheet: View {
                     TextField("Swap with location", text: $editLocation)
                     
                     Button("Confirm swap") {
-                        if validatedLocation.valueToSubmit != nil {
+                        if validatedLocation.submitValue != nil {
                             self.swapItems(with: itemsInNewLocation)
                         }
                     }
-                    .disabled(validatedLocation.valueToSubmit == nil)
+                    .disabled(validatedLocation.submitValue == nil)
                 }
                 
-                if isUpdatingItems || validatedLocation.hasWarning {
+                if isUpdatingItems || validatedLocation.isInvalid {
                     
                     HStack {
                         
@@ -63,7 +63,7 @@ struct InventorySwapActionSheet: View {
                         
                         Spacer()
                         
-                        if validatedLocation.hasWarning {
+                        if validatedLocation.isInvalid {
                             Text("invalid location").foregroundStyle(.secondary)
                         }
                     }
@@ -89,11 +89,11 @@ struct InventorySwapActionSheet: View {
     var validatedLocation: ValidatedValue<Location> {
         
         if let loc = Location(from: editLocation) {
-            .init(valueToSubmit: loc, hasWarning: false)
+            .init(submitValue: loc, isInvalid: false)
         } else if editLocation.isEmpty {
-            .init(valueToSubmit: nil, hasWarning: false)
+            .init(submitValue: nil, isInvalid: false)
         } else {
-            .init(valueToSubmit: nil, hasWarning: true)
+            .init(submitValue: nil, isInvalid: true)
         }
     }
     

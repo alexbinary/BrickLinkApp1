@@ -5,6 +5,8 @@ import Foundation
 
 struct ValidatedValue<T> {
     
-    var valueToSubmit: T? = nil
-    var hasWarning: Bool = false
+    var submitValue: T? = nil
+    var isInvalid: Bool = false
+    var isValid: Bool { !isInvalid }
+    var hasChanges: Bool = false
 }

@@ -35,23 +35,6 @@ struct UploadActiveItemView: View {
     
     var body: some View {
         
-        let itemErrors: [String] = {
-            
-            var errors = [String]()
-            
-            if uploadItem.ref.normalizedOptional == nil {
-                errors.append("invalid item ref")
-            }
-            
-            if uploadItem.condition == nil {
-                errors.append("missing condition")
-            }
-            
-            return errors
-        }()
-        
-        let itemValid = itemErrors.isEmpty
-        
         HStack(alignment: .top) {
             
             VStack(alignment: .leading) {
@@ -68,7 +51,8 @@ struct UploadActiveItemView: View {
                             Text("Type")
                                 .gridColumnAlignment(.trailing)
                                 .foregroundStyle(
-                                    editingValue_type != savedValue_type ? .blue
+                                    validatedValue_type.isInvalid ? .red
+                                    : validatedValue_type.hasChanges ? .blue
                                     : .secondary
                                 )
                                 
@@ -76,6 +60,7 @@ struct UploadActiveItemView: View {
                                 .labelsHidden()
                                 
                             Button("􀅉") { editingValue_type = savedValue_type }
+                                .opacity(validatedValue_type.hasChanges ? 1 : 0)
                         }
                         
                         GridRow {
@@ -83,7 +68,8 @@ struct UploadActiveItemView: View {
                             Text("Ref")
                                 .gridColumnAlignment(.trailing)
                                 .foregroundStyle(
-                                    editingValue_ref != savedValue_ref ? .blue
+                                    validatedValue_ref.isInvalid ? .red
+                                    : validatedValue_ref.hasChanges ? .blue
                                     : .secondary
                                 )
                                 
@@ -92,13 +78,21 @@ struct UploadActiveItemView: View {
                                     if editingValue_ref.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
                                         editingValue_ref = uploadItem.ref
                                     }
-                                    updateItem(ref: ChangeValue(to: editingValue_ref))
                                 })
+                            
+                            Button("􀅉") { editingValue_ref = savedValue_ref }
+                                .opacity(validatedValue_ref.hasChanges ? 1 : 0)
                         }
                         
                         GridRow {
                             
-                            Text("Name").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            Text("Name")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    validatedValue_name.isInvalid ? .red
+                                    : validatedValue_name.hasChanges ? .blue
+                                    : .secondary
+                                )
                             
                             Group {
                                 
@@ -134,22 +128,39 @@ struct UploadActiveItemView: View {
                                     Text("-")
                                 }
                             }
+                            
+                            Button("􀅉") { Task { await refreshCatalogEntry() } }
                         }
                         
                         GridRow {
                             
-                            Text("Color").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            Text("Color")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    validatedValue_colorId.isInvalid ? .red
+                                    : validatedValue_colorId.hasChanges ? .blue
+                                    : .secondary
+                                )
                             
                             LegoColorPicker("Color", selection: $editingValue_colorId)
                                 .labelsHidden()
                                 .onChange(of: editingValue_colorId, {
-                                    updateItem(colorId: ChangeValue(to: editingValue_colorId))
+                                    
                                 })
+                            
+                            Button("􀅉") { editingValue_colorId = savedValue_colorId }
+                                .opacity(validatedValue_colorId.hasChanges ? 1 : 0)
                         }
                         
                         GridRow {
                             
-                            Text("Condition").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            Text("Condition")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    validatedValue_condition.isInvalid ? .red
+                                    : validatedValue_condition.hasChanges ? .blue
+                                    : .secondary
+                                )
                             
                             Picker("Condition", selection: $editingValue_condition) {
                                 
@@ -165,18 +176,30 @@ struct UploadActiveItemView: View {
                             }
                             .labelsHidden()
                             .onChange(of: editingValue_condition) {
-                                updateItem(condition: ChangeValue(to: editingValue_condition))
+                                
                             }
+                            
+                            Button("􀅉") { editingValue_condition = savedValue_condition }
+                                .opacity(validatedValue_condition.hasChanges ? 1 : 0)
                         }
                         
                         GridRow {
                             
-                            Text("Comment").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                            Text("Comment")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    validatedValue_comment.isInvalid ? .red
+                                    : validatedValue_comment.hasChanges ? .blue
+                                    : .secondary
+                                )
                             
                             TextField("Comment", text: $editingValue_comment)
                                 .onSubmit {
-                                    updateItem(comment: ChangeValue(to: editingValue_comment))
+                                    
                                 }
+                            
+                            Button("􀅉") { editingValue_comment = savedValue_comment }
+                                .opacity(validatedValue_comment.hasChanges ? 1 : 0)
                         }
                     }
                     
@@ -198,8 +221,10 @@ struct UploadActiveItemView: View {
                     }
                 }
                 
-                Group {
-                    if itemValid {
+                if itemIsValid {
+                    
+                    Group {
+                        
                         if let inventoryItem = inventoryItem {
                             HStack {
                                 Text("Updating lot")
@@ -209,119 +234,105 @@ struct UploadActiveItemView: View {
                             Text("This is a new lot 􀫸")
                         }
                     }
-                }
-                .font(.title3)
-                .padding(.vertical)
-                
-                Grid(alignment: .leading, verticalSpacing: 6) {
+                    .font(.title3)
+                    .padding(.vertical)
                     
-                    if inventoryItem != nil {
-                        GridRow {
-                            Text("")
-                            Text("")
-                            Text("Current")
-                            Text("Updated")
+                    Grid(alignment: .leading, verticalSpacing: 6) {
+                        
+                        if inventoryItem != nil {
+                            GridRow {
+                                Text("")
+                                Text("")
+                                Text("Current")
+                                Text("Updated")
+                            }
+                            .foregroundStyle(.secondary)
                         }
-                        .foregroundStyle(.secondary)
-                    }
-                    
-                    GridRow {
                         
-                        Text("Quantity").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
+                        GridRow {
+                            
+                            Text("Quantity")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    validatedValue_quantity.isInvalid ? .red
+                                    : validatedValue_quantity.hasChanges ? .blue
+                                    : .secondary
+                                )
+                            
+                            HStack {
+                                TextField("Qty", value: $editingValue_quantity, format: .number)
+                                    .onSubmit({
+                                        
+                                    })
+                                
+                                Button {
+                                    editingValue_quantity = (editingValue_quantity ?? 0) + 1
+                                } label: {
+                                    Text("􀅼")
+                                }
+                                
+                                Button {
+                                    editingValue_quantity = (editingValue_quantity ?? 0) - 1
+                                } label: {
+                                    Text("􀅽")
+                                }
+                            }
+                            
+                            if let inventoryItem = inventoryItem {
+                                
+                                Text("\(inventoryItem.quantity)").gridColumnAlignment(.center).font(.title3)
+                                
+                                if let qty = uploadItem.qty {
+                                    Text("􁉂 \(inventoryItem.quantity + qty)").gridColumnAlignment(.center).font(.title3)
+                                } else {
+                                    Text("")
+                                }
+                            }
+                            
+                            Button("􀅉") { editingValue_quantity = savedValue_quantity }
+                                .opacity(validatedValue_quantity.hasChanges ? 1 : 0)
+                        }
                         
-                        HStack {
-                            TextField("Qty", value: $editingValue_quantity, format: .number)
+                        GridRow {
+                            
+                            Text("Unit price")
+                                .gridColumnAlignment(.trailing)
+                                .foregroundStyle(
+                                    validatedValue_unitPrice.isInvalid ? .red
+                                    : validatedValue_unitPrice.hasChanges ? .blue
+                                    : .secondary
+                                )
+                            
+                            TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                                 .onSubmit({
-                                    updateItem(qty: ChangeValue(to: editingValue_quantity))
+                                    
                                 })
                             
-                            Button {
-                                updateItem(qty: ChangeValue(to: (uploadItem.qty ?? 0) + 1))
-                            } label: {
-                                Text("􀅼")
-                            }
-                            
-                            Button {
-                                updateItem(qty: ChangeValue(to: (uploadItem.qty ?? 0) - 1))
-                            } label: {
-                                Text("􀅽")
-                            }
-                        }
-                        
-                        if let inventoryItem = inventoryItem {
-                            
-                            Text("\(inventoryItem.quantity)").gridColumnAlignment(.center).font(.title3)
-                            
-                            if let qty = uploadItem.qty {
-                                Text("􁉂 \(inventoryItem.quantity + qty)").gridColumnAlignment(.center).font(.title3)
-                            } else {
-                                Text("")
-                            }
-                        }
-                    }
-                    
-                    GridRow {
-                        
-                        Text("Unit price").foregroundStyle(.secondary).gridColumnAlignment(.trailing)
-                        
-                        TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                            .onSubmit({
-                                updateItem(unitPrice: ChangeValue(to: editingValue_unitPrice))
-                            })
-                        
-                        if let inventoryItem = inventoryItem {
-                            
-                            Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).font(.title3)
-                            
-                            if let price = uploadItem.unitPrice {
-                                if price != inventoryItem.unitPrice {
-                                    HStack {
-                                        Text("􁉂")
-                                        Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).font(.title3)
+                            if let inventoryItem = inventoryItem {
+                                
+                                Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).font(.title3)
+                                
+                                if let price = uploadItem.unitPrice {
+                                    if price != inventoryItem.unitPrice {
+                                        HStack {
+                                            Text("􁉂")
+                                            Text(price, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).font(.title3)
+                                        }
+                                    } else {
+                                        Text("unchanged")
                                     }
                                 } else {
-                                    Text("unchanged")
+                                    Text("")
                                 }
-                            } else {
-                                Text("")
+                                
+                                Button("keep existing") {
+                                    editingValue_unitPrice = inventoryItem.unitPrice
+                                }
                             }
                             
-                            Button("􀅉") {
-                                editingValue_unitPrice = inventoryItem.unitPrice
-                            }
+                            Button("􀅉") { editingValue_unitPrice = savedValue_unitPrice }
+                                .opacity(validatedValue_unitPrice.hasChanges ? 1 : 0)
                         }
-                    }
-                    
-                    Color.clear.frame(width: 0, height: 12)
-                    
-                    GridRow {
-                        
-                        Color.clear.frame(width: 0)
-                        
-                        HStack(spacing: 12) {
-                            
-                            let submitErrors = {
-                                
-                                var errors = [String]()
-                                
-                                if submitValue_quantity == nil {
-                                    errors.append("missing valid qty")
-                                }
-                                
-                                if submitValue_unitPrice == nil {
-                                    errors.append("missing valid price")
-                                }
-                                
-                                if submitValue_remarks == nil {
-                                    errors.append("missing valid remarks")
-                                }
-                                
-                                return errors
-                            }()
-                            
-                            Text((submitErrors+itemErrors).joined(separator: ", ")).italic().fixedSize()
-                        }
-                        .gridCellColumns(3)
                     }
                 }
             }
@@ -374,7 +385,7 @@ struct UploadActiveItemView: View {
                     }
                     .disabled(!canUpload)
                     
-                    if validatedLocation.hasWarning {
+                    if validatedValue_location.isInvalid {
                         Text("invalid location").italic().fixedSize()
                     }
                     
@@ -400,7 +411,7 @@ struct UploadActiveItemView: View {
                 
                 Divider().padding(.top)
                 
-                let newLocation = validatedLocation.valueToSubmit
+                let newLocation = validatedValue_location.submitValue
                 
                 InventoryTargetLocationView(newLocation: newLocation, candidateItems: [uploadItem], columnsCount: 6)
                     .padding(.vertical)
@@ -443,79 +454,242 @@ struct UploadActiveItemView: View {
         
         .onChange(of: uploadItem.name, initial: true) { old, new in
             if new == nil {
-                Task { await pullCatalogEntry(type: savedValue_type, ref: savedValue_ref) }
+                Task { await refreshCatalogEntry() }
             }
         }
-        .onChange(of: editingValue_ref, initial: true) {
+        .onChange(of: validatedValue_type.submitValue, initial: true) {
             
-            Task { await pullCatalogEntry(type: savedValue_type, ref: editingValue_ref) }
+            Task { await refreshCatalogEntry() }
         }
-        .onChange(of: uploadItem.ref, initial: false) {
+        .onChange(of: validatedValue_ref.submitValue, initial: true) {
             
-            switch catalogResult {
-            case .found(let entry):
-                updateItem(name: ChangeValue(to: entry.name))
-            default:
-                break
-            }
+            Task { await refreshCatalogEntry() }
         }
         
         //
         
-        .onChange(of: [uploadItem.ref, uploadItem.colorId, uploadItem.comment], initial: true) {
-            self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
-        }
-        .onChange(of: [uploadItem.condition], initial: true) {
-            self.editingValue_remarks = self.inventoryItem?.remarks ?? ""
+        .onChange(of: inventoryItem, initial: true) {
+            
+            self.editingValue_remarks = inventoryItem?.remarks ?? ""
         }
     }
     
     
-    func pullCatalogEntry(type: ItemType, ref: String) async {
+    var validatedValue_type: ValidatedValue<ItemType> {
+        
+        .init(
+            submitValue: editingValue_type, isInvalid: false,
+            hasChanges: editingValue_type != savedValue_type
+        )
+    }
+    
+    var validatedValue_ref: ValidatedValue<String> {
+        
+        switch catalogResult {
+            
+        case .found(let entry): .init(
+            
+            submitValue: entry.ref, isInvalid: false,
+            hasChanges: entry.ref != savedValue_ref
+        )
+        default: .init(
+            
+            submitValue: nil, isInvalid: true,
+            hasChanges: editingValue_ref != savedValue_ref
+        )
+        }
+    }
+    
+    var validatedValue_name: ValidatedValue<String> {
+        
+        switch catalogResult {
+            
+        case .found(let entry): .init(
+            
+            submitValue: entry.name, isInvalid: false,
+            hasChanges: entry.name != savedValue_name
+        )
+        default: .init(
+            
+            submitValue: nil, isInvalid: true,
+            hasChanges: false
+        )
+        }
+    }
+    
+    var validatedValue_colorId: ValidatedValue<LegoColor.ID> {
+        
+        let trimmed = editingValue_colorId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            
+            return .init(
+                submitValue: trimmed, isInvalid: false,
+                hasChanges: trimmed != savedValue_colorId
+            )
+            
+        } else {
+            
+            return .init(
+                submitValue: nil, isInvalid: true,
+                hasChanges: trimmed != savedValue_colorId
+            )
+        }
+    }
+    
+    var validatedValue_condition: ValidatedValue<ItemCondition> {
+        
+        if let condition = editingValue_condition {
+            
+            return .init(
+                submitValue: condition, isInvalid: false,
+                hasChanges: condition != savedValue_condition
+            )
+            
+        } else {
+            
+            return .init(
+                submitValue: nil, isInvalid: true,
+                hasChanges: editingValue_condition != savedValue_condition
+            )
+        }
+    }
+    
+    var validatedValue_comment: ValidatedValue<String> {
+        
+        .init(
+            submitValue: editingValue_comment, isInvalid: false,
+            hasChanges: editingValue_comment != savedValue_comment
+        )
+    }
+    
+    var validatedValue_quantity: ValidatedValue<Int> {
+        
+        if let qty = editingValue_quantity, qty > 0 {
+        
+            return .init(
+                submitValue: qty, isInvalid: false,
+                hasChanges: qty != savedValue_quantity
+            )
+            
+        } else {
+            
+            return .init(
+                submitValue: nil, isInvalid: true,
+                hasChanges: editingValue_quantity != savedValue_quantity
+            )
+        }
+    }
+    
+    var validatedValue_unitPrice: ValidatedValue<Float> {
+        
+        if let price = editingValue_unitPrice, price > 0 {
+        
+            return .init(
+                submitValue: editingValue_unitPrice, isInvalid: false,
+                hasChanges: price != savedValue_unitPrice
+            )
+            
+        } else {
+            
+            return .init(
+                submitValue: nil, isInvalid: true,
+                hasChanges: editingValue_unitPrice != savedValue_unitPrice
+            )
+        }
+    }
+    
+    var validatedValue_location: ValidatedValue<Location> {
+        
+        if let loc = Location(from: editingValue_remarks) {
+            
+            .init(
+                submitValue: loc, isInvalid: false,
+                hasChanges: loc.textRepresentation != inventoryItem?.remarks
+            )
+            
+        } else {
+            
+            .init(
+                submitValue: nil, isInvalid: true,
+                hasChanges: editingValue_remarks != inventoryItem?.remarks
+            )
+        }
+    }
+    
+    
+    func refreshCatalogEntry() async {
+        
+        guard let type = validatedValue_type.submitValue,
+              let ref = validatedValue_ref.submitValue
+        else {
+            return
+        }
         
         self.catalogResult = .loading
         
         if let catalogEntry = await catalog.fetchEntry(forItemType: type, ref: ref) {
             
             self.catalogResult = .found(catalogEntry)
-            updateItem(name: ChangeValue(to: catalogEntry.name))
         } else {
             self.catalogResult = .notFound
         }
     }
     
     
+    var itemIsValid: Bool {
+        
+        return
+            validatedValue_type.submitValue != nil
+            &&
+            validatedValue_ref.submitValue != nil
+            &&
+            validatedValue_colorId.submitValue != nil
+            &&
+            validatedValue_condition.submitValue != nil
+    }
+    
+    
     var inventoryItem: InventoryItem? {
         
-        if let condition = editingValue_condition {
+        if let type = validatedValue_type.submitValue,
+           let ref = validatedValue_ref.submitValue,
+           let colorId = validatedValue_colorId.submitValue,
+           let condition = validatedValue_condition.submitValue {
+            
+            let comment = validatedValue_comment.submitValue
             
             return inventoryStore.inventory(
                 
-                forType: editingValue_type,
-                ref: editingValue_ref,
-                comment: editingValue_comment,
-                colorId: editingValue_colorId,
+                forItemType: type,
+                ref: ref,
+                comment: comment,
+                colorId: colorId,
                 condition: condition
             )
+        } else {
+            return nil
         }
-        return nil
     }
     
     
     var suggestedLocations: [String] {
         
-        if let condition = editingValue_condition {
+        if let type = validatedValue_type.submitValue,
+           let ref = validatedValue_ref.submitValue,
+           let condition = validatedValue_condition.submitValue {
+            
+            let comment = validatedValue_comment.submitValue
             
             return uploadStore.suggestedLocations(
                 
-                forItemType: editingValue_type,
-                ref: editingValue_ref,
-                comment: editingValue_comment,
+                forItemType: type,
+                ref: ref,
+                comment: comment,
                 condition: condition
             )
+        } else {
+            return []
         }
-        
-        return []
     }
     
     
@@ -524,63 +698,44 @@ struct UploadActiveItemView: View {
     var savedValue_name: String? { uploadItem.name }
     var savedValue_colorId: LegoColor.ID { uploadItem.colorId }
     var savedValue_condition: ItemCondition? { uploadItem.condition }
-    var savedValue_comment: String? { uploadItem.comment }
+    var savedValue_comment: String { uploadItem.comment ?? "" }
     var savedValue_quantity: Int? { uploadItem.qty }
     var savedValue_unitPrice: Float? { uploadItem.unitPrice }
     
     
-    var validatedValue_type: ValidatedValue<ItemType> {
-        
-        .init(valueToSubmit: editingValue_type)
-    }
-    
-    var submitValue_ref: String? {
-        switch catalogResult {
-        case .found(let entry): entry.ref
-        default: nil
-        }
-    }
-    
-    var submitValue_name: String? { uploadItem.name }
-    
-    var submitValue_colorId: LegoColor.ID { uploadItem.colorId }
-    
-    var submitValue_condition: ItemCondition? { uploadItem.condition }
-    
-    var submitValue_comment: String? { uploadItem.comment }
-    
-    var submitValue_quantity: Int? { uploadItem.qty.normalizedOptional }
-    
-    var submitValue_unitPrice: Float? { uploadItem.unitPrice.normalizedOptional }
-    
-    var submitValue_remarks: String? { editingValue_remarks.normalizedOptional }
-    
-    
-    var validatedLocation: ValidatedValue<Location> {
-        
-        if let loc = Location(from: editingValue_remarks) {
-            .init(valueToSubmit: loc, hasWarning: false)
-        } else if editingValue_remarks.isEmpty {
-            .init(valueToSubmit: nil, hasWarning: false)
-        } else {
-            .init(valueToSubmit: nil, hasWarning: true)
-        }
-    }
-    
-    
     var hasChanges: Bool {
         
-        editingValue_type != savedValue_type
+        validatedValue_type.hasChanges
         ||
-        editingValue_ref != savedValue_ref
+        validatedValue_ref.hasChanges
+        ||
+        validatedValue_colorId.hasChanges
+        ||
+        validatedValue_condition.hasChanges
+        ||
+        validatedValue_comment.hasChanges
+        ||
+        validatedValue_quantity.hasChanges
+        ||
+        validatedValue_unitPrice.hasChanges
     }
     
     
     var canSaveChanges: Bool {
         
-        validatedValue_type.valueToSubmit != nil
+        validatedValue_type.isValid
         &&
-        submitValue_ref != nil
+        validatedValue_ref.isValid
+        &&
+        validatedValue_colorId.isValid
+        &&
+        validatedValue_condition.isValid
+        &&
+        validatedValue_comment.isValid
+        &&
+        validatedValue_quantity.isValid
+        &&
+        validatedValue_unitPrice.isValid
     }
     
     
@@ -589,14 +744,14 @@ struct UploadActiveItemView: View {
         uploadStore.update(UploadItem(
             
             id: uploadItem.id,
-            type: validatedValue_type.valueToSubmit!,
-            ref: submitValue_ref!,
-            name: submitValue_name,
-            colorId: submitValue_colorId,
-            qty: submitValue_quantity,
-            condition: submitValue_condition,
-            comment: submitValue_comment,
-            unitPrice: submitValue_unitPrice
+            type: validatedValue_type.submitValue!,
+            ref: validatedValue_ref.submitValue!,
+            name: validatedValue_name.submitValue!,
+            colorId: validatedValue_colorId.submitValue!,
+            qty: validatedValue_quantity.submitValue!,
+            condition: validatedValue_condition.submitValue!,
+            comment: validatedValue_comment.submitValue!,
+            unitPrice: validatedValue_unitPrice.submitValue!
         ))
     }
     
@@ -609,12 +764,24 @@ struct UploadActiveItemView: View {
     
     var canUpload: Bool {
         
-        return !(isSubmitting
-        || submitValue_ref == nil
-        || submitValue_condition == nil
-        || submitValue_quantity == nil
-        || submitValue_unitPrice == nil
-        || submitValue_remarks == nil)
+        if isSubmitting { return false }
+        
+        return
+            validatedValue_type.isValid
+            &&
+            validatedValue_ref.isValid
+            &&
+            validatedValue_colorId.isValid
+            &&
+            validatedValue_condition.isValid
+            &&
+            validatedValue_comment.isValid
+            &&
+            validatedValue_quantity.isValid
+            &&
+            validatedValue_unitPrice.isValid
+            &&
+            validatedValue_location.isValid
     }
     
     
@@ -635,9 +802,9 @@ struct UploadActiveItemView: View {
         await inventoryStore.updateInventory(
             
             inventoryId: id,
-            addQuantity: submitValue_quantity!,
-            unitPrice: submitValue_unitPrice!,
-            remarks: submitValue_remarks!
+            addQuantity: validatedValue_quantity.submitValue!,
+            unitPrice: validatedValue_unitPrice.submitValue!,
+            remarks: validatedValue_location.submitValue!.textRepresentation
         )
     }
     
@@ -646,14 +813,14 @@ struct UploadActiveItemView: View {
         
         await inventoryStore.createInventory(
             
-            ref: submitValue_ref!,
-            type: validatedValue_type.valueToSubmit!,
-            colorId: submitValue_colorId,
-            quantity: submitValue_quantity!,
-            unitPrice: submitValue_unitPrice!,
-            condition: submitValue_condition!,
-            description: submitValue_comment,
-            remarks: submitValue_remarks!
+            ref: validatedValue_ref.submitValue!,
+            type: validatedValue_type.submitValue!,
+            colorId: validatedValue_colorId.submitValue!,
+            quantity: validatedValue_quantity.submitValue!,
+            unitPrice: validatedValue_unitPrice.submitValue!,
+            condition: validatedValue_condition.submitValue!,
+            description: validatedValue_comment.submitValue!,
+            remarks: validatedValue_location.submitValue!.textRepresentation
         )!
     }
     
@@ -677,98 +844,21 @@ struct UploadActiveItemView: View {
         let inventoryStatus = inventoryItem != nil ? UploadInventoryStatus.updated : .created
         
         uploadStore.add(UploadedItem(
-            type: validatedValue_type.valueToSubmit!,
-            ref: submitValue_ref!,
-            name: submitValue_name,
-            colorId: submitValue_colorId,
+            type: validatedValue_type.submitValue!,
+            ref: validatedValue_ref.submitValue!,
+            name: validatedValue_name.submitValue!,
+            colorId: validatedValue_colorId.submitValue!,
             qtyBefore: qtyBefore,
-            qtyAfter:  (qtyBefore ?? 0) + submitValue_quantity!,
-            condition: submitValue_condition!,
-            comment: submitValue_comment,
+            qtyAfter:  (qtyBefore ?? 0) + validatedValue_quantity.submitValue!,
+            condition: validatedValue_condition.submitValue!,
+            comment: validatedValue_comment.submitValue!,
             remarksBefore: remarksBefore,
-            remarksAfter: submitValue_remarks!,
+            remarksAfter: validatedValue_location.submitValue!.textRepresentation,
             unitPriceBefore: priceBefore,
-            unitPriceAfter: submitValue_unitPrice!,
+            unitPriceAfter: validatedValue_unitPrice.submitValue!,
             inventoryId: inventoryId,
             uploadDate: .now,
             inventoryStatus: inventoryStatus
         ))
     }
-    
-    
-    func updateItem(
-        
-        type changeType: ChangeValue<ItemType>? = nil,
-        ref changeRef: ChangeValue<String>? = nil,
-        name changeName: ChangeValue<String?>? = nil,
-        colorId changeColorId: ChangeValue<String>? = nil,
-        qty changeQty: ChangeValue<Int?>? = nil,
-        condition changeCondition: ChangeValue<ItemCondition?>? = nil,
-        comment changeComment: ChangeValue<String?>? = nil,
-        unitPrice changeUnitPrice: ChangeValue<Float?>? = nil
-    ) {
-        uploadStore.update(UploadItem(
-            
-            id: uploadItem.id,
-            type: value(from: changeType, ifNoChange: uploadItem.type),
-            ref: value(from: changeRef, ifNoChange: uploadItem.ref),
-            name: value(from: changeName, ifNoChange: uploadItem.name),
-            colorId: value(from: changeColorId, ifNoChange: uploadItem.colorId),
-            qty: value(from: changeQty, ifNoChange: uploadItem.qty),
-            condition: value(from: changeCondition, ifNoChange: uploadItem.condition),
-            comment: value(from: changeComment, ifNoChange: uploadItem.comment),
-            unitPrice: value(from: changeUnitPrice, ifNoChange: uploadItem.unitPrice)
-        ))
-    }
-}
-
-
-
-struct ChangeValue<T> {
-    
-    let newValue: T
-    
-    init(to newValue: T) {
-        self.newValue = newValue
-    }
-}
-
-
-func value<T>(from change: ChangeValue<T>?, ifNoChange defaultValue: T) -> T {
-    
-    change != nil ? change!.newValue : defaultValue
-}
-
-
-
-extension Int? {
-    
-    var normalizedOptional: Int? {
-        return (self ?? 0) > 0 ? self : nil
-    }
-}
-
-
-
-extension Float? {
-    
-    var normalizedOptional: Float? {
-        return (self ?? 0) > 0 ? self : nil
-    }
-}
-
-
-
-extension String {
-        
-    var normalizedOptional: String? {
-        
-        let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed == "" ? nil : trimmed
-    }
-}
-
-extension String? {
-    
-    var normalizedOptional: String? { (self ?? "").normalizedOptional }
 }

@@ -40,15 +40,15 @@ struct InventoryMoveActionSheet: View {
                     TextField("New location", text: $editLocation)
                     
                     Button("Confirm move") {
-                        if let loc = validatedLocation.valueToSubmit {
+                        if let loc = validatedLocation.submitValue {
                             self.moveItems(to: loc)
                             self.addRecentLocation(loc)
                         }
                     }
-                    .disabled(validatedLocation.valueToSubmit == nil)
+                    .disabled(validatedLocation.submitValue == nil)
                 }
                 
-                if isUpdatingItems || validatedLocation.hasWarning {
+                if isUpdatingItems || validatedLocation.isInvalid {
                     
                     HStack {
                         
@@ -58,7 +58,7 @@ struct InventoryMoveActionSheet: View {
                         
                         Spacer()
                         
-                        if validatedLocation.hasWarning {
+                        if validatedLocation.isInvalid {
                             Text("invalid location").foregroundStyle(.secondary)
                         }
                     }
@@ -98,7 +98,7 @@ struct InventoryMoveActionSheet: View {
                 }
             }
             
-            let newLocation = validatedLocation.valueToSubmit
+            let newLocation = validatedLocation.submitValue
             
             InventoryTargetLocationView(newLocation: newLocation, candidateItems: items)
         }
@@ -114,11 +114,11 @@ struct InventoryMoveActionSheet: View {
     var validatedLocation: ValidatedValue<Location> {
         
         if let loc = Location(from: editLocation) {
-            .init(valueToSubmit: loc, hasWarning: false)
+            .init(submitValue: loc, isInvalid: false)
         } else if editLocation.isEmpty {
-            .init(valueToSubmit: nil, hasWarning: false)
+            .init(submitValue: nil, isInvalid: false)
         } else {
-            .init(valueToSubmit: nil, hasWarning: true)
+            .init(submitValue: nil, isInvalid: true)
         }
     }
     
