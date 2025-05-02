@@ -53,7 +53,7 @@ struct InventorySwapActionSheet: View {
                     .disabled(validatedLocation.submitValue == nil)
                 }
                 
-                if isUpdatingItems || validatedLocation.isInvalid {
+                if isUpdatingItems || validatedLocation.hasWarning {
                     
                     HStack {
                         
@@ -63,7 +63,7 @@ struct InventorySwapActionSheet: View {
                         
                         Spacer()
                         
-                        if validatedLocation.isInvalid {
+                        if validatedLocation.hasWarning {
                             Text("invalid location").foregroundStyle(.secondary)
                         }
                     }
@@ -89,11 +89,11 @@ struct InventorySwapActionSheet: View {
     var validatedLocation: ValidatedValue<Location> {
         
         if let loc = Location(from: editLocation) {
-            .init(submitValue: loc, isInvalid: false)
+            .init(submitValue: loc, validity: .valid, hasWarning: false)
         } else if editLocation.isEmpty {
-            .init(submitValue: nil, isInvalid: false)
+            .init(submitValue: nil, validity: .valid, hasWarning: false)
         } else {
-            .init(submitValue: nil, isInvalid: true)
+            .init(submitValue: nil, validity: .invalid, hasWarning: true)
         }
     }
     

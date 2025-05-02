@@ -23,11 +23,6 @@ struct LegoColorView: View {
         self.style = style
     }
     
-    init(uploadItem item: UploadItem, style: Style = .default) {
-        self.colorId = item.colorId
-        self.style = style
-    }
-    
     init(uploadedItem item: UploadedItem, style: Style = .default) {
         self.colorId = item.colorId
         self.style = style

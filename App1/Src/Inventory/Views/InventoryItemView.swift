@@ -78,7 +78,7 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Remarks")
-                        .foregroundStyle(validatedRemarks.isInvalid ? .red : .secondary)
+                        .foregroundStyle(validatedRemarks.hasWarning ? .red : .secondary)
                         
                     TextField("Remarks", text: $editRemarks)
                         .onSubmit {
@@ -103,7 +103,7 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Quantity").gridColumnAlignment(.trailing)
-                        .foregroundStyle(validatedQty.isInvalid ? .red : .secondary)
+                        .foregroundStyle(validatedQty.hasWarning ? .red : .secondary)
                     
                     HStack {
                         Text("\(item.quantity)").font(.title2)
@@ -122,7 +122,7 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Unit price")
-                        .foregroundStyle(validatedUnitPrice.isInvalid ? .red : .secondary)
+                        .foregroundStyle(validatedUnitPrice.hasWarning ? .red : .secondary)
                     
                     TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
                         .onSubmit {
@@ -157,9 +157,9 @@ struct InventoryItemView: View {
     var validatedRemarks: ValidatedValue<String> {
         
         if Location(from: editRemarks) == nil {
-            .init(submitValue: editRemarks, isInvalid: true)
+            .init(submitValue: editRemarks, validity: .valid, hasWarning: true)
         } else {
-            .init(submitValue: editRemarks, isInvalid: false)
+            .init(submitValue: editRemarks, validity: .valid, hasWarning: false)
         }
     }
     
@@ -167,11 +167,11 @@ struct InventoryItemView: View {
     var validatedQty: ValidatedValue<Int> {
         
         if let qty = Int(editQty) {
-            .init(submitValue: qty, isInvalid: false)
+            .init(submitValue: qty, validity: .valid, hasWarning: false)
         } else if editQty.isEmpty {
-            .init(submitValue: nil, isInvalid: false)
+            .init(submitValue: nil, validity: .invalid, hasWarning: false)
         } else {
-            .init(submitValue: nil, isInvalid: true)
+            .init(submitValue: nil, validity: .invalid, hasWarning: true)
         }
     }
     
@@ -179,9 +179,9 @@ struct InventoryItemView: View {
     var validatedUnitPrice: ValidatedValue<Float> {
         
         if let price = editUnitPrice, price > 0 {
-            .init(submitValue: price, isInvalid: false)
+            .init(submitValue: price, validity: .valid, hasWarning: false)
         } else {
-            .init(submitValue: nil, isInvalid: true)
+            .init(submitValue: nil, validity: .invalid, hasWarning: true)
         }
     }
     

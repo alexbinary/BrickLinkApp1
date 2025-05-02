@@ -18,12 +18,6 @@ struct UploadItemView: View {
     
     let uploadItem: UploadItem
     
-    init(uploadItem: UploadItem) {
-        
-        self.uploadItem = uploadItem
-        self._editColorId = State(initialValue: uploadItem.colorId)
-    }
-    
     
     @State var hover = false
     @State var catalogResult: Result<CatalogEntry>? = nil
@@ -36,7 +30,7 @@ struct UploadItemView: View {
     @State var editModePrice = false
     
     @State var editRef: String = ""
-    @State var editColorId: LegoColor.ID
+    @State var editColorId: LegoColor.ID?
     @State var editCondition: ItemCondition?
     @State var editComment: String = ""
     @State var editQty: Int?
@@ -81,9 +75,13 @@ struct UploadItemView: View {
                         
                             ZStack(alignment: .leading) {
                                 
-                                Text(catalog.colorName(forLegoColorId: uploadItem.colorId))
-                                    .onTapGesture { editModeColor = true }
-                                    .opacity(editModeColor ? 0 : 1)
+                                if let colorId = uploadItem.colorId {
+                                    Text(catalog.colorName(forLegoColorId: colorId))
+                                        .onTapGesture { editModeColor = true }
+                                        .opacity(editModeColor ? 0 : 1)
+                                } else {
+                                    Text("no color").italic().foregroundStyle(.secondary)
+                                }
                                 
                                 LegoColorPicker("Color", selection: $editColorId)
                                 .labelsHidden()

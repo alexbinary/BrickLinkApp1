@@ -22,14 +22,15 @@ struct UploadActiveItemView: View {
     
     @State var editingValue_type: ItemType = .part
     @State var editingValue_ref: String = ""
-    @State var editingValue_colorId: LegoColor.ID = ""
+    @State var editingValue_colorId: LegoColor.ID?
     @State var editingValue_condition: ItemCondition?
     @State var editingValue_comment: String = ""
     @State var editingValue_quantity: Int?
     @State var editingValue_unitPrice: Float?
     @State var editingValue_remarks: String = ""
     
-    @State var catalogResult: Result<CatalogEntry>? = nil
+    @State var catalogLoading: Bool = false
+    @State var catalogResult: CatalogResult? = nil
     @State var isSubmitting = false
 
     
@@ -55,6 +56,7 @@ struct UploadActiveItemView: View {
                                     : validatedValue_type.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_type.hasChanges)
                                 
                             ItemTypePicker("Type", selection: $editingValue_type)
                                 .labelsHidden()
@@ -72,6 +74,7 @@ struct UploadActiveItemView: View {
                                     : validatedValue_ref.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_ref.hasChanges)
                                 
                             TextField("Ref", text: $editingValue_ref)
                                 .onSubmit({
@@ -93,43 +96,52 @@ struct UploadActiveItemView: View {
                                     : validatedValue_name.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_name.hasChanges)
                             
-                            Group {
+                            HStack {
                                 
-                                if let catalogResult = catalogResult {
+                                Group {
                                     
-                                    switch catalogResult {
+                                    if catalogLoading {
                                         
-                                    case .loading:
                                         HStack {
-                                            Text("Fetching catalog entry...")
+                                            Text("Checking catalog...")
+                                                .italic()
                                             ProgressView().controlSize(.mini)
                                         }
                                         .foregroundStyle(.secondary)
                                         
-                                    case .notFound:
-                                        Text("invalid type/ref")
-                                        .foregroundStyle(.red)
-                                    
-                                    case .found(let catalogEntry):
-                                        Text(catalogEntry.name)
+                                    } else if let catalogResult = catalogResult {
+                                        
+                                        switch catalogResult {
+                                            
+                                        case .notFound:
+                                            Text("􀁑 invalid type/ref: no catalog entry")
+                                                .foregroundStyle(.red)
+                                                .italic()
+                                            
+                                        case .found(let catalogEntry):
+                                            Text(catalogEntry.name)
+                                                .lineLimit(nil)
+                                                .font(.title3)
+                                        }
+                                        
+                                    } else if let name = uploadItem.name {
+                                        
+                                        Text(name)
                                             .lineLimit(nil)
                                             .font(.title3)
+                                        
+                                    } else {
+                                        
+                                        Text("-")
                                     }
-                                    
-                                } else if let name = uploadItem.name {
-                                    
-                                    Text(name)
-                                        .lineLimit(nil)
-                                        .font(.title3)
-                                    
-                                } else {
-                                    
-                                    Text("-")
                                 }
+                                
+                                Spacer()
+                                
+                                Button("􀊫") { Task { await refreshCatalogEntry() } }
                             }
-                            
-                            Button("􀅉") { Task { await refreshCatalogEntry() } }
                         }
                         
                         GridRow {
@@ -141,12 +153,10 @@ struct UploadActiveItemView: View {
                                     : validatedValue_colorId.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_colorId.hasChanges)
                             
                             LegoColorPicker("Color", selection: $editingValue_colorId)
                                 .labelsHidden()
-                                .onChange(of: editingValue_colorId, {
-                                    
-                                })
                             
                             Button("􀅉") { editingValue_colorId = savedValue_colorId }
                                 .opacity(validatedValue_colorId.hasChanges ? 1 : 0)
@@ -161,6 +171,7 @@ struct UploadActiveItemView: View {
                                     : validatedValue_condition.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_condition.hasChanges)
                             
                             Picker("Condition", selection: $editingValue_condition) {
                                 
@@ -175,9 +186,6 @@ struct UploadActiveItemView: View {
                                     .tag(ItemCondition.used)
                             }
                             .labelsHidden()
-                            .onChange(of: editingValue_condition) {
-                                
-                            }
                             
                             Button("􀅉") { editingValue_condition = savedValue_condition }
                                 .opacity(validatedValue_condition.hasChanges ? 1 : 0)
@@ -192,11 +200,9 @@ struct UploadActiveItemView: View {
                                     : validatedValue_comment.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_comment.hasChanges)
                             
                             TextField("Comment", text: $editingValue_comment)
-                                .onSubmit {
-                                    
-                                }
                             
                             Button("􀅉") { editingValue_comment = savedValue_comment }
                                 .opacity(validatedValue_comment.hasChanges ? 1 : 0)
@@ -207,12 +213,12 @@ struct UploadActiveItemView: View {
                         CatalogImage(
                             itemType: editingValue_type,
                             ref: editingValue_ref,
-                            colorId: editingValue_colorId,
+                            colorId: editingValue_colorId ?? "",
                             scale: 2
                         )
-                        .border(uploadItem.condition?.color ?? .black, width: 2)
+                        .border(validatedValue_condition.submitValue?.color ?? .black, width: 2)
                         
-                        if let condition = uploadItem.condition {
+                        if let condition = validatedValue_condition.submitValue {
                             Text(condition.name.uppercased())
                                 .font(.title3)
                                 .foregroundStyle(condition.color)
@@ -229,6 +235,14 @@ struct UploadActiveItemView: View {
                             HStack {
                                 Text("Updating lot")
                                 InventoryLink(inventoryItem) { Text("\(inventoryItem.id)") }
+                                if let loc = Location(from: inventoryItem.remarks) {
+                                    HStack {
+                                        Text("currently in")
+                                        Text("\(loc)").bold()
+                                    }
+                                        .foregroundStyle(.secondary)
+                                        .font(.body)
+                                }
                             }
                         } else {
                             Text("This is a new lot 􀫸")
@@ -243,8 +257,8 @@ struct UploadActiveItemView: View {
                             GridRow {
                                 Text("")
                                 Text("")
-                                Text("Current")
-                                Text("Updated")
+                                Text("Before")
+                                Text("After")
                             }
                             .foregroundStyle(.secondary)
                         }
@@ -258,12 +272,10 @@ struct UploadActiveItemView: View {
                                     : validatedValue_quantity.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_quantity.hasChanges)
                             
                             HStack {
                                 TextField("Qty", value: $editingValue_quantity, format: .number)
-                                    .onSubmit({
-                                        
-                                    })
                                 
                                 Button {
                                     editingValue_quantity = (editingValue_quantity ?? 0) + 1
@@ -272,17 +284,18 @@ struct UploadActiveItemView: View {
                                 }
                                 
                                 Button {
-                                    editingValue_quantity = (editingValue_quantity ?? 0) - 1
+                                    editingValue_quantity = max(1, (editingValue_quantity ?? 0) - 1)
                                 } label: {
                                     Text("􀅽")
                                 }
+                                .disabled(editingValue_quantity ?? 0 <= 1)
                             }
                             
                             if let inventoryItem = inventoryItem {
                                 
                                 Text("\(inventoryItem.quantity)").gridColumnAlignment(.center).font(.title3)
                                 
-                                if let qty = uploadItem.qty {
+                                if let qty = validatedValue_quantity.submitValue {
                                     Text("􁉂 \(inventoryItem.quantity + qty)").gridColumnAlignment(.center).font(.title3)
                                 } else {
                                     Text("")
@@ -302,17 +315,25 @@ struct UploadActiveItemView: View {
                                     : validatedValue_unitPrice.hasChanges ? .blue
                                     : .secondary
                                 )
+                                .italic(validatedValue_unitPrice.hasChanges)
                             
-                            TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                                .onSubmit({
-                                    
-                                })
+                            HStack {
+                                TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                                
+                                if let inventoryItem = inventoryItem,
+                                   validatedValue_unitPrice.submitValue != inventoryItem.unitPrice
+                                {
+                                    Button("keep existing") {
+                                        editingValue_unitPrice = inventoryItem.unitPrice
+                                    }
+                                }
+                            }
                             
                             if let inventoryItem = inventoryItem {
                                 
                                 Text(inventoryItem.unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4))).font(.title3)
                                 
-                                if let price = uploadItem.unitPrice {
+                                if let price = validatedValue_unitPrice.submitValue {
                                     if price != inventoryItem.unitPrice {
                                         HStack {
                                             Text("􁉂")
@@ -324,14 +345,32 @@ struct UploadActiveItemView: View {
                                 } else {
                                     Text("")
                                 }
-                                
-                                Button("keep existing") {
-                                    editingValue_unitPrice = inventoryItem.unitPrice
-                                }
                             }
                             
                             Button("􀅉") { editingValue_unitPrice = savedValue_unitPrice }
                                 .opacity(validatedValue_unitPrice.hasChanges ? 1 : 0)
+                        }
+                        
+                        if let inventoryItem = inventoryItem {
+                            
+                            GridRow {
+                                
+                                Text("Location")
+                                    .gridColumnAlignment(.trailing)
+                                    .foregroundStyle(.secondary)
+                                
+                                Text("")
+                                
+                                Text(inventoryItem.remarks).font(.title3)
+                                
+                                if let loc = validatedValue_location.submitValue {
+                                    if loc.textRepresentation == inventoryItem.remarks {
+                                        Text("unchanged")
+                                    } else {
+                                        Text("􁉂 \(loc)").font(.title3)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -343,7 +382,7 @@ struct UploadActiveItemView: View {
                 Text("Location 􁉂􀈫").font(.title2)
                     .padding(.bottom)
                 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading) {
                     
                     HStack {
                         
@@ -375,6 +414,36 @@ struct UploadActiveItemView: View {
                         }
                     }
                 }
+                .padding(.bottom)
+                
+                Group {
+                    if let loc = validatedValue_location.submitValue {
+                        
+                        if let inventoryItem = inventoryItem {
+                            
+                            if loc.textRepresentation == inventoryItem.remarks {
+                                HStack {
+                                    Text("This will add new items to existing lot in")
+                                    Text("\(loc)").bold()
+                                }
+                            } else {
+                                HStack {
+                                    Text("This will move existing lot to")
+                                    Text("\(loc)").bold()
+                                    Text("and add new items there")
+                                }
+                            }
+                            
+                        } else {
+                            
+                            HStack {
+                                Text("This will create a new lot in")
+                                Text("\(loc)").bold()
+                            }
+                        }
+                    }
+                }
+                .padding(.bottom)
                 
                 HStack {
                     
@@ -385,22 +454,21 @@ struct UploadActiveItemView: View {
                     }
                     .disabled(!canUpload)
                     
-                    if validatedValue_location.isInvalid {
-                        Text("invalid location").italic().fixedSize()
-                    }
-                    
                     if isSubmitting {
                         ProgressView().controlSize(.small)
                     }
                     
                     Spacer()
                     
-                    Button {
-                        saveChanges()
-                    } label: {
-                        Text("􀈽 Save changes")
+                    if hasChanges {
+                        
+                        Button {
+                            saveChanges()
+                        } label: {
+                            Text("􀈽 Save changes")
+                        }
+                        .disabled(!canSaveChanges)
                     }
-                    .disabled(!hasChanges || !canSaveChanges)
                     
                     Button {
                         deleteUploadItem()
@@ -411,10 +479,45 @@ struct UploadActiveItemView: View {
                 
                 Divider().padding(.top)
                 
-                let newLocation = validatedValue_location.submitValue
-                
-                InventoryTargetLocationView(newLocation: newLocation, candidateItems: [uploadItem], columnsCount: 6)
-                    .padding(.vertical)
+                Group {
+                    
+                    if itemValidity != .indeterminate {
+                        
+                        if itemIsInvalid {
+                            
+                            Text("􀁑 cannot upload: item is invalid")
+                                .italic()
+                                .foregroundStyle(.red)
+                            
+                        } else if validatedValue_quantity.isInvalid || validatedValue_unitPrice.isInvalid {
+                            
+                            Text("􀁑 cannot upload: invalid quantity and/or unit price")
+                                .italic()
+                                .foregroundStyle(.red)
+                            
+                        } else if validatedValue_location.isInvalid {
+                            
+                            Group {
+                                if editingValue_remarks.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    Text("􀇿 no location specified")
+                                } else {
+                                    Text("􀇿 invalid location")
+                                }
+                            }
+                            .italic()
+                            .foregroundStyle(.orange)
+                            
+                        } else {
+                            
+                            InventoryTargetLocationView(
+                                newLocation: validatedValue_location.submitValue,
+                                candidateItems: [uploadItem],
+                                columnsCount: 6
+                            )
+                        }
+                    }
+                }
+                .padding(.vertical)
             }
             .padding()
         }
@@ -457,12 +560,14 @@ struct UploadActiveItemView: View {
                 Task { await refreshCatalogEntry() }
             }
         }
-        .onChange(of: validatedValue_type.submitValue, initial: true) {
+        .onChange(of: editingValue_type, initial: true) {
             
+            catalogResult = nil
             Task { await refreshCatalogEntry() }
         }
-        .onChange(of: validatedValue_ref.submitValue, initial: true) {
+        .onChange(of: editingValue_ref, initial: true) {
             
+            catalogResult = nil
             Task { await refreshCatalogEntry() }
         }
         
@@ -478,7 +583,7 @@ struct UploadActiveItemView: View {
     var validatedValue_type: ValidatedValue<ItemType> {
         
         .init(
-            submitValue: editingValue_type, isInvalid: false,
+            submitValue: editingValue_type, validity: .valid,
             hasChanges: editingValue_type != savedValue_type
         )
     }
@@ -489,12 +594,14 @@ struct UploadActiveItemView: View {
             
         case .found(let entry): .init(
             
-            submitValue: entry.ref, isInvalid: false,
+            submitValue: entry.ref,
+            validity: catalogLoading ? .indeterminate : .valid,
             hasChanges: entry.ref != savedValue_ref
         )
         default: .init(
             
-            submitValue: nil, isInvalid: true,
+            submitValue: editingValue_ref,
+            validity: (catalogResult == nil || catalogLoading) ? .indeterminate : .invalid,
             hasChanges: editingValue_ref != savedValue_ref
         )
         }
@@ -506,32 +613,33 @@ struct UploadActiveItemView: View {
             
         case .found(let entry): .init(
             
-            submitValue: entry.name, isInvalid: false,
+            submitValue: entry.name,
+            validity: catalogLoading ? .indeterminate : .valid,
             hasChanges: entry.name != savedValue_name
         )
         default: .init(
             
-            submitValue: nil, isInvalid: true,
-            hasChanges: false
+            submitValue: nil,
+            validity: (catalogResult == nil || catalogLoading) ? .indeterminate : .invalid,
+            hasChanges: (catalogResult == nil || catalogLoading) ? false : "" != (savedValue_name ?? "")
         )
         }
     }
     
     var validatedValue_colorId: ValidatedValue<LegoColor.ID> {
         
-        let trimmed = editingValue_colorId.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmed.isEmpty {
+        if let colorId = editingValue_colorId {
             
             return .init(
-                submitValue: trimmed, isInvalid: false,
-                hasChanges: trimmed != savedValue_colorId
+                submitValue: colorId, validity: .valid,
+                hasChanges: colorId != savedValue_colorId
             )
             
         } else {
             
             return .init(
-                submitValue: nil, isInvalid: true,
-                hasChanges: trimmed != savedValue_colorId
+                submitValue: nil, validity: .invalid,
+                hasChanges: editingValue_colorId != savedValue_colorId
             )
         }
     }
@@ -541,14 +649,14 @@ struct UploadActiveItemView: View {
         if let condition = editingValue_condition {
             
             return .init(
-                submitValue: condition, isInvalid: false,
+                submitValue: condition, validity: .valid,
                 hasChanges: condition != savedValue_condition
             )
             
         } else {
             
             return .init(
-                submitValue: nil, isInvalid: true,
+                submitValue: nil, validity: .invalid,
                 hasChanges: editingValue_condition != savedValue_condition
             )
         }
@@ -557,7 +665,7 @@ struct UploadActiveItemView: View {
     var validatedValue_comment: ValidatedValue<String> {
         
         .init(
-            submitValue: editingValue_comment, isInvalid: false,
+            submitValue: editingValue_comment, validity: .valid,
             hasChanges: editingValue_comment != savedValue_comment
         )
     }
@@ -567,14 +675,14 @@ struct UploadActiveItemView: View {
         if let qty = editingValue_quantity, qty > 0 {
         
             return .init(
-                submitValue: qty, isInvalid: false,
+                submitValue: qty, validity: .valid,
                 hasChanges: qty != savedValue_quantity
             )
             
         } else {
             
             return .init(
-                submitValue: nil, isInvalid: true,
+                submitValue: nil, validity: .invalid,
                 hasChanges: editingValue_quantity != savedValue_quantity
             )
         }
@@ -585,15 +693,33 @@ struct UploadActiveItemView: View {
         if let price = editingValue_unitPrice, price > 0 {
         
             return .init(
-                submitValue: editingValue_unitPrice, isInvalid: false,
+                submitValue: editingValue_unitPrice, validity: .valid,
                 hasChanges: price != savedValue_unitPrice
             )
             
         } else {
             
             return .init(
-                submitValue: nil, isInvalid: true,
+                submitValue: nil, validity: .invalid,
                 hasChanges: editingValue_unitPrice != savedValue_unitPrice
+            )
+        }
+    }
+    
+    var validatedValue_remarks: ValidatedValue<String> {
+        
+        if let loc = Location(from: editingValue_remarks) {
+            
+            .init(
+                submitValue: loc.textRepresentation, validity: .valid,
+                hasChanges: loc.textRepresentation != inventoryItem?.remarks
+            )
+            
+        } else {
+            
+            .init(
+                submitValue: editingValue_remarks, validity: .valid,
+                hasChanges: editingValue_remarks != inventoryItem?.remarks
             )
         }
     }
@@ -603,14 +729,14 @@ struct UploadActiveItemView: View {
         if let loc = Location(from: editingValue_remarks) {
             
             .init(
-                submitValue: loc, isInvalid: false,
+                submitValue: loc, validity: .valid,
                 hasChanges: loc.textRepresentation != inventoryItem?.remarks
             )
             
         } else {
             
             .init(
-                submitValue: nil, isInvalid: true,
+                submitValue: nil, validity: .invalid,
                 hasChanges: editingValue_remarks != inventoryItem?.remarks
             )
         }
@@ -625,46 +751,48 @@ struct UploadActiveItemView: View {
             return
         }
         
-        self.catalogResult = .loading
+        catalogLoading = true
         
         if let catalogEntry = await catalog.fetchEntry(forItemType: type, ref: ref) {
             
-            self.catalogResult = .found(catalogEntry)
+            catalogResult = .found(catalogEntry)
         } else {
-            self.catalogResult = .notFound
+            catalogResult = .notFound
+        }
+        
+        catalogLoading = false
+    }
+    
+    
+    var itemValidity: Validity {
+        
+        return [
+            validatedValue_type.validity,
+            validatedValue_ref.validity,
+            validatedValue_colorId.validity,
+            validatedValue_condition.validity,
+        ].reduce(.valid) { total, item in
+            if total == .invalid { return .invalid }
+            if item != .valid { return item }
+            return total
         }
     }
     
-    
-    var itemIsValid: Bool {
-        
-        return
-            validatedValue_type.submitValue != nil
-            &&
-            validatedValue_ref.submitValue != nil
-            &&
-            validatedValue_colorId.submitValue != nil
-            &&
-            validatedValue_condition.submitValue != nil
-    }
+    var itemIsValid: Bool { itemValidity == .valid }
+    var itemIsInvalid: Bool { itemValidity == .invalid }
     
     
     var inventoryItem: InventoryItem? {
         
-        if let type = validatedValue_type.submitValue,
-           let ref = validatedValue_ref.submitValue,
-           let colorId = validatedValue_colorId.submitValue,
-           let condition = validatedValue_condition.submitValue {
-            
-            let comment = validatedValue_comment.submitValue
-            
+        if itemIsValid {
+        
             return inventoryStore.inventory(
                 
-                forItemType: type,
-                ref: ref,
-                comment: comment,
-                colorId: colorId,
-                condition: condition
+                forItemType: validatedValue_type.submitValue!,
+                ref: validatedValue_ref.submitValue!,
+                comment: validatedValue_comment.submitValue,
+                colorId: validatedValue_colorId.submitValue!,
+                condition: validatedValue_condition.submitValue!
             )
         } else {
             return nil
@@ -674,18 +802,14 @@ struct UploadActiveItemView: View {
     
     var suggestedLocations: [String] {
         
-        if let type = validatedValue_type.submitValue,
-           let ref = validatedValue_ref.submitValue,
-           let condition = validatedValue_condition.submitValue {
-            
-            let comment = validatedValue_comment.submitValue
-            
+        if itemIsValid {
+           
             return uploadStore.suggestedLocations(
                 
-                forItemType: type,
-                ref: ref,
-                comment: comment,
-                condition: condition
+                forItemType: validatedValue_type.submitValue!,
+                ref: validatedValue_ref.submitValue!,
+                comment: validatedValue_comment.submitValue,
+                condition: validatedValue_condition.submitValue!
             )
         } else {
             return []
@@ -696,7 +820,7 @@ struct UploadActiveItemView: View {
     var savedValue_type: ItemType { uploadItem.type }
     var savedValue_ref: String { uploadItem.ref }
     var savedValue_name: String? { uploadItem.name }
-    var savedValue_colorId: LegoColor.ID { uploadItem.colorId }
+    var savedValue_colorId: LegoColor.ID? { uploadItem.colorId }
     var savedValue_condition: ItemCondition? { uploadItem.condition }
     var savedValue_comment: String { uploadItem.comment ?? "" }
     var savedValue_quantity: Int? { uploadItem.qty }
@@ -723,19 +847,7 @@ struct UploadActiveItemView: View {
     
     var canSaveChanges: Bool {
         
-        validatedValue_type.isValid
-        &&
-        validatedValue_ref.isValid
-        &&
-        validatedValue_colorId.isValid
-        &&
-        validatedValue_condition.isValid
-        &&
-        validatedValue_comment.isValid
-        &&
-        validatedValue_quantity.isValid
-        &&
-        validatedValue_unitPrice.isValid
+        true
     }
     
     
@@ -746,12 +858,12 @@ struct UploadActiveItemView: View {
             id: uploadItem.id,
             type: validatedValue_type.submitValue!,
             ref: validatedValue_ref.submitValue!,
-            name: validatedValue_name.submitValue!,
-            colorId: validatedValue_colorId.submitValue!,
+            name: validatedValue_name.submitValue ?? savedValue_name,
+            colorId: validatedValue_colorId.submitValue,
             qty: validatedValue_quantity.submitValue!,
             condition: validatedValue_condition.submitValue!,
             comment: validatedValue_comment.submitValue!,
-            unitPrice: validatedValue_unitPrice.submitValue!
+            unitPrice: validatedValue_unitPrice.submitValue
         ))
     }
     
@@ -781,7 +893,7 @@ struct UploadActiveItemView: View {
             &&
             validatedValue_unitPrice.isValid
             &&
-            validatedValue_location.isValid
+            validatedValue_remarks.isValid
     }
     
     
@@ -804,7 +916,7 @@ struct UploadActiveItemView: View {
             inventoryId: id,
             addQuantity: validatedValue_quantity.submitValue!,
             unitPrice: validatedValue_unitPrice.submitValue!,
-            remarks: validatedValue_location.submitValue!.textRepresentation
+            remarks: validatedValue_remarks.submitValue!
         )
     }
     
@@ -820,7 +932,7 @@ struct UploadActiveItemView: View {
             unitPrice: validatedValue_unitPrice.submitValue!,
             condition: validatedValue_condition.submitValue!,
             description: validatedValue_comment.submitValue!,
-            remarks: validatedValue_location.submitValue!.textRepresentation
+            remarks: validatedValue_remarks.submitValue!
         )!
     }
     
@@ -853,7 +965,7 @@ struct UploadActiveItemView: View {
             condition: validatedValue_condition.submitValue!,
             comment: validatedValue_comment.submitValue!,
             remarksBefore: remarksBefore,
-            remarksAfter: validatedValue_location.submitValue!.textRepresentation,
+            remarksAfter: validatedValue_remarks.submitValue!,
             unitPriceBefore: priceBefore,
             unitPriceAfter: validatedValue_unitPrice.submitValue!,
             inventoryId: inventoryId,
@@ -861,4 +973,12 @@ struct UploadActiveItemView: View {
             inventoryStatus: inventoryStatus
         ))
     }
+}
+
+
+
+enum CatalogResult {
+    
+    case notFound
+    case found(CatalogEntry)
 }

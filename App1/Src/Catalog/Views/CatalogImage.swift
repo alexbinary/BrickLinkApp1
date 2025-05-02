@@ -44,7 +44,7 @@ struct CatalogImage: View {
     init(uploadItem item: UploadItem, scale: CGFloat = 1) {
         self.type = item.type
         self.ref = item.ref
-        self.colorId = item.colorId
+        self.colorId = item.colorId ?? ""
         self.scale = scale
     }
     

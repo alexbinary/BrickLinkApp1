@@ -13,7 +13,7 @@ struct UploadAddFormView: View {
     @State var type: ItemType = .part
     @State var ref: String = ""
     @State var name: String? = nil
-    @State var colorId: LegoColor.ID = ""
+    @State var colorId: LegoColor.ID?
     @State var qty: Int = 1
     @State var condition: ItemCondition = .used
     @State var comment: String = ""
@@ -65,7 +65,7 @@ struct UploadAddFormView: View {
                             }
                         }
                             
-                        CatalogImage(itemType: type, ref: ref, colorId: colorId)
+                        CatalogImage(itemType: type, ref: ref, colorId: colorId ?? "")
                     }
                 }
                 .padding()

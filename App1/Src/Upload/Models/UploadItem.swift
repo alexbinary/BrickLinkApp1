@@ -8,7 +8,7 @@ struct UploadItem: Identifiable, Codable, Equatable {
     let type: ItemType
     let ref: String
     let name: String?
-    let colorId: LegoColor.ID
+    let colorId: LegoColor.ID?
     let qty: Int?
     let condition: ItemCondition?
     let comment: String?

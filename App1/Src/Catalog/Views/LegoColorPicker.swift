@@ -13,10 +13,10 @@ struct LegoColorPicker: View {
     let label: String
 
     @Binding
-    var selection: LegoColor.ID
+    var selection: LegoColor.ID?
     
     
-    init(_ label: String, selection: Binding<LegoColor.ID>) {
+    init(_ label: String, selection: Binding<LegoColor.ID?>) {
         self.label = label
         self._selection = selection
     }
@@ -27,6 +27,9 @@ struct LegoColorPicker: View {
         let colors = catalog.allColors
         
         Picker(label, selection: $selection) {
+            
+            Text("").tag(nil as LegoColor.ID?)
+            
             ForEach(colors) { color in
              
                 let text = {
@@ -48,14 +51,14 @@ struct LegoColorPicker: View {
 
 #Preview {
     
-    @Previewable @State var selection: LegoColor.ID = ""
+    @Previewable @State var selection: LegoColor.ID? = nil
     
     VStack(alignment: .leading) {
         
         LegoColorPicker("Color", selection: $selection)
         .padding()
         
-        Text("Selected value: \(selection)").font(.title3)
+        Text("Selected value: \(selection ?? "-")").font(.title3)
         .padding()
     }
     .padding()
