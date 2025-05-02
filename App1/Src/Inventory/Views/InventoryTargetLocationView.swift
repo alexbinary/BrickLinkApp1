@@ -59,7 +59,7 @@ struct InventoryTargetLocationView: View {
                 
                 InventoryLocationItemsView(
                     items: itemsInNewLocation,
-                    highlightItems: highlightItems,
+                    highlightItems: highlightItems.union(conflictingItems.map(\.id)),
                     columnsCount: columnsCount,
                     itemViewBuilder: { item, view in
                     
