@@ -62,11 +62,20 @@ struct CatalogImage: View {
         self.scale = scale
     }
     
-    var body: some View {    
+    
+    var catalogUrl: URL? {
+        
+        let colorId = colorId.isEmpty ? "11" : colorId
+        
+        return catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId)
+    }
+    
+    
+    var body: some View {
         
         ZStack {
             AsyncImage(
-                url: catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId),
+                url: catalogUrl,
                 transaction: SwiftUICore.Transaction(animation: .default),
                 content: { phase in
                     Group {
@@ -86,6 +95,7 @@ struct CatalogImage: View {
                     .frame(width: imageSize.width, height: imageSize.height)
                 }
             )
+            .opacity(colorId.isEmpty ? 0.7 : 1)
             
             if let data = catalog.data(forItemOfType: type, ref: ref, colorId: colorId) {
                 if let length = data.lengthAnnotation {
