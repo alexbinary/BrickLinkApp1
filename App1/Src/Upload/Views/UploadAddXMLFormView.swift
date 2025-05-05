@@ -18,10 +18,11 @@ struct UploadAddXMLFormView: View {
         VStack(alignment: .leading, spacing: 12) {
             
             HStack {
-                Text("XML import").font(.title2)
+                Text("XML import")
                 Spacer()
                 Text("􀈄")
             }
+            .font(.title2)
             
             VStack(alignment: .leading) {
                 

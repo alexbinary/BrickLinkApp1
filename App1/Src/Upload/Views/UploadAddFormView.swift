@@ -13,7 +13,7 @@ struct UploadAddFormView: View {
     @State var type: ItemType = .part
     @State var ref: String = ""
     @State var name: String? = nil
-    @State var colorId: LegoColor.ID?
+    @State var colorId: LegoColor.ID? = "1"
     @State var qty: Int = 1
     @State var condition: ItemCondition = .used
     @State var comment: String = ""
@@ -25,48 +25,142 @@ struct UploadAddFormView: View {
         VStack(alignment: .leading, spacing: 12) {
             
             HStack {
-                Text("Add item").font(.title2)
+                Text("Add item")
                 Spacer()
                 Text("􁚛")
             }
+            .font(.title2)
             
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: 16) {
                 
-                Form {
+                Grid(alignment: .leading) {
                     
-                    ItemTypePicker("Type", selection: $type)
+                    GridRow {
                         
-                    TextField("Ref", text: $ref)
+                        Text("Type")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        ItemTypePicker("Type", selection: $type)
+                            .labelsHidden()
+                    }
                     
-                    DynamicCatalogName(forItemType: type, ref: ref, name: $name)
+                    GridRow {
+                        
+                        Text("Ref")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        TextField("Ref", text: $ref)
+                    }
                     
-                    LegoColorPicker("Color", selection: $colorId)
+                    GridRow {
+                        
+                        Text("Name")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        DynamicCatalogName(forItemType: type, ref: ref, name: $name)
+                    }
                     
-                    TextField("Qty", value: $qty, format: .number)
+                    GridRow {
+                        
+                        Text("Color")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        LegoColorPicker("Color", selection: $colorId)
+                            .labelsHidden()
+                    }
                     
-                    TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                    GridRow {
+                        
+                        Text("Condition")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        ItemConditionPicker("Condition", selection: $condition)
+                            .labelsHidden()
+                    }
                     
-                    ItemConditionPicker("Condition", selection: $condition)
+                    GridRow {
+                        
+                        Text("Comment")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        TextField("Comment", text: $comment)
+                    }
                     
-                    TextField("Comment", text: $comment)
+                    GridRow {
+                        
+                        Text("Quantity")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        HStack {
+                            TextField("Qty", value: $qty, format: .number)
+                            
+                            Button {
+                                qty = qty + 1
+                            } label: {
+                                Text("􀅼")
+                            }
+                            
+                            Button {
+                                qty = max(1, qty - 1)
+                            } label: {
+                                Text("􀅽")
+                            }
+                            .disabled(qty <= 1)
+                        }
+                    }
                     
-                    Button("Add") {
-                        uploadStore.add(UploadItem(
-                            type: type,
-                            ref: ref,
-                            name: name,
-                            colorId: colorId,
-                            qty: qty,
-                            condition: condition,
-                            comment: comment,
-                            unitPrice: unitPrice
-                        ))
+                    GridRow {
+                        
+                        Text("Unit price")
+                            .gridColumnAlignment(.trailing)
+                            .foregroundStyle(.secondary)
+                        
+                        TextField("Price", value: $unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                    }
+                    
+                    GridRow {
+                        
+                        Color.clear.frame(width: 0, height: 0)
+                        
+                        Button("Add") { addItem() }
                     }
                 }
+                
+                VStack {
                     
-                CatalogImage(itemType: type, ref: ref, colorId: colorId ?? "")
+                    CatalogImage(
+                        itemType: type,
+                        ref: ref,
+                        colorId: colorId ?? "",
+                        scale: 1.5
+                    )
+                    
+                    
+                }
             }
         }
         .padding()
+    }
+    
+    
+    func addItem() {
+        
+        uploadStore.add(UploadItem(
+            type: type,
+            ref: ref,
+            name: name,
+            colorId: colorId,
+            qty: qty,
+            condition: condition,
+            comment: comment,
+            unitPrice: unitPrice
+        ))
     }
 }

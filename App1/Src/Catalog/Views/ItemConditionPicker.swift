@@ -19,11 +19,17 @@ struct ItemConditionPicker: View {
     
     
     var body: some View {
-
+        
         Picker(label, selection: $selection) {
-            ForEach(ItemCondition.allCases, id: \.self) { condition in
-                Text(condition.name.uppercased()).tag(condition)
-            }
+            
+            Text("NEW")
+                .foregroundStyle(ItemCondition.new.color)
+                .fontWeight(.bold)
+                .tag(ItemCondition.new)
+            Text("USED")
+                .foregroundStyle(ItemCondition.used.color)
+                .fontWeight(.bold)
+                .tag(ItemCondition.used)
         }
     }
 }
