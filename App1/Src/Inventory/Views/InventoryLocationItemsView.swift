@@ -59,7 +59,13 @@ struct InventoryLocationItemsView<Content: View>: View {
                     .clipShape(Capsule())
                     .padding(4)
             }
-            .help(catalog.colorName(forLegoColorId: item.colorId))
+            .help("""
+                \(item.ref)
+                \(item.name)
+                \(catalog.colorName(forLegoColorId: item.colorId))
+                \(item.condition)
+                """
+            )
         
         if highlighted {
             view
