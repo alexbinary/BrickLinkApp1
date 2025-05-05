@@ -9,6 +9,9 @@ struct UploadItemView: View {
     @Environment(\.catalog)
     var catalog: CatalogProtocol!
     
+    @Environment(\.uploadStore)
+    var uploadStore: UploadStoreProtocol!
+    
     @Environment(\.inventoryStore)
     var inventoryStore: InventoryStoreProtocol!
     
@@ -141,6 +144,19 @@ struct UploadItemView: View {
                                 .gridColumnAlignment(.trailing)
                             
                             Text(inventoryItem.remarks)
+                        }
+                        
+                    } else {
+                        
+                        GridRow(alignment: .firstTextBaseline) {
+                            
+                            Text("Suggested")
+                                .foregroundStyle(.secondary)
+                                .gridColumnAlignment(.trailing)
+                            
+                            if let loc = uploadStore.suggestedLocations(for: uploadItem).first {
+                                Text(loc)
+                            }
                         }
                     }
                 }
