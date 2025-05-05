@@ -17,11 +17,11 @@ enum BrickLinkUtility {
     }
 
 
-    static func url(forItemOfType type: BrickLinkItemType, ref: String, colorId: String) -> URL? {
+    static func url(forItemOfType type: BrickLinkItemType, ref: String, colorId: String?) -> URL? {
         
         switch type {
         case .part:
-            return URL(string: "https://www.bricklink.com/v2/catalog/catalogitem.page?P=\(ref)&C=\(colorId)")
+            return URL(string: "https://www.bricklink.com/v2/catalog/catalogitem.page?P=\(ref)&C=\(colorId ?? "")")
         case .minifig:
             return URL(string: "https://www.bricklink.com/v2/catalog/catalogitem.page?M=\(ref)")
         }

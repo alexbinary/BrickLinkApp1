@@ -15,7 +15,7 @@ protocol CatalogProtocol {
 
     func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry?
     func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL?
-    func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL?
+    func url(forItemOfType type: ItemType, ref: String, colorId: String?) -> URL?
     func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData?
 }
 
@@ -102,7 +102,7 @@ class Catalog: CatalogProtocol {
     }
     
     
-    func url(forItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+    func url(forItemOfType type: ItemType, ref: String, colorId: String?) -> URL? {
         
         BrickLinkUtility.url(forItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
     }
