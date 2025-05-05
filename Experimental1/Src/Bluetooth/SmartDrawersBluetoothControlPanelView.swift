@@ -9,6 +9,8 @@ struct SmartDrawersBluetoothControlPanelView: View {
     var controller = SmartDrawersBluetoothController()
     var ready: Bool { controller.state == .ready }
     
+    @FocusState private var focused: Bool
+    
     
     var body: some View {
             
@@ -24,6 +26,13 @@ struct SmartDrawersBluetoothControlPanelView: View {
             Button { openDrawer() }
             label: { Text("Open drawer").padding() }
                 .disabled(!ready)
+                .focusable().focused($focused)
+                .onAppear { focused = true }
+                .onKeyPress(keys: [.space]) { press in
+                    if !ready { return .ignored }
+                    openDrawer()
+                    return .handled
+                }
             
             Spacer()
             
