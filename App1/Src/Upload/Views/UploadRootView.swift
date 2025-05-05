@@ -11,16 +11,12 @@ struct UploadRootView: View {
 
     
     @State var addViewVisible: Bool = false
+    @State var selectedTab: String? = Defaults.active.uploadActiveTab
     
     
     var body: some View {
      
-        TabView(
-            selection: .constant("upload")
-        ) {
-            
-            UploadAddView()
-            .tabItem { Text("􀋲 Prepare") }.tag("add")
+        TabView(selection: $selectedTab) {
             
             UploadView()
             .tabItem { Text("􀈧 Upload") }.tag("upload")

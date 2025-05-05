@@ -8,10 +8,14 @@ let previewDefaults = Defaults(
 //        .upload
     ,
     ordersActiveNavigationPath: [
-       "1234567890"
+//       "1234567890"
     ],
     orderDetailActiveTab:
         nil
 //            .picking
 //            .shipping
+    ,
+    uploadActiveTab:
+        nil
+//        "upload"
 )

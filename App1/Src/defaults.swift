@@ -7,6 +7,7 @@ struct Defaults {
     let selectedSidebarItem: SidebarItem
     let ordersActiveNavigationPath: [Order.ID]
     let orderDetailActiveTab: OrderDetailTab?
+    let uploadActiveTab: String?
     let resultSelectedOrderIds: Set<Order.ID> = []
     
     

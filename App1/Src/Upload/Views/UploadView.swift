@@ -15,6 +15,9 @@ struct UploadView: View {
     
     @State var activeItemId: UploadItem.ID? = nil
     
+    @State var addFormPopoverPresented: Bool = false
+    @State var addFormXMLPopoverPresented: Bool = false
+    
     
     var body: some View {
         
@@ -50,6 +53,30 @@ struct UploadView: View {
             
             if !items.contains(where: { $0.id == activeItemId }) {
                 activeItemId = items.first?.id
+            }
+        }
+        .toolbar {
+            
+            Button {
+                addFormPopoverPresented.toggle()
+            } label: {
+                Text("􀅼").padding(.horizontal)
+            }
+            .popover(isPresented: $addFormPopoverPresented, arrowEdge: .bottom) {
+                
+                UploadAddFormView()
+                    .frame(width: 700)
+            }
+            
+            Button {
+                addFormXMLPopoverPresented.toggle()
+            } label: {
+                Text("􀈄").padding(.horizontal)
+            }
+            .popover(isPresented: $addFormXMLPopoverPresented, arrowEdge: .bottom) {
+                
+                UploadAddXMLFormView()
+                    .frame(width: 500)
             }
         }
     }
