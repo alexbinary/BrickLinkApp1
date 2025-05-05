@@ -100,7 +100,7 @@ struct InventoryMoveActionSheet: View {
             
             let newLocation = validatedLocation.submitValue
             
-            InventoryTargetLocationView(newLocation: newLocation, candidateItems: items)
+            InventoryTargetLocationView(newLocation: newLocation, candidateItems: items.map(\.partDescriptor))
         }
         .padding()
         .padding(.vertical)

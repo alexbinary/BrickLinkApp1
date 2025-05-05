@@ -16,17 +16,16 @@ struct InventoryItem: Identifiable, Equatable, Codable {
     let remarks: String
     let quantity: Int
     let unitPrice: Float
-}
-
-
-
-extension InventoryItem: PartIdentity {
     
     
-    var item_type: ItemType? { type }
-    var item_ref: String? { ref }
-    var item_colorId: String? { colorId }
-    var item_condition: ItemCondition? { condition }
+    var partDescriptor: PartDescriptor {
+        .init(
+            item_type: type,
+            item_ref: ref,
+            item_colorId: colorId,
+            item_condition: condition
+        )
+    }
 }
 
 

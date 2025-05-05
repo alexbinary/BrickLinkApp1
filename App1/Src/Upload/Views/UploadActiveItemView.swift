@@ -512,7 +512,12 @@ struct UploadActiveItemView: View {
                             
                             InventoryTargetLocationView(
                                 newLocation: validatedValue_location.submitValue,
-                                candidateItems: [uploadItem],
+                                candidateItems: [PartDescriptor(
+                                    item_type: validatedValue_type.submitValue,
+                                    item_ref: validatedValue_ref.submitValue,
+                                    item_colorId: validatedValue_colorId.submitValue,
+                                    item_condition: validatedValue_condition.submitValue
+                                )],
                                 highlightItems: inventoryItem != nil ? [inventoryItem!.id] : [],
                                 columnsCount: 6,
                                 

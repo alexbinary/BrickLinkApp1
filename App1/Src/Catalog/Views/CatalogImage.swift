@@ -27,7 +27,7 @@ struct CatalogImage: View {
         self.scale = scale
     }
     
-    init(item: PartIdentity, scale: CGFloat = 1) {
+    init(item: PartDescriptor, scale: CGFloat = 1) {
         self.type = item.item_type!
         self.ref = item.item_ref!
         self.colorId = item.item_colorId!

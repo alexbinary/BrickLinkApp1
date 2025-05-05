@@ -1,8 +1,10 @@
+
 import Foundation
 
 
 
 struct UploadItem: Identifiable, Codable, Equatable {
+    
     
     var id = UUID()
     let type: ItemType
@@ -13,13 +15,14 @@ struct UploadItem: Identifiable, Codable, Equatable {
     let condition: ItemCondition?
     let comment: String?
     let unitPrice: Float?
-}
-
-
-extension UploadItem: PartIdentity {
     
-    var item_type: ItemType? { type }
-    var item_ref: String? { ref }
-    var item_colorId: String? { colorId }
-    var item_condition: ItemCondition? { condition }
+    
+    var partDescriptor: PartDescriptor {
+        .init(
+            item_type: type,
+            item_ref: ref,
+            item_colorId: colorId,
+            item_condition: condition
+        )
+    }
 }

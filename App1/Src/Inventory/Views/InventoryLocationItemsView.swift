@@ -63,7 +63,7 @@ struct InventoryLocationItemsView<Content: View>: View {
                 \(item.ref)
                 \(item.name)
                 \(catalog.colorName(forLegoColorId: item.colorId))
-                \(item.condition)
+                \(item.condition.name.uppercased())
                 """
             )
         

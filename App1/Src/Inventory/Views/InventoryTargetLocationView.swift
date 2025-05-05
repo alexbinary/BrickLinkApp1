@@ -11,14 +11,14 @@ struct InventoryTargetLocationView: View {
     
     
     let newLocation: Location?
-    let candidateItems: [PartIdentity]
+    let candidateItems: [PartDescriptor]
     let highlightItems: Set<InventoryItem.ID>
     
     let itemsLimit = 50
     let columnsCount: Int
     
     
-    init(newLocation: Location?, candidateItems: [PartIdentity], highlightItems: Set<InventoryItem.ID> = [], columnsCount: Int = 4) {
+    init(newLocation: Location?, candidateItems: [PartDescriptor], highlightItems: Set<InventoryItem.ID> = [], columnsCount: Int = 4) {
         self.newLocation = newLocation
         self.candidateItems = candidateItems
         self.highlightItems = highlightItems
