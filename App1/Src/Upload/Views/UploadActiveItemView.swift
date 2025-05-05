@@ -250,6 +250,7 @@ struct UploadActiveItemView: View {
                     }
                     .font(.title3)
                     .padding(.vertical)
+                    .padding(.top)
                     
                     Grid(alignment: .leading, verticalSpacing: 6) {
                         

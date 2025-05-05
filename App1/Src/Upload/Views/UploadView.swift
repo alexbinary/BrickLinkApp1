@@ -28,7 +28,7 @@ struct UploadView: View {
                     
                     if let id = activeItemId {
                         UploadActiveItemView(uploadItemId: id)
-                            .padding(.horizontal)
+                            .padding()
                     }
                     
                     Section {
