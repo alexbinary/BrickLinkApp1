@@ -99,7 +99,7 @@ struct UploadItemView: View {
             }
             .frame(width: 300, alignment: .leading)
             
-            if itemIsValid {
+            if uploadItem.itemIsValid {
                 
                 Grid(alignment: .leading, verticalSpacing: 8) {
                     
@@ -181,16 +181,5 @@ struct UploadItemView: View {
     var inventoryItem: InventoryItem? {
         
         return inventoryStore.inventory(for: uploadItem)
-    }
-    
-    
-    var itemIsValid: Bool {
-        
-        return
-            !uploadItem.ref.isEmpty
-            &&
-            !(uploadItem.colorId ?? "").isEmpty
-            &&
-            uploadItem.condition != nil
     }
 }
