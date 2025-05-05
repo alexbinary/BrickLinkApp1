@@ -108,28 +108,20 @@ class UploadStore: UploadStoreProtocol {
     }
     
     
+    func actualOrSuggestedLocation(for uploadItem: UploadItem) -> String? {
+        
+        inventory(for: uploadItem)?.remarks ?? suggestedLocations(for: uploadItem).first
+    }
+    
+    
     var uploadItemsForList: [UploadItem] {
         
-        uploadItems.sorted { item1, item2 in
-                
-            let rem1 = suggestedLocations(for: item1).first
-            let rem2 = suggestedLocations(for: item2).first
-            
-            switch (rem1, rem2) {
-                
-            case (nil, nil):
-                return true
-                
-            case (.some, nil):
-                return true
-                
-            case (nil, .some):
-                return false
-                
-            case (.some(let rem1), .some(let rem2)):
-                return rem1 < rem2
-            }
-        }
+        uploadItems
+            .sorted(
+                firstOn: \.itemIsValid, .true_before_false,
+                thenOn: { self.actualOrSuggestedLocation(for: $0) },
+                sortNilFirst: false
+            )
     }
     
     

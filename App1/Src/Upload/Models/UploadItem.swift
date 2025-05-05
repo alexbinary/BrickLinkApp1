@@ -29,6 +29,6 @@ struct UploadItem: Identifiable, Codable, Equatable {
     
     var itemIsValid: Bool {
         
-        ref.isEmpty && !(colorId ?? "").isEmpty && condition != nil
+        !ref.isEmpty && !(colorId ?? "").isEmpty && condition != nil
     }
 }

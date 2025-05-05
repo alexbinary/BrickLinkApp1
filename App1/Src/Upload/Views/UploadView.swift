@@ -19,9 +19,6 @@ struct UploadView: View {
     var body: some View {
         
         let items = uploadStore.uploadItemsForList
-            .sorted(by: { a, b in
-                return a.itemIsValid
-            })
         
         VStack {
             

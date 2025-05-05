@@ -72,7 +72,11 @@ class InventoryStore: InventoryStoreProtocol {
         
         allInventories
             .filter { $0.matches(searchText, searchTokens, catalog) }
-            .sorted(on: { Location(from: $0.remarks) }, ifNilOn: { $0.remarks })
+            .sorted(
+                tryUsing: { Location(from: $0.remarks) },
+                ifNilTry: { $0.remarks },
+                sortNilFirst: true
+            )
     }
     
     
@@ -84,7 +88,7 @@ class InventoryStore: InventoryStoreProtocol {
     
     func inventory(
         
-                        forItemType type: ItemType,
+        forItemType type: ItemType,
         ref: String,
         comment: String?,
         colorId: String,
@@ -99,7 +103,6 @@ class InventoryStore: InventoryStoreProtocol {
             comment: comment,
             colorId: colorId,
             condition: condition
-        
         )
     }
     
