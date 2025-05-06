@@ -8,3 +8,10 @@ struct PartDescriptor {
     let item_colorId: String?
     let item_condition: ItemCondition?
 }
+
+
+
+protocol PartDescriptible {
+    
+    var partDescriptor: PartDescriptor { get }
+}

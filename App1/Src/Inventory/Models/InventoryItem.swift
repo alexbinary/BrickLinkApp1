@@ -16,6 +16,11 @@ struct InventoryItem: Identifiable, Equatable, Codable {
     let remarks: String
     let quantity: Int
     let unitPrice: Float
+}
+
+
+
+extension InventoryItem: PartDescriptible {
     
     
     var partDescriptor: PartDescriptor {
