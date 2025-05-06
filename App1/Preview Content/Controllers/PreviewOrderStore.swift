@@ -52,6 +52,11 @@ struct PreviewOrderStore: OrderStoreProtocol {
         
     }
     
+    func isUpdatingTrackingNo(of order: Order) -> Bool {
+        
+        return false
+    }
+    
     func sendDriveThru(for order: Order) async {
         
     }

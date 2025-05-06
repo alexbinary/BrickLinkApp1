@@ -214,8 +214,15 @@ struct OrderDetailShippingView: View {
                                     }
                                     .frame(maxWidth: 140)
                                 
-                                Button("Save") {
-                                    Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
+                                HStack {
+                                    Button("Save") {
+                                        Task { await orderStore.updateTrackingNo(of: order, to: trackingNoEditValue ?? "") }
+                                    }
+                                    
+                                    if orderStore.isUpdatingTrackingNo(of: order) {
+                                        ProgressView()
+                                            .controlSize(.small)
+                                    }
                                 }
                             }
                             
@@ -229,8 +236,15 @@ struct OrderDetailShippingView: View {
                                     Text("not sent")
                                 }
                                 
-                                Button("Send") {
-                                    Task { await orderStore.sendDriveThru(for: order) }
+                                HStack {
+                                    Button("Send") {
+                                        Task { await orderStore.sendDriveThru(for: order) }
+                                    }
+                                    
+                                    if orderStore.isSendingDriveThru(for: order) {
+                                        ProgressView()
+                                            .controlSize(.small)
+                                    }
                                 }
                             }
                             

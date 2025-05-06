@@ -16,6 +16,7 @@ protocol OrderStoreProtocol {
     func updateStatus(of order: Order, to status: OrderStatus) async
     func isUpdatingStatus(of order: Order, to status: OrderStatus) -> Bool
     func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async
+    func isUpdatingTrackingNo(of order: Order) -> Bool
     func sendDriveThru(for order: Order) async
     func isSendingDriveThru(for order: Order) -> Bool
     
@@ -166,6 +167,12 @@ class OrderStore: OrderStoreProtocol {
     func updateTrackingNo(of order: Order, to trackingNo: TrackingNo) async {
         
         await orderController.updateTrackingNo(of: order, to: trackingNo)
+    }
+    
+    
+    func isUpdatingTrackingNo(of order: Order) -> Bool {
+        
+        orderController.isUpdatingTrackingNo(of: order)
     }
     
     
