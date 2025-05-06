@@ -86,7 +86,11 @@ class PickingStore: PickingStoreProtocol {
         
         return items(for: order)
             .filter { !pickedIds.contains($0.id) }
-            .sorted { $0.location < $1.location }
+            .sorted(
+                tryUsing: { Location(from: $0.location) },
+                ifNilTry: { $0.location },
+                sortNilFirst: true
+            )
     }
     
     

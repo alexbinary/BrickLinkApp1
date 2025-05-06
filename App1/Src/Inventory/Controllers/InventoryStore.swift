@@ -72,11 +72,7 @@ class InventoryStore: InventoryStoreProtocol {
         
         allInventories
             .filter { $0.matches(searchText, searchTokens, catalog) }
-            .sorted(
-                tryUsing: { Location(from: $0.remarks) },
-                ifNilTry: { $0.remarks },
-                sortNilFirst: true
-            )
+            .sortedByLocation()
     }
     
     

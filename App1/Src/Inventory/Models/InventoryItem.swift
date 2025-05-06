@@ -51,6 +51,21 @@ extension InventoryItem {
 
 
 
+extension Array where Element == InventoryItem {
+    
+    
+    func sortedByLocation() -> Self {
+        
+        self.sorted(
+            tryUsing: { Location(from: $0.remarks) },
+            ifNilTry: { $0.remarks },
+            sortNilFirst: true
+        )
+    }
+}
+
+
+
 extension InventoryItem {
     
     
