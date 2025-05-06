@@ -8,6 +8,8 @@ struct PickingProgressView: View {
 
     @Environment(\.pickingStore)
     var pickingStore: PickingStoreProtocol!
+    
+    @Namespace var animation
 
 
     let order: Order
@@ -15,60 +17,94 @@ struct PickingProgressView: View {
     init(_ order: Order) {
         self.order = order
     }
+    
+    
+    var pickingProgress: Percent {
+        pickingStore.pickingProgress(for: order)
+    }
+    var verificationProgress: Percent {
+        pickingStore.pickingVerificationProgress(for: order)
+    }
 
 
     var body: some View {
         
         HStack(alignment: .firstTextBaseline, spacing: 16) {
             
-            VStack(alignment: .leading, spacing: 0) {
+            let pickingView = VStack(alignment: .leading, spacing: 0) {
 
-                HStack {
+                HStack(alignment: .firstTextBaseline) {
 
                     Text("Picking")
                         .font(.headline)
                     
-                    let progress = pickingStore.pickingProgress(for: order)
-                    Text("\(progress) complete")
+                    Text("\(pickingProgress) complete")
                         .font(.subheadline)
 
-                    if progress < 100% {
+                    if pickingProgress < 100% {
                         let parts = pickingStore.totalPartsLeftToPick(for: order)
                         let lots = pickingStore.totalLotsLeftToPick(for: order)
                         Text("\(parts) parts in \(lots) lots left to pick")
-                            .foregroundStyle(.secondary)
                             .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("􀆅")
+                            .foregroundStyle(green)
                     }
                 }
                 
-                let progress = pickingStore.pickingProgress(for: order)
-                ProgressView(value: progress.fractionValue).tint(.green)
+                ProgressView(value: pickingProgress.fractionValue)
+                    .tint(pickingProgress == 100% ? .green : .accentColor)
             }
+                .matchedGeometryEffect(id: "picking", in: animation)
+                
             
-            VStack(alignment: .leading, spacing: 0) {
+            let verificationView = VStack(alignment: .leading, spacing: 0) {
 
-                HStack {
+                HStack(alignment: .firstTextBaseline) {
+                    
                     Text("Verify")
                         .font(.headline)
                     
-                    let progress = pickingStore.pickingVerificationProgress(for: order)
-                    Text("\(progress) complete")
+                    Text("\(verificationProgress) complete")
                         .font(.subheadline)
 
-                    if progress < 100% {
+                    if verificationProgress < 100% {
                         let parts = pickingStore.totalPartsLeftToVerify(for: order)
                         let lots = pickingStore.totalLotsLeftToVerify(for: order)
                         Text("\(parts) parts in \(lots) lots left to verify")
-                            .foregroundStyle(.secondary)
                             .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("􀆅")
+                            .foregroundStyle(green)
                     }
                 }
                 
-                let progress = pickingStore.pickingVerificationProgress(for: order)
-                ProgressView(value: progress.fractionValue).tint(.green)
+                ProgressView(value: verificationProgress.fractionValue)
+                    .tint(verificationProgress == 100% ? .green : .accentColor)
+            }
+                .matchedGeometryEffect(id: "verification", in: animation)
+            
+            if pickingProgress < 100% {
+                
+                pickingView
+                    .layoutPriority(1)
+                    
+                verificationView
+                    .fixedSize()
+                
+            } else {
+                
+                pickingView
+                    .fixedSize()
+                
+                verificationView
+                    .layoutPriority(1)
             }
         }
         .monospacedDigit()
+        .animation(.default, value: pickingProgress)
     }
 }
 

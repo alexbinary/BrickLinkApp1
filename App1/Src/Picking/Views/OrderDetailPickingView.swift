@@ -49,14 +49,16 @@ struct OrderDetailPickingView: View {
                     if !tab.items.isEmpty {
                         ScrollView {
                             LazyVStack(alignment: .leading, spacing: 12) {
-                                Divider()
-                                ForEach(tab.items) {
-                                    PickingItemView($0, button: tab.button)
-                                    Divider()
+                                ForEach(tab.items) { item in
+                                    VStack {
+                                        Divider()
+                                        PickingItemView(item, button: tab.button)
+                                    }
                                 }
                             }
+                            .animation(.default, value: tab.items)
+                            .padding()
                         }
-                        .padding()
                         .tabItem { Text(tab.title) }
                     }
                 }
