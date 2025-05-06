@@ -175,10 +175,6 @@ let partData: [PartData] = [
         lengthAnnotation: "3L"
     ),
     .init(
-        ref: "98138",
-        lengthAnnotation: "1L"
-    ),
-    .init(
         ref: "3957",
         variantAnnotation: true
     ),
