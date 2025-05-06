@@ -701,7 +701,7 @@ struct UploadActiveItemView: View {
         if let price = editingValue_unitPrice, price > 0 {
         
             return .init(
-                submitValue: editingValue_unitPrice, validity: .valid,
+                submitValue: price, validity: .valid,
                 hasChanges: price != savedValue_unitPrice
             )
             
