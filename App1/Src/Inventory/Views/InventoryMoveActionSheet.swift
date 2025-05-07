@@ -32,7 +32,11 @@ struct InventoryMoveActionSheet: View {
                 Text("􀈫􁉂􀈫")
             }
             
-            InventoryLocationItemsView(items: items, itemViewBuilder: { item, view in AnyView(view) })
+            ScrollView {
+                
+                InventoryLocationItemsView(items: items, splitByRemarks: true, itemViewBuilder: { item, view in AnyView(view) })
+            }
+            .frame(minHeight: 270)
             
             VStack(alignment: .leading, spacing: 4) {
                 
@@ -100,10 +104,13 @@ struct InventoryMoveActionSheet: View {
             
             let newLocation = validatedLocation.submitValue
             
-            InventoryTargetLocationView(newLocation: newLocation, candidateItems: items.map(\.partDescriptor))
+            ScrollView {
+                
+                InventoryTargetLocationView(newLocation: newLocation, candidateItems: items.map(\.partDescriptor))
+            }
+            .frame(minHeight: 270)
         }
         .padding()
-        .padding(.vertical)
         .onAppear {
             editLocation = defaultLocation?.description ?? ""
         }

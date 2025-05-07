@@ -422,6 +422,25 @@ extension Array {
     }
     
     
+    func sorted<Transformed: Comparable>(
+    
+        tryUsing transformer: @escaping (Self.Element) -> Transformed?,
+        sortNilFirst: Bool
+        
+    ) -> [Self.Element] {
+        
+        self.sorted(using:
+                            
+            FailableTransformComparator(
+
+                transformer: transformer,
+                nilOrdering: sortNilFirst ? .nil_before_some : .nil_after_some,
+                whenBothNil: UndefinedComparator()
+            )
+        )
+    }
+    
+    
     func sorted<Primary: Comparable, Fallback: Comparable>(
     
         tryUsing primaryTransformer: @escaping (Self.Element) -> Primary?,

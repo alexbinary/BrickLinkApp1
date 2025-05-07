@@ -11,7 +11,11 @@ struct InventoryListView: View {
     
     
     @State var searchText = ""
-    @State var searchTokens: [SearchToken] = []
+    @State var searchTokens: [SearchToken] = [
+//        .refIs("87994"),
+//        .refIs("92946"),
+//        .locationIs(Location(from: "A1-1.3")!)
+    ]
     
     @State var actionMovePopoverPresented: Bool = false
     @State var actionSwapPopoverPresented: Bool = false

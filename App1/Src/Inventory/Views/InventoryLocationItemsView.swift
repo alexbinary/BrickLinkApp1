@@ -16,21 +16,70 @@ struct InventoryLocationItemsView<Content: View>: View {
     let itemsLimit = 50
     let columnsCount: Int
     
+    let splitByRemarks: Bool
+    
     @ViewBuilder
     let itemViewBuilder: (InventoryItem, any View) -> Content
     
     
-    init(items: [InventoryItem], highlightItems: Set<InventoryItem.ID> = [], columnsCount: Int = 4, itemViewBuilder: @escaping (InventoryItem, any View) -> Content) {
+    init(items: [InventoryItem], highlightItems: Set<InventoryItem.ID> = [], columnsCount: Int = 4, splitByRemarks: Bool = false, itemViewBuilder: @escaping (InventoryItem, any View) -> Content) {
         
         self.items = items.sorted(by: { a,b in highlightItems.contains(a.id) })
         self.highlightItems = highlightItems
         self.columnsCount = columnsCount
+        self.splitByRemarks = splitByRemarks
         self.itemViewBuilder = itemViewBuilder
     }
 
 
     var body: some View {
 
+        Group {
+            
+            if splitByRemarks {
+                
+                let itemsByRemark = Dictionary(grouping: items, by: { $0.remarks})
+                let remarks = Array(itemsByRemark.keys).sorted(
+                    tryUsing: { Location(from: $0) },
+                    sortNilFirst: false
+                )
+                
+                VStack(spacing: 12) {
+                    
+                    ForEach(remarks, id: \.self) { remark in
+                        
+                        VStack(alignment: .leading) {
+                            
+                            let items = itemsByRemark[remark]!
+                            
+                            HStack {
+                                if let loc = Location(from: remark) {
+                                    Text("\(loc)").bold()
+                                } else if remark.isEmpty {
+                                    Text("no remarks").foregroundStyle(.secondary).italic()
+                                } else {
+                                    Text(remark)
+                                }
+                                Text("\(items.count) items").foregroundStyle(.secondary)
+                            }
+                            
+                            view(for: items)
+                        }
+                    }
+                }
+                
+            } else {
+                
+                view(for: items)
+            }
+        }
+        .fixedSize()
+    }
+    
+    
+    @ViewBuilder
+    func view(for items: [InventoryItem]) -> some View {
+        
         LazyVGrid(columns: Array(repeating: .init(.fixed(84)), count: columnsCount)) {
             
             ForEach(items.limit(itemsLimit)) { item in
@@ -41,7 +90,6 @@ struct InventoryLocationItemsView<Content: View>: View {
                 Text("\(items.count-itemsLimit) more")
             }
         }
-        .fixedSize()
     }
     
     
