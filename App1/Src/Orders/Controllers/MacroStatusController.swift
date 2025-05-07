@@ -70,7 +70,7 @@ class MacroStatusController {
                 || self.order(order, validates: .buyerFeedback)
                 || self.order(order, validates: .unchangedFor30Days)
                 
-            }, status: .giveFeedback
+            }, status: .closedByBuyer
             ),
             (condition: {
                 self.order(order, validates: .sellerFeedback)

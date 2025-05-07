@@ -185,7 +185,7 @@ struct OrdersMainListItem: View {
                 .orange
         case .received:
                 .green
-        case .giveFeedback:
+        case .closedByBuyer:
                 .green
         case .recentlyClosed:
                 .green
@@ -288,7 +288,7 @@ struct OrdersMainListItem: View {
             
             items.append(OrderStatusTag(text: "Waiting Completed or buyer feedback", status: .waitingOnExternalAction))
         
-        case .giveFeedback:
+        case .closedByBuyer:
                 
             let formattedDate = formatter.localizedString(for: order.dateStatusChanged, relativeTo: Date.now)
             if order.status == .completed {

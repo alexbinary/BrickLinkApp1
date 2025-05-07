@@ -225,7 +225,7 @@ class OrderStore: OrderStoreProtocol {
         
         return ChecklistData(sections: [
             .init(
-                title: OrderMacroStatus.validatePayment.descriptionWithPicto,
+                macroStatus: .validatePayment,
                 items: [
                     .init(
                         label: "Payment received",
@@ -238,7 +238,7 @@ class OrderStore: OrderStoreProtocol {
                 ]
             ),
             .init(
-                title: OrderMacroStatus.pickAndPack.descriptionWithPicto,
+                macroStatus: .pickAndPack,
                 items: [
                     .init(
                         label: {
@@ -269,7 +269,7 @@ class OrderStore: OrderStoreProtocol {
                 ]
             ),
             .init(
-                title: OrderMacroStatus.ship.descriptionWithPicto,
+                macroStatus: .ship,
                 items: [
                     .init(
                         label: "Validate stamping",
@@ -294,18 +294,13 @@ class OrderStore: OrderStoreProtocol {
                 ]
             ),
             .init(
-                title: "􀐚 Shipped",
+                macroStatus: .inTransit,
                 items: [
                     .init(
                         label: "Picked up by transporter",
                         state: laPosteTrackingStatus(for: order)?.isOneOf(.inTransit, .delivered) ?? false ? .validated : .pending,
                         mandatory: false
                     ),
-                ]
-            ),
-            .init(
-                title: OrderMacroStatus.inTransit.descriptionWithPicto,
-                items: [
                     .init(
                         label: "Received",
                         state: state(of: .received, for: order)
@@ -313,7 +308,7 @@ class OrderStore: OrderStoreProtocol {
                 ]
             ),
             .init(
-                title: OrderMacroStatus.received.descriptionWithPicto,
+                macroStatus: .received,
                 items: [
                     .init(
                         label: "Completed",
@@ -326,13 +321,18 @@ class OrderStore: OrderStoreProtocol {
                 ]
             ),
             .init(
-                title: OrderMacroStatus.giveFeedback.descriptionWithPicto,
+                macroStatus: .closedByBuyer,
                 items: [
                     .init(
-                        label: "Give feedback",
+                        label: "Seller feedback",
                         state: state(of: .sellerFeedback, for: order)
                     ),
                 ]
+            ),
+            .init(
+                macroStatus: .closed,
+                items: [],
+                state: macroStatus(for: order).isOneOf([.recentlyClosed, .closed]) ? .validated : .pending
             )
         ])
     }
@@ -360,9 +360,9 @@ class OrderStore: OrderStoreProtocol {
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
-                header: OrderMacroStatus.giveFeedback.descriptionWithPicto,
+                header: OrderMacroStatus.closedByBuyer.descriptionWithPicto,
                 orders: orders
-                    .filter { macroStatus(for: $0) == .giveFeedback }
+                    .filter { macroStatus(for: $0) == .closedByBuyer }
                     .sorted { $0.dateStatusChanged > $1.dateStatusChanged }
             ),
             .init(
@@ -457,7 +457,7 @@ class OrderStore: OrderStoreProtocol {
     
     private func orderNeedsRefreshFeedback(_ order: Order) -> Bool {
         
-        macroStatus(for: order).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .giveFeedback)
+        macroStatus(for: order).isOneOf(.inTransit, .inTransitFor30PlusDays, .received, .closedByBuyer)
     }
     
     
@@ -612,7 +612,7 @@ class OrderStore: OrderStoreProtocol {
     
     private func orderNeedsGiveFeedback(_ order: Order) -> Bool {
         
-        macroStatus(for: order) == .giveFeedback
+        macroStatus(for: order) == .closedByBuyer
     }
     
     
@@ -691,7 +691,7 @@ class OrderStore: OrderStoreProtocol {
         
         orders.filter {
             macroStatus(for: $0).isOneOf(
-                .ship, .pickAndPack, .validatePayment, .giveFeedback, .inTransitFor30PlusDays
+                .ship, .pickAndPack, .validatePayment, .closedByBuyer, .inTransitFor30PlusDays
             )
         }.count
     }
@@ -706,8 +706,35 @@ struct ChecklistData: Equatable {
     struct SectionData: Identifiable, Equatable {
         
         var id: String { title }
+        let macroStatus: OrderMacroStatus
         let title: String
         let items: [ItemData]
+        let state: ChecklistState
+        let mandatory: Bool
+        
+        init(macroStatus: OrderMacroStatus, items: [ItemData], state: ChecklistState? = nil, mandatory: Bool? = nil) {
+            
+            self.macroStatus = macroStatus
+            self.title = macroStatus.descriptionWithPicto
+            self.items = items
+            
+            self.state = state ?? {
+                
+                let states = items.map(\.state)
+                
+                if states.contains(.pending) {
+                    return .pending
+                }
+                
+                if states.contains(.validated) || items.count == 0 {
+                    return .validated
+                }
+                
+                return .notApplicable
+            }()
+            
+            self.mandatory = mandatory ?? items.map(\.mandatory).contains(true)
+        }
     }
     
     struct ItemData: Identifiable, Equatable {

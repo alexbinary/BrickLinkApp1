@@ -12,7 +12,7 @@ enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
     case inTransit
     case inTransitFor30PlusDays
     case received
-    case giveFeedback
+    case closedByBuyer
     case recentlyClosed
     case closed
     
@@ -39,8 +39,8 @@ enum OrderMacroStatus: String, CaseIterable, IsOneOfAble {
         case .received:
             (picto: "􀐛", text: "Received")
             
-        case .giveFeedback:
-            (picto: "􀉿", text: "Give feedback")
+        case .closedByBuyer:
+            (picto: "􀤞", text: "Closed by buyer")
 
         case .recentlyClosed:
             (picto: "􀐫", text: "Recently closed")

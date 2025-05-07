@@ -60,11 +60,11 @@ struct OrderChecklistView: View {
                             },
                             label: {
                                 HStack {
-                                    let state = sectionState(for: section)
                                     Text(section.title).checklistTitle()
-                                        .strikethrough(state.state != .pending)
-                                    if !isExpandedBinding.wrappedValue {                                        
-                                        CheckView(state: state.state, mandatory: state.mandatory)
+                                        .strikethrough(section.state != .pending)
+                                    if !isExpandedBinding.wrappedValue {
+                                        CheckView(state: section.state, mandatory: section.mandatory)
+                                            .transition(.scale)
                                     }
                                 }
                             }
@@ -76,26 +76,13 @@ struct OrderChecklistView: View {
             .scrollIndicators(.hidden)
         }
         .onChange(of: checklist, initial: true) {
-            let completedSections = checklist.sections.filter { sectionState(for: $0).state != .pending }
+            let completedSections = checklist.sections.filter {
+                $0.state != .pending || $0.macroStatus == .closed
+            }
             collapsedSections = Set(completedSections.map(\.id))
         }
-    }
-    
-    
-    private func sectionState(for section: ChecklistData.SectionData) -> (state: ChecklistState, mandatory: Bool) {
-        
-        let states = section.items.map(\.state)
-        let mandatory = section.items.map(\.mandatory).contains(true)
-        
-        if states.contains(.pending) {
-            return (state: .pending, mandatory: mandatory)
-        }
-        
-        if states.contains(.validated) {
-            return (state: .validated, mandatory: mandatory)
-        }
-        
-        return (state: .notApplicable, mandatory: mandatory)
+        .animation(.default, value: checklist)
+        .animation(.default, value: collapsedSections)
     }
 }
 
