@@ -18,9 +18,9 @@ struct InventoryItemView: View {
     
     @State var hover = false
     
-    @State var editRemarks: String = ""
-    @State var editQty: String = ""
-    @State var editUnitPrice: Float? = nil
+    @State var editingValue_remarks: String = ""
+    @State var editingValue_quantity: String = ""
+    @State var editingValue_unitPrice: Float? = nil
     
     @Binding var listSearchText: String
     @Binding var listSearchTokens: [SearchToken]
@@ -78,16 +78,24 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Remarks")
-                        .foregroundStyle(validatedRemarks.hasWarning ? .red : .secondary)
+                        .foregroundStyle(
+                            validatedValue_remarks.isInvalid ? .red
+                            : validatedValue_remarks.hasChanges ? .blue
+                            : .secondary
+                        )
+                        .italic(validatedValue_remarks.hasChanges)
                         
-                    TextField("Remarks", text: $editRemarks)
-                        .onSubmit {
-                            if let rem = validatedRemarks.submitValue {
-                                self.updateInventoryItem(remarks: rem)
+                    HStack {
+                        TextField("Remarks", text: $editingValue_remarks)
+                            .onSubmit {
+                                updateRemarks()
+                                reset()
                             }
+                        
+                        if validatedValue_remarks.hasChanges {
+                            Button("􀅉") { editingValue_remarks = item.remarks }
                         }
-                    
-                    Button("􀅉") { editRemarks = item.remarks }
+                    }
                     
                     Button("􀭥") {
                         if let loc = Location(from: item.remarks) {
@@ -103,35 +111,49 @@ struct InventoryItemView: View {
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Quantity").gridColumnAlignment(.trailing)
-                        .foregroundStyle(validatedQty.hasWarning ? .red : .secondary)
+                        .foregroundStyle(
+                            validatedValue_quantity.isInvalid ? .red
+                            : validatedValue_quantity.hasChanges ? .blue
+                            : .secondary
+                        )
+                        .italic(validatedValue_quantity.hasChanges)
                     
                     HStack {
                         Text("\(item.quantity)").font(.title2)
                         
-                        TextField("Change quantity +/-", text: $editQty)
+                        TextField("Change quantity +/-", text: $editingValue_quantity)
                             .onSubmit {
-                                if let qty = validatedQty.submitValue {
-                                    self.updateInventoryItem(addQuantity: qty)
-                                }
+                                updateQuantity()
+                                reset()
                             }
+                        
+                        if validatedValue_quantity.hasChanges {
+                            Button("􀅉") { editingValue_quantity = "" }
+                        }
                     }
-                    
-                    Button("􀅉") { editQty = "" }
                 }
                 
                 GridRow(alignment: .firstTextBaseline) {
                     
                     Text("Unit price")
-                        .foregroundStyle(validatedUnitPrice.hasWarning ? .red : .secondary)
+                        .foregroundStyle(
+                            validatedValue_unitPrice.isInvalid ? .red
+                            : validatedValue_unitPrice.hasChanges ? .blue
+                            : .secondary
+                        )
+                        .italic(validatedValue_unitPrice.hasChanges)
                     
-                    TextField("Price", value: $editUnitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
-                        .onSubmit {
-                            if let price = validatedUnitPrice.submitValue {
-                                self.updateInventoryItem(unitPrice: price)
+                    HStack {
+                        TextField("Price", value: $editingValue_unitPrice, format: .currency(code: "EUR").presentation(.isoCode).precision(.fractionLength(4)))
+                            .onSubmit {
+                                updatePrice()
+                                reset()
                             }
+                        
+                        if validatedValue_unitPrice.hasChanges {
+                            Button("􀅉") { editingValue_unitPrice = item.unitPrice }
                         }
-                    
-                    Button("􀅉") { editUnitPrice = item.unitPrice }
+                    }
                 }
             }
             .frame(width: 300)
@@ -148,40 +170,88 @@ struct InventoryItemView: View {
         )
         .onHover { self.hover = $0 }
         .onChange(of: item, initial: true) {
-            self.editRemarks = item.remarks
-            self.editUnitPrice = item.unitPrice
+            reset()
         }
     }
     
     
-    var validatedRemarks: ValidatedValue<String> {
+    var validatedValue_remarks: ValidatedValue<String> {
         
-        if Location(from: editRemarks) == nil {
-            .init(submitValue: editRemarks, validity: .valid, hasWarning: true)
+        if let loc = Location(from: editingValue_remarks) {
+            .init(
+                submitValue: loc.textRepresentation, validity: .valid,
+                hasChanges: loc.textRepresentation != savedValue_remarks
+            )
         } else {
-            .init(submitValue: editRemarks, validity: .valid, hasWarning: false)
+            .init(
+                submitValue: editingValue_remarks, validity: .invalid,
+                hasChanges: editingValue_remarks != savedValue_remarks
+            )
         }
     }
     
     
-    var validatedQty: ValidatedValue<Int> {
+    var validatedValue_quantity: ValidatedValue<Int> {
         
-        if let qty = Int(editQty) {
-            .init(submitValue: qty, validity: .valid, hasWarning: false)
-        } else if editQty.isEmpty {
-            .init(submitValue: nil, validity: .invalid, hasWarning: false)
+        if let qty = Int(editingValue_quantity) {
+            .init(
+                submitValue: qty, validity: .valid,
+                hasChanges: true
+            )
+        } else if editingValue_quantity.isEmpty {
+            .init(
+                submitValue: nil, validity: .valid
+            )
         } else {
-            .init(submitValue: nil, validity: .invalid, hasWarning: true)
+            .init(
+                submitValue: nil, validity: .invalid,
+                hasChanges: true
+            )
         }
     }
     
     
-    var validatedUnitPrice: ValidatedValue<Float> {
+    var validatedValue_unitPrice: ValidatedValue<Float> {
         
-        if let price = editUnitPrice, price > 0 {
-            .init(submitValue: price, validity: .valid, hasWarning: false)
+        if let price = editingValue_unitPrice, price > 0 {
+            .init(
+                submitValue: price, validity: .valid,
+                hasChanges: price != savedValue_unitPrice
+            )
         } else {
-            .init(submitValue: nil, validity: .invalid, hasWarning: true)
+            .init(
+                submitValue: nil, validity: .invalid,
+                hasChanges: editingValue_unitPrice != savedValue_unitPrice
+            )
+        }
+    }
+    
+    
+    var savedValue_remarks: String { item.remarks }
+    var savedValue_quantity: Int { item.quantity }
+    var savedValue_unitPrice: Float { item.unitPrice }
+    
+    
+    func updateRemarks() {
+        
+        if let rem = validatedValue_remarks.submitValue {
+            self.updateInventoryItem(remarks: rem)
+        }
+    }
+    
+    
+    func updateQuantity() {
+        
+        if let qty = validatedValue_quantity.submitValue {
+            self.updateInventoryItem(addQuantity: qty)
+        }
+    }
+    
+    
+    func updatePrice() {
+     
+        if let price = validatedValue_unitPrice.submitValue {
+            self.updateInventoryItem(unitPrice: price)
         }
     }
     
@@ -196,6 +266,14 @@ struct InventoryItemView: View {
                 remarks: remarks
             )
         }
+    }
+    
+    
+    func reset() {
+        
+        self.editingValue_remarks = item.remarks
+        self.editingValue_quantity = ""
+        self.editingValue_unitPrice = item.unitPrice
     }
 }
 
