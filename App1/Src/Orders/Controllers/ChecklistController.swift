@@ -212,13 +212,16 @@ class ChecklistController {
             
             .validated
             
-        } else if checklistState_received(order) == .validated {
-            
-             .notApplicable
-            
         } else {
             
-            .pending
+            if checklistState_received(order) == .validated {
+                
+                .notApplicable
+                
+            } else {
+                
+                .pending
+            }
         }
     }
     
@@ -231,13 +234,41 @@ class ChecklistController {
     
     private func checklistState_completed(_ order: Order) -> ChecklistState {
         
-        order.status == .completed ? .validated : .pending
+        if order.status == .completed {
+            
+            .validated
+            
+        } else {
+            
+            if feedbacks(for: order).hasBuyerFeedback() {
+                
+                .notApplicable
+                
+            } else {
+                
+                .pending
+            }
+        }
     }
     
     
     private func checklistState_buyerFeedback(_ order: Order) -> ChecklistState {
         
-        feedbacks(for: order).buyerFeedback() != nil ? .validated : .pending
+        if feedbacks(for: order).hasBuyerFeedback() {
+          
+            .validated
+            
+        } else {
+            
+            if order.status == .completed {
+                
+                .notApplicable
+                
+            } else {
+                
+                .pending
+            }
+        }
     }
     
     
