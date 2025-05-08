@@ -64,12 +64,16 @@ struct InventoryItemView: View {
                     }
                     .font(.caption)
                     
-                    Text(item.name)
+                    Text(item.name.htmlUnescape())
                         .lineLimit(nil)
                         .font(.title3)
                         .frame(width: 300, alignment: .leading)
                     
-                    if !item.description.isEmpty { Text(item.description) }
+                    if !item.description.isEmpty {
+                        Text(item.description)
+                            .lineLimit(nil)
+                            .frame(width: 300, alignment: .leading)
+                    }
                 }
             }
             
