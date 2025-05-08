@@ -16,7 +16,7 @@ protocol CatalogProtocol {
     func fetchEntry(for item: PartDescriptible) async -> CatalogEntry?
     func url(forImageOf item: PartDescriptible) -> URL?
     func url(forPageOf item: PartDescriptible) -> URL?
-    func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData?
+    func data(for item: PartDescriptible) -> PartData?
 }
 
 
@@ -133,11 +133,23 @@ class Catalog: CatalogProtocol {
     // MARK: - Parts data
     
 
-    func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData? {
-     
-        return
-            partData.first(where: { $0.matches(ref: ref, colorId: colorId) })
-            ??
-            partData.first(where: { $0.matches(ref: ref) })
+    func data(for item: PartDescriptible) -> PartData? {
+        
+        if let ref = item.partDescriptor.ref {
+            
+            if let colorId = item.partDescriptor.colorId,
+               let data = partData.first(where: { $0.matches(ref: ref, colorId: colorId) }) {
+                    
+                return data
+                
+            } else {
+                
+                return partData.first(where: { $0.matches(ref: ref) })
+            }
+            
+        } else {
+            
+            return nil
+        }
     }
 }

@@ -27,9 +27,9 @@ struct CatalogImage: View {
     
     var type: ItemType { part.type! }
     var ref: String { part.ref! }
-    var colorId: String { part.colorId!.isEmpty ? "11" : part.colorId! }
+    var colorId: String { part.colorId! }
     
-    var catalogUrl: URL? { catalog.url(forImageOf: part) }
+    var catalogUrl: URL? { catalog.url(forImageOf: part.withDefaults(colorId: "11")) }
     
     
     var body: some View {
@@ -58,7 +58,7 @@ struct CatalogImage: View {
             )
             .opacity(colorId.isEmpty ? 0.7 : 1)
             
-            if let data = catalog.data(forItemOfType: type, ref: ref, colorId: colorId) {
+            if let data = catalog.data(for: part) {
                 if let length = data.lengthAnnotation {
                     annotationView(text: length, alignment: data.lengthAnnotationPosition)
                 }

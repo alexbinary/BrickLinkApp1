@@ -71,7 +71,7 @@ struct PreviewCatalog: CatalogProtocol {
     
     let partData: PartData?
     
-    func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData? {
+    func data(for item: PartDescriptible) -> PartData? {
         
         return partData
     }
