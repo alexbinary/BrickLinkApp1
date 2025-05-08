@@ -23,6 +23,19 @@ struct OrderItem: Identifiable, Codable, Equatable {
 }
 
 
+extension OrderItem: PartDescriptible {
+    
+    var partDescriptor: PartDescriptor {
+        .init(
+            item_type: type,
+            item_ref: ref,
+            item_colorId: colorId,
+            item_condition: condition
+        )
+    }
+}
+
+
 
 extension OrderItem {
 

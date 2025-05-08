@@ -18,9 +18,9 @@ struct InventoryTargetLocationView: View {
     let columnsCount: Int
     
     
-    init(newLocation: Location?, candidateItems: [PartDescriptor], highlightItems: Set<InventoryItem.ID> = [], columnsCount: Int = 4) {
+    init(newLocation: Location?, candidateItems: [PartDescriptible], highlightItems: Set<InventoryItem.ID> = [], columnsCount: Int = 4) {
         self.newLocation = newLocation
-        self.candidateItems = candidateItems
+        self.candidateItems = candidateItems.map(\.partDescriptor)
         self.highlightItems = highlightItems
         self.columnsCount = columnsCount
     }

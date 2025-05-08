@@ -27,7 +27,7 @@ struct UploadHistoryItemView: View {
 
                 VStack(spacing: 0) {
 
-                    CatalogImage(uploadedItem: uploadedItem)
+                    CatalogImage(item: uploadedItem)
                         .border(uploadedItem.condition.color, width: 2)
                     
                     Text(uploadedItem.condition.name.uppercased())

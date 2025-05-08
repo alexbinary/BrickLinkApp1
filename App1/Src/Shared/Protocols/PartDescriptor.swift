@@ -1,17 +1,22 @@
 
 
 
-struct PartDescriptor {
+protocol PartDescriptible {
     
-    let item_type: ItemType?
-    let item_ref: String?
-    let item_colorId: String?
-    let item_condition: ItemCondition?
+    var partDescriptor: PartDescriptor { get }
 }
 
 
 
-protocol PartDescriptible {
+struct PartDescriptor {
     
-    var partDescriptor: PartDescriptor { get }
+    var item_type: ItemType? = nil
+    var item_ref: String? = nil
+    var item_colorId: String? = nil
+    var item_condition: ItemCondition? = nil
+}
+
+extension PartDescriptor: PartDescriptible {
+    
+    var partDescriptor: PartDescriptor { self }
 }

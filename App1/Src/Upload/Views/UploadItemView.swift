@@ -31,7 +31,7 @@ struct UploadItemView: View {
                 
                 VStack(spacing: 0) {
                     
-                    CatalogImage(uploadItem: uploadItem)
+                    CatalogImage(item: uploadItem)
                         .border(uploadItem.condition?.color ?? .black, width: 2)
                     
                     if let condition = uploadItem.condition {

@@ -20,45 +20,11 @@ struct CatalogImage: View {
     var frameSize: CGSize { baseFrameSize * scale }
     var imageSize: CGSize { baseImageSize * scale }
     
-    init(itemType type: ItemType, ref: String, colorId: String, scale: CGFloat = 1) {
-        self.type = type
-        self.ref = ref
-        self.colorId = colorId
-        self.scale = scale
-    }
     
-    init(item: PartDescriptor, scale: CGFloat = 1) {
-        self.type = item.item_type!
-        self.ref = item.item_ref!
-        self.colorId = item.item_colorId!
-        self.scale = scale
-    }
-    
-    init(orderItem item: OrderItem, scale: CGFloat = 1) {
-        self.type = item.type
-        self.ref = item.ref
-        self.colorId = item.colorId
-        self.scale = scale
-    }
-    
-    init(uploadItem item: UploadItem, scale: CGFloat = 1) {
-        self.type = item.type
-        self.ref = item.ref
-        self.colorId = item.colorId ?? ""
-        self.scale = scale
-    }
-    
-    init(uploadedItem item: UploadedItem, scale: CGFloat = 1) {
-        self.type = item.type
-        self.ref = item.ref
-        self.colorId = item.colorId
-        self.scale = scale
-    }
-    
-    init(inventoryItem item: InventoryItem, scale: CGFloat = 1) {
-        self.type = item.type
-        self.ref = item.ref
-        self.colorId = item.colorId
+    init(item: PartDescriptible, scale: CGFloat = 1) {
+        self.type = item.partDescriptor.item_type!
+        self.ref = item.partDescriptor.item_ref!
+        self.colorId = item.partDescriptor.item_colorId!
         self.scale = scale
     }
     
@@ -136,7 +102,7 @@ struct CatalogImage: View {
     VStack {
         
         let baseView =
-            CatalogImage(itemType: .part, ref: "", colorId: "")
+            CatalogImage(item: PartDescriptor(item_type: .part, item_ref: "", item_colorId: ""))
                 .padding(.top)
         
         baseView

@@ -98,7 +98,7 @@ struct InventoryLocationItemsView<Content: View>: View {
         
         let view =
             ZStack(alignment: .bottomTrailing) {
-                CatalogImage(inventoryItem: item)
+                CatalogImage(item: item)
                     .border(item.condition.color, width: highlighted ? 4 : 2)
                 Text("x \(item.quantity)")
                     .padding(.horizontal, 6)

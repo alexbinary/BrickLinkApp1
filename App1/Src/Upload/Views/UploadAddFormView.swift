@@ -196,11 +196,12 @@ struct UploadAddFormView: View {
                 
                 VStack {
                     
-                    CatalogImage(
-                        itemType: editingValue_type,
-                        ref: editingValue_ref,
-                        colorId: editingValue_colorId ?? "",
-                        scale: 1.5
+                    CatalogImage(item: PartDescriptor(
+                            item_type: editingValue_type,
+                            item_ref: editingValue_ref,
+                            item_colorId: editingValue_colorId
+                        ),
+                         scale: 1.5
                     )
                     .border(validatedValue_condition.submitValue?.color ?? .black, width: 2)
                     

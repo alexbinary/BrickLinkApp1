@@ -91,7 +91,7 @@ struct InventoryMoveActionSheet: View {
             
             InventoryTargetLocationView(
                 newLocation: validatedLocation.submitValue,
-                candidateItems: items.map(\.partDescriptor)
+                candidateItems: items
             )
         }
         .padding()

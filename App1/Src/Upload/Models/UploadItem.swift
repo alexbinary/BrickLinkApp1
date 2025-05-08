@@ -17,6 +17,16 @@ struct UploadItem: Identifiable, Codable, Equatable {
     let unitPrice: Float?
     
     
+    var itemIsValid: Bool {
+        
+        !ref.isEmpty && !(colorId ?? "").isEmpty && condition != nil
+    }
+}
+
+
+extension UploadItem: PartDescriptible {
+    
+    
     var partDescriptor: PartDescriptor {
         .init(
             item_type: type,
@@ -24,11 +34,5 @@ struct UploadItem: Identifiable, Codable, Equatable {
             item_colorId: colorId,
             item_condition: condition
         )
-    }
-    
-    
-    var itemIsValid: Bool {
-        
-        !ref.isEmpty && !(colorId ?? "").isEmpty && condition != nil
     }
 }

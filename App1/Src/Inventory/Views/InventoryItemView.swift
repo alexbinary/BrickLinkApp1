@@ -34,7 +34,7 @@ struct InventoryItemView: View {
 
                 VStack(spacing: 0) {
 
-                    CatalogImage(inventoryItem: item)
+                    CatalogImage(item: item)
                         .border(item.condition.color, width: 2)
                     
                     Text(item.condition.name.uppercased())
