@@ -32,11 +32,10 @@ struct InventoryMoveActionSheet: View {
                 Text("􀈫􁉂􀈫")
             }
             
-            ScrollView {
-                
-                InventoryLocationItemsView(items: items, splitByRemarks: true, itemViewBuilder: { item, view in AnyView(view) })
-            }
-            .frame(minHeight: 270)
+            InventoryLocationItemsView(
+                items: items, splitByRemarks: true,
+                itemViewBuilder: { item, view in AnyView(view) }
+            )
             
             VStack(alignment: .leading, spacing: 4) {
                 
@@ -102,13 +101,10 @@ struct InventoryMoveActionSheet: View {
                 }
             }
             
-            let newLocation = validatedLocation.submitValue
-            
-            ScrollView {
-                
-                InventoryTargetLocationView(newLocation: newLocation, candidateItems: items.map(\.partDescriptor))
-            }
-            .frame(minHeight: 270)
+            InventoryTargetLocationView(
+                newLocation: validatedLocation.submitValue,
+                candidateItems: items.map(\.partDescriptor)
+            )
         }
         .padding()
         .onAppear {
