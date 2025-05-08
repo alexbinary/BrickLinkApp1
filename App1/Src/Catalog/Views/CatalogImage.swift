@@ -9,9 +9,7 @@ struct CatalogImage: View {
     var catalog: CatalogProtocol!
     
     
-    let type: ItemType
-    let ref: String
-    let colorId: String
+    let part: PartDescriptor
     let scale: CGFloat
     
     let baseFrameSize = CGSize(width: 84, height: 64)
@@ -22,19 +20,16 @@ struct CatalogImage: View {
     
     
     init(item: PartDescriptible, scale: CGFloat = 1) {
-        self.type = item.partDescriptor.type!
-        self.ref = item.partDescriptor.ref!
-        self.colorId = item.partDescriptor.colorId!
+        
+        self.part = item.partDescriptor
         self.scale = scale
     }
     
+    var type: ItemType { part.type! }
+    var ref: String { part.ref! }
+    var colorId: String { part.colorId!.isEmpty ? "11" : part.colorId! }
     
-    var catalogUrl: URL? {
-        
-        let colorId = colorId.isEmpty ? "11" : colorId
-        
-        return catalog.url(forImageOfItemOfType: type, ref: ref, colorId: colorId)
-    }
+    var catalogUrl: URL? { catalog.url(forImageOf: part) }
     
     
     var body: some View {

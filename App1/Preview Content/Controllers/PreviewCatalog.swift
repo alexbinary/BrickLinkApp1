@@ -59,7 +59,7 @@ struct PreviewCatalog: CatalogProtocol {
     
     let urlForImageOfItemOfType: URL?
     
-    func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL? {
+    func url(forImageOf item: PartDescriptor) -> URL? {
         
         return urlForImageOfItemOfType
     }
