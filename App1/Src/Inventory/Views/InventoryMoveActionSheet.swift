@@ -51,20 +51,8 @@ struct InventoryMoveActionSheet: View {
                     .disabled(validatedLocation.submitValue == nil)
                 }
                 
-                if isUpdatingItems || validatedLocation.hasWarning {
-                    
-                    HStack {
-                        
-                        if isUpdatingItems {
-                            ProgressView().controlSize(.small)
-                        }
-                        
-                        Spacer()
-                        
-                        if validatedLocation.hasWarning {
-                            Text("invalid location").foregroundStyle(.secondary)
-                        }
-                    }
+                if isUpdatingItems {
+                    ProgressView().controlSize(.small)
                 }
             }
             

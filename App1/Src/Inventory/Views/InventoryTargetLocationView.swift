@@ -76,6 +76,10 @@ struct InventoryTargetLocationView: View {
                         }
                     }
                 })
+                
+            } else {
+                
+                Text("invalid location").foregroundStyle(.red).italic()
             }
         }
     }
