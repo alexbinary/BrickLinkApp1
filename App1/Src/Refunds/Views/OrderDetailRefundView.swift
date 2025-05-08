@@ -55,7 +55,6 @@ struct OrderDetailRefundView: View {
                     Text(refund.comment)
                 }
             }
-            .frame(minHeight: 100)
         }
         .onChange(of: order, initial: true) {
             
