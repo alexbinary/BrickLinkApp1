@@ -62,9 +62,20 @@ struct OrderDetailPaymentView: View {
 
 #Preview {
     
-    let env = createEnv()
-    let order = env.stores.order.orders.first!
+    let order = Order.previewOrderWith(
+        subTotal: 42,
+        grandTotal: 12
+    )
+    let details = OrderDetails.previewOrderDetailsWith(
+        shippingCost: 34
+    )
     
     OrderDetailPaymentView(order)
-        .inject(env)
+        .padding()
+        .frame(width: 1200, height: 200)
+        .previewEnv(
+            orderStore: PreviewOrderStore(
+                detailsForOrder: details
+            )
+        )
 }

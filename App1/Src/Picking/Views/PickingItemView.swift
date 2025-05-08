@@ -112,7 +112,8 @@ enum ButtonType {
 
 
 
-#Preview(traits: .env) {
+#Preview {
     
     PickingItemView(.previewItem1, button: .pick)
+        .previewEnv()
 }

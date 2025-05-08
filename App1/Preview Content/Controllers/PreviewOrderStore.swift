@@ -6,8 +6,9 @@ import SwiftUI
 struct PreviewOrderStore: OrderStoreProtocol {
     
     
-    init(numberForSidebarBadge: Int = 0) {
+    init(detailsForOrder: OrderDetails? = nil, numberForSidebarBadge: Int = 0) {
         
+        self.detailsForOrder = detailsForOrder
         self.numberForSidebarBadge = numberForSidebarBadge
     }
     
@@ -29,9 +30,11 @@ struct PreviewOrderStore: OrderStoreProtocol {
         return .previewOrder1
     }
     
+    var detailsForOrder: OrderDetails?
+    
     func details(for order: Order) -> OrderDetails? {
         
-        return nil
+        return detailsForOrder
     }
     
     func isLoadingDetails(for order: Order) -> Bool {

@@ -33,7 +33,8 @@ struct InventoryLink<Label>: View where Label: View {
 
 
 
-#Preview(traits: .env) {
+#Preview {
     
     InventoryLink(inventoryItemId: "") { Text("Link") }
+        .previewEnv()
 }
