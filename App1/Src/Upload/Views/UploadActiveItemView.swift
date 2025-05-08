@@ -757,15 +757,14 @@ struct UploadActiveItemView: View {
     
     func refreshCatalogEntry() async {
         
-        guard let type = validatedValue_type.submitValue,
-              let ref = validatedValue_ref.submitValue
-        else {
-            return
-        }
+        let part = PartDescriptor(
+            item_type: validatedValue_type.submitValue,
+            item_ref: validatedValue_ref.submitValue
+        )
         
         catalogLoading = true
         
-        if let catalogEntry = await catalog.fetchEntry(forItemType: type, ref: ref) {
+        if let catalogEntry = await catalog.fetchEntry(for: part) {
             
             catalogResult = .found(catalogEntry)
         } else {

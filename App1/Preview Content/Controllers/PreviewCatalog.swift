@@ -49,7 +49,7 @@ struct PreviewCatalog: CatalogProtocol {
     var catalogEntry: CatalogEntry?
     var catalogEntryLoadingDelay: TimeInterval?
     
-    func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
+    func fetchEntry(for item: PartDescriptible) async -> CatalogEntry? {
         
         if let delay = catalogEntryLoadingDelay {
             try! await Task.sleep(for: .seconds(delay))

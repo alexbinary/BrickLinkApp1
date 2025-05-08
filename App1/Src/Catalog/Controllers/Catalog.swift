@@ -13,7 +13,7 @@ protocol CatalogProtocol {
     func colorAndName(forLegoColorId colorId: LegoColor.ID) -> (color: Color?, name: String)
     func loadColors(_ operationTag: OperationTag?) async
 
-    func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry?
+    func fetchEntry(for item: PartDescriptible) async -> CatalogEntry?
     func url(forImageOfItemOfType type: ItemType, ref: String, colorId: String) -> URL?
     func url(forItemOfType type: ItemType, ref: String, colorId: String?) -> URL?
     func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData?
@@ -79,7 +79,7 @@ class Catalog: CatalogProtocol {
     // MARK: - Items
     
     
-    func fetchEntry(forItemType type: ItemType, ref: String) async -> CatalogEntry? {
+    func fetchEntry(for item: PartDescriptible) async -> CatalogEntry? {
         
         #if DEBUG
         if PreviewUtils.isPreviewing {
@@ -87,7 +87,9 @@ class Catalog: CatalogProtocol {
         }
         #endif
         
-        if let entry = await brickLinkAPIClient.fetchCatalogEntry(itemType: type.brickLinkItemType, ref: ref) {
+        if let type = item.partDescriptor.item_type,
+           let ref = item.partDescriptor.item_ref,
+           let entry = await brickLinkAPIClient.fetchCatalogEntry(itemType: type.brickLinkItemType, ref: ref) {
             
             return CatalogEntry(fromBl: entry)
         }
