@@ -29,10 +29,10 @@ extension UploadItem: PartDescriptible {
     
     var partDescriptor: PartDescriptor {
         .init(
-            item_type: type,
-            item_ref: ref,
-            item_colorId: colorId,
-            item_condition: condition
+            type: type,
+            ref: ref,
+            colorId: colorId,
+            condition: condition
         )
     }
 }

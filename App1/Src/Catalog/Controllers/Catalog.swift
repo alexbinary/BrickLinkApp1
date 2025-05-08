@@ -87,8 +87,8 @@ class Catalog: CatalogProtocol {
         }
         #endif
         
-        if let type = item.partDescriptor.item_type,
-           let ref = item.partDescriptor.item_ref,
+        if let type = item.partDescriptor.type,
+           let ref = item.partDescriptor.ref,
            let entry = await brickLinkAPIClient.fetchCatalogEntry(itemType: type.brickLinkItemType, ref: ref) {
             
             return CatalogEntry(fromBl: entry)

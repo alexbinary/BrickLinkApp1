@@ -22,9 +22,9 @@ struct CatalogImage: View {
     
     
     init(item: PartDescriptible, scale: CGFloat = 1) {
-        self.type = item.partDescriptor.item_type!
-        self.ref = item.partDescriptor.item_ref!
-        self.colorId = item.partDescriptor.item_colorId!
+        self.type = item.partDescriptor.type!
+        self.ref = item.partDescriptor.ref!
+        self.colorId = item.partDescriptor.colorId!
         self.scale = scale
     }
     
@@ -102,7 +102,7 @@ struct CatalogImage: View {
     VStack {
         
         let baseView =
-            CatalogImage(item: PartDescriptor(item_type: .part, item_ref: "", item_colorId: ""))
+            CatalogImage(item: PartDescriptor(type: .part, ref: "", colorId: ""))
                 .padding(.top)
         
         baseView

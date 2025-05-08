@@ -197,9 +197,9 @@ struct UploadAddFormView: View {
                 VStack {
                     
                     CatalogImage(item: PartDescriptor(
-                            item_type: editingValue_type,
-                            item_ref: editingValue_ref,
-                            item_colorId: editingValue_colorId
+                            type: editingValue_type,
+                            ref: editingValue_ref,
+                            colorId: editingValue_colorId
                         ),
                          scale: 1.5
                     )
@@ -336,8 +336,8 @@ struct UploadAddFormView: View {
     func refreshCatalogEntry() async {
         
         let part = PartDescriptor(
-            item_type: validatedValue_type.submitValue,
-            item_ref: validatedValue_ref.submitValue
+            type: validatedValue_type.submitValue,
+            ref: validatedValue_ref.submitValue
         )
         
         catalogLoading = true

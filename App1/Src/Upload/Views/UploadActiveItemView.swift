@@ -213,9 +213,9 @@ struct UploadActiveItemView: View {
                         
                         VStack {
                             CatalogImage(item: PartDescriptor(
-                                    item_type: editingValue_type,
-                                    item_ref: editingValue_ref,
-                                    item_colorId: editingValue_colorId
+                                    type: editingValue_type,
+                                    ref: editingValue_ref,
+                                    colorId: editingValue_colorId
                                 ),
                                  scale: 2
                             )
@@ -516,10 +516,10 @@ struct UploadActiveItemView: View {
                                 InventoryTargetLocationView(
                                     newLocation: validatedValue_location.submitValue,
                                     candidateItems: [PartDescriptor(
-                                        item_type: validatedValue_type.submitValue,
-                                        item_ref: validatedValue_ref.submitValue,
-                                        item_colorId: validatedValue_colorId.submitValue,
-                                        item_condition: validatedValue_condition.submitValue
+                                        type: validatedValue_type.submitValue,
+                                        ref: validatedValue_ref.submitValue,
+                                        colorId: validatedValue_colorId.submitValue,
+                                        condition: validatedValue_condition.submitValue
                                     )],
                                     highlightItems: inventoryItem != nil ? [inventoryItem!.id] : [],
                                     columnsCount: 6,
@@ -758,8 +758,8 @@ struct UploadActiveItemView: View {
     func refreshCatalogEntry() async {
         
         let part = PartDescriptor(
-            item_type: validatedValue_type.submitValue,
-            item_ref: validatedValue_ref.submitValue
+            type: validatedValue_type.submitValue,
+            ref: validatedValue_ref.submitValue
         )
         
         catalogLoading = true

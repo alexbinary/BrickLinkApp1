@@ -10,10 +10,10 @@ protocol PartDescriptible {
 
 struct PartDescriptor {
     
-    var item_type: ItemType? = nil
-    var item_ref: String? = nil
-    var item_colorId: String? = nil
-    var item_condition: ItemCondition? = nil
+    var type: ItemType? = nil
+    var ref: String? = nil
+    var colorId: String? = nil
+    var condition: ItemCondition? = nil
 }
 
 extension PartDescriptor: PartDescriptible {
