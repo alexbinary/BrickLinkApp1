@@ -19,27 +19,15 @@ struct OrderDetailPaymentView: View {
     
     var body: some View {
         
-        HStack(alignment: .top, spacing: 96) {
-            
-            VStack(alignment: .leading) {
-                
-                Text("􂙡 Address").font(.caption).foregroundStyle(.secondary)
-                OrderAddressView(order)
-            }
-            .font(.title3)
-            
-            Spacer()
-            
-            VStack(alignment: .leading) {
-                
-                OrderCostView(order)
-                    .padding(.leading)
-                
-                OrderIncomeTransactionView(order)
-                    .padding()
-                    .roundedContainer(style: .secondary)
-            }
-        }
+        VStack(alignment: .leading) {
+           
+           OrderCostView(order)
+               .padding(.leading)
+           
+           OrderIncomeTransactionView(order)
+               .padding()
+               .roundedContainer(style: .secondary)
+       }
     }
 }
 

@@ -51,7 +51,12 @@ struct OrderDetailView: View {
             }
             TabView(selection: navOrderDetailTabBinding) {
                 
-                ScrollView { OrderDetailPaymentView(order) }
+                ScrollView {
+                    HStack {
+                        OrderDetailPaymentView(order)
+                        Spacer()
+                    }
+                }
                     .padding()
                     .tabItem { Text("􀖧 Payment") }.tag(OrderDetailTab.payment)
                 
@@ -75,7 +80,6 @@ struct OrderDetailView: View {
         }
         .padding()
         .navigationTitle("Order \(order.id)")
-        
     }
 }
 

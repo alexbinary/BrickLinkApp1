@@ -15,6 +15,8 @@ struct OrderIdentityView: View {
     
     var body: some View {
 
+        let addressView = OrderAddressView(order)
+        
         VStack(alignment: .leading, spacing: 12) {
             
             Grid(alignment: .leading, verticalSpacing: 0) {
@@ -58,6 +60,16 @@ struct OrderIdentityView: View {
                     Text(order.grandTotal, format: .currency(code: "EUR").presentation(.isoCode)).monospacedDigit()
                 }
             }
+            
+            addressView
+                .padding(.top, 8)
+        }
+        .overlay(alignment: .bottom) {
+            VStack {
+                Divider()
+                    .padding(.bottom, 4)
+                addressView.hidden()
+            }
         }
     }
 }
@@ -66,9 +78,18 @@ struct OrderIdentityView: View {
 
 #Preview {
     
-    let env = createEnv()
-    let order = env.stores.order.orders.first!
+    let order = Order.previewOrderWith(
+        id: "1234567890"
+    )
+    let details = OrderDetails.previewOrderDetailsWith(
+        shippingAddress: "1 rue principale"
+    )
     
     OrderIdentityView(order)
-        .inject(env)
+        .padding()
+        .previewEnv(
+            orderStore: PreviewOrderStore(
+                detailsForOrder: details
+            )
+        )
 }

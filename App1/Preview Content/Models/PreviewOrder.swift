@@ -24,9 +24,9 @@ extension Order {
         )
     }
     
-    static func previewOrderWith(subTotal: Float? = nil, grandTotal: Float? = nil) -> Order {
+    static func previewOrderWith(id: String? = nil, subTotal: Float? = nil, grandTotal: Float? = nil) -> Order {
         .init(
-            id: "",
+            id: id ?? "",
             date: .now,
             dateStatusChanged: .now,
             buyer: "",

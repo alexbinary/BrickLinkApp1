@@ -4,7 +4,7 @@
 extension OrderDetails {
     
     
-    static func previewOrderDetailsWith(shippingCost: Float? = nil) -> OrderDetails {
+    static func previewOrderDetailsWith(shippingAddress: String? = nil, shippingCost: Float? = nil) -> OrderDetails {
         .init(
             id: "",
             remarks: nil,
@@ -15,7 +15,7 @@ extension OrderDetails {
             
             shippingMethodId: 0,
             shippingMethodName: nil,
-            shippingAddress: "",
+            shippingAddress: shippingAddress ?? "",
             shippingAddressCountryCode: "",
             shippingAddressName: "",
             
