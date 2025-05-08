@@ -43,6 +43,7 @@ extension UploadedItem: PartDescriptible {
         .init(
             type: type,
             ref: ref,
+            comment: comment,
             colorId: colorId,
             condition: condition
         )

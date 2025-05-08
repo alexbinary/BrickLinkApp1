@@ -199,7 +199,9 @@ struct UploadAddFormView: View {
                     CatalogImage(item: PartDescriptor(
                             type: editingValue_type,
                             ref: editingValue_ref,
-                            colorId: editingValue_colorId
+                            comment: nil,
+                            colorId: editingValue_colorId,
+                            condition: nil
                         ),
                          scale: 1.5
                     )
@@ -337,7 +339,10 @@ struct UploadAddFormView: View {
         
         let part = PartDescriptor(
             type: validatedValue_type.submitValue,
-            ref: validatedValue_ref.submitValue
+            ref: validatedValue_ref.submitValue,
+            comment: nil,
+            colorId: nil,
+            condition: nil
         )
         
         catalogLoading = true

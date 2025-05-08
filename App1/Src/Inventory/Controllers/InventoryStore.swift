@@ -11,7 +11,7 @@ protocol InventoryStoreProtocol {
 
     var allInventories: [InventoryItem] { get }
     func allInventories(matching searchText: String, _ searchTokens: [SearchToken]) -> [InventoryItem]
-    func inventory(                forItemType type: ItemType, ref: String, comment: String?, colorId: String, condition: ItemCondition) -> InventoryItem?
+    func inventory(forItemType type: ItemType, ref: String, comment: String?, colorId: String, condition: ItemCondition) -> InventoryItem?
     func inventory(for uploadItem: UploadItem) -> InventoryItem?
     func inventories(forAllColorsOf uploadItem: UploadItem) -> [InventoryItem]
 

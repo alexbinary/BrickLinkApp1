@@ -27,6 +27,7 @@ extension InventoryItem: PartDescriptible {
         .init(
             type: type,
             ref: ref,
+            comment: description,
             colorId: colorId,
             condition: condition
         )

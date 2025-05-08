@@ -35,7 +35,7 @@ struct InventoryTargetLocationView: View {
             let conflictingItems: [InventoryItem] = candidateItems.flatMap { sourceItem in
                 
                 itemsInNewLocation
-                    .filter({ $0.ref == sourceItem.ref && $0.condition != sourceItem.condition })
+                    .filter({ $0.ref == sourceItem.ref && $0.description == sourceItem.comment && $0.condition != sourceItem.condition })
             }
             
             if let loc = newLocation {

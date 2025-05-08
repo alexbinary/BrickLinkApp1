@@ -10,15 +10,17 @@ protocol PartDescriptible {
 
 struct PartDescriptor {
     
-    var type: ItemType? = nil
-    var ref: String? = nil
-    var colorId: String? = nil
-    var condition: ItemCondition? = nil
+    let type: ItemType?
+    let ref: String?
+    let comment: String?
+    let colorId: String?
+    let condition: ItemCondition?
     
     func withDefaults(
         
         type defaultType: ItemType? = nil,
         ref defaultRef: String? = nil,
+        comment defaultComment: String? = nil,
         colorId defaultColorId: String? = nil,
         condition defaultCondition: ItemCondition? = nil
         
@@ -27,6 +29,7 @@ struct PartDescriptor {
         .init(
             type: self.type ?? defaultType,
             ref: self.ref.withDefaultIfNilEmptyOrWhitespace(defaultRef),
+            comment: self.comment.withDefaultIfNilEmptyOrWhitespace(defaultComment),
             colorId: self.colorId.withDefaultIfNilEmptyOrWhitespace(defaultColorId),
             condition: self.condition ?? defaultCondition
         )

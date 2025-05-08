@@ -97,7 +97,7 @@ struct CatalogImage: View {
     VStack {
         
         let baseView =
-            CatalogImage(item: PartDescriptor(type: .part, ref: "", colorId: ""))
+            CatalogImage(item: PartDescriptor(type: .part, ref: "", comment: nil, colorId: "", condition: nil))
                 .padding(.top)
         
         baseView
