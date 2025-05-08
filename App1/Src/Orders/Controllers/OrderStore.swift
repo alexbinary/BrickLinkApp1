@@ -298,8 +298,7 @@ class OrderStore: OrderStoreProtocol {
                 items: [
                     .init(
                         label: "Picked up by transporter",
-                        state: (laPosteTrackingStatus(for: order) ?? .noData).isOneOf(.inTransit, .delivered) ? .validated : state(of: .received, for: order) == .validated ?
-                            .notApplicable : .pending,
+                        state: state(of: .pickedUpByTransporter, for: order),
                         mandatory: false
                     ),
                     .init(

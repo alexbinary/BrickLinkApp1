@@ -76,6 +76,12 @@ class ChecklistController {
     }
     
     
+    private func laPosteTrackingStatus(for order: Order) -> LaPosteTrackingStatus? {
+        
+        trackingMiddleController.laPosteTrackingStatus(for: order)
+    }
+    
+    
     private func items(for order: Order) -> [OrderItem] {
         
         orderController.items(for: order)
@@ -200,6 +206,23 @@ class ChecklistController {
     }
     
     
+    private func checklistState_pickedUpByTransporter(_ order: Order) -> ChecklistState {
+        
+        if (laPosteTrackingStatus(for: order) ?? .noData).isOneOf(.inTransit, .delivered) {
+            
+            .validated
+            
+        } else if checklistState_received(order) == .validated {
+            
+             .notApplicable
+            
+        } else {
+            
+            .pending
+        }
+    }
+    
+    
     private func checklistState_received(_ order: Order) -> ChecklistState {
         
         order.status.isOneOf(.received, .completed) ? .validated : .pending
@@ -269,6 +292,9 @@ class ChecklistController {
         case .stamping:
             return checklistState_stamping(order)
             
+        case .pickedUpByTransporter:
+            return checklistState_pickedUpByTransporter(order)
+            
         case .received:
             return checklistState_received(order)
             
@@ -306,6 +332,7 @@ enum ChecklistItem {
     case trackingNo
     case driveThru
     case stamping
+    case pickedUpByTransporter
     case received
     case completed
     case buyerFeedback
