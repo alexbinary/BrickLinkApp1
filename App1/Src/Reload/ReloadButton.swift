@@ -90,7 +90,6 @@ struct ReloadButton: View {
         } label: {
             Text("􀅈").padding(.horizontal)
         }
-
         primaryAction: {
             items.forEach { performAction(for: $0) }
         }

@@ -32,6 +32,8 @@ struct WindowRootView: View {
             }
             
             ReloadButton()
+            
+            OrderStatusView()
         }
         .environment(\.navigationController, navigationController)
     }

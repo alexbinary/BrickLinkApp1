@@ -72,9 +72,31 @@ struct OrderDetailView: View {
                     .padding()
                     .tabItem { Text("􀖧 Compta") }.tag(OrderDetailTab.compta)
             }
-            
         }
         .padding()
         .navigationTitle("Order \(order.id)")
+        
     }
+}
+
+
+
+#Preview {
+    
+    let order = Order.previewOrderWith(
+        subTotal: 42,
+        grandTotal: 12
+    )
+    let details = OrderDetails.previewOrderDetailsWith(
+        shippingCost: 34
+    )
+    
+    OrderDetailView(order)
+        .padding()
+        .frame(width: 1200, height: 600)
+        .previewEnv(
+            orderStore: PreviewOrderStore(
+                detailsForOrder: details
+            )
+        )
 }
