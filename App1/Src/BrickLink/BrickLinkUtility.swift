@@ -17,7 +17,7 @@ enum BrickLinkUtility {
     }
 
 
-    static func url(forItemOfType type: BrickLinkItemType, ref: String, colorId: String?) -> URL? {
+    static func url(forCatalogPageOfItemOfType type: BrickLinkItemType, ref: String, colorId: String?) -> URL? {
         
         switch type {
         case .part:

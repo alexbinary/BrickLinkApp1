@@ -40,7 +40,7 @@ struct UploadHistoryItemView: View {
 
                     HStack {
                         
-                        Link(destination: catalog.url(forItemOfType: uploadedItem.type, ref: uploadedItem.ref, colorId: uploadedItem.colorId)!) {
+                        Link(destination: catalog.url(forPageOf: uploadedItem)!) {
                             Text(uploadedItem.ref)
                         }
                         

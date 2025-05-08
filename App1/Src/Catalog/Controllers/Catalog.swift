@@ -14,8 +14,8 @@ protocol CatalogProtocol {
     func loadColors(_ operationTag: OperationTag?) async
 
     func fetchEntry(for item: PartDescriptible) async -> CatalogEntry?
-    func url(forImageOf item: PartDescriptor) -> URL?
-    func url(forItemOfType type: ItemType, ref: String, colorId: String?) -> URL?
+    func url(forImageOf item: PartDescriptible) -> URL?
+    func url(forPageOf item: PartDescriptible) -> URL?
     func data(forItemOfType type: ItemType, ref: String, colorId: String) -> PartData?
 }
 
@@ -100,7 +100,7 @@ class Catalog: CatalogProtocol {
     }
     
     
-    func url(forImageOf item: PartDescriptor) -> URL? {
+    func url(forImageOf item: PartDescriptible) -> URL? {
         
         if let type = item.partDescriptor.type,
            let ref = item.partDescriptor.ref,
@@ -115,9 +115,18 @@ class Catalog: CatalogProtocol {
     }
     
     
-    func url(forItemOfType type: ItemType, ref: String, colorId: String?) -> URL? {
+    func url(forPageOf item: PartDescriptible) -> URL? {
         
-        BrickLinkUtility.url(forItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
+        if let type = item.partDescriptor.type,
+           let ref = item.partDescriptor.ref,
+           let colorId = item.partDescriptor.colorId {
+            
+            return BrickLinkUtility.url(forCatalogPageOfItemOfType: type.brickLinkItemType, ref: ref, colorId: colorId)
+            
+        } else {
+            
+            return nil
+        }
     }
     
 

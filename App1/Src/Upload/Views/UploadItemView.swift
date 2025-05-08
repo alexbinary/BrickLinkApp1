@@ -46,7 +46,7 @@ struct UploadItemView: View {
                     
                     HStack {
                         
-                        Link(destination: catalog.url(forItemOfType: uploadItem.type, ref: uploadItem.ref, colorId: uploadItem.colorId)!) {
+                        Link(destination: catalog.url(forPageOf: uploadItem)!) {
                             Text(uploadItem.ref)
                         }
                         .font(.caption)

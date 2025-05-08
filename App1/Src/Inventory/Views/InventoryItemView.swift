@@ -56,7 +56,7 @@ struct InventoryItemView: View {
                             listSearchText = ""
                         }
                         
-                        Link(destination: catalog.url(forItemOfType: item.type, ref: item.ref, colorId: item.colorId)!) {
+                        Link(destination: catalog.url(forPageOf: item)!) {
                             Text(item.ref)
                         }
                         
