@@ -52,8 +52,6 @@ struct TransactionListView: View {
             
         } rows : {
             
-            let transactions = transactions.sorted { $0.date > $1.date }
-            
             if grouppedByMonth {
                 
                 ForEach(transactions.grouppedByMonth, id: \.month) { item in

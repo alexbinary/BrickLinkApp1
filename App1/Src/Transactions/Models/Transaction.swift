@@ -6,9 +6,9 @@ import SwiftUI
 
 struct Transaction: Identifiable, Codable, Hashable, Datable {
     
-    var id: UUID = UUID()
+    var id = UUID()
     var date: Date
-    let createdAt: Date
+    var createdAt = Date()
     let type: TransactionType
     var amount: Float
     let fees: Float?

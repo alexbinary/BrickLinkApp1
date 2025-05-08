@@ -411,7 +411,7 @@ struct CashFlowDetailView: View {
                 }
                 
                 TransactionListView(
-                    transactions: transactions,
+                    transactions: transactions.sorted { $0.date > $1.date },
                     grouppedByMonth: false,
                     selectedTransactions: .constant([])
                 )

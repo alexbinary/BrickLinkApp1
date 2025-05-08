@@ -21,7 +21,7 @@ struct CashFlowContentView: View {
             nav.selectedTransactions = $0
         }
         TransactionListView(
-            transactions: transactionStore.allTransactions,
+            transactions: transactionStore.allTransactions.sorted { $0.date > $1.date },
             selectedTransactions: navSelectedTransactionsBinding
         )
         .navigationTitle("Cash Flow")

@@ -23,219 +23,281 @@ struct OrderDetailComptaView: View {
     }
     
     
-    @State var incomeDate: Date = Date()
-    @State var incomeAmount: Float = 0
-    @State var incomeFees: Float = 0
-    @State var incomePaymentMethod: PaymentMethod = .paypal
-    @State var incomeComment: String = ""
-    
-    @State var shippingDate: Date = Date()
-    @State var shippingAmount: Float = 0
-    @State var shippingPaymentMethod: PaymentMethod = .cb_iban
-    @State var shippingComment: String = ""
-    
-    @State var refundDate: Date = Date()
-    @State var refundAmount: Float = 0
-    @State var refundFees: Float = 0
-    @State var refundPaymentMethod: PaymentMethod = .paypal
-    @State var refundComment: String = ""
+    @State var editType: TransactionType = .orderIncome
+    @State var editDate: Date = Date()
+    @State var editAmount: Float = 0
+    @State var editFees: Float = 0
+    @State var editPaymentMethod: PaymentMethod = .paypal
+    @State var editComment: String = ""
     
     
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
             
-            HeaderTitleView(label: "􀗧 Income")
+            HeaderTitleView(label: "􁚛 Register transaction")
             
-            Form {
-                TextField(
-                    "Amount", value: $incomeAmount,
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                )
-                .onSubmit { self.submitIncomeTransaction() }
+            HStack(alignment: .top, spacing: 24) {
                 
-                TextField(
-                    "Fees", value: $incomeFees,
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                )
-                .onSubmit { self.submitIncomeTransaction() }
-                
-                PaymentMethodPicker("Payment method", selection: $incomePaymentMethod)
-                
-                DatePicker("Date", selection: $incomeDate)
-                
-                TextField("Comment", text: $incomeComment, axis: .vertical).lineLimit(3...5)
-                
-                HStack {
-                    Button("Register transaction") {
-                        self.submitIncomeTransaction()
+                Form {
+                    
+                    Picker("Type", selection: $editType) {
+                        
+                        ForEach([TransactionType.orderIncome, .orderShipping, .orderRefund], id: \.self) { type in
+                            Text(type.rawValue).tag(type)
+                        }
                     }
-                    Button("Validate without transaction") {
+                    
+                    TextField(
+                        "Amount", value: $editAmount,
+                        format: .currency(code: "EUR").presentation(.isoCode)
+                    )
+                    .onSubmit { self.registerTransaction() }
+                    
+                    TextField(
+                        "Fees", value: $editFees,
+                        format: .currency(code: "EUR").presentation(.isoCode)
+                    )
+                    .onSubmit { self.registerTransaction() }
+                    
+                    PaymentMethodPicker("Payment method", selection: $editPaymentMethod)
+                    
+                    DatePicker("Date", selection: $editDate)
+                    
+                    TextField("Comment", text: $editComment, axis: .vertical).lineLimit(3...5)
+                    
+                    Button("Register transaction") {
+                        self.registerTransaction()
+                    }
+                    
+                    Button("Validate without income transaction") {
                         transactionStore.validateOrderWithoutIncomeTransaction(order)
                     }
-                    if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(order) {
-                        Text("Validated without transaction on")
-                        Text(date, format: .dateTime)
-                    }
-                }
-            }
-
-            TransactionListView(
-                transactions: transactionStore.incomeTransactions(for: order),
-                grouppedByMonth: false,
-                selectedTransactions: .constant([])
-            )
-            .frame(minHeight: 100)
-            
-            Divider()
-            
-            HeaderTitleView(label: "􀐚 Shipping")
-               
-            HStack {
-                Text("Confirmed stamping:")
-                if let stamping = shippingStore.confirmedStamping(for: order) {
-                    Text(stamping)
-                }
-            }
-            
-            Form {
-                TextField(
-                    "Amount", value: $shippingAmount,
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                )
-                .onSubmit { self.submitShippingTransaction() }
-                
-                PaymentMethodPicker("Payment method", selection: $shippingPaymentMethod)
-                
-                DatePicker("Date", selection: $shippingDate)
-                
-                TextField("Comment", text: $shippingComment, axis: .vertical).lineLimit(3...5)
-                
-                HStack {
-                    Button("Register transaction") {
-                        self.submitShippingTransaction()
-                    }
-                    Button("Validate without transaction") {
+                    Button("Validate without shipping transaction") {
                         transactionStore.validateOrderWithoutShippingTransaction(order)
                     }
-                    if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(order) {
-                        Text("Validated without transaction on")
-                        Text(date, format: .dateTime)
+                    
+                    VStack(alignment: .leading) {
+                        
+                        if let date = transactionStore.dateOrderValidatedWithoutIncomeTransaction(order) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text("Validated without transaction on")
+                                Text(date, format: .dateTime)
+                            }
+                        }
+                        
+                        if let date = transactionStore.dateOrderValidatedWithoutShippingTransaction(order) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text("Validated without transaction on")
+                                Text(date, format: .dateTime)
+                            }
+                        }
+                    }
+                }
+                
+                VStack(alignment: .leading) {
+                    
+                    if transactionStore.incomeTransactions(for: order).isEmpty {
+                        
+                        view(for: Transaction(
+                            
+                            date: order.date,
+                            type: .orderIncome,
+                            amount: order.grandTotal,
+                            fees: editFees,
+                            paymentMethod: .cb_iban,
+                            comment: "",
+                            orderRefIn: order.id
+                            
+                        ), title: {
+                            
+                            Text("􁇖 Suggested income transaction")
+                                .font(.system(size: 12).bold())
+                                .foregroundStyle(.secondary)
+                        })
+                        .padding(.bottom)
+                    }
+                    
+                    if transactionStore.shippingTransactions(for: order).isEmpty,
+                       let cost = shippingStore.confirmedShippingCost(for: order) {
+                        
+                        view(for: Transaction(
+                            
+                            date: editDate,
+                            type: .orderShipping,
+                            amount: cost,
+                            fees: editFees,
+                            paymentMethod: .cb_iban,
+                            comment: "",
+                            orderRefIn: order.id
+                            
+                        ), title: {
+                            
+                            Grid(alignment: .leading, verticalSpacing: 4) {
+                                
+                                GridRow(alignment: .firstTextBaseline) {
+                                    
+                                    Text("􁇖")
+                                    Text("Suggested shipping transaction")
+                                }
+                                .font(.system(size: 12).bold())
+                                .foregroundStyle(.secondary)
+                             
+                                GridRow(alignment: .firstTextBaseline) {
+                                    
+                                    Text("")
+                                    
+                                    HStack(alignment: .firstTextBaseline) {
+                                        Text("Confirmed stamping:")
+                                        if let stamping = shippingStore.confirmedStamping(for: order) {
+                                            Text(stamping)
+                                        }
+                                    }
+                                }
+                                .font(.system(size: 12))
+                            }
+                        })
+                        .padding(.bottom)
+                    }
+                    
+                    if let amount = refundStore.refunds(for: order).last?.amount {
+                        
+                        view(for: Transaction(
+                            
+                            date: editDate,
+                            type: .orderRefund,
+                            amount: amount,
+                            fees: editFees,
+                            paymentMethod: .paypal,
+                            comment: "",
+                            orderRefIn: order.id
+                            
+                        ), title: {
+                            
+                            Grid(alignment: .leading, verticalSpacing: 4) {
+                                
+                                GridRow(alignment: .firstTextBaseline) {
+                                    
+                                    Text("􁇖")
+                                    Text("Suggested refund transaction")
+                                }
+                                .font(.system(size: 12).bold())
+                                .foregroundStyle(.secondary)
+                             
+                                GridRow(alignment: .firstTextBaseline) {
+                                    
+                                    Text("")
+                                    
+                                    HStack(alignment: .firstTextBaseline) {
+                                        Text("Latest refund:")
+                                        if let refund = refundStore.refunds(for: order).last {
+                                            Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
+                                        }
+                                    }
+                                }
+                                .font(.system(size: 12))
+                            }
+                        })
+                        .padding(.bottom)
                     }
                 }
             }
             
+            Color.clear.fixedSize()
+            
             TransactionListView(
-                transactions: transactionStore.shippingTransactions(for: order),
+                transactions:
+                    transactionStore.incomeTransactions(for: order)
+                    + transactionStore.shippingTransactions(for: order)
+                    + transactionStore.refundTransactions(for: order),
                 grouppedByMonth: false,
                 selectedTransactions: .constant([])
             )
-            .frame(minHeight: 100)
-            
-            Divider()
-            
-            HeaderTitleView(label: "􂈚 Refund")
-            
-            HStack {
-                Text("Latest refund:")
-                if let refund = refundStore.refunds(for: order).last {
-                    Text(abs(refund.amount), format: .currency(code: "EUR").presentation(.isoCode))
-                }
-            }
-               
-            Form {
-                TextField(
-                    "Amount", value: $refundAmount,
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                )
-                .onSubmit { self.submitRefundTransaction() }
-
-                TextField(
-                    "Fees", value: $refundFees,
-                    format: .currency(code: "EUR").presentation(.isoCode)
-                )
-                .onSubmit { self.submitRefundTransaction() }
-                
-                PaymentMethodPicker("Payment method", selection: $refundPaymentMethod)
-                
-                DatePicker("Date", selection: $refundDate)
-                
-                TextField("Comment", text: $refundComment, axis: .vertical).lineLimit(3...5)
-                
-                Button("Register transaction") {
-                    self.submitRefundTransaction()
-                }
-            }
-            
-            TransactionListView(
-                transactions: transactionStore.refundTransactions(for: order),
-                grouppedByMonth: false,
-                selectedTransactions: .constant([])
-            )
-            .frame(minHeight: 100)
         }
         .onChange(of: order, initial: true) {
             
-            self.incomeDate = order.date
-            self.incomeAmount = order.grandTotal
-            self.incomePaymentMethod = .paypal
-            self.incomeComment = ""
-
-            self.shippingDate = Date()
-            self.shippingAmount = shippingStore.confirmedShippingCost(for: order) ?? 0
-            self.shippingPaymentMethod = .cb_iban
-            self.shippingComment = ""
+            self.editDate = Date()
+            self.editPaymentMethod = .cb_iban
+        }
+    }
+    
+    
+    @ViewBuilder
+    func view<Content: View>(for transaction: Transaction, title: () -> Content) -> some View {
+        
+        VStack(alignment: .leading) {
             
-            self.refundDate = Date()
-            self.refundAmount = refundStore.refunds(for: order).last?.amount ?? 0
-            self.refundPaymentMethod = .paypal
-            self.refundComment = ""
+            HStack(alignment: .firstTextBaseline) {
+                
+                AnyView(title())
+                
+                Spacer()
+                
+                Button("Accept") {
+                    register(Transaction(
+                        date: transaction.date,
+                        createdAt: Date(),
+                        type: transaction.type,
+                        amount: transaction.amount,
+                        fees: transaction.fees,
+                        paymentMethod: transaction.paymentMethod,
+                        comment: transaction.comment,
+                        orderRefIn: transaction.orderRefIn
+                    ))
+                }
+            }
+                
+            HStack {
+                Grid(alignment: .leading, horizontalSpacing: 12) {
+                    
+                    GridRow(alignment: .firstTextBaseline) {
+                        
+                        Text("Amount")
+                        Text("Fees")
+                        Text("Payment method")
+                        Text("Date")
+                    }
+                    .captionStyle()
+                    
+                    GridRow(alignment: .firstTextBaseline) {
+                        
+                        Text(abs(transaction.amount), format: .currency(code: "EUR").presentation(.isoCode))
+                        if let fees = transaction.fees {
+                            Text(abs(fees), format: .currency(code: "EUR").presentation(.isoCode))
+                        } else {
+                            Text("")
+                        }
+                        Text(transaction.paymentMethod.rawValue)
+                        Text(transaction.date, format: .dateTime)
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .roundedContainer(style: .secondary)
         }
     }
     
 
-    func submitIncomeTransaction() {
+    func registerTransaction() {
         
-        transactionStore.register(Transaction(
-            date: incomeDate,
+        register(Transaction(
+            date: editDate,
             createdAt: Date(),
-            type: .orderIncome,
-            amount: incomeAmount,
-            fees: incomeFees,
-            paymentMethod: incomePaymentMethod,
-            comment: incomeComment,
+            type: editType,
+            amount: editAmount,
+            fees: editFees,
+            paymentMethod: editPaymentMethod,
+            comment: editComment,
             orderRefIn: order.id
         ))
     }
     
     
-    func submitShippingTransaction() {
-     
-        transactionStore.register(Transaction(
-            date: shippingDate,
-            createdAt: Date(),
-            type: .orderShipping,
-            amount: shippingAmount,
-            fees: nil as Float?,
-            paymentMethod: shippingPaymentMethod,
-            comment: shippingComment,
-            orderRefIn: order.id
-        ))
-    }
-    
-    
-    func submitRefundTransaction() {
-     
-        transactionStore.register(Transaction(
-            date: refundDate,
-            createdAt: Date(),
-            type: .orderRefund,
-            amount: refundAmount,
-            fees: refundFees,
-            paymentMethod: refundPaymentMethod,
-            comment: refundComment,
-            orderRefIn: order.id
-        ))
+    func register(_ transaction: Transaction) {
+        
+        transactionStore.register(transaction)
     }
 }
 
@@ -243,9 +305,7 @@ struct OrderDetailComptaView: View {
 
 #Preview {
     
-    let env = createEnv()
-    let order = env.stores.order.orders.first!
-    
-    OrderDetailComptaView(order)
-        .inject(env)
+    OrderDetailComptaView(.previewOrder1)
+        .padding()
+        .previewEnv()
 }
