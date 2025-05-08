@@ -19,6 +19,8 @@ struct OrderChecklistView: View {
     
     @State
     var collapsedSections: Set<ChecklistData.SectionData.ID> = []
+    @State
+    var animated = false
     
     
     var body: some View {
@@ -50,6 +52,7 @@ struct OrderChecklistView: View {
                                     ForEach(section.items) { item in
                                         GridRow {
                                             CheckView(state: item.state, mandatory: item.mandatory)
+                                                .transition(.scale)
                                             Text(item.label)
                                         }
                                     }
@@ -71,18 +74,43 @@ struct OrderChecklistView: View {
                         )
                         .fixedSize()
                     }
+                    
+                    let closed = orderStore.macroStatus(for: order).isOneOf([.recentlyClosed, .closed])
+
+                    HStack {
+                        Color.clear.frame(width: 3, height: 0)
+                        Text(OrderMacroStatus.closed.descriptionWithPicto).checklistTitle()
+                            .strikethrough(closed)
+                        if closed {
+                            CheckView(state: .validated)
+                                .transition(.scale)
+                        }
+                    }
+                    .padding(.top, 4)
                 }
             }
             .scrollIndicators(.hidden)
         }
-        .onChange(of: checklist, initial: true) {
-            let completedSections = checklist.sections.filter {
-                $0.state != .pending || $0.macroStatus == .closed
-            }
-            collapsedSections = Set(completedSections.map(\.id))
+        .onAppear {
+            updateCollapsedSections(from: checklist, animated: false)
+        }
+        .onChange(of: checklist, initial: false) {
+            updateCollapsedSections(from: checklist, animated: true)
         }
         .animation(.default, value: checklist)
         .animation(.default, value: collapsedSections)
+    }
+    
+    
+    func updateCollapsedSections(from checklist: ChecklistData, animated: Bool) {
+        
+        var transaction = SwiftUI.Transaction()
+        transaction.disablesAnimations = !animated
+        withTransaction(transaction) {
+            
+            let completedSections = checklist.sections.filter { $0.state != .pending }
+            collapsedSections = Set(completedSections.map(\.id))
+        }
     }
 }
 

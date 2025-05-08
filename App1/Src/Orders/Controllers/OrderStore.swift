@@ -328,11 +328,6 @@ class OrderStore: OrderStoreProtocol {
                         state: state(of: .sellerFeedback, for: order)
                     ),
                 ]
-            ),
-            .init(
-                macroStatus: .closed,
-                items: [],
-                state: macroStatus(for: order).isOneOf([.recentlyClosed, .closed]) ? .validated : .pending
             )
         ])
     }
@@ -712,13 +707,13 @@ struct ChecklistData: Equatable {
         let state: ChecklistState
         let mandatory: Bool
         
-        init(macroStatus: OrderMacroStatus, items: [ItemData], state: ChecklistState? = nil, mandatory: Bool? = nil) {
+        init(macroStatus: OrderMacroStatus, items: [ItemData]) {
             
             self.macroStatus = macroStatus
             self.title = macroStatus.descriptionWithPicto
             self.items = items
             
-            self.state = state ?? {
+            self.state = {
                 
                 let states = items.map(\.state)
                 
@@ -733,7 +728,7 @@ struct ChecklistData: Equatable {
                 return .notApplicable
             }()
             
-            self.mandatory = mandatory ?? items.map(\.mandatory).contains(true)
+            self.mandatory = items.map(\.mandatory).contains(true)
         }
     }
     
