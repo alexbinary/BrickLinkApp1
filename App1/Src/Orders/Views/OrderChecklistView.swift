@@ -29,8 +29,6 @@ struct OrderChecklistView: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
-            HeaderTitleView(label: "􀼏 Status").padding(.bottom, 6)
-            
             ScrollView {
                 
                 VStack(alignment: .leading) {
